@@ -95,11 +95,11 @@ const circuitsData = {
     description:
       "Plages paradisiaques, immersion dans la culture locale et découverte des marchés traditionnels. Le sud authentique de Madagascar.",
     images: [
-      "/madagascar-ifaty-beach-paradise-palm-trees.jpg?height=600&width=800&query=paradise beach palm trees Ifaty Madagascar",
-      "/madagascar-tulear-traditional-market.jpg?height=600&width=800&query=traditional colorful market Tulear Madagascar",
-      "/madagascar-ambatomilo-fishing-village.jpg?height=600&width=800&query=fishing village Ambatomilo Madagascar coast",
-      "/madagascar-ifaty-spiny-forest.jpg?height=600&width=800&query=spiny forest unique vegetation Ifaty Madagascar",
-      "/madagascar-tulear-sunset-beach.jpg?height=600&width=800&query=sunset beach Tulear Madagascar golden hour",
+      "/madagascar-adventure-climbing.jpg?height=600&width=800&query=lemurs in Andasibe national park Madagascar",
+      "/madagascar-avenue-of-baobabs-sunset.jpg?height=600&width=800&query=Palmarium lodge lakeside Madagascar",
+      "/madagascar-rice-terraces.jpg?height=600&width=800&query=exotic orchid flowers Andasibe Madagascar",
+      "/madagascar-lemurs-in-andasibe-national-park.jpg?height=600&width=800&query=misty morning forest Andasibe Madagascar",
+      "/madagascar-family-travel-children-beach.jpg?height=600&width=800&query=Indri lemur close up Madagascar wildlife",
     ],
     highlights: [
       "Plages paradisiaques",
