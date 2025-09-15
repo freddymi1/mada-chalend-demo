@@ -1,0 +1,116 @@
+{
+  "home": {
+    "language": {
+      "french": "Français",
+      "english": "Anglais",
+      "malagasy": "Malgache"
+    }
+  },
+  "navigation": {
+    "home": "Accueil",
+    "about": "À propos",
+    "tours": "Nos circuits",
+    "booking": "Réservation",
+    "blog": "Blog",
+    "contact": "Contact"
+  },
+  "about": {
+    "title": "Qui sommes-nous?",
+    "subtitle": "Mada Chaland est une agence de voyage basée à Madagascar, spécialisée dans les circuits personnalisés à travers l'île. Notre mission est de vous offrir des voyages inoubliables, authentiques et sûrs. Nous travaillons avec des guides locaux expérimentés et sélectionnons des hébergements de qualité pour garantir votre confort tout au long de votre séjour.",
+    "features": {
+      "authentic": {
+        "title": "Voyage Authentique",
+        "description": "Des expériences uniques avec des guides locaux pour découvrir la vraie Madagascar"
+      },
+      "safe": {
+        "title": "Voyage Sûr",
+        "description": "Hébergements de qualité et accompagnement personnalisé pour votre sécurité"
+      },
+      "responsible": {
+        "title": "Voyage Responsable",
+        "description": "Soutien aux communautés locales et préservation de l'environnement"
+      },
+      "conclusion": "Nous croyons au voyage responsable et mettons un point d'honneur à soutenir les communautés locales et la préservation de l'environnement."
+    }
+  },
+  "hero": {
+    "title": "Bienvenue chez Mada Chaland",
+    "subtitle": "Votre agence de voyage à Madagascar",
+    "description": "Explorez Madagascar autrement, avec des circuits sur mesure, des expériences uniques et un accompagnement personnalisé.",
+    "longDescription": "Chez Mada Chaland, nous vous proposons des voyages sur mesure pour découvrir Madagascar dans toute sa splendeur. Que vous soyez passionné par la nature, les plages paradisiaques, la faune ou la culture locale, nous avons des circuits adaptés à vos envies et votre budget.",
+    "cta": "Découvrez nos circuits"
+  },
+  "tours": {
+    "title": "Nos circuits et expériences",
+    "description": "Découvrez Madagascar à votre rythme grâce à nos circuits sur mesure : plages, aventures, nature, faune unique et découvertes culturelles. Chaque circuit peut être personnalisé selon vos envies, votre budget et votre durée de séjour.",
+    "viewDetails": "Voir détails",
+    "book": "Réserver",
+    "customTour": "Demandez votre circuit personnalisé"
+  },
+  "book":{
+    "title":"Réservez votre voyage",
+    "subtitle":"Réservez facilement votre circuit avec Mada Chaland. Indiquez vos dates, le nombre de personnes et vos préférences, et nous vous proposerons un itinéraire sur mesure.",
+    "form":{
+      "title":"Formulaire de réservation",
+      "name":"Nom",
+      "firstname":"Prénom",
+      "email":"Adresse email",
+      "phone":"Téléphone",
+      "personNumber":"Nombre de personnes",
+      "date":"Dates souhaitées",
+      "datePL":"Ex: Du 15 au 25 juillet 2024",
+      "nb":"Préférences ou remarques",
+      "nbPL":"Décrivez vos préférences, centres d'intérêt, ou toute information utile...",
+      "cta":"Envoyer ma demande"
+    }
+  },
+  "blog":{
+    "title":"Nos conseils et récits de voyage",
+    "subtitle":"Découvrez nos articles pour mieux préparer votre voyage et plongez dans les légendes fascinantes de Madagascar.",
+    "viewMore":"Lire la suite"
+  },
+  "contact": {
+    "title": "Contactez-nous",
+    "subtitle": "Pour toute question, demande de circuit ou information, contactez-nous directement.",
+    "infoTitle": "Nos coordonnées",
+    "phoneLabel": "Téléphone",
+    "emailLabel": "Email",
+    "addressLabel": "Adresse",
+    "addressValue": "123 Avenue de l'Indépendance\nAntananarivo 101, Madagascar",
+    "officeAlt": "Notre bureau à Antananarivo",
+    "formTitle": "Envoyez-nous un message",
+    "form": {
+      "name": "Nom *",
+      "email": "Email *",
+      "message": "Message *",
+      "messagePlaceholder": "Votre message...",
+      "submit": "Envoyer le message"
+    },
+    "toastTitle": "Message envoyé !",
+    "toastDescription": "Nous vous répondrons dans les plus brefs délais."
+  },
+  "footer":{
+    "text":"Votre agence de voyage spécialisée dans les circuits sur mesure à Madagascar.",
+    "followOur":"Suivez-nous",
+    "legalInfos":{
+      "title":"Informations légales",
+      "legalMention":"Mentions légales",
+      "politic":"Politique de confidentialité",
+      "copyright":"© 2024 Mada Chaland. Tous droits réservés."
+    }
+  },
+  "common": {
+    "days": "jours",
+    "nights": "nuits",
+    "duration": "Durée",
+    "price": "Prix",
+    "from": "À partir de",
+    "euro": "€",
+    "person": "personne"
+  },
+  "theme": {
+    "light": "Mode clair",
+    "dark": "Mode sombre",
+    "system": "Système"
+  }
+}

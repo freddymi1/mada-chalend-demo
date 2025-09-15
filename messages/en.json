@@ -1,0 +1,116 @@
+{
+  "home": {
+    "language": {
+      "french": "French",
+      "english": "English",
+      "malagasy": "Malgache"
+    }
+  },
+  "navigation": {
+    "home": "Home",
+    "about": "About",
+    "tours": "Our Tours",
+    "booking": "Booking",
+    "blog": "Blog",
+    "contact": "Contact"
+  },
+  "about": {
+    "title": "Who are we?",
+    "subtitle": "Mada Chaland is a travel agency based in Madagascar, specialized in tailor-made tours across the island. Our mission is to provide you with unforgettable, authentic, and safe journeys. We work with experienced local guides and carefully select quality accommodations to ensure your comfort throughout your stay.",
+    "features": {
+      "authentic": {
+        "title": "Authentic Travel",
+        "description": "Unique experiences with local guides to discover the real Madagascar"
+      },
+      "safe": {
+        "title": "Safe Travel",
+        "description": "Quality accommodations and personalized support for your safety"
+      },
+      "responsible": {
+        "title": "Responsible Travel",
+        "description": "Support for local communities and preservation of the environment"
+      },
+      "conclusion": "We believe in responsible travel and make it a priority to support local communities and environmental preservation."
+    }
+  },
+  "hero": {
+    "title": "Welcome to Mada Chaland",
+    "subtitle": "Your travel agency in Madagascar",
+    "description": "Explore Madagascar differently, with tailor-made tours, unique experiences and personalized support.",
+    "longDescription": "At Mada Chaland, we offer tailor-made trips to discover Madagascar in all its splendor. Whether you are passionate about nature, paradise beaches, wildlife or local culture, we have tours adapted to your desires and budget.",
+    "cta": "Discover our tours"
+  },
+  "tours": {
+    "title": "Our tours and experiences",
+    "description": "Discover Madagascar at your own pace with our tailor-made tours: beaches, adventures, nature, unique wildlife and cultural discoveries. Each tour can be customized according to your desires, budget and length of stay.",
+    "viewDetails": "View details",
+    "book": "Book",
+    "customTour": "Request your custom tour"
+  },
+  "book": {
+    "title": "Book your trip",
+    "subtitle": "Easily book your tour with Mada Chaland. Enter your dates, the number of people, and your preferences, and we will suggest a tailor-made itinerary.",
+    "form": {
+      "title": "Booking Form",
+      "name": "Last Name",
+      "firstname": "First Name",
+      "email": "Email Address",
+      "phone": "Phone",
+      "personNumber": "Number of people",
+      "date": "Desired dates",
+      "datePL": "Ex: From July 15 to 25, 2024",
+      "nb": "Preferences or remarks",
+      "nbPL": "Describe your preferences, interests, or any useful information...",
+      "cta": "Send my request"
+    }
+  },
+  "blog": {
+    "title": "Our travel tips and stories",
+    "subtitle": "Discover our articles to better prepare your trip and dive into Madagascar's fascinating legends.",
+    "viewMore": "Read more"
+  },
+  "contact": {
+    "title": "Contact Us",
+    "subtitle": "For any question, tour request, or information, contact us directly.",
+    "infoTitle": "Our Contact Information",
+    "phoneLabel": "Phone Number",
+    "emailLabel": "Email Address",
+    "addressLabel": "Address",
+    "addressValue": "123 Avenue de l'Indépendance\nAntananarivo 101, Madagascar",
+    "officeAlt": "Our office in Antananarivo",
+    "formTitle": "Send us a message",
+    "form": {
+      "name": "Last Name *",
+      "email": "Email Adress *",
+      "message": "Message *",
+      "messagePlaceholder": "Your message...",
+      "submit": "Send Message"
+    },
+    "toastTitle": "Message sent!",
+    "toastDescription": "We will get back to you as soon as possible."
+  },
+  "footer": {
+    "text": "Your travel agency specialized in tailor-made tours in Madagascar.",
+    "followOur": "Follow us",
+    "legalInfos": {
+      "title": "Legal Information",
+      "legalMention": "Legal Notice",
+      "politic": "Privacy Policy",
+      "copyright": "© 2024 Mada Chaland. All rights reserved."
+    }
+  },
+  "common": {
+    "days": "days",
+    "nights": "nights",
+    "duration": "Duration",
+    "price": "Price",
+    "from": "From",
+    "euro": "€",
+    "person": "person"
+  },
+  "theme": {
+    "light": "Light mode",
+    "dark": "Dark mode",
+    "system": "System"
+  }
+}

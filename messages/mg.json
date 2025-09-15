@@ -1,0 +1,116 @@
+{
+  "home": {
+    "language": {
+      "french": "Frantsay",
+      "english": "Anglais",
+      "malagasy": "Malagasy"
+    }
+  },
+  "navigation": {
+    "home": "Fandraisana",
+    "about": "Momba anay",
+    "tours": "Ny dianay",
+    "booking": "Famandrihana",
+    "blog": "Blog",
+    "contact": "Fifandraisana"
+  },
+  "about": {
+    "title": "Iza moa izahay?",
+    "subtitle": "Mada Chaland dia masoivoho fitsangatsanganana miorina eto Madagasikara, manam-pahaizana manokana amin’ny famolavolana dia manokana manerana ny nosy. Ny tanjonay dia ny hanolotra anao dia tsy hay hadinoina, tena izy ary azo antoka. Miasa miaraka amin’ny mpitari-dalana za-draharaha izahay ary mifidy toeram-ponenana tsara kalitao mba hahazoanao aina mandritra ny dianao.",
+    "features": {
+      "authentic": {
+        "title": "Dia Tena Izy",
+        "description": "Traikefa tokana miaraka amin’ny mpitari-dalana eo an-toerana hahafantarana an’i Madagasikara tena izy"
+      },
+      "safe": {
+        "title": "Dia Azo Antoka",
+        "description": "Fonenana tsara kalitao sy fanohanana manokana ho fiarovana anao"
+      },
+      "responsible": {
+        "title": "Dia Tompon’andraikitra",
+        "description": "Fanohanana ny fiaraha-monina eo an-toerana sy fiarovana ny tontolo iainana"
+      },
+      "conclusion": "Mino izahay fa ny dia tompon’andraikitra no zava-dehibe, ka manome lanja ny fanohanana ny fiaraha-monina eo an-toerana sy ny fiarovana ny tontolo iainana."
+    }
+  },
+  "hero": {
+    "title": "Tongasoa eto amin'ny Mada Chaland",
+    "subtitle": "Ny mpiasa fitetezana eto Madagasikara",
+    "description": "Hijereo an'i Madagasikara amin'ny fomba hafa, miaraka amin'ny dia natao manokana, traikefa tsy manam-paharoa ary fanohanana manokana.",
+    "longDescription": "Ao amin'ny Mada Chaland, manome dia natao manokana izahay mba hahitana an'i Madagasikara amin'ny hatsarany rehetra. Na tia ny natiora ianao, na tia toerana tsara tarehy, na biby fiompy, na kolontsaina eo an-toerana, manana dia mifanaraka amin'ny tianao sy ny vola azonao izahay.",
+    "cta": "Jereo ny dianay"
+  },
+  "tours": {
+    "title": "Ny dianay sy ny traikefanay",
+    "description": "Hijereo an'i Madagasikara araka ny hafainganao amin'ny alalan'ny dianay natao manokana: toerana tsara tarehy, fitsangatsanganana, natiora, biby tsy manam-paharoa ary fahitana kolontsaina. Ny dia tsirairay dia azo ovaina araka ny tianao, ny vola azonao ary ny halavany.",
+    "viewDetails": "Jereo ny antsipiriany",
+    "book": "Mandray toerana",
+    "customTour": "Mangataha ny dia manokana"
+  },
+  "book": {
+    "title": "Mamoròna famandrihana ny dianao",
+    "subtitle": "Ataovy mora ny famandrihana ny dianao miaraka amin’i Mada Chaland. Ampidiro ny daty tianao, ny isan’ny olona ary ny safidinao, dia hanolotra drafitra manokana ho anao izahay.",
+    "form": {
+      "title": "Taratasy famandrihana",
+      "name": "Anarana",
+      "firstname": "Fanampin’anarana",
+      "email": "Adiresy mailaka",
+      "phone": "Finday",
+      "personNumber": "Isan’ny olona",
+      "date": "Daty tiana",
+      "datePL": "Ohatra: Avy ny 15 ka hatramin’ny 25 Jolay 2024",
+      "nb": "Safidy na fanamarihana",
+      "nbPL": "Lazao ny safidinao, ny zavatra tianao, na vaovao ilaina...",
+      "cta": "Alefaso ny fangatahana"
+    }
+  },
+  "blog": {
+    "title": "Torohevitra sy tantara momba ny dia",
+    "subtitle": "Jereo ny lahatsoratray mba hahamora ny fanomanana ny dianao ary midira amin’ny angano mahafinaritra any Madagasikara.",
+    "viewMore": "Hamaky bebe kokoa"
+  },
+  "contact": {
+    "title": "Mifandraisa aminay",
+    "subtitle": "Ho an’ny fanontaniana, fangatahana fitsidihana na fampahalalana, mifandraisa mivantana aminay.",
+    "infoTitle": "Ny mombamomba anay",
+    "phoneLabel": "Finday",
+    "emailLabel": "Mailaka",
+    "addressLabel": "Adiresy",
+    "addressValue": "123 Avenue de l'Indépendance\nAntananarivo 101, Madagasikara",
+    "officeAlt": "Biraonay any Antananarivo",
+    "formTitle": "Alefaso aminay ny hafatrao",
+    "form": {
+      "name": "Anarana *",
+      "email": "Mailaka *",
+      "message": "Hafatra *",
+      "messagePlaceholder": "Ny hafatrao...",
+      "submit": "Alefaso ny hafatra"
+    },
+    "toastTitle": "Hafatra nalefa!",
+    "toastDescription": "Hiverina aminao izahay haingana araka izay azo atao."
+  },
+  "footer": {
+    "text": "Orinasa mpikarakara dia manokana amin'ny fitsangatsanganana namboarina manokana any Madagasikara.",
+    "followOur": "Araho izahay",
+    "legalInfos": {
+      "title": "Fampahalalana ara-dalàna",
+      "legalMention": "Fanambarana ara-dalàna",
+      "politic": "Politikan’ny fiainana manokana",
+      "copyright": "© 2024 Mada Chaland. Zo rehetra voatokana."
+    }
+  },
+  "common": {
+    "days": "andro",
+    "nights": "alina",
+    "duration": "Faharetana",
+    "price": "Vidiny",
+    "from": "Manomboka amin'ny",
+    "euro": "€",
+    "person": "olona"
+  },
+  "theme": {
+    "light": "Maivana",
+    "dark": "Maizina",
+    "system": "Rafitra"
+  }
+}
