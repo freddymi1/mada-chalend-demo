@@ -1,7 +1,7 @@
 "use client"
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/client/ui/card"
+import { Button } from "@/components/client/ui/button"
 import { Calendar, ArrowRight } from "lucide-react"
 import { useTranslations } from "use-intl";
 

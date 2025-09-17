@@ -1,7 +1,7 @@
-import { Header } from "@/components/header"
-import { ToursSection } from "@/components/tours-section"
-import { Footer } from "@/components/footer"
-import { Toaster } from "@/components/ui/toaster"
+import { Header } from "@/components/client/header"
+import { ToursSection } from "@/components/client/tours-section"
+import { Footer } from "@/components/client/footer"
+import { Toaster } from "@/components/client/ui/toaster"
 
 export default function CircuitsPage() {
   return (

@@ -1,7 +1,7 @@
-import { Header } from "@/components/header"
-import { HeroSection } from "@/components/hero-section"
-import { Footer } from "@/components/footer"
-import { Toaster } from "@/components/ui/toaster"
+import { Footer } from "@/components/client/footer";
+import { Header } from "@/components/client/header";
+import { HeroSection } from "@/components/client/hero-section";
+import { Toaster } from "@/components/client/ui/toaster";
 
 export default function Home() {
   return (

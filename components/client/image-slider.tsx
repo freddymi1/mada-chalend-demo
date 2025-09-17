@@ -1,8 +1,8 @@
 "use client"
 
 import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog"
+import { Button } from "@/components/client/ui/button"
+import { Dialog, DialogContent, DialogTrigger } from "@/components/client/ui/dialog"
 import { ChevronLeft, ChevronRight, ZoomIn, X } from "lucide-react"
 
 interface ImageSliderProps {

@@ -6,8 +6,8 @@ import { Analytics } from "@vercel/analytics/next"
 import { Suspense } from "react"
 import { NextIntlClientProvider } from "next-intl"
 import { getMessages } from "next-intl/server"
-import { ThemeProvider } from "@/components/theme-provider"
-import { PageTransition } from "@/components/page-transition"
+import { ThemeProvider } from "@/components/client/theme-provider"
+import { PageTransition } from "@/components/client/page-transition"
 import "./globals.css"
 
 export const metadata: Metadata = {

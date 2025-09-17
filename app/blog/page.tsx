@@ -1,7 +1,7 @@
-import { Header } from "@/components/header"
-import { BlogSection } from "@/components/blog-section"
-import { Footer } from "@/components/footer"
-import { Toaster } from "@/components/ui/toaster"
+import { Header } from "@/components/client/header"
+import { BlogSection } from "@/components/client/blog-section"
+import { Footer } from "@/components/client/footer"
+import { Toaster } from "@/components/client/ui/toaster"
 
 export default function BlogPage() {
   return (

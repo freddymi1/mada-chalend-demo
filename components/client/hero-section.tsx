@@ -1,5 +1,5 @@
 "use client"
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/client/ui/button"
 import Link from "next/link"
 import { useTranslations } from "use-intl";
 import { useState, useEffect } from "react";
