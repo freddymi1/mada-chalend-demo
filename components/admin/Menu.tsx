@@ -1,21 +1,50 @@
-"use client"
+"use client";
 
-import React, { useState } from "react"
-import Link from "next/link"
-import { usePathname } from "next/navigation"
+import React, { useState } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { MapPin } from "lucide-react";
 export const menuItems = [
-    { id: "dashboard", nom: "Dashboard", path: "/admin/dashboard", icone: "M3 7v10a2 2 0..." },
-    { id: "circuits", nom: "Circuits", path: "/admin/circuits", icone: "M9 20l-5.447..." },
-    { id: "reservations", nom: "Réservations", path: "/admin/reservations", icone: "M8 7V3a2..." },
-    { id: "clients", nom: "Clients", path: "/admin/clients", icone: "M12 4.354a4..." },
-    { id: "analytics", nom: "Analyses", path: "/admin/analytics", icone: "M9 19v-6a2..." },
-    { id: "parametres", nom: "Paramètres", path: "/admin/parametres", icone: "M10.325 4.317c..." },
-  ]
+  {
+    id: "dashboard",
+    nom: "Dashboard",
+    path: "/admin/dashboard",
+    icone: "M3 7v10a2 2 0...",
+  },
+  {
+    id: "circuits",
+    nom: "Circuits",
+    path: "/admin/circuits",
+    icone: "M9 20l-5.447...",
+  },
+  {
+    id: "reservations",
+    nom: "Réservations",
+    path: "/admin/reservations",
+    icone: "M8 7V3a2...",
+  },
+  {
+    id: "clients",
+    nom: "Clients",
+    path: "/admin/clients",
+    icone: "M12 4.354a4...",
+  },
+  {
+    id: "analytics",
+    nom: "Analyses",
+    path: "/admin/analytics",
+    icone: "M9 19v-6a2...",
+  },
+  {
+    id: "parametres",
+    nom: "Paramètres",
+    path: "/admin/parametres",
+    icone: "M10.325 4.317c...",
+  },
+];
 const SideMenu = () => {
-  const pathname = usePathname()
-  const [sidebarOpen, setSidebarOpen] = useState(false)
-
-  
+  const pathname = usePathname();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
     <div className="">
@@ -28,14 +57,33 @@ const SideMenu = () => {
         {/* Ajout flex-col + h-screen ici */}
         <div className="flex flex-col h-screen">
           {/* Header */}
-          <div className="flex items-center justify-between h-16 px-6 bg-gradient-to-r from-blue-600 to-purple-600">
-            <h1 className="text-xl font-bold text-white">Madagascar Tours</h1>
+          <div className="flex items-center justify-between h-16 px-6 bg-blue-900">
+            {/* <h1 className="text-xl font-bold text-white">Madagascar Tours</h1> */}
+            <div className="flex items-center gap-2 text-lg lg:text-xl font-bold text-primary hover:text-primary/80 transition-all duration-300 hover:scale-105">
+                <div className="relative">
+                  <MapPin className="h-8 w-8 text-primary animate-float" />
+                  <div className="absolute -top-1 -right-1 w-3 h-3 bg-accent rounded-full animate-pulse"></div>
+                </div>
+                <span className="hidden lg:block bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+                  Mada Chaland
+                </span>
+              </div>
             <button
               onClick={() => setSidebarOpen(false)}
               className="lg:hidden text-white hover:text-gray-200"
             >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              <svg
+                className="w-6 h-6"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
               </svg>
             </button>
           </div>
@@ -43,7 +91,7 @@ const SideMenu = () => {
           {/* Menu */}
           <nav className="mt-8 flex-1 overflow-y-auto">
             {menuItems.map((item) => {
-              const isActive = pathname === item.path
+              const isActive = pathname === item.path;
               return (
                 <Link key={item.id} href={item.path}>
                   <span
@@ -53,13 +101,23 @@ const SideMenu = () => {
                         : "text-gray-700"
                     }`}
                   >
-                    <svg className="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={item.icone} />
+                    <svg
+                      className="w-5 h-5 mr-3"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d={item.icone}
+                      />
                     </svg>
                     {item.nom}
                   </span>
                 </Link>
-              )
+              );
             })}
           </nav>
 
@@ -73,14 +131,16 @@ const SideMenu = () => {
               </div>
               <div className="ml-3">
                 <p className="text-sm font-medium text-gray-900">Admin</p>
-                <p className="text-xs text-gray-500">admin@madagascartours.com</p>
+                <p className="text-xs text-gray-500">
+                  admin@madagascartours.com
+                </p>
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default SideMenu
+export default SideMenu;

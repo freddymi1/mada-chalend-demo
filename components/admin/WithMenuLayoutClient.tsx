@@ -21,13 +21,13 @@ export default function WithMenuLayoutClient({
   // Empêcher le défilement de la page quand le menu est ouvert
   useEffect(() => {
     if (isOpen) {
-      document.body.style.overflow = 'hidden';
+      document.body.style.overflow = "hidden";
     } else {
-      document.body.style.overflow = 'unset';
+      document.body.style.overflow = "unset";
     }
-    
+
     return () => {
-      document.body.style.overflow = 'unset';
+      document.body.style.overflow = "unset";
     };
   }, [isOpen]);
 
@@ -35,7 +35,7 @@ export default function WithMenuLayoutClient({
     <div className="withmenu-layout flex min-h-screen">
       {/* Overlay pour mobile */}
       {isOpen && (
-        <div 
+        <div
           className="fixed inset-0 bg-black/20 bg-opacity-50 z-40 md:hidden"
           onClick={() => setIsOpen(false)}
         />
@@ -51,7 +51,9 @@ export default function WithMenuLayoutClient({
         `}
       >
         <div className="flex justify-between items-center p-4 border-b">
-          <h2 className="text-lg font-bold text-gray-800">Menu</h2>
+          <span className="text-lg font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+            Mada Chaland
+          </span>
           <button
             className="w-10 h-10 flex items-center justify-center rounded-lg bg-gray-100 hover:bg-gray-200 transition-colors"
             onClick={() => setIsOpen(false)}
@@ -60,10 +62,10 @@ export default function WithMenuLayoutClient({
             <X className="w-6 h-6 text-gray-700" />
           </button>
         </div>
-        
+
         <div className="flex flex-col justify-between h-[calc(100%-4rem)]">
           <nav className="mt-4 flex-1 overflow-y-auto">
-            {menuItems.map((item) => { 
+            {menuItems.map((item) => {
               const isActive = pathname === item.path;
               return (
                 <Link key={item.id} href={item.path} legacyBehavior>
@@ -130,9 +132,7 @@ export default function WithMenuLayoutClient({
           <Menu className="w-6 h-6 text-gray-700" />
         </button>
 
-        <div className="">
-          {children}
-        </div>
+        <div className="">{children}</div>
       </main>
     </div>
   );
