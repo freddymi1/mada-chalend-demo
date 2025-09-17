@@ -2,9 +2,58 @@
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { useTranslations } from "use-intl";
+import { useState, useEffect } from "react";
 
 export function HeroSection() {
   const t = useTranslations("lng");
+  
+  // Images du carrousel - remplacez par vos vraies images
+  const backgroundImages = [
+    '/madagascar-baobab-trees-landscape-sunset.jpg',
+    '/tsiribihina-landscap.jpg',
+    '/tsiribihina-river.jpg',
+    '/boucle_ouest_baobabs_Madagascar.jpg',
+    '/35019733054_2108a63acc_k-1.jpg'
+  ];
+  
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [isTransitioning, setIsTransitioning] = useState(false);
+  
+  // Changement automatique d'image toutes les 5 secondes
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setIsTransitioning(true);
+      setTimeout(() => {
+        setCurrentImageIndex((prevIndex) => 
+          (prevIndex + 1) % backgroundImages.length
+        );
+        setIsTransitioning(false);
+      }, 500);
+    }, 5000);
+    
+    return () => clearInterval(interval);
+  }, [backgroundImages.length]);
+  
+  // Navigation manuelle
+  const goToSlide = (index:number) => {
+    if (index !== currentImageIndex) {
+      setIsTransitioning(true);
+      setTimeout(() => {
+        setCurrentImageIndex(index);
+        setIsTransitioning(false);
+      }, 500);
+    }
+  };
+  
+  const goToNext = () => {
+    const nextIndex = (currentImageIndex + 1) % backgroundImages.length;
+    goToSlide(nextIndex);
+  };
+  
+  const goToPrev = () => {
+    const prevIndex = currentImageIndex === 0 ? backgroundImages.length - 1 : currentImageIndex - 1;
+    goToSlide(prevIndex);
+  };
   
   return (
     <>
@@ -84,6 +133,33 @@ export function HeroSection() {
           }
         }
         
+        @keyframes slideTransition {
+          0% {
+            opacity: 1;
+            transform: scale(1);
+          }
+          50% {
+            opacity: 0.7;
+            transform: scale(1.05);
+          }
+          100% {
+            opacity: 1;
+            transform: scale(1);
+          }
+        }
+        
+        @keyframes float {
+          0%, 100% {
+            transform: translateY(0px) rotate(0deg);
+          }
+          33% {
+            transform: translateY(-10px) rotate(1deg);
+          }
+          66% {
+            transform: translateY(-5px) rotate(-1deg);
+          }
+        }
+        
         .animate-fade-in-up {
           animation: fadeInUp 0.8s ease-out forwards;
           opacity: 0;
@@ -110,6 +186,14 @@ export function HeroSection() {
         
         .animate-button-pulse {
           animation: buttonPulse 2s ease-in-out infinite;
+        }
+        
+        .animate-float {
+          animation: float 6s ease-in-out infinite;
+        }
+        
+        .slide-transition {
+          animation: slideTransition 1s ease-in-out;
         }
         
         .text-glow-effect {
@@ -148,14 +232,36 @@ export function HeroSection() {
           border: 1px solid rgba(255, 255, 255, 0.1);
           border-radius: 20px;
         }
+        
+        .background-slider {
+          transition: all 0.5s ease-in-out;
+        }
+        
+        .slider-controls {
+          backdrop-filter: blur(5px);
+          background: rgba(0, 0, 0, 0.3);
+          border-radius: 50px;
+        }
+        
+        .nav-arrow {
+          backdrop-filter: blur(10px);
+          background: rgba(255, 255, 255, 0.1);
+          border: 1px solid rgba(255, 255, 255, 0.2);
+          transition: all 0.3s ease;
+        }
+        
+        .nav-arrow:hover {
+          background: rgba(255, 255, 255, 0.2);
+          transform: scale(1.1);
+        }
       `}</style>
       
       <section id="accueil" className="relative w-full min-h-screen flex items-center justify-center overflow-hidden">
-        {/* Background Image avec effet parallaxe */}
+        {/* Carrousel d'images de fond */}
         <div
-          className="absolute inset-0 w-full h-full bg-cover bg-center bg-no-repeat"
+          className={`absolute inset-0 w-full h-full bg-cover bg-center bg-no-repeat background-slider ${isTransitioning ? 'slide-transition' : ''}`}
           style={{
-            backgroundImage: `url('/madagascar-baobab-trees-landscape-sunset.jpg')`,
+            backgroundImage: `url('${backgroundImages[currentImageIndex]}')`,
             backgroundAttachment: 'fixed',
             backgroundPosition: 'center center',
             backgroundSize: 'cover',
@@ -165,11 +271,56 @@ export function HeroSection() {
           <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/70 to-black/80" />
         </div>
 
-        {/* Particules flottantes décoratives */}
+        {/* Contrôles de navigation du carrousel */}
+        <div className="absolute top-1/2 left-4 transform -translate-y-1/2 z-20">
+          <button
+            onClick={goToPrev}
+            className="nav-arrow w-12 h-12 rounded-full flex items-center justify-center text-white hover:text-yellow-300 transition-all duration-300"
+            aria-label="Image précédente"
+          >
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            </svg>
+          </button>
+        </div>
+        
+        <div className="absolute top-1/2 right-4 transform -translate-y-1/2 z-20">
+          <button
+            onClick={goToNext}
+            className="nav-arrow w-12 h-12 rounded-full flex items-center justify-center text-white hover:text-yellow-300 transition-all duration-300"
+            aria-label="Image suivante"
+          >
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
+        </div>
+
+        {/* Indicateurs de slides */}
+        <div className="absolute bottom-20 left-1/2 transform -translate-x-1/2 z-20">
+          <div className="slider-controls px-4 py-2 flex space-x-3">
+            {backgroundImages.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => goToSlide(index)}
+                className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                  index === currentImageIndex
+                    ? 'bg-white scale-125'
+                    : 'bg-white/50 hover:bg-white/80'
+                }`}
+                aria-label={`Aller à l'image ${index + 1}`}
+              />
+            ))}
+          </div>
+        </div>
+
+        {/* Particules flottantes décoratives améliorées */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute top-1/4 left-1/4 w-2 h-2 bg-white/20 rounded-full animate-ping" style={{ animationDelay: '0s', animationDuration: '3s' }}></div>
-          <div className="absolute top-1/3 right-1/3 w-1 h-1 bg-white/30 rounded-full animate-ping" style={{ animationDelay: '1s', animationDuration: '4s' }}></div>
-          <div className="absolute bottom-1/3 left-1/5 w-3 h-3 bg-white/10 rounded-full animate-ping" style={{ animationDelay: '2s', animationDuration: '5s' }}></div>
+          <div className="absolute top-1/4 left-1/4 w-2 h-2 bg-white/20 rounded-full animate-ping animate-float" style={{ animationDelay: '0s', animationDuration: '3s' }}></div>
+          <div className="absolute top-1/3 right-1/3 w-1 h-1 bg-white/30 rounded-full animate-ping animate-float" style={{ animationDelay: '1s', animationDuration: '4s' }}></div>
+          <div className="absolute bottom-1/3 left-1/5 w-3 h-3 bg-white/10 rounded-full animate-ping animate-float" style={{ animationDelay: '2s', animationDuration: '5s' }}></div>
+          <div className="absolute top-1/2 left-1/6 w-1 h-1 bg-yellow-300/40 rounded-full animate-ping animate-float" style={{ animationDelay: '3s', animationDuration: '6s' }}></div>
+          <div className="absolute bottom-1/4 right-1/4 w-2 h-2 bg-blue-300/20 rounded-full animate-ping animate-float" style={{ animationDelay: '4s', animationDuration: '4s' }}></div>
         </div>
 
         {/* Content avec effet de verre */}
@@ -273,7 +424,7 @@ export function HeroSection() {
             </div>
           </div>
 
-          {/* Indicateur de scroll */}
+          {/* Indicateur de scroll amélioré */}
           <div 
             className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce"
             style={{
@@ -281,7 +432,7 @@ export function HeroSection() {
               animationFillMode: "both",
             }}
           >
-            <div className="w-6 h-10 border-2 border-white/50 rounded-full flex justify-center">
+            <div className="w-6 h-10 border-2 border-white/50 rounded-full flex justify-center backdrop-blur-sm">
               <div className="w-1 h-3 bg-white/70 rounded-full mt-2 animate-pulse"></div>
             </div>
           </div>
