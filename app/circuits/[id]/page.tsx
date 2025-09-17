@@ -253,7 +253,7 @@ export default function CircuitDetailPage({ params }: CircuitDetailPageProps) {
               className="w-full h-auto max-h-[60vh] sm:max-h-[70vh] object-contain"
             />
             <div className="p-3 sm:p-4 bg-white">
-              <h3 className="font-bold text-base sm:text-lg mb-2 break-words text-secondary">
+              <h3 className="font-bold text-base sm:text-lg mb-2 break-words text-black">
                 Jour {selectedImage.day} : {selectedImage.title}
               </h3>
               <p className="text-gray-600 text-xs sm:text-sm break-words">{selectedImage.description}</p>

@@ -271,7 +271,7 @@ const CarSection: React.FC<CarSectionProps> = ({ className = "" }) => {
                     </div>
                   </div>
 
-                  <div className="flex gap-4 mt-8">
+                  <div className="flex flex-col lg:flex-row  gap-4 mt-8">
                     <button className="flex-1 bg-primary hover:bg-blue-700 text-white font-bold py-4 px-8 rounded-xl transition-colors duration-300">
                       {t('car.details.booknow')}
                     </button>
