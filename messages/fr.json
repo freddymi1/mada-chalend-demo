@@ -12,7 +12,8 @@
     "tours": "Nos circuits",
     "booking": "Réservation",
     "blog": "Blog",
-    "contact": "Contact"
+    "contact": "Contact",
+    "car":"Nos voiture"
   },
   "about": {
     "title": "Qui sommes-nous?",
@@ -88,6 +89,23 @@
     },
     "toastTitle": "Message envoyé !",
     "toastDescription": "Nous vous répondrons dans les plus brefs délais."
+  },
+  "car":{
+    "title":"Location de Véhicules Touristiques",
+    "description":"Explorez Madagascar avec notre flotte de véhicules spécialement sélectionnés pour le tourisme. 4x4 pour les aventures, minibus pour les groupes, pick-ups pour l'équipement - nous avons le véhicule parfait pour votre voyage.",
+    "day":"jour",
+    "seat":"places",
+    "photo":"photos",
+    "other":"autres",
+    "viewDetail":"Voir détails",
+    "details":{
+      "day":"jour",
+      "book":"Description",
+      "assurence":"Assurance incluse",
+      "equipment":"Équipements",
+      "booknow":"Réserver maintenant",
+      "requestDevis":"Demander un devis"
+    }
   },
   "footer":{
     "text":"Votre agence de voyage spécialisée dans les circuits sur mesure à Madagascar.",

@@ -12,7 +12,8 @@
     "tours": "Ny dianay",
     "booking": "Famandrihana",
     "blog": "Blog",
-    "contact": "Fifandraisana"
+    "contact": "Fifandraisana",
+    "car": "Ny fiarantsika"
   },
   "about": {
     "title": "Iza moa izahay?",
@@ -88,6 +89,23 @@
     },
     "toastTitle": "Hafatra nalefa!",
     "toastDescription": "Hiverina aminao izahay haingana araka izay azo atao."
+  },
+  "car": {
+    "title": "Fandefasana Fiara mpizahatany",
+    "description": "Andramo eto Madagasikara miaraka amin'ny fiara notsofintsika ho an'ny fizahantany. Fiara 4x4 ho an'ny dia aventoura, minibosy ho an'ny vondrona, pikapy ho an'ny fitaovana - manana fiara mety tsara ho an'ny diavanao izahay.",
+    "day": "andro",
+    "seat": "seza",
+    "photo": "sary",
+    "other": "hafa",
+    "viewDetail": "Hijery tsipiriany",
+    "details": {
+      "day": "andro",
+      "book": "Famariparitana",
+      "assurence": "Tapiavy ao anatin'ny vidiny",
+      "equipment": "Fitaovana",
+      "booknow": "Reserva izao",
+      "requestDevis": "Mangataka devis / Tombanana vidiny"
+    }
   },
   "footer": {
     "text": "Orinasa mpikarakara dia manokana amin'ny fitsangatsanganana namboarina manokana any Madagasikara.",

@@ -12,7 +12,8 @@
     "tours": "Our Tours",
     "booking": "Booking",
     "blog": "Blog",
-    "contact": "Contact"
+    "contact": "Contact",
+    "car":"Our car"
   },
   "about": {
     "title": "Who are we?",
@@ -88,6 +89,23 @@
     },
     "toastTitle": "Message sent!",
     "toastDescription": "We will get back to you as soon as possible."
+  },
+  "car": {
+    "title": "Tourist Vehicle Rental",
+    "description": "Explore Madagascar with our fleet of vehicles specially selected for tourism. 4x4s for adventures, minibuses for groups, pick-ups for equipment - we have the perfect vehicle for your trip.",
+    "day": "day",
+    "seat": "seats",
+    "photo": "photos",
+    "other":"others",
+    "viewDetail": "View details",
+    "details": {
+       "day":"day",
+      "book": "Description",
+      "assurence": "Insurance included",
+      "equipment": "Equipment",
+      "booknow": "Book now",
+      "requestDevis": "Request a quote"
+    }
   },
   "footer": {
     "text": "Your travel agency specialized in tailor-made tours in Madagascar.",
