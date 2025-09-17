@@ -297,7 +297,7 @@ export function HeroSection() {
         </div>
 
         {/* Indicateurs de slides */}
-        <div className="absolute bottom-20 left-1/2 transform -translate-x-1/2 z-20">
+        <div className="absolute hidden lg:block bottom-20 left-1/2 transform -translate-x-1/2 z-20">
           <div className="slider-controls px-4 py-2 flex space-x-3">
             {backgroundImages.map((_, index) => (
               <button
