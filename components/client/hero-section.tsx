@@ -106,18 +106,18 @@ export function HeroSection() {
         @keyframes glow {
           0%, 100% {
             text-shadow: 
-              0 0 5px rgba(255, 255, 255, 0.8),
-              0 0 10px rgba(255, 215, 0, 0.6),
-              0 0 15px rgba(255, 215, 0, 0.4),
-              0 0 20px rgba(255, 215, 0, 0.3),
+              0 0 3px rgba(255, 255, 255, 0.4),
+              0 0 6px rgba(255, 215, 0, 0.3),
+              0 0 9px rgba(255, 215, 0, 0.2),
+              0 0 12px rgba(255, 215, 0, 0.1),
               2px 2px 4px rgba(0, 0, 0, 0.8);
           }
           50% {
             text-shadow: 
-              0 0 10px rgba(255, 255, 255, 1),
-              0 0 20px rgba(255, 215, 0, 0.8),
-              0 0 30px rgba(255, 215, 0, 0.6),
-              0 0 40px rgba(255, 215, 0, 0.4),
+              0 0 5px rgba(255, 255, 255, 0.6),
+              0 0 10px rgba(255, 215, 0, 0.4),
+              0 0 15px rgba(255, 215, 0, 0.3),
+              0 0 20px rgba(255, 215, 0, 0.2),
               2px 2px 4px rgba(0, 0, 0, 0.8);
           }
         }
@@ -199,10 +199,10 @@ export function HeroSection() {
         .text-glow-effect {
           color: #ffffff;
           text-shadow: 
-            0 0 5px rgba(255, 255, 255, 0.8),
-            0 0 10px rgba(255, 215, 0, 0.6),
-            0 0 15px rgba(255, 215, 0, 0.4),
-            0 0 20px rgba(255, 215, 0, 0.3),
+            0 0 3px rgba(255, 255, 255, 0.4),
+            0 0 6px rgba(255, 215, 0, 0.3),
+            0 0 9px rgba(255, 215, 0, 0.2),
+            0 0 12px rgba(255, 215, 0, 0.1),
             2px 2px 4px rgba(0, 0, 0, 0.8);
           animation: textGlowPulse 3s ease-in-out infinite;
         }
@@ -210,18 +210,18 @@ export function HeroSection() {
         @keyframes textGlowPulse {
           0%, 100% {
             text-shadow: 
-              0 0 5px rgba(255, 255, 255, 0.8),
-              0 0 10px rgba(255, 215, 0, 0.6),
-              0 0 15px rgba(255, 215, 0, 0.4),
-              0 0 20px rgba(255, 215, 0, 0.3),
+              0 0 3px rgba(255, 255, 255, 0.4),
+              0 0 6px rgba(255, 215, 0, 0.3),
+              0 0 9px rgba(255, 215, 0, 0.2),
+              0 0 12px rgba(255, 215, 0, 0.1),
               2px 2px 4px rgba(0, 0, 0, 0.8);
           }
           50% {
             text-shadow: 
-              0 0 10px rgba(255, 255, 255, 1),
-              0 0 20px rgba(255, 215, 0, 0.8),
-              0 0 30px rgba(255, 215, 0, 0.6),
-              0 0 40px rgba(255, 215, 0, 0.4),
+              0 0 5px rgba(255, 255, 255, 0.6),
+              0 0 10px rgba(255, 215, 0, 0.4),
+              0 0 15px rgba(255, 215, 0, 0.3),
+              0 0 20px rgba(255, 215, 0, 0.2),
               2px 2px 4px rgba(0, 0, 0, 0.8);
           }
         }
@@ -272,7 +272,7 @@ export function HeroSection() {
         </div>
 
         {/* Contrôles de navigation du carrousel */}
-        <div className="absolute top-1/2 left-4 transform -translate-y-1/2 z-20">
+        <div className="hidden lg:block absolute top-1/2 left-4 transform -translate-y-1/2 z-20">
           <button
             onClick={goToPrev}
             className="nav-arrow w-12 h-12 rounded-full flex items-center justify-center text-white hover:text-yellow-300 transition-all duration-300"
@@ -284,7 +284,7 @@ export function HeroSection() {
           </button>
         </div>
         
-        <div className="absolute top-1/2 right-4 transform -translate-y-1/2 z-20">
+        <div className="hidden lg:block absolute top-1/2 right-4 transform -translate-y-1/2 z-20">
           <button
             onClick={goToNext}
             className="nav-arrow w-12 h-12 rounded-full flex items-center justify-center text-white hover:text-yellow-300 transition-all duration-300"
@@ -329,12 +329,12 @@ export function HeroSection() {
           <div className="glass-effect p-8 sm:p-12 lg:p-16">
             {/* Titre principal */}
             <h1
-              className="text-4xl sm:text-5xl lg:text-7xl font-bold mb-6 text-balance animate-fade-in-up animate-text-glow"
+              className="text-4xl sm:text-5xl lg:text-7xl font-bold mb-6 animate-fade-in-up animate-text-glow"
               style={{
                 animationDelay: "0.2s",
                 animationFillMode: "both",
                 fontWeight: "900",
-                letterSpacing: "-0.02em",
+                letterSpacing: "-0.01em",
                 lineHeight: "1.1",
                 color: "#ffffff",
                 opacity: 1,
@@ -426,7 +426,7 @@ export function HeroSection() {
 
           {/* Indicateur de scroll amélioré */}
           <div 
-            className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce"
+            className="hidden lg:block absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce"
             style={{
               animationDelay: "1.5s",
               animationFillMode: "both",
