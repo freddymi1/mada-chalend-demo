@@ -260,7 +260,7 @@ const LoginScreen = () => {
           <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-xl">
             <h3 className="text-sm font-medium text-blue-800 mb-2">Informations de test :</h3>
             <p className="text-xs text-blue-600">
-              <strong>Email:</strong> admin@madachaland.ord<br />
+              <strong>Email:</strong> admin@madachaland.org<br />
               <strong>Mot de passe:</strong> Admin@123
             </p>
           </div>
