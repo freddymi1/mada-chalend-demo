@@ -29,13 +29,13 @@ export function Header() {
           <div className="flex items-center">
             <Link
               href="/"
-              className="flex items-center gap-3 text-2xl font-bold text-primary hover:text-primary/80 transition-all duration-300 hover:scale-105"
+              className="flex items-center gap-3 text-lg lg:text-2xl font-bold text-primary hover:text-primary/80 transition-all duration-300 hover:scale-105"
             >
               <div className="relative">
                 <MapPin className="h-8 w-8 text-primary animate-float" />
                 <div className="absolute -top-1 -right-1 w-3 h-3 bg-accent rounded-full animate-pulse"></div>
               </div>
-              <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+              <span className="hidden lg:block bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
                 Mada Chaland
               </span>
             </Link>
