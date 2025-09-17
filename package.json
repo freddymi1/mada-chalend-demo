@@ -11,7 +11,7 @@
     "db:generate": "prisma generate",
     "db:push": "prisma db push",
     "db:studio": "prisma studio",
-    "seed": "node scripts/seedAdmin.js"
+    "seed": "node scripts/seedAdmin.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
