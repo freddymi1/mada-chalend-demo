@@ -1,5 +1,6 @@
 "use client"
 
+import { useAuth } from '@/src/hooks/useAuth';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 
@@ -9,28 +10,55 @@ const LoginScreen = () => {
     password: '',
     rememberMe: false
   });
-  const [isLoading, setIsLoading] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
-  const router = useRouter()
 
-  const handleSubmit = async (e: any) => {
+
+  const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState('');
+  const router = useRouter();
+  const { login, isLoading } = useAuth();
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
+    setError('');
     
-    // Simulation de connexion
-    setTimeout(() => {
-      setIsLoading(false);
-      console.log('Connexion:', formData);
-      router.push("/admin/dashboard")
-    }, 2000);
+    try {
+      const response = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: formData.email,
+          password: formData.password
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        // Utiliser la fonction login du hook
+        login(data.token, data.user, formData.rememberMe);
+        
+        console.log('Connexion réussie:', data);
+        router.push("/admin/dashboard");
+      } else {
+        setError(data.message || 'Erreur de connexion');
+      }
+    } catch (error) {
+      console.error('Erreur réseau:', error);
+      setError('Erreur de connexion au serveur');
+    }
   };
 
-  const handleChange = (e: any) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
     setFormData(prev => ({
       ...prev,
       [name]: type === 'checkbox' ? checked : value
     }));
+    
+    // Clear error when user starts typing
+    if (error) setError('');
   };
 
   return (
@@ -82,8 +110,20 @@ const LoginScreen = () => {
             <p className="text-gray-600">Accédez à votre espace d'administration</p>
           </div>
 
+          {/* Message d'erreur */}
+          {error && (
+            <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl">
+              <div className="flex items-center">
+                <svg className="w-5 h-5 text-red-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <span className="text-red-600 text-sm">{error}</span>
+              </div>
+            </div>
+          )}
+
           {/* Formulaire */}
-          <div className="space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-6">
             {/* Email */}
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
@@ -98,8 +138,9 @@ const LoginScreen = () => {
                   required
                   value={formData.email}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 pl-11 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-white"
-                  placeholder="admin@example.com"
+                  className="w-full px-4 py-3 pl-11 text-blue-900 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-white"
+                  placeholder="admin@madachaland.ord"
+                  disabled={isLoading}
                 />
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                   <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -123,8 +164,9 @@ const LoginScreen = () => {
                   required
                   value={formData.password}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 pl-11 pr-11 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-white"
-                  placeholder="••••••••"
+                  className="w-full px-4 py-3 pl-11 pr-11 text-blue-900 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-white"
+                  placeholder="Admin@123"
+                  disabled={isLoading}
                 />
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                   <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -135,6 +177,7 @@ const LoginScreen = () => {
                   type="button"
                   className="absolute inset-y-0 right-0 pr-3 flex items-center"
                   onClick={() => setShowPassword(!showPassword)}
+                  disabled={isLoading}
                 >
                   {showPassword ? (
                     <svg className="h-5 w-5 text-gray-400 hover:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -160,6 +203,7 @@ const LoginScreen = () => {
                   checked={formData.rememberMe}
                   onChange={handleChange}
                   className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                  disabled={isLoading}
                 />
                 <label htmlFor="rememberMe" className="ml-2 block text-sm text-gray-700">
                   Se souvenir de moi
@@ -167,7 +211,11 @@ const LoginScreen = () => {
               </div>
 
               <div className="text-sm">
-                <button className="font-medium text-blue-600 hover:text-blue-500 transition-colors duration-200">
+                <button 
+                  type="button"
+                  className="font-medium text-blue-600 hover:text-blue-500 transition-colors duration-200"
+                  disabled={isLoading}
+                >
                   Mot de passe oublié ?
                 </button>
               </div>
@@ -175,8 +223,7 @@ const LoginScreen = () => {
 
             {/* Bouton de connexion */}
             <button
-              type="button"
-              onClick={handleSubmit}
+              type="submit"
               disabled={isLoading}
               className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-xl text-white bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98]"
             >
@@ -199,13 +246,21 @@ const LoginScreen = () => {
                 </>
               )}
             </button>
-          </div>
+          </form>
 
+          {/* Informations de test */}
+          <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-xl">
+            <h3 className="text-sm font-medium text-blue-800 mb-2">Informations de test :</h3>
+            <p className="text-xs text-blue-600">
+              <strong>Email:</strong> admin@madachaland.ord<br />
+              <strong>Mot de passe:</strong> Admin@123
+            </p>
+          </div>
 
           {/* Footer */}
           <div className="mt-8 text-center">
             <p className="text-sm text-gray-600">
-              © 2024 Madagascar Tours. Tous droits réservés.
+              © 2024 Mada Chaland. Tous droits réservés.
             </p>
             <div className="mt-2 flex justify-center space-x-4 text-xs text-gray-500">
               <button className="hover:text-gray-700 transition-colors">Politique de confidentialité</button>

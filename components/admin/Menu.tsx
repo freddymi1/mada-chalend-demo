@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { MapPin } from "lucide-react";
+import { useAuth } from "@/src/hooks/useAuth";
 export const menuItems = [
   {
     id: "dashboard",
@@ -45,6 +46,7 @@ export const menuItems = [
 const SideMenu = () => {
   const pathname = usePathname();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const { user, logout } = useAuth();
 
   return (
     <div className="">
@@ -123,6 +125,7 @@ const SideMenu = () => {
 
           {/* Profil utilisateur en bas */}
           <div className="p-4 border-t border-gray-200">
+            <button onClick={logout} className="py-2 px-4 bg-blue-300 w-full rounded-lg mb-4 cursor-pointer">Log out</button>
             <div className="flex items-center">
               <div className="flex-shrink-0">
                 <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center text-white font-semibold">
@@ -130,9 +133,9 @@ const SideMenu = () => {
                 </div>
               </div>
               <div className="ml-3">
-                <p className="text-sm font-medium text-gray-900">Admin</p>
+                <p className="text-sm font-medium text-gray-900">{user?.username}</p>
                 <p className="text-xs text-gray-500">
-                  admin@madagascartours.com
+                  {user?.email}
                 </p>
               </div>
             </div>
