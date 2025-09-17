@@ -11,50 +11,46 @@ const LoginScreen = () => {
     rememberMe: false
   });
 
-  const [isLoading, setIsLoading] = useState(false)
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const router = useRouter();
-  // const { login, isLoading } = useAuth();
+  const { login, isLoading } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
   e.preventDefault();
   setError('');
 
-  setIsLoading(true);
   
   try {
     // Ajout d'un délai de 5 secondes avant la redirection
-    await new Promise(resolve => setTimeout(resolve, 3000));
     
-    // const response = await fetch('/api/auth/login', {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //   },
-    //   body: JSON.stringify({
-    //     email: formData.email,
-    //     password: formData.password
-    //   }),
-    // });
+    const response = await fetch('/api/auth/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        email: formData.email,
+        password: formData.password
+      }),
+    });
 
-    // const data = await response.json();
+    const data = await response.json();
 
-    // if (response.ok) {
-    //   // Utiliser la fonction login du hook
-    //   login(data.token, data.user, formData.rememberMe);
+    if (response.ok) {
+      // Utiliser la fonction login du hook
+      login(data.token, data.user, formData.rememberMe);
       
-    //   console.log('Connexion réussie:', data);
-    // } else {
-    //   setError(data.message || 'Erreur de connexion');
-    // }
+      console.log('Connexion réussie:', data);
+    } else {
+      setError(data.message || 'Erreur de connexion');
+    }
     
     router.push("/admin/dashboard");
   } catch (error) {
     console.error('Erreur réseau:', error);
     setError('Erreur de connexion au serveur');
   } finally {
-    setIsLoading(false);
   }
 };
 

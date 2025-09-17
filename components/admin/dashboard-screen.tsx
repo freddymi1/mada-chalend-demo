@@ -51,7 +51,7 @@ const DashboardScreen = () => {
         <main className="flex-1 overflow-y-auto p-6">
           {/* Welcome Message */}
           <div className="mb-8">
-            <h2 className="text-3xl font-bold text-gray-900">Bonjour, Admin ! 👋</h2>
+            <h2 className="text-3xl font-bold text-gray-900">Bonjour, {user?.username} ! 👋</h2>
             <p className="text-gray-600 mt-1">Voici un aperçu de votre activité aujourd'hui.</p>
           </div>
 
