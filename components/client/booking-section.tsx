@@ -8,7 +8,7 @@ import { Button } from "@/components/client/ui/button"
 import { Input } from "@/components/client/ui/input"
 import { Label } from "@/components/client/ui/label"
 import { Textarea } from "@/components/client/ui/textarea"
-import { useToast } from "@/hooks/use-toast"
+import { useToast } from "@/hooks/shared/use-toast"
 import { useTranslations } from "use-intl"
 
 export function BookingSection() {

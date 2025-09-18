@@ -24,3 +24,61 @@ model User {
 
   @@map("users")
 }
+
+model Circuit {
+  id           String       @id @default(cuid())
+  title        String
+  duration     String
+  price        String
+  maxPeople    Int
+  difficulty   String
+  description  String
+  highlights   Highlight[]  // Tableau de points forts
+  included     Included[]   // Tableau inclus
+  notIncluded  NotIncluded[] // Tableau non inclus
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+  itineraries  Itinerary[]  // Relation avec Itinerary
+
+  @@map("circuits")
+}
+
+model Itinerary {
+  id                String   @id @default(cuid())
+  day               Int
+  title             String
+  description       String
+  image             String
+  imageDescription  String
+  circuitId         String
+  circuit           Circuit  @relation(fields: [circuitId], references: [id])
+
+  @@map("itineraries")
+}
+
+model Highlight {
+  id         String   @id @default(cuid())
+  text       String
+  circuitId  String
+  circuit    Circuit  @relation(fields: [circuitId], references: [id])
+
+  @@map("highlights")
+}
+
+model Included {
+  id         String   @id @default(cuid())
+  text       String
+  circuitId  String
+  circuit    Circuit  @relation(fields: [circuitId], references: [id])
+
+  @@map("included")
+}
+
+model NotIncluded {
+  id         String   @id @default(cuid())
+  text       String
+  circuitId  String
+  circuit    Circuit  @relation(fields: [circuitId], references: [id])
+
+  @@map("not_included")
+}
