@@ -22,6 +22,7 @@ interface CircuitFormData {
   itinerary: ItineraryDay[];
   included: string[];
   notIncluded: string[];
+  
 }
 
 interface CircuitContextType {
@@ -51,8 +52,10 @@ interface CircuitContextType {
   ) => void;
   handleSubmit: (e: React.FormEvent) => void;
   addedCircuits: any[];
-  handleDelete: (id: number) => void;
-  fetchCircuits:()=> void
+  handleDelete: (id: string) => void;
+  fetchCircuits: () => void;
+  getCircuitById:(id: string)=> void
+  circuitDetail: any
 }
 
 const CircuitContext = createContext<CircuitContextType | undefined>(undefined);
@@ -64,6 +67,7 @@ export const CircuitProvider = ({
 }) => {
   const router = useRouter();
   const [addedCircuits, setAddedCircuits] = useState<any[]>([]);
+  const [circuitDetail, setCircuitDetail] = useState<any>(null)
   const [formData, setFormData] = useState<CircuitFormData>({
     title: "",
     duration: "",
@@ -219,9 +223,20 @@ export const CircuitProvider = ({
     }
   };
 
-  const handleDelete = (id: number) => {
-    if (window.confirm("Êtes-vous sûr de vouloir supprimer ce circuit ?")) {
-      setAddedCircuits(addedCircuits.filter((circuit) => circuit.id !== id));
+  const handleDelete = async (id: string) => {
+    console.log("IDDDDD", id);
+    try {
+      const res = await fetch(`/api/circuit/delete/${id}`, {
+        method: "DELETE",
+      });
+      if (res.ok) {
+        setAddedCircuits((prev) => prev.filter((circuit) => circuit.id !== id));
+        toast.success("Circuit supprimé !");
+      } else {
+        toast.error("Erreur lors de la suppression du circuit");
+      }
+    } catch {
+      toast.error("Erreur serveur lors de la suppression");
     }
   };
 
@@ -236,6 +251,23 @@ export const CircuitProvider = ({
       }
     } catch (error) {
       toast.error("Erreur serveur lors du chargement des circuits");
+    }
+  };
+
+  const getCircuitById = async (id: string) => {
+    try {
+      const res = await fetch(`/api/circuit/${id}`);
+      if (res.ok) {
+        const data = await res.json();
+        setCircuitDetail(data)
+        return data;
+      } else {
+        toast.error("Erreur lors du chargement du circuit");
+        return null;
+      }
+    } catch (error) {
+      toast.error("Erreur serveur lors du chargement du circuit");
+      return null;
     }
   };
 
@@ -255,7 +287,9 @@ export const CircuitProvider = ({
         handleSubmit,
         addedCircuits,
         handleDelete,
-        fetchCircuits
+        fetchCircuits,
+        getCircuitById,
+        circuitDetail
       }}
     >
       {children}

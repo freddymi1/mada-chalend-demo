@@ -51,7 +51,7 @@ model Itinerary {
   image             String
   imageDescription  String
   circuitId         String
-  circuit           Circuit  @relation(fields: [circuitId], references: [id])
+  circuit           Circuit  @relation(fields: [circuitId], references: [id], onDelete: Cascade)
 
   @@map("itineraries")
 }
@@ -60,7 +60,7 @@ model Highlight {
   id         String   @id @default(cuid())
   text       String
   circuitId  String
-  circuit    Circuit  @relation(fields: [circuitId], references: [id])
+  circuit    Circuit  @relation(fields: [circuitId], references: [id], onDelete: Cascade)
 
   @@map("highlights")
 }
@@ -69,7 +69,7 @@ model Included {
   id         String   @id @default(cuid())
   text       String
   circuitId  String
-  circuit    Circuit  @relation(fields: [circuitId], references: [id])
+  circuit    Circuit  @relation(fields: [circuitId], references: [id], onDelete: Cascade)
 
   @@map("included")
 }
@@ -78,7 +78,7 @@ model NotIncluded {
   id         String   @id @default(cuid())
   text       String
   circuitId  String
-  circuit    Circuit  @relation(fields: [circuitId], references: [id])
+  circuit    Circuit  @relation(fields: [circuitId], references: [id], onDelete: Cascade)
 
   @@map("not_included")
 }

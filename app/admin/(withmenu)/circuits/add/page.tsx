@@ -276,14 +276,6 @@ const AddCircuit = () => {
                     <label className="block text-sm font-medium text-gray-700">
                       Itinéraire
                     </label>
-                    <button
-                      type="button"
-                      onClick={addItineraryDay}
-                      className="inline-flex items-center px-3 py-1 text-sm bg-blue-100 hover:bg-blue-200 text-blue-700 rounded-lg"
-                    >
-                      <Plus className="w-4 h-4 mr-1" />
-                      Ajouter un jour
-                    </button>
                   </div>
 
                   {formData.itinerary.length === 0 ? (
@@ -300,10 +292,10 @@ const AddCircuit = () => {
                           key={index}
                           className="border rounded-lg p-4 bg-gray-50"
                         >
-                          <div className="flex justify-between items-center mb-3">
-                            <h4 className="font-medium text-gray-900">
+                          <div className="flex justify-end items-center mb-3">
+                            {/* <h4 className="font-medium text-gray-900">
                               Jour {day.day}
-                            </h4>
+                            </h4> */}
                             <button
                               type="button"
                               onClick={() => removeItineraryDay(index)}
@@ -418,6 +410,16 @@ const AddCircuit = () => {
                       ))}
                     </div>
                   )}
+                </div>
+                <div className="flex justify-end my-6">
+                  <button
+                    type="button"
+                    onClick={addItineraryDay}
+                    className="inline-flex items-center px-3 py-1 text-sm bg-blue-100 hover:bg-blue-200 text-blue-700 rounded-lg"
+                  >
+                    <Plus className="w-4 h-4 mr-1" />
+                    Ajouter un jour
+                  </button>
                 </div>
               </div>
             </div>
