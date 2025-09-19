@@ -18,7 +18,7 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
 
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
-      router.push('/login');
+      router.push('/admin');
     }
 
     if (!isLoading && isAuthenticated && requiredRole && user?.role !== requiredRole) {

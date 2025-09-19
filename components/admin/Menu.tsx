@@ -133,9 +133,9 @@ const SideMenu = () => {
                 </div>
               </div>
               <div className="ml-3">
-                <p className="text-sm font-medium text-gray-900">Admin</p>
+                <p className="text-sm font-medium text-gray-900">{user?.username}</p>
                 <p className="text-xs text-gray-500">
-                  admin@madachaland.org
+                  {user?.email}
                 </p>
               </div>
             </div>
