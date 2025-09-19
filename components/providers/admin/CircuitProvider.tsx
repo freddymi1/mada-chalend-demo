@@ -242,7 +242,7 @@ export const CircuitProvider = ({
 
   const fetchCircuits = async () => {
     try {
-      const res = await fetch("/api/circuit/get");
+      const res = await fetch("/api/circuit/get", { cache: "no-store" });
       if (res.ok) {
         const data = await res.json();
         setAddedCircuits(data);
@@ -256,7 +256,7 @@ export const CircuitProvider = ({
 
   const getCircuitById = async (id: string) => {
     try {
-      const res = await fetch(`/api/circuit/${id}`);
+      const res = await fetch(`/api/circuit/${id}`, { cache: "no-store" });
       if (res.ok) {
         const data = await res.json();
         setCircuitDetail(data)

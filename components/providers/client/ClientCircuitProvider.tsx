@@ -46,7 +46,7 @@ export const ClientCircuitProvider = ({
   const fetchCircuits = async () => {
     setIsLoading(true)
     try {
-      const res = await fetch("/api/circuit/get");
+      const res = await fetch("/api/circuit/get", { cache: "no-store" });
       if (res.ok) {
         const data = await res.json();
         setAddedCircuits(data);
@@ -64,7 +64,7 @@ export const ClientCircuitProvider = ({
   const getCircuitById = async (id: string) => {
     setIsLoading(true)
     try {
-      const res = await fetch(`/api/circuit/${id}`);
+      const res = await fetch(`/api/circuit/${id}`, { cache: "no-store" });
       if (res.ok) {
         const data = await res.json();
         setCircuitDetail(data);
