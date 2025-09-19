@@ -2,12 +2,9 @@ import { NextRequest, NextResponse } from "next/server";
 import { promises as fs } from "fs";
 import path from "path";
 
-// Désactive le bodyParser natif
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
+// Replace the config export with runtime configuration
+export const runtime = 'nodejs'; // or 'edge' if you prefer
+export const dynamic = 'force-dynamic'; // Ensure this route is dynamic
 
 export async function POST(req: NextRequest) {
   const formData = await req.formData();
