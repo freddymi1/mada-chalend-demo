@@ -1,33 +1,62 @@
-import { NextRequest, NextResponse } from "next/server";
-import { promises as fs } from "fs";
-import path from "path";
+// import { NextRequest, NextResponse } from "next/server";
+// import { promises as fs } from "fs";
+// import path from "path";
 
-// Replace the config export with runtime configuration
-export const runtime = 'nodejs'; // or 'edge' if you prefer
-export const dynamic = 'force-dynamic'; // Ensure this route is dynamic
+// // Replace the config export with runtime configuration
+// export const runtime = 'nodejs'; // or 'edge' if you prefer
+// export const dynamic = 'force-dynamic'; // Ensure this route is dynamic
+
+// export async function POST(req: NextRequest) {
+//   const formData = await req.formData();
+//   const file = formData.get("file") as File;
+
+//   if (!file) {
+//     return NextResponse.json({ error: "No file uploaded" }, { status: 400 });
+//   }
+
+//   const bytes = await file.arrayBuffer();
+//   const buffer = Buffer.from(bytes);
+
+//   // Crée le dossier uploads si besoin
+//   const uploadDir = path.join(process.cwd(), "public/uploads");
+//   await fs.mkdir(uploadDir, { recursive: true });
+
+//   // Nom du fichier unique
+//   const fileName = `${Date.now()}-${file.name.replace(/\s/g, "_")}`;
+//   const filePath = path.join(uploadDir, fileName);
+
+//   await fs.writeFile(filePath, buffer);
+
+//   // URL publique
+//   const url = `/uploads/${fileName}`;
+//   return NextResponse.json({ url });
+// }
+
+import { NextRequest, NextResponse } from "next/server";
+import { v2 as cloudinary } from "cloudinary";
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
+export const runtime = 'nodejs';
 
 export async function POST(req: NextRequest) {
   const formData = await req.formData();
   const file = formData.get("file") as File;
 
-  if (!file) {
-    return NextResponse.json({ error: "No file uploaded" }, { status: 400 });
+  if (!file) return NextResponse.json({ error: "No file uploaded" }, { status: 400 });
+
+  const buffer = Buffer.from(await file.arrayBuffer());
+  const base64 = buffer.toString("base64");
+  const dataUri = `data:${file.type};base64,${base64}`;
+
+  try {
+    const result = await cloudinary.uploader.upload(dataUri, { folder: "nextjs_uploads" });
+    return NextResponse.json({ url: result.secure_url });
+  } catch (err) {
+    return NextResponse.json({ error: "Upload failed" }, { status: 500 });
   }
-
-  const bytes = await file.arrayBuffer();
-  const buffer = Buffer.from(bytes);
-
-  // Crée le dossier uploads si besoin
-  const uploadDir = path.join(process.cwd(), "public/uploads");
-  await fs.mkdir(uploadDir, { recursive: true });
-
-  // Nom du fichier unique
-  const fileName = `${Date.now()}-${file.name.replace(/\s/g, "_")}`;
-  const filePath = path.join(uploadDir, fileName);
-
-  await fs.writeFile(filePath, buffer);
-
-  // URL publique
-  const url = `/uploads/${fileName}`;
-  return NextResponse.json({ url });
 }
