@@ -31,13 +31,13 @@ export function ImageSlider({ images, title }: ImageSliderProps) {
       {/* Main image display */}
       <div className="relative aspect-video overflow-hidden rounded-lg bg-muted">
         <img
-          src={images[currentIndex] || "/placeholder.svg"}
+          src={images?.[currentIndex] || "/placeholder.svg"}
           alt={`${title} - Image ${currentIndex + 1}`}
           className="w-full h-full object-cover transition-transform duration-300"
         />
 
         {/* Navigation arrows */}
-        {images.length > 1 && (
+        {images?.length > 1 && (
           <>
             <Button
               variant="secondary"
@@ -72,7 +72,7 @@ export function ImageSlider({ images, title }: ImageSliderProps) {
           <DialogContent className="max-w-7xl w-full h-full max-h-screen p-0 bg-black/95">
             <div className="relative w-full h-full flex items-center justify-center">
               <img
-                src={images[currentIndex] || "/placeholder.svg"}
+                src={images?.[currentIndex] || "/placeholder.svg"}
                 alt={`${title} - Image ${currentIndex + 1}`}
                 className="max-w-full max-h-full object-contain"
               />
@@ -86,7 +86,7 @@ export function ImageSlider({ images, title }: ImageSliderProps) {
               </Button>
 
               {/* Navigation in zoom mode */}
-              {images.length > 1 && (
+              {images?.length > 1 && (
                 <>
                   <Button
                     variant="ghost"
@@ -111,17 +111,17 @@ export function ImageSlider({ images, title }: ImageSliderProps) {
         </Dialog>
 
         {/* Image counter */}
-        {images.length > 1 && (
+        {images?.length > 1 && (
           <div className="absolute bottom-2 left-1/2 -translate-x-1/2 bg-black/50 text-white px-3 py-1 rounded-full text-sm">
-            {currentIndex + 1} / {images.length}
+            {currentIndex + 1} / {images?.length}
           </div>
         )}
       </div>
 
       {/* Thumbnail navigation */}
-      {images.length > 1 && (
+      {images?.length > 1 && (
         <div className="flex gap-2 overflow-x-auto pb-2">
-          {images.map((image, index) => (
+          {images?.map((image, index) => (
             <button
               key={index}
               onClick={() => goToImage(index)}

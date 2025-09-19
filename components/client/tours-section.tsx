@@ -12,11 +12,14 @@ import Link from "next/link";
 import { useTranslations } from "use-intl";
 import { useClientCircuit } from "../providers/client/ClientCircuitProvider";
 import { useEffect } from "react";
+import { LoadingSpinner } from "./loading";
+
+
 
 export function ToursSection() {
   const t = useTranslations("lng");
 
-  const { addedCircuits, fetchCircuits } = useClientCircuit();
+  const { addedCircuits, fetchCircuits, isLoading } = useClientCircuit();
 
   useEffect(() => {
     const loadCircuits = async () => {
@@ -37,89 +40,95 @@ export function ToursSection() {
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-8 mb-12">
-          {addedCircuits.map((tour, index) => (
-            <Card
-              key={index}
-              className="overflow-hidden hover-lift animate-fade-in"
-              style={{
-                animationDelay: `${0.2 + index * 0.1}s`,
-                animationFillMode: "both",
-              }}
-            >
-              <div className="aspect-video relative overflow-hidden">
-                <img
-                  src={tour?.itineraries[0]?.image || "/placeholder.svg"}
-                  alt={tour.title}
-                  className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
-                />
-              </div>
-              <CardHeader>
-                <CardTitle className="text-xl text-balance">
-                  {tour.title}
-                </CardTitle>
-                <div className="flex items-center gap-2 text-muted-foreground">
-                  <Calendar className="h-4 w-4" />
-                  <span>{tour.duration}</span>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground mb-4 text-pretty">
-                  {tour.description}
-                </p>
-                <div className="flex items-center justify-between">
-                  <div className="flex flex-wrap gap-2 mb-4">
-                    {tour.highlights.map((highlight: any) => (
-                      <span
-                        key={highlight.id}
-                        className="bg-primary/20 text-primary px-3 py-1 rounded-full text-sm transition-all duration-300 hover:bg-primary/20 hover:scale-105"
-                      >
-                        {highlight.text}
-                      </span>
-                    ))}
+        {isLoading ? (
+          <LoadingSpinner/>
+        ) : (
+          <>
+            <div className="grid md:grid-cols-2 gap-8 mb-12">
+              {addedCircuits.map((tour, index) => (
+                <Card
+                  key={index}
+                  className="overflow-hidden hover-lift animate-fade-in"
+                  style={{
+                    animationDelay: `${0.2 + index * 0.1}s`,
+                    animationFillMode: "both",
+                  }}
+                >
+                  <div className="aspect-video relative overflow-hidden">
+                    <img
+                      src={tour?.itineraries[0]?.image || "/placeholder.svg"}
+                      alt={tour.title}
+                      className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
+                    />
                   </div>
-                  <div className="flex flex-wrap gap-2 mb-4">
-                    {tour.included.map((highlight: any) => (
-                      <span
-                        key={highlight.id}
-                        className="bg-primary/10 text-primary px-3 py-1 rounded-full text-sm transition-all duration-300 hover:bg-primary/20 hover:scale-105"
-                      >
-                        {highlight.text}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-                <div className="flex gap-2">
-                  <Link href={`/circuits/${tour.id}`} className="flex-1">
-                    <Button
-                      variant="outline"
-                      className="w-full hover-lift bg-transparent"
-                    >
-                      <Eye className="h-4 w-4 mr-2" />
-                      {t("tours.viewDetails")}
-                    </Button>
-                  </Link>
-                  <Link href="/reservation" className="flex-1">
-                    <Button className="w-full hover-glow">
-                      {t("tours.book")}
-                    </Button>
-                  </Link>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
+                  <CardHeader>
+                    <CardTitle className="text-xl text-balance">
+                      {tour.title}
+                    </CardTitle>
+                    <div className="flex items-center gap-2 text-muted-foreground">
+                      <Calendar className="h-4 w-4" />
+                      <span>{tour.duration}</span>
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-muted-foreground mb-4 text-pretty">
+                      {tour.description}
+                    </p>
+                    <div className="flex items-center justify-between">
+                      <div className="flex flex-wrap gap-2 mb-4">
+                        {tour.highlights.map((highlight: any) => (
+                          <span
+                            key={highlight.id}
+                            className="bg-primary/20 text-primary px-3 py-1 rounded-full text-sm transition-all duration-300 hover:bg-primary/20 hover:scale-105"
+                          >
+                            {highlight.text}
+                          </span>
+                        ))}
+                      </div>
+                      <div className="flex flex-wrap gap-2 mb-4">
+                        {tour.included.map((highlight: any) => (
+                          <span
+                            key={highlight.id}
+                            className="bg-primary/10 text-primary px-3 py-1 rounded-full text-sm transition-all duration-300 hover:bg-primary/20 hover:scale-105"
+                          >
+                            {highlight.text}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                    <div className="flex gap-2">
+                      <Link href={`/circuits/${tour.id}`} className="flex-1">
+                        <Button
+                          variant="outline"
+                          className="w-full hover-lift bg-transparent"
+                        >
+                          <Eye className="h-4 w-4 mr-2" />
+                          {t("tours.viewDetails")}
+                        </Button>
+                      </Link>
+                      <Link href="/reservation" className="flex-1">
+                        <Button className="w-full hover-glow">
+                          {t("tours.book")}
+                        </Button>
+                      </Link>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
 
-        <div
-          className="text-center animate-bounce-in"
-          style={{ animationDelay: "0.8s", animationFillMode: "both" }}
-        >
-          <Link href="/reservation">
-            <Button size="lg" className="hover-lift hover-glow">
-              {t("tours.customTour")}
-            </Button>
-          </Link>
-        </div>
+            <div
+              className="text-center animate-bounce-in"
+              style={{ animationDelay: "0.8s", animationFillMode: "both" }}
+            >
+              <Link href="/reservation">
+                <Button size="lg" className="hover-lift hover-glow">
+                  {t("tours.customTour")}
+                </Button>
+              </Link>
+            </div>
+          </>
+        )}
       </div>
     </section>
   );

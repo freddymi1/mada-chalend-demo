@@ -29,6 +29,7 @@ interface CircuitContextType {
   fetchCircuits: () => void;
   getCircuitById: (id: string) => void;
   circuitDetail: any;
+  isLoading: boolean
 }
 
 const ClientCircuitContext = createContext<CircuitContextType | undefined>(undefined);
@@ -40,34 +41,43 @@ export const ClientCircuitProvider = ({
 }) => {
   const [addedCircuits, setAddedCircuits] = useState<any[]>([]);
   const [circuitDetail, setCircuitDetail] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(false)
 
   const fetchCircuits = async () => {
+    setIsLoading(true)
     try {
       const res = await fetch("/api/circuit/get");
       if (res.ok) {
         const data = await res.json();
         setAddedCircuits(data);
+        setIsLoading(false)
       } else {
         toast.error("Erreur lors du chargement des circuits");
+        setIsLoading(false)
       }
     } catch (error) {
       toast.error("Erreur serveur lors du chargement des circuits");
+      setIsLoading(false)
     }
   };
 
   const getCircuitById = async (id: string) => {
+    setIsLoading(true)
     try {
       const res = await fetch(`/api/circuit/${id}`);
       if (res.ok) {
         const data = await res.json();
         setCircuitDetail(data);
+        setIsLoading(false)
         return data;
       } else {
         toast.error("Erreur lors du chargement du circuit");
+        setIsLoading(false)
         return null;
       }
     } catch (error) {
       toast.error("Erreur serveur lors du chargement du circuit");
+      setIsLoading(false)
       return null;
     }
   };
@@ -79,6 +89,7 @@ export const ClientCircuitProvider = ({
         fetchCircuits,
         getCircuitById,
         circuitDetail,
+        isLoading
       }}
     >
       {children}
