@@ -180,7 +180,7 @@ const BookingScreen = () => {
 
             {/* Liste des réservations */}
             <div className="space-y-4">
-              {filteredReservations?.map((reservation: Reservation) => (
+              {filteredReservations?.map((reservation: any) => (
                 <div
                   key={reservation?.id}
                   className="bg-white rounded-2xl shadow-lg border border-gray-100 hover:shadow-xl transition-all duration-300"
@@ -270,12 +270,6 @@ const BookingScreen = () => {
                           </h5>
                           <div className="space-y-2 text-sm">
                             <div className="flex justify-between">
-                              <span className="text-gray-600">Durée:</span>
-                              <span className="font-medium">
-                                {reservation?.circuitRel?.duration}
-                              </span>
-                            </div>
-                            <div className="flex justify-between">
                               <span className="text-gray-600">Prix:</span>
                               <span className="font-medium text-green-600">
                                 {reservation?.circuitRel?.price}€
@@ -283,15 +277,21 @@ const BookingScreen = () => {
                             </div>
                             <div className="flex justify-between">
                               <span className="text-gray-600">Difficulté:</span>
-                              <span className="font-medium">
+                              <span className="font-medium text-black/80">
                                 {reservation?.circuitRel?.difficulty}
                               </span>
                             </div>
                             <div className="flex justify-between">
                               <span className="text-gray-600">Dates:</span>
-                              <span className="font-medium">
+                              <span className="font-medium text-primary">
                                 {formatDate(reservation?.startDate)} -{" "}
                                 {formatDate(reservation?.endDate)}
+                              </span>
+                            </div>
+                            <div className="flex justify-between">
+                              <span className="text-gray-600">Durée:</span>
+                              <span className="font-medium text-black/80">
+                                {reservation?.circuitRel?.duration}
                               </span>
                             </div>
                           </div>
