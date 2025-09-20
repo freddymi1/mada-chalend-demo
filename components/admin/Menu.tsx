@@ -21,7 +21,7 @@ export const menuItems = [
   {
     id: "reservations",
     nom: "Réservations",
-    path: "/admin/reservations",
+    path: "/admin/booking",
     icone: "M8 7V3a2...",
   },
   {

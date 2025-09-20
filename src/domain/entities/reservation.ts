@@ -1,11 +1,14 @@
+import { Circuit } from "./circuit";
+
 export enum Status {
   Valide = "valide",
   Annule = "annule",
   EnAttente = "en_attente",
-  EnCours = "en_cours"
+  EnCours = "en_cours",
 }
 
 export interface Reservation {
+  id?: string;
   circuit: string;
   nom: string;
   prenom: string;
@@ -14,8 +17,23 @@ export interface Reservation {
   address: string;
   personnes: string;
   startDate: string; // format YYYY-MM-DD
-  endDate: string;   // format YYYY-MM-DD
-  duration: string;  // nombre de jours
+  endDate: string; // format YYYY-MM-DD
+  duration: string; // nombre de jours
   preferences: string;
-  status?: Status;   // facultatif
+  circuitRel: Circuit;
+  status?: Status; // facultatif
+  createdAt: any;
+}
+
+export interface Pagination {
+  totalPages: number;
+  totalCount: number;
+  currentPage: number;
+  hasPrev: boolean;
+  hasNext: boolean;
+}
+
+export interface BookingResponse {
+  reservations: Reservation[] | any;
+  pagination: Pagination;
 }
