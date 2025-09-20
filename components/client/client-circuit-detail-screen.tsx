@@ -158,7 +158,7 @@ const ClientCircuitDetailScreen = () => {
                       </p>
                     </CardHeader>
                     <CardContent className="space-y-3 sm:space-y-4">
-                      <Link href={`/reservation?circuit=${circuitDetail.id}`}>
+                      <Link href={`/reservation?circuit=${circuitDetail?.id}`}>
                         <Button className="w-full hover-glow" size="lg">
                           Réserver maintenant
                         </Button>
