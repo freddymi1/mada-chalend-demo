@@ -363,7 +363,7 @@ export function BookingSection() {
                       min={getTodayString()}
                       value={formData.startDate}
                       onChange={handleChange}
-                      className="transition-all duration-300 focus:scale-105 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:right-3 [&::-webkit-calendar-picker-indicator]:cursor-pointer"
+                      className="transition-all duration-300 focus:scale-105"
                     />
                   </div>
                   <div
@@ -378,7 +378,7 @@ export function BookingSection() {
                       min={formData.startDate}
                       value={formData.endDate}
                       onChange={handleChange}
-                      className="transition-all duration-300 focus:scale-105 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:right-3 [&::-webkit-calendar-picker-indicator]:cursor-pointer"
+                      className="transition-all duration-300 focus:scale-105"
                     />
                   </div>
                 </div>
