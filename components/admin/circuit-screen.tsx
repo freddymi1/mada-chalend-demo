@@ -318,41 +318,8 @@ const CircuitScreen = () => {
               </div>
             </div>
           </div>
-          <div className="bg-white rounded-lg shadow-sm p-6 border">
-            <div className="flex items-center">
-              <div className="p-3 rounded-full bg-green-100">
-                <Users className="w-6 h-6 text-green-600" />
-              </div>
-              <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">
-                  Capacité Max
-                </p>
-                <p className="text-2xl font-bold text-gray-900">
-                  {filteredCircuits.reduce((sum, c) => sum + c.maxPeople, 0)}
-                </p>
-              </div>
-            </div>
-          </div>
-          <div className="bg-white rounded-lg shadow-sm p-6 border">
-            <div className="flex items-center">
-              <div className="p-3 rounded-full bg-yellow-100">
-                <Star className="w-6 h-6 text-yellow-600" />
-              </div>
-              <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">Prix Moyen</p>
-                <p className="text-2xl font-bold text-gray-900">
-                  {filteredCircuits.length > 0
-                    ? `€${Math.round(
-                        filteredCircuits.reduce(
-                          (sum, c) => sum + getPriceValue(c.price),
-                          0
-                        ) / filteredCircuits.length
-                      )}`
-                    : "€0"}
-                </p>
-              </div>
-            </div>
-          </div>
+          
+          
           <div className="bg-white rounded-lg shadow-sm p-6 border">
             <div className="flex items-center">
               <div className="p-3 rounded-full bg-purple-100">

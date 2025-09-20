@@ -265,9 +265,9 @@ const BookingScreen = () => {
                           Détails du Voyage
                         </h4>
                         <div className="bg-gradient-to-r from-indigo-50 to-blue-50 rounded-xl p-4">
-                          <h5 className="font-medium text-indigo-900 mb-2">
+                          <a href={`/admin/circuits/${reservation?.circuitRel?.id}`} className="font-bold text-xl text-indigo-900 mb-2">
                             {reservation?.circuitRel?.title}
-                          </h5>
+                          </a>
                           <div className="space-y-2 text-sm">
                             <div className="flex justify-between">
                               <span className="text-gray-600">Prix:</span>
