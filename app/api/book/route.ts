@@ -69,7 +69,7 @@ export async function POST(req: NextRequest) {
     // 🔹 Sauvegarde dans la BDD
     const reservation = await prisma.reservation.create({
       data: {
-        circuit,
+        circuitId: circuit,
         nom,
         prenom,
         email,

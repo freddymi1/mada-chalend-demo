@@ -1,18 +1,6 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
-// generator client {
-//   provider = "prisma-client-js"
-// }
-
-// datasource db {
-//   provider = "sqlite"
-//   url      = "file:./dev.db"
-// }
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -21,7 +9,6 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
-
 
 model User {
   id        String   @id @default(cuid())
@@ -36,65 +23,67 @@ model User {
 }
 
 model Circuit {
-  id           String       @id @default(cuid())
+  id           String         @id @default(cuid())
   title        String
   duration     String
   price        String
   maxPeople    Int
   difficulty   String
   description  String
-  highlights   Highlight[]  // Tableau de points forts
-  included     Included[]   // Tableau inclus
-  notIncluded  NotIncluded[] // Tableau non inclus
-  createdAt    DateTime     @default(now())
-  updatedAt    DateTime     @updatedAt
-  itineraries  Itinerary[]  // Relation avec Itinerary
+  highlights   Highlight[]    // Tableau de points forts
+  included     Included[]     // Tableau inclus
+  notIncluded  NotIncluded[]  // Tableau non inclus
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  itineraries  Itinerary[]    // Relation avec Itinerary
+  reservations Reservation[]  // Relation avec Reservation (nouvelle relation)
 
   @@map("circuits")
 }
 
 model Itinerary {
-  id                String   @id @default(cuid())
-  day               Int
-  title             String
-  description       String
-  image             String
-  imageDescription  String
-  circuitId         String
-  circuit           Circuit  @relation(fields: [circuitId], references: [id], onDelete: Cascade)
+  id               String   @id @default(cuid())
+  day              Int
+  title            String
+  description      String
+  image            String
+  imageDescription String
+  circuitId        String
+  circuit          Circuit  @relation(fields: [circuitId], references: [id], onDelete: Cascade)
 
   @@map("itineraries")
 }
 
 model Highlight {
-  id         String   @id @default(cuid())
-  text       String
-  circuitId  String
-  circuit    Circuit  @relation(fields: [circuitId], references: [id], onDelete: Cascade)
+  id        String   @id @default(cuid())
+  text      String
+  circuitId String
+  circuit   Circuit  @relation(fields: [circuitId], references: [id], onDelete: Cascade)
 
   @@map("highlights")
 }
 
 model Included {
-  id         String   @id @default(cuid())
-  text       String
-  circuitId  String
-  circuit    Circuit  @relation(fields: [circuitId], references: [id], onDelete: Cascade)
+  id        String   @id @default(cuid())
+  text      String
+  circuitId String
+  circuit   Circuit  @relation(fields: [circuitId], references: [id], onDelete: Cascade)
 
   @@map("included")
 }
 
 model NotIncluded {
-  id         String   @id @default(cuid())
-  text       String
-  circuitId  String
-  circuit    Circuit  @relation(fields: [circuitId], references: [id], onDelete: Cascade)
+  id        String   @id @default(cuid())
+  text      String
+  circuitId String
+  circuit   Circuit  @relation(fields: [circuitId], references: [id], onDelete: Cascade)
 
   @@map("not_included")
 }
+
 model Reservation {
   id          String   @id @default(cuid())
-  circuit     String
+  circuitId   String   // Nouveau champ pour la relation
   nom         String
   prenom      String
   email       String
@@ -108,6 +97,7 @@ model Reservation {
   status      String
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+  circuitRel  Circuit? @relation(fields: [circuitId], references: [id], onDelete: Cascade) // Relation
 
-  @@map("reservation")
+  @@map("reservations") // Changé de "reservation" à "reservations" pour plus de cohérence
 }
