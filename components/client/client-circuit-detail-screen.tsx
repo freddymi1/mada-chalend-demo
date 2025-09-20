@@ -35,7 +35,6 @@ const ClientCircuitDetailScreen = () => {
       getCircuitById(id.toString());
     }
   }, [id]);
-
   const [selectedImage, setSelectedImage] = useState<{
     image: string;
     title: string;
@@ -74,7 +73,7 @@ const ClientCircuitDetailScreen = () => {
                   {t("navigation.home")}
                 </Link>
                 <span className="mx-2">/</span>
-                <Link href={`/reservation?circuit=${circuitDetail.id}`} className="hover:text-primary">
+                <Link href="/circuits" className="hover:text-primary">
                   {t("navigation.tours")}
                 </Link>
                 <span className="mx-2">/</span>
@@ -159,7 +158,7 @@ const ClientCircuitDetailScreen = () => {
                       </p>
                     </CardHeader>
                     <CardContent className="space-y-3 sm:space-y-4">
-                      <Link href="/reservation">
+                      <Link href={`/reservation?circuit=${circuitDetail.id}`}>
                         <Button className="w-full hover-glow" size="lg">
                           Réserver maintenant
                         </Button>
