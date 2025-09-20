@@ -92,3 +92,22 @@ model NotIncluded {
 
   @@map("not_included")
 }
+model Reservation {
+  id          String   @id @default(cuid())
+  circuit     String
+  nom         String
+  prenom      String
+  email       String
+  telephone   String
+  address     String
+  personnes   Int
+  startDate   DateTime
+  endDate     DateTime
+  duration    Int
+  preferences String
+  status      String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("reservation")
+}

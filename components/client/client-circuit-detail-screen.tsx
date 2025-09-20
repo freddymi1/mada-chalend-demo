@@ -35,6 +35,7 @@ const ClientCircuitDetailScreen = () => {
       getCircuitById(id.toString());
     }
   }, [id]);
+
   const [selectedImage, setSelectedImage] = useState<{
     image: string;
     title: string;
@@ -73,7 +74,7 @@ const ClientCircuitDetailScreen = () => {
                   {t("navigation.home")}
                 </Link>
                 <span className="mx-2">/</span>
-                <Link href="/circuits" className="hover:text-primary">
+                <Link href={`/reservation?circuit=${circuitDetail.id}`} className="hover:text-primary">
                   {t("navigation.tours")}
                 </Link>
                 <span className="mx-2">/</span>

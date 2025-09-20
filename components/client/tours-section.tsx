@@ -106,7 +106,7 @@ export function ToursSection() {
                           {t("tours.viewDetails")}
                         </Button>
                       </Link>
-                      <Link href="/reservation" className="flex-1">
+                      <Link href={`/reservation?circuit=${tour.id}`} className="flex-1">
                         <Button className="w-full hover-glow">
                           {t("tours.book")}
                         </Button>
