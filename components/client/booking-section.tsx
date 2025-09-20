@@ -25,13 +25,14 @@ import {
   SelectValue,
 } from "./ui/select";
 import { useBooking } from "../providers/client/ClientBookingProvider";
+import { extraireJours } from "../helpers/extract-text";
 
 export function BookingSection() {
   const t = useTranslations("lng");
 
   const params = useSearchParams();
   const circuit = params.get("circuit");
-  console.log("CR", circuit);
+
   const { createReservation, loading, success } = useBooking();
 
   const {
@@ -54,8 +55,6 @@ export function BookingSection() {
       getCircuitById(circuit.toString());
     }
   }, [circuit]);
-
-  console.log("CR D", circuitDetail);
 
   const [formData, setFormData] = useState({
     circuit: circuit ? circuit : "",
@@ -125,40 +124,50 @@ export function BookingSection() {
     getCircuitById(value);
   };
 
-  // Duration = difference entre formdata.endDate et startDate
-  const duration = (() => {
-    if (formData.startDate && formData.endDate) {
-      const startDate = new Date(formData.startDate);
-      const endDate = new Date(formData.endDate);
+  // Fonction pour calculer la date de fin
+  const calculateEndDate = (
+    startDate: string,
+    durationInDays: number
+  ): string => {
+    if (!startDate || !durationInDays) return "";
 
-      // Calculate difference in milliseconds
-      const diffTime = endDate.getTime() - startDate.getTime();
+    const start = new Date(startDate);
+    const end = new Date(start);
+    end.setDate(start.getDate() + durationInDays - 1); // -1 car si c'est 3 jours, ça finit le 3ème jour
 
-      // Convert to days
-      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    const year = end.getFullYear();
+    const month = String(end.getMonth() + 1).padStart(2, "0");
+    const day = String(end.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  };
 
-      // Return 0 if end date is before start date
-      return diffDays > 0 ? diffDays : 0;
-    }
-    return 0;
-  })();
-
-  console.log("DURATION", duration);
-
-  // If you want to update the formData with the calculated duration
+  // Mettre à jour la durée quand le détail du circuit change
   useEffect(() => {
-    if (formData.startDate && formData.endDate) {
-      const startDate = new Date(formData.startDate);
-      const endDate = new Date(formData.endDate);
-      const diffTime = endDate.getTime() - startDate.getTime();
-      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
+    if (circuitDetail.duration) {
+      const jours = extraireJours(circuitDetail.duration);
       setFormData((prev) => ({
         ...prev,
-        duration: diffDays > 0 ? diffDays.toString() : "0",
+        duration: jours !== null ? jours.toString() : "",
       }));
     }
-  }, [formData.startDate, formData.endDate]);
+  }, [circuitDetail.duration]);
+
+  // Calculer automatiquement la date de fin quand startDate ou duration change
+  useEffect(() => {
+    if (formData.startDate && formData.duration) {
+      const durationInDays = parseInt(formData.duration);
+      if (!isNaN(durationInDays)) {
+        const calculatedEndDate = calculateEndDate(
+          formData.startDate,
+          durationInDays
+        );
+        setFormData((prev) => ({
+          ...prev,
+          endDate: calculatedEndDate,
+        }));
+      }
+    }
+  }, [formData.startDate, formData.duration]);
 
   const getTodayString = () => {
     const today = new Date();
@@ -314,9 +323,7 @@ export function BookingSection() {
                   className="space-y-2 animate-fade-in"
                   style={{ animationDelay: "0.9s", animationFillMode: "both" }}
                 >
-                  <Label htmlFor="address">
-                    {t("book.form.address")} *
-                  </Label>
+                  <Label htmlFor="address">{t("book.form.address")} *</Label>
                   <Input
                     id="address"
                     name="address"
@@ -370,15 +377,14 @@ export function BookingSection() {
                     className="space-y-2 animate-fade-in"
                     style={{ animationDelay: "1s", animationFillMode: "both" }}
                   >
-                    <Label htmlFor="dates">{t("book.form.endDate")}</Label>
+                    <Label htmlFor="endDate">{t("book.form.endDate")}</Label>
                     <Input
                       id="endDate"
                       name="endDate"
                       type="date"
-                      min={formData.startDate}
                       value={formData.endDate}
-                      onChange={handleChange}
-                      className="transition-all duration-300 focus:scale-105"
+                      disabled // Désactivé car calculé automatiquement
+                      className="transition-all duration-300 focus:scale-105 bg-muted"
                     />
                   </div>
                 </div>
@@ -387,14 +393,13 @@ export function BookingSection() {
                   className="space-y-2 animate-fade-in"
                   style={{ animationDelay: "1.1s", animationFillMode: "both" }}
                 >
-                  <Label htmlFor="preferences">{t("book.form.duration")}</Label>
+                  <Label htmlFor="duration">{t("book.form.duration")}</Label>
                   <Input
                     id="duration"
                     name="duration"
-                    value={duration}
+                    value={formData.duration}
                     disabled
-                    onChange={handleChange}
-                    className="transition-all duration-300 focus:scale-105"
+                    className="transition-all duration-300 focus:scale-105 bg-muted"
                   />
                 </div>
 

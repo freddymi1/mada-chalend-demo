@@ -20,9 +20,9 @@ export interface Reservation {
   endDate: string; // format YYYY-MM-DD
   duration: string; // nombre de jours
   preferences: string;
-  circuitRel: Circuit;
+  circuitRel?: Circuit;
   status?: Status; // facultatif
-  createdAt: any;
+  createdAt?: any;
 }
 
 export interface Pagination {
