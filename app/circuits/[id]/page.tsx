@@ -4,7 +4,6 @@ export default function CircuitDetailPage() {
   return (
     <div>
       <ClientCircuitDetailScreen />
-      ok
     </div>
   );
 }

@@ -115,7 +115,9 @@ const ClientCircuitDetailScreen = () => {
                           className="flex items-center gap-1 text-xs sm:text-sm"
                         >
                           <Armchair className="h-4 w-4" />
-                          <span>{circuitDetail?.placesDisponibles} disponible</span>
+                          <span>
+                            {circuitDetail?.placesDisponibles} disponible
+                          </span>
                         </Badge>
                       </div>
                       <Badge
@@ -151,35 +153,31 @@ const ClientCircuitDetailScreen = () => {
                 {/* Sidebar */}
                 <div className="space-y-4 sm:space-y-6 w-full">
                   {/* Booking card */}
+
                   <Card
-                    className="lg:sticky lg:top-24 animate-slide-up w-full"
+                    className="animate-slide-up w-full"
                     style={{
-                      animationDelay: "0.5s",
+                      animationDelay: "0.3s",
                       animationFillMode: "both",
                     }}
                   >
-                    <CardHeader className="text-center">
-                      <CardTitle className="text-xl sm:text-2xl text-primary break-words">
-                        {circuitDetail?.price}
+                    <CardHeader className="pb-4">
+                      <CardTitle className="flex items-center gap-2 text-lg sm:text-xl">
+                        <Camera className="h-4 w-4 sm:h-5 sm:w-5 flex-shrink-0" />
+                        <span>Points forts du circuit</span>
                       </CardTitle>
-                      <p className="text-muted-foreground text-sm sm:text-base">
-                        par personne
-                      </p>
                     </CardHeader>
-                    <CardContent className="space-y-3 sm:space-y-4">
-                      <Link href={`/reservation?circuit=${circuitDetail?.id}`}>
-                        <Button className="w-full hover-glow" size="lg">
-                          Réserver maintenant
-                        </Button>
-                      </Link>
-                      <Link href="/contact">
-                        <Button
-                          variant="outline"
-                          className="w-full bg-transparent"
-                        >
-                          Demander des infos
-                        </Button>
-                      </Link>
+                    <CardContent>
+                      <div className="flex flex-wrap gap-2 mb-4">
+                        {circuitDetail?.highlights?.map((highlight: any) => (
+                          <span
+                            key={highlight.id}
+                            className="bg-primary/20 text-primary px-3 py-1 rounded-full text-sm transition-all duration-300 hover:bg-primary/20 hover:scale-105"
+                          >
+                            {highlight.text}
+                          </span>
+                        ))}
+                      </div>
                     </CardContent>
                   </Card>
 
@@ -239,29 +237,6 @@ const ClientCircuitDetailScreen = () => {
               </div>
               <div className="w-full my-6 flex flex-col gap-4">
                 {/* Highlights */}
-                <Card
-                  className="animate-slide-up w-full"
-                  style={{ animationDelay: "0.3s", animationFillMode: "both" }}
-                >
-                  <CardHeader className="pb-4">
-                    <CardTitle className="flex items-center gap-2 text-lg sm:text-xl">
-                      <Camera className="h-4 w-4 sm:h-5 sm:w-5 flex-shrink-0" />
-                      <span>Points forts du circuit</span>
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="flex flex-wrap gap-2 mb-4">
-                      {circuitDetail?.highlights?.map((highlight: any) => (
-                        <span
-                          key={highlight.id}
-                          className="bg-primary/20 text-primary px-3 py-1 rounded-full text-sm transition-all duration-300 hover:bg-primary/20 hover:scale-105"
-                        >
-                          {highlight.text}
-                        </span>
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
 
                 {/* Itinerary with images */}
                 <Card
@@ -326,6 +301,34 @@ const ClientCircuitDetailScreen = () => {
                   </CardContent>
                 </Card>
               </div>
+              <Card
+                className="lg:sticky lg:top-24 animate-slide-up w-full"
+                style={{
+                  animationDelay: "0.5s",
+                  animationFillMode: "both",
+                }}
+              >
+                <CardHeader className="text-center">
+                  <CardTitle className="text-xl sm:text-2xl text-primary break-words flex items-center gap-4">
+                    <span>{circuitDetail?.price} €</span>
+                    <p className="text-muted-foreground text-sm sm:text-base">
+                      par personne
+                    </p>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="grid grid-cols 1 lg:grid-cols-2 gap-6">
+                  <Link href={`/reservation?circuit=${circuitDetail?.id}`}>
+                    <Button className="w-full hover-glow" size="lg">
+                      Réserver maintenant
+                    </Button>
+                  </Link>
+                  <Link href="/contact">
+                    <Button variant="outline" className="w-full bg-transparent">
+                      Demander des infos
+                    </Button>
+                  </Link>
+                </CardContent>
+              </Card>
             </div>
           </div>
 
