@@ -12,7 +12,7 @@ import {
 } from "@/components/client/ui/card";
 import { Badge } from "@/components/client/ui/badge";
 import { Toaster } from "@/components/client/ui/toaster";
-import { Calendar, MapPin, Users, Star, Camera } from "lucide-react";
+import { Calendar, MapPin, Users, Star, Camera, Armchair } from "lucide-react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -109,6 +109,15 @@ const ClientCircuitDetailScreen = () => {
                           Max {circuitDetail?.maxPeople} personnes
                         </span>
                       </Badge>
+                      <div className="flex items-center justify-start gap-10">
+                        <Badge
+                          variant="secondary"
+                          className="flex items-center gap-1 text-xs sm:text-sm"
+                        >
+                          <Armchair className="h-4 w-4" />
+                          <span>{circuitDetail?.placesDisponibles} disponible</span>
+                        </Badge>
+                      </div>
                       <Badge
                         variant="secondary"
                         className="flex items-center gap-1 text-xs sm:text-sm"

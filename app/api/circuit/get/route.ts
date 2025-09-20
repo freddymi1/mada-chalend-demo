@@ -14,11 +14,51 @@ export async function GET() {
         included: true,
         notIncluded: true,
         itineraries: true,
+        reservations: {
+          select: {
+            id: true,
+            nom: true,
+            prenom: true,
+            personnes: true,
+            startDate: true,
+            endDate: true,
+            status: true
+          }
+        }
       },
       orderBy: { createdAt: "desc" },
     });
 
-    return NextResponse.json(circuits, {
+    // Calculer les statistiques pour chaque circuit
+    const circuitsWithStats = circuits.map(circuit => {
+      // Filtrer les réservations confirmées (vous pouvez ajuster selon vos besoins)
+      const confirmedReservations = circuit.reservations.filter(
+        reservation => reservation.status === "confirmé" // ou "confirmed" selon votre modèle
+      );
+
+      // Total des personnes dans les réservations confirmées
+      const totalPersonnes = circuit?.reservations.reduce(
+        (sum, reservation) => sum + reservation.personnes,
+        0
+      );
+
+      // Nombre total de réservations confirmées
+      const reservationCount = circuit?.reservations?.length;
+
+      // Places disponibles
+      const placesDisponibles = Math.max(0, circuit.maxPeople - totalPersonnes);
+
+      return {
+        ...circuit,
+        reservationCount,
+        totalPersonnesReservees: totalPersonnes,
+        placesDisponibles,
+        // Optionnel: inclure toutes les réservations ou seulement les confirmées
+        reservations: circuit.reservations
+      };
+    });
+
+    return NextResponse.json(circuitsWithStats, {
       status: 200,
       headers: {
         "Cache-Control": "no-store, no-cache, must-revalidate",

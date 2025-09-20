@@ -18,6 +18,7 @@ import {
   Eye,
   ArrowLeft,
   Plus,
+  Armchair,
 } from "lucide-react";
 
 const CircuitDetailScreen = () => {
@@ -153,6 +154,49 @@ const CircuitDetailScreen = () => {
                 </div>
               </div>
             </div>
+
+            <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
+              <div className="flex items-center space-x-3">
+                <Armchair className="w-5 h-5 text-primary" />
+                <div>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">
+                    Nombre de reservations
+                  </p>
+                  <p className="font-semibold text-gray-900 dark:text-white">
+                    {circuitDetail.reservationCount}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
+              <div className="flex items-center space-x-3">
+                <Armchair className="w-5 h-5 text-primary" />
+                <div>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">
+                    Places disponnibles
+                  </p>
+                  <p className="font-semibold text-gray-900 dark:text-white">
+                    {circuitDetail.placesDisponibles}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
+              <div className="flex items-center space-x-3">
+                <Armchair className="w-5 h-5 text-primary" />
+                <div>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">
+                    Nombre des personnes
+                  </p>
+                  <p className="font-semibold text-gray-900 dark:text-white">
+                    {circuitDetail.totalPersonnesReservees} personnes
+                  </p>
+                </div>
+              </div>
+            </div>
+
             <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
               <div className="flex items-center space-x-3">
                 <Star className="w-5 h-5 text-yellow-600 dark:text-yellow-400" />

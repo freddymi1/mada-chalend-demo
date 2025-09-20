@@ -7,14 +7,12 @@ import {
   CardTitle,
 } from "@/components/client/ui/card";
 import { Button } from "@/components/client/ui/button";
-import { Calendar, Eye } from "lucide-react";
+import { Armchair, Calendar, Eye, Users } from "lucide-react";
 import Link from "next/link";
 import { useTranslations } from "use-intl";
 import { useClientCircuit } from "../providers/client/ClientCircuitProvider";
 import { useEffect } from "react";
 import { LoadingSpinner } from "./loading";
-
-
 
 export function ToursSection() {
   const t = useTranslations("lng");
@@ -41,7 +39,7 @@ export function ToursSection() {
         </div>
 
         {isLoading ? (
-          <LoadingSpinner/>
+          <LoadingSpinner />
         ) : (
           <>
             <div className="grid md:grid-cols-2 gap-8 mb-12">
@@ -65,9 +63,17 @@ export function ToursSection() {
                     <CardTitle className="text-xl text-balance">
                       {tour.title}
                     </CardTitle>
-                    <div className="flex items-center gap-2 text-muted-foreground">
-                      <Calendar className="h-4 w-4" />
-                      <span>{tour.duration}</span>
+                    <div className="flex items-center justify-start gap-10">
+                      <div className="flex items-center gap-2 text-muted-foreground">
+                        <Calendar className="h-4 w-4" />
+                        <span>{tour.duration}</span>
+                      </div>
+                      <div className="flex items-center gap-2 text-muted-foreground">
+                        <Armchair className="h-4 w-4" />
+                        <span>
+                          {tour.placesDisponibles} / {tour.maxPeople}
+                        </span>
+                      </div>
                     </div>
                   </CardHeader>
                   <CardContent>
@@ -106,7 +112,10 @@ export function ToursSection() {
                           {t("tours.viewDetails")}
                         </Button>
                       </Link>
-                      <Link href={`/reservation?circuit=${tour.id}`} className="flex-1">
+                      <Link
+                        href={`/reservation?circuit=${tour.id}`}
+                        className="flex-1"
+                      >
                         <Button className="w-full hover-glow">
                           {t("tours.book")}
                         </Button>

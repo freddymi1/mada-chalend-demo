@@ -143,14 +143,14 @@ export function BookingSection() {
 
   // Mettre à jour la durée quand le détail du circuit change
   useEffect(() => {
-    if (circuitDetail.duration) {
+    if (circuitDetail?.duration) {
       const jours = extraireJours(circuitDetail.duration);
       setFormData((prev) => ({
         ...prev,
         duration: jours !== null ? jours.toString() : "",
       }));
     }
-  }, [circuitDetail.duration]);
+  }, [circuitDetail?.duration]);
 
   // Calculer automatiquement la date de fin quand startDate ou duration change
   useEffect(() => {

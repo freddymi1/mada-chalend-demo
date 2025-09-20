@@ -1,3 +1,5 @@
+import { Reservation } from "./reservation";
+
 export interface Circuit {
   id: number;
   title: string;
@@ -16,6 +18,10 @@ export interface Circuit {
   }>;
   included: string[];
   notIncluded: string[];
+  reservations?: Reservation[];
+  reservationCount?: number;
+  totalPersonnesReservees?: number;
+  placesDisponibles?: number;
 }
 
 export interface ItineraryDay {

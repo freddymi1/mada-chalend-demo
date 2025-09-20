@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { useCircuit } from "../providers/admin/CircuitProvider";
 import {
+  Armchair,
   Clock,
   Edit,
   Eye,
@@ -407,6 +408,9 @@ const CircuitScreen = () => {
                     Participants
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Réservations
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Difficulté
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -448,6 +452,12 @@ const CircuitScreen = () => {
                       <div className="flex items-center text-sm text-gray-900">
                         <Users className="w-4 h-4 mr-2 text-gray-400" />
                         {circuit.maxPeople} max
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="flex items-center text-sm text-gray-900">
+                        <Armchair className="w-4 h-4 mr-2 text-gray-400" />
+                        {circuit.totalPersonnesReservees}
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
