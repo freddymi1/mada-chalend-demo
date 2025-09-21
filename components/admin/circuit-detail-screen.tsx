@@ -87,7 +87,7 @@ const CircuitDetailScreen = () => {
                 <Plus className="w-4 h-4 mr-2" />
                 Ajouter
               </button>
-              <button className="flex items-center px-4 py-2 text-sm bg-primary text-white rounded-lg transition-colors">
+              <button onClick={() => router.push(`/admin/circuits/add?update=true&id=${id}`)} className="flex items-center px-4 py-2 text-sm bg-primary text-white rounded-lg transition-colors">
                 <Edit className="w-4 h-4 mr-2" />
                 Modifier
               </button>
