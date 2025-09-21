@@ -87,7 +87,7 @@ export default function WithMenuLayoutClient({
                         strokeLinecap="round"
                         strokeLinejoin="round"
                         strokeWidth={2}
-                        d={item.icone}
+                        d={item.icon}
                       />
                     </svg>
                     {item.nom}

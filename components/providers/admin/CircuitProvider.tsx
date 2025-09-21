@@ -1,7 +1,6 @@
 "use client";
 import React, { createContext, useContext, useState } from "react";
 import { useRouter } from "next/navigation";
-import { toast } from "sonner";
 import { useToast } from "@/hooks/shared/use-toast";
 
 export interface ItineraryDay {
@@ -245,6 +244,7 @@ export const CircuitProvider = ({
 
   const handleDelete = async (id: string) => {
     console.log("IDDDDD", id);
+    // setIsLoading(true)
     try {
       const res = await fetch(`/api/circuit/delete/${id}`, {
         method: "DELETE",
@@ -255,17 +255,20 @@ export const CircuitProvider = ({
           title: "Success !",
           description: "Circuit supprimé !",
         });
+        setIsLoading(false)
       } else {
         toast({
           title: "Error !",
           description: "Erreur lors de la suppression du circuit.",
         });
+        setIsLoading(false)
       }
     } catch {
       toast({
         title: "Error !",
         description: "Erreur lors de la suppression du circuit.",
       });
+      setIsLoading(false)
     }
   };
 
