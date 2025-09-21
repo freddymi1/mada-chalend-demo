@@ -1,5 +1,5 @@
-import { useRouter } from 'next/navigation';
-import { useState, useEffect } from 'react';
+import { useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
 
 interface User {
   id: string;
@@ -21,10 +21,10 @@ export const useAuth = () => {
     user: null,
     token: null,
     isLoading: true,
-    isAuthenticated: false
+    isAuthenticated: false,
   });
 
-  const router = useRouter()
+  const router = useRouter();
 
   useEffect(() => {
     checkAuth();
@@ -33,77 +33,113 @@ export const useAuth = () => {
   const checkAuth = async () => {
     try {
       // Récupérer le token depuis localStorage ou sessionStorage
-      const token = localStorage.getItem('authToken') || sessionStorage.getItem('authToken');
-      
+      const token =
+        localStorage.getItem("authToken") ||
+        sessionStorage.getItem("authToken");
+
+      // Récupérer les infos utilisateur
+      const userData =
+        localStorage.getItem("user") ||
+        sessionStorage.getItem("user");
+
       if (!token) {
-        setAuthState(prev => ({ ...prev, isLoading: false }));
+        setAuthState((prev) => ({ ...prev, isLoading: false }));
         return;
       }
 
-      const response = await fetch('/api/auth/verify', {
-        method: 'POST',
+      // Vérifier le token avec l'API
+      const response = await fetch("/api/auth/verify", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
         },
-        body: JSON.stringify({ token })
       });
 
       const data = await response.json();
 
-      if (data.valid) {
+      if (data.valid && data.user) {
         setAuthState({
           user: data.user,
           token: token,
           isLoading: false,
-          isAuthenticated: true
+          isAuthenticated: true,
         });
+      } else if (userData) {
+        // Fallback: utiliser les données stockées si l'API échoue
+        try {
+          const user = JSON.parse(userData);
+          setAuthState({
+            user,
+            token: token,
+            isLoading: false,
+            isAuthenticated: true,
+          });
+        } catch {
+          // Si les données utilisateur sont corrompues
+          logout();
+        }
       } else {
-        // Token invalide, nettoyer le storage
+        // Token invalide et pas de données utilisateur
         logout();
       }
     } catch (error) {
-      console.error('Auth check failed:', error);
-      setAuthState(prev => ({ ...prev, isLoading: false }));
+      console.error("Auth check failed:", error);
+      setAuthState((prev) => ({ ...prev, isLoading: false }));
     }
   };
 
   const login = (token: string, user: User, rememberMe: boolean = false) => {
+    // Nettoyer d'abord les anciens tokens
+    localStorage.removeItem("authToken");
+    localStorage.removeItem("user");
+    sessionStorage.removeItem("authToken");
+    sessionStorage.removeItem("user");
+
+    // Stocker selon le choix rememberMe
     if (rememberMe) {
-      localStorage.setItem('authToken', token);
-      localStorage.setItem('user', JSON.stringify(user));
+      localStorage.setItem("authToken", token);
+      localStorage.setItem("user", JSON.stringify(user));
     } else {
-      sessionStorage.setItem('authToken', token);
-      sessionStorage.setItem('user', JSON.stringify(user));
+      sessionStorage.setItem("authToken", token);
+      sessionStorage.setItem("user", JSON.stringify(user));
     }
 
+    // Mettre à jour l'état
     setAuthState({
       user,
       token,
       isLoading: false,
-      isAuthenticated: true
+      isAuthenticated: true,
     });
+
+    // Rediriger
+    router.push("/admin/dashboard");
   };
 
   const logout = () => {
-    localStorage.removeItem('authToken');
-    localStorage.removeItem('user');
-    sessionStorage.removeItem('authToken');
-    sessionStorage.removeItem('user');
-    localStorage.clear()
-    
+    // Nettoyer le storage
+    localStorage.removeItem("authToken");
+    localStorage.removeItem("user");
+    sessionStorage.removeItem("authToken");
+    sessionStorage.removeItem("user");
+
+    // Mettre à jour l'état
     setAuthState({
       user: null,
       token: null,
       isLoading: false,
-      isAuthenticated: false
+      isAuthenticated: false,
     });
-    router.push('/admin')
+
+    // Rediriger vers la page de login
+    router.push("/admin");
   };
 
   return {
     ...authState,
     login,
     logout,
-    checkAuth
+    checkAuth,
   };
 };
