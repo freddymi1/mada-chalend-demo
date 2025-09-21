@@ -2,6 +2,7 @@
 import React, { createContext, useContext, useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { useToast } from "@/hooks/shared/use-toast";
 
 export interface ItineraryDay {
   day: number;
@@ -15,14 +16,13 @@ interface CircuitFormData {
   title: string;
   duration: string;
   price: string;
-  maxPeople: string;
+  maxPeople?: string;
   difficulty: string;
   description: string;
   highlights: string[];
   itinerary: ItineraryDay[];
   included: string[];
   notIncluded: string[];
-  
 }
 
 interface CircuitContextType {
@@ -54,8 +54,9 @@ interface CircuitContextType {
   addedCircuits: any[];
   handleDelete: (id: string) => void;
   fetchCircuits: () => void;
-  getCircuitById:(id: string)=> void
-  circuitDetail: any
+  getCircuitById: (id: string) => void;
+  circuitDetail: any;
+  isLoading: boolean;
 }
 
 const CircuitContext = createContext<CircuitContextType | undefined>(undefined);
@@ -66,8 +67,10 @@ export const CircuitProvider = ({
   children: React.ReactNode;
 }) => {
   const router = useRouter();
+  const { toast } = useToast();
   const [addedCircuits, setAddedCircuits] = useState<any[]>([]);
-  const [circuitDetail, setCircuitDetail] = useState<any>(null)
+  const [isLoading, setIsLoading] = useState(false);
+  const [circuitDetail, setCircuitDetail] = useState<any>(null);
   const [formData, setFormData] = useState<CircuitFormData>({
     title: "",
     duration: "",
@@ -168,13 +171,18 @@ export const CircuitProvider = ({
         // data.url = "/uploads/nomfichier.jpg"
         handleItineraryChange(index, "image", data.url);
       } else {
-        toast.error("Erreur lors de l'upload de l'image");
+        toast({
+          title: "Error !",
+          description: "Erreur lors de l'upload de l'image",
+        });
       }
     }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    setIsLoading(true);
 
     // Filtrer les tableaux pour enlever les éléments vides
     const filteredHighlights = formData.highlights.filter(
@@ -194,7 +202,7 @@ export const CircuitProvider = ({
       title: formData.title,
       duration: formData.duration,
       price: formData.price,
-      maxPeople: parseInt(formData.maxPeople),
+      maxPeople: parseInt(formData?.maxPeople!),
       difficulty: formData.difficulty,
       description: formData.description,
       highlights: filteredHighlights,
@@ -213,13 +221,25 @@ export const CircuitProvider = ({
       if (res.ok) {
         const newCircuit = await res.json();
         setAddedCircuits((prev) => [...prev, newCircuit]);
-        toast.success("Circuit ajouté avec succès !");
+        toast({
+          title: "Felicitation !",
+          description: "Circuit ajouté avec succès !",
+        });
+        setIsLoading(false);
         router.push("/admin/circuits");
       } else {
-        toast.error("Erreur lors de l'ajout du circuit");
+        toast({
+          title: "Error !",
+          description: "Erreur serveur lors de l'ajout du circuit",
+        });
+        setIsLoading(false);
       }
     } catch (error) {
-      toast.error("Erreur serveur lors de l'ajout du circuit");
+      toast({
+        title: "Error !",
+        description: "Erreur serveur lors de l'ajout du circuit",
+      });
+      setIsLoading(false);
     }
   };
 
@@ -231,26 +251,45 @@ export const CircuitProvider = ({
       });
       if (res.ok) {
         setAddedCircuits((prev) => prev.filter((circuit) => circuit.id !== id));
-        toast.success("Circuit supprimé !");
+        toast({
+          title: "Success !",
+          description: "Circuit supprimé !",
+        });
       } else {
-        toast.error("Erreur lors de la suppression du circuit");
+        toast({
+          title: "Error !",
+          description: "Erreur lors de la suppression du circuit.",
+        });
       }
     } catch {
-      toast.error("Erreur serveur lors de la suppression");
+      toast({
+        title: "Error !",
+        description: "Erreur lors de la suppression du circuit.",
+      });
     }
   };
 
   const fetchCircuits = async () => {
+    setIsLoading(true)
     try {
       const res = await fetch("/api/circuit/get", { cache: "no-store" });
       if (res.ok) {
         const data = await res.json();
         setAddedCircuits(data);
+        setIsLoading(false)
       } else {
-        toast.error("Erreur lors du chargement des circuits");
+        toast({
+          title: "Error !",
+          description: "Erreur lors du chargement des circuits.",
+        });
+        setIsLoading(false)
       }
     } catch (error) {
-      toast.error("Erreur serveur lors du chargement des circuits");
+      toast({
+        title: "Error !",
+        description: "Erreur lors du chargement des circuits.",
+      });
+      setIsLoading(false)
     }
   };
 
@@ -259,14 +298,20 @@ export const CircuitProvider = ({
       const res = await fetch(`/api/circuit/${id}`, { cache: "no-store" });
       if (res.ok) {
         const data = await res.json();
-        setCircuitDetail(data)
+        setCircuitDetail(data);
         return data;
       } else {
-        toast.error("Erreur lors du chargement du circuit");
+        toast({
+          title: "Error !",
+          description: "Erreur lors du chargement des circuits.",
+        });
         return null;
       }
     } catch (error) {
-      toast.error("Erreur serveur lors du chargement du circuit");
+      toast({
+        title: "Error !",
+        description: "Erreur lors du chargement des circuits.",
+      });
       return null;
     }
   };
@@ -289,7 +334,8 @@ export const CircuitProvider = ({
         handleDelete,
         fetchCircuits,
         getCircuitById,
-        circuitDetail
+        circuitDetail,
+        isLoading,
       }}
     >
       {children}

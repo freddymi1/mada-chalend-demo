@@ -16,6 +16,8 @@ export interface Reservation {
   telephone: string;
   address: string;
   personnes: string;
+  nbrChild: string;
+  nbrAdult: string;
   startDate: string; // format YYYY-MM-DD
   endDate: string; // format YYYY-MM-DD
   duration: string; // nombre de jours

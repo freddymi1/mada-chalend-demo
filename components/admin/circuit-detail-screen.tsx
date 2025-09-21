@@ -141,7 +141,7 @@ const CircuitDetailScreen = () => {
                 </div>
               </div>
             </div>
-            <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
+            {/* <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
               <div className="flex items-center space-x-3">
                 <Users className="w-5 h-5 text-green-600 dark:text-green-400" />
                 <div>
@@ -153,7 +153,7 @@ const CircuitDetailScreen = () => {
                   </p>
                 </div>
               </div>
-            </div>
+            </div> */}
 
             <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
               <div className="flex items-center space-x-3">
@@ -169,7 +169,7 @@ const CircuitDetailScreen = () => {
               </div>
             </div>
 
-            <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
+            {/* <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
               <div className="flex items-center space-x-3">
                 <Armchair className="w-5 h-5 text-primary" />
                 <div>
@@ -181,7 +181,7 @@ const CircuitDetailScreen = () => {
                   </p>
                 </div>
               </div>
-            </div>
+            </div> */}
 
             <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
               <div className="flex items-center space-x-3">

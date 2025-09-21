@@ -1,8 +1,21 @@
-// Types
-export interface Vehicle {
-  id: number;
+import { LucideProps } from "lucide-react";
+import { ForwardRefExoticComponent, RefAttributes } from "react";
+
+type LucideIcon = ForwardRefExoticComponent<
+  Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>
+>;
+
+export interface Category {
+  id: string;
   name: string;
-  category: VehicleCategory;
+  icon: LucideIcon;
+  slug?: string; // Devenu optionnel
+  vehicles?: Vehicle[];
+}
+export interface Vehicle {
+  id: string;
+  name: string;
+  categoryId: string;
   type: string;
   passengers: number;
   pricePerDay: number;
@@ -11,17 +24,7 @@ export interface Vehicle {
   detailImages: string[];
   features: string[];
   description: string;
-}
-
-export interface Category {
-  id: VehicleCategory | 'all';
-  name: string;
-  icon: React.ComponentType<{ className?: string }>;
-}
-
-export type VehicleCategory = '4x4' | 'pickup' | 'minibus' | 'bus' | 'compact4x4';
-
-// Component Props
-export interface CarSectionProps {
-  className?: string;
+  createdAt: Date;
+  updatedAt: Date;
+  categoryRel?: Category; // Relation optionnelle
 }

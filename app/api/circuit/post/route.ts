@@ -20,7 +20,7 @@ export async function POST(req: NextRequest) {
     } = body;
 
     // Validate required fields
-    if (!title || !duration || !price || !maxPeople || !difficulty || !description) {
+    if (!title || !duration || !price || !difficulty || !description) {
       return NextResponse.json(
         { error: "Missing required fields" },
         { status: 400 }

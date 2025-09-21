@@ -27,7 +27,7 @@ model Circuit {
   title        String
   duration     String
   price        String
-  maxPeople    Int
+  maxPeople    Int?
   difficulty   String
   description  String
   highlights   Highlight[]    // Tableau de points forts
@@ -90,6 +90,8 @@ model Reservation {
   telephone   String
   address     String
   personnes   Int
+  nbrChild    Int       @default(0)
+  nbrAdult    Int       @default(0)
   startDate   DateTime
   endDate     DateTime
   duration    Int
@@ -100,4 +102,34 @@ model Reservation {
   circuitRel  Circuit? @relation(fields: [circuitId], references: [id], onDelete: Cascade) // Relation
 
   @@map("reservations") // Changé de "reservation" à "reservations" pour plus de cohérence
+}
+
+model Vehicle {
+  id            String         @id @default(cuid())
+  name          String
+  categoryId      String
+  type          String
+  passengers    Int
+  pricePerDay   Float
+  rating        Float
+  mainImage     String
+  detailImages  String[]
+  features      String[]
+  description   String
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  categoryRel   Category       @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@map("vehicles")
+}
+
+model Category {
+  id        String    @id
+  name      String
+  icon      String?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  vehicles  Vehicle[]
+
+  @@map("categories")
 }

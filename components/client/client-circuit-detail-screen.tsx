@@ -100,7 +100,7 @@ const ClientCircuitDetailScreen = () => {
                           {circuitDetail?.duration}
                         </span>
                       </Badge>
-                      <Badge
+                      {/* <Badge
                         variant="secondary"
                         className="flex items-center gap-1 text-xs sm:text-sm"
                       >
@@ -108,8 +108,8 @@ const ClientCircuitDetailScreen = () => {
                         <span className="truncate">
                           Max {circuitDetail?.maxPeople} personnes
                         </span>
-                      </Badge>
-                      <div className="flex items-center justify-start gap-10">
+                      </Badge> */}
+                      {/* <div className="flex items-center justify-start gap-10">
                         <Badge
                           variant="secondary"
                           className="flex items-center gap-1 text-xs sm:text-sm"
@@ -119,7 +119,7 @@ const ClientCircuitDetailScreen = () => {
                             {circuitDetail?.placesDisponibles} disponible
                           </span>
                         </Badge>
-                      </div>
+                      </div> */}
                       <Badge
                         variant="secondary"
                         className="flex items-center gap-1 text-xs sm:text-sm"
@@ -161,21 +161,23 @@ const ClientCircuitDetailScreen = () => {
                       animationFillMode: "both",
                     }}
                   >
-                    <CardHeader className="pb-4">
+                    <CardHeader className="">
                       <CardTitle className="flex items-center gap-2 text-lg sm:text-xl">
                         <Camera className="h-4 w-4 sm:h-5 sm:w-5 flex-shrink-0" />
                         <span>Points forts du circuit</span>
                       </CardTitle>
                     </CardHeader>
                     <CardContent>
-                      <div className="flex flex-wrap gap-2 mb-4">
+                      <div className="flex flex-col gap-2 mb-4">
                         {circuitDetail?.highlights?.map((highlight: any) => (
-                          <span
+                          <div
                             key={highlight.id}
-                            className="bg-primary/20 text-primary px-3 py-1 rounded-full text-sm transition-all duration-300 hover:bg-primary/20 hover:scale-105"
+                            className="flex flex-col items-start gap-2"
                           >
-                            {highlight.text}
-                          </span>
+                            <span className="bg-primary/20 text-primary px-3 py-1 rounded-full text-sm transition-all duration-300 hover:bg-primary/20 hover:scale-105">
+                              {highlight.text}
+                            </span>
+                          </div>
                         ))}
                       </div>
                     </CardContent>

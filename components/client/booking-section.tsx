@@ -64,6 +64,8 @@ export function BookingSection() {
     telephone: "",
     address: "",
     personnes: "",
+    nbrChild: "",
+    nbrAdult: "",
     startDate: "",
     endDate: "",
     duration: "",
@@ -81,6 +83,8 @@ export function BookingSection() {
       telephone: formData.telephone,
       address: formData.address,
       personnes: formData.personnes,
+      nbrChild: formData.nbrChild,
+      nbrAdult: formData.nbrAdult,
       startDate: formData.startDate,
       endDate: formData.endDate,
       duration: formData.duration,
@@ -98,6 +102,8 @@ export function BookingSection() {
         telephone: "",
         address: "",
         personnes: "",
+        nbrChild: "",
+        nbrAdult: "",
         startDate: "",
         endDate: "",
         duration: "",
@@ -112,6 +118,52 @@ export function BookingSection() {
     setFormData((prev) => ({
       ...prev,
       [e.target.name]: e.target.value,
+    }));
+  };
+
+  // Gestion spécifique du changement du nombre de personnes
+  const handlePersonnesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newPersonnes = e.target.value;
+    const personnesNum = parseInt(newPersonnes) || 0;
+    
+    setFormData((prev) => ({
+      ...prev,
+      personnes: newPersonnes,
+      nbrAdult: personnesNum > 0 ? personnesNum.toString() : "",
+      nbrChild: "0",
+    }));
+  };
+
+  // Gestion du changement du nombre d'adultes
+  const handleNbrAdultChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newNbrAdult = e.target.value;
+    const adultsNum = parseInt(newNbrAdult) || 0;
+    const personnesNum = parseInt(formData.personnes) || 0;
+    
+    // Limiter le nombre d'adultes au nombre total de personnes
+    const maxAdults = Math.min(adultsNum, personnesNum);
+    const remainingChildren = personnesNum - maxAdults;
+    
+    setFormData((prev) => ({
+      ...prev,
+      nbrAdult: maxAdults.toString(),
+      nbrChild: remainingChildren.toString(),
+    }));
+  };
+
+  // Gestion du changement du nombre d'enfants
+  const handleNbrChildChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newNbrChild = e.target.value;
+    const childrenNum = parseInt(newNbrChild) || 0;
+    const personnesNum = parseInt(formData.personnes) || 0;
+    const adultsNum = parseInt(formData.nbrAdult) || 0;
+    
+    // Limiter le nombre d'enfants pour que le total ne dépasse pas le nombre de personnes
+    const maxChildren = Math.min(childrenNum, personnesNum - adultsNum);
+    
+    setFormData((prev) => ({
+      ...prev,
+      nbrChild: Math.max(0, maxChildren).toString(),
     }));
   };
 
@@ -349,16 +401,59 @@ export function BookingSection() {
                     type="number"
                     min="1"
                     value={formData.personnes}
-                    onChange={handleChange}
+                    onChange={handlePersonnesChange}
                     required
                     className="transition-all duration-300 focus:scale-105"
                   />
                 </div>
 
+                {/* Champs nbrAdult et nbrChild qui s'affichent seulement si personnes > 0 */}
+                {formData.personnes && parseInt(formData.personnes) > 0 && (
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                    <div
+                      className="space-y-2 animate-fade-in"
+                      style={{ animationDelay: "1s", animationFillMode: "both" }}
+                    >
+                      <Label htmlFor="nbrAdult">
+                        Nombre d'adultes *
+                      </Label>
+                      <Input
+                        id="nbrAdult"
+                        name="nbrAdult"
+                        type="number"
+                        min="0"
+                        max={formData.personnes}
+                        value={formData.nbrAdult}
+                        onChange={handleNbrAdultChange}
+                        required
+                        className="transition-all duration-300 focus:scale-105"
+                      />
+                    </div>
+                    <div
+                      className="space-y-2 animate-fade-in"
+                      style={{ animationDelay: "1.1s", animationFillMode: "both" }}
+                    >
+                      <Label htmlFor="nbrChild">
+                        Nombre d'enfants
+                      </Label>
+                      <Input
+                        id="nbrChild"
+                        name="nbrChild"
+                        type="number"
+                        min="0"
+                        max={Math.max(0, parseInt(formData.personnes) - parseInt(formData.nbrAdult || "0"))}
+                        value={formData.nbrChild}
+                        onChange={handleNbrChildChange}
+                        className="transition-all duration-300 focus:scale-105"
+                      />
+                    </div>
+                  </div>
+                )}
+
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                   <div
                     className="space-y-2 animate-fade-in"
-                    style={{ animationDelay: "1s", animationFillMode: "both" }}
+                    style={{ animationDelay: "1.2s", animationFillMode: "both" }}
                   >
                     <Label htmlFor="startDate">
                       {t("book.form.startDate")}
@@ -375,7 +470,7 @@ export function BookingSection() {
                   </div>
                   <div
                     className="space-y-2 animate-fade-in"
-                    style={{ animationDelay: "1s", animationFillMode: "both" }}
+                    style={{ animationDelay: "1.2s", animationFillMode: "both" }}
                   >
                     <Label htmlFor="endDate">{t("book.form.endDate")}</Label>
                     <Input
@@ -391,7 +486,7 @@ export function BookingSection() {
 
                 <div
                   className="space-y-2 animate-fade-in"
-                  style={{ animationDelay: "1.1s", animationFillMode: "both" }}
+                  style={{ animationDelay: "1.3s", animationFillMode: "both" }}
                 >
                   <Label htmlFor="duration">{t("book.form.duration")}</Label>
                   <Input
@@ -405,7 +500,7 @@ export function BookingSection() {
 
                 <div
                   className="space-y-2 animate-fade-in"
-                  style={{ animationDelay: "1.1s", animationFillMode: "both" }}
+                  style={{ animationDelay: "1.4s", animationFillMode: "both" }}
                 >
                   <Label htmlFor="preferences">{t("book.form.nb")}</Label>
                   <Textarea
@@ -421,7 +516,7 @@ export function BookingSection() {
 
                 <div
                   className="animate-bounce-in"
-                  style={{ animationDelay: "1.2s", animationFillMode: "both" }}
+                  style={{ animationDelay: "1.5s", animationFillMode: "both" }}
                 >
                   <Button
                     disabled={loading}

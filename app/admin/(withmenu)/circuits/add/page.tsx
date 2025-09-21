@@ -26,6 +26,7 @@ const AddCircuit = () => {
     removeItineraryDay,
     handleImageUpload,
     handleSubmit,
+    isLoading,
   } = useCircuit();
 
   return (
@@ -95,8 +96,8 @@ const AddCircuit = () => {
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
+                  <div className="grid grid-cols-1 gap-4">
+                    {/* <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">
                         Participants max
                       </label>
@@ -109,7 +110,7 @@ const AddCircuit = () => {
                         placeholder="8"
                         required
                       />
-                    </div>
+                    </div> */}
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">
                         Difficulté
@@ -433,9 +434,10 @@ const AddCircuit = () => {
               </button>
               <button
                 type="submit"
+                disabled={isLoading}
                 className="flex-1 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors duration-200"
               >
-                Ajouter le Circuit
+                {isLoading ? "Loading..." : "Ajouter le Circuit"}
               </button>
             </div>
           </form>

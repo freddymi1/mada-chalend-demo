@@ -3,46 +3,72 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { MapPin } from "lucide-react";
+import { 
+  MapPin, 
+  Home, 
+  Car, 
+  Bus, 
+  Users, 
+  Settings, 
+  LineChart 
+} from "lucide-react"; // ajoute ici tous les icônes nécessaires
 import { useAuth } from "@/src/hooks/useAuth";
+
 export const menuItems = [
   {
     id: "dashboard",
     nom: "Dashboard",
     path: "/admin/dashboard",
-    icone: "M3 7v10a2 2 0...",
+    icon: "Home",
   },
   {
     id: "circuits",
     nom: "Circuits",
     path: "/admin/circuits",
-    icone: "M9 20l-5.447...",
+    icon: "LineChart",
+  },
+  {
+    id: "vehicles",
+    nom: "Voitures",
+    path: "/admin/vehicles",
+    icon: "Car",
   },
   {
     id: "reservations",
     nom: "Réservations",
     path: "/admin/booking",
-    icone: "M8 7V3a2...",
+    icon: "Users",
   },
   {
     id: "clients",
     nom: "Clients",
     path: "/admin/clients",
-    icone: "M12 4.354a4...",
+    icon: "Users",
   },
   {
     id: "analytics",
     nom: "Analyses",
     path: "/admin/analytics",
-    icone: "M9 19v-6a2...",
+    icon: "LineChart",
   },
   {
     id: "parametres",
     nom: "Paramètres",
     path: "/admin/parametres",
-    icone: "M10.325 4.317c...",
+    icon: "Settings",
   },
 ];
+
+// mapping nom -> composant lucide-react
+const iconMap: Record<string, React.ElementType> = {
+  Home,
+  Car,
+  Bus,
+  Users,
+  Settings,
+  LineChart,
+};
+
 const SideMenu = () => {
   const pathname = usePathname();
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -56,37 +82,23 @@ const SideMenu = () => {
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         } fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-lg transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0`}
       >
-        {/* Ajout flex-col + h-screen ici */}
         <div className="flex flex-col h-screen">
           {/* Header */}
           <div className="flex items-center justify-between h-16 px-6 bg-blue-900">
-            {/* <h1 className="text-xl font-bold text-white">Madagascar Tours</h1> */}
             <div className="flex items-center gap-2 text-lg lg:text-xl font-bold text-primary hover:text-primary/80 transition-all duration-300 hover:scale-105">
-                <div className="relative">
-                  <MapPin className="h-8 w-8 text-primary animate-float" />
-                  <div className="absolute -top-1 -right-1 w-3 h-3 bg-accent rounded-full animate-pulse"></div>
-                </div>
-                <span className="hidden lg:block bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-                  Mada Chaland
-                </span>
+              <div className="relative">
+                <MapPin className="h-8 w-8 text-primary animate-float" />
+                <div className="absolute -top-1 -right-1 w-3 h-3 bg-accent rounded-full animate-pulse"></div>
               </div>
+              <span className="hidden lg:block bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+                Mada Chaland
+              </span>
+            </div>
             <button
               onClick={() => setSidebarOpen(false)}
               className="lg:hidden text-white hover:text-gray-200"
             >
-              <svg
-                className="w-6 h-6"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
+              ✕
             </button>
           </div>
 
@@ -94,6 +106,7 @@ const SideMenu = () => {
           <nav className="mt-8 flex-1 overflow-y-auto">
             {menuItems.map((item) => {
               const isActive = pathname === item.path;
+              const Icon = iconMap[item.icon];
               return (
                 <Link key={item.id} href={item.path}>
                   <span
@@ -103,19 +116,7 @@ const SideMenu = () => {
                         : "text-gray-700"
                     }`}
                   >
-                    <svg
-                      className="w-5 h-5 mr-3"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d={item.icone}
-                      />
-                    </svg>
+                    {Icon && <Icon className="w-5 h-5 mr-3" />}
                     {item.nom}
                   </span>
                 </Link>
@@ -125,7 +126,12 @@ const SideMenu = () => {
 
           {/* Profil utilisateur en bas */}
           <div className="p-4 border-t border-gray-200">
-            <button onClick={logout} className="py-2 px-4 bg-blue-300 w-full rounded-lg mb-4 cursor-pointer">Log out</button>
+            <button
+              onClick={logout}
+              className="py-2 px-4 bg-blue-300 w-full rounded-lg mb-4 cursor-pointer"
+            >
+              Log out
+            </button>
             <div className="flex items-center">
               <div className="flex-shrink-0">
                 <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center text-white font-semibold">
@@ -133,10 +139,10 @@ const SideMenu = () => {
                 </div>
               </div>
               <div className="ml-3">
-                <p className="text-sm font-medium text-gray-900">{user?.username}</p>
-                <p className="text-xs text-gray-500">
-                  {user?.email}
+                <p className="text-sm font-medium text-gray-900">
+                  {user?.username}
                 </p>
+                <p className="text-xs text-gray-500">{user?.email}</p>
               </div>
             </div>
           </div>

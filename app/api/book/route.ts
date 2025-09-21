@@ -39,6 +39,8 @@ export async function POST(req: NextRequest) {
       telephone,
       address,
       personnes,
+      nbrChild,
+      nbrAdult,
       startDate,
       endDate,
       duration,
@@ -76,6 +78,8 @@ export async function POST(req: NextRequest) {
         telephone,
         address,
         personnes: Number(personnesNumber),
+        nbrChild: Number(nbrChild),
+        nbrAdult: Number(nbrAdult),
         startDate: new Date(startDate),
         endDate: new Date(endDate),
         duration: durationNumber,
@@ -326,6 +330,36 @@ export async function POST(req: NextRequest) {
                       font-size: 16px;
                       font-weight: 600;
                     ">${personnes} personne${personnes > 1 ? 's' : ''}</p>
+                  </div>
+                  <div>
+                    <p style="
+                      margin: 0 0 5px 0;
+                      color: #4a5568;
+                      font-size: 14px;
+                      font-weight: 600;
+                      text-transform: uppercase;
+                    ">👥 Nombre d'adulte</p>
+                    <p style="
+                      margin: 0;
+                      color: #2d3748;
+                      font-size: 16px;
+                      font-weight: 600;
+                    ">${nbrAdult} adulte${nbrAdult > 1 ? 's' : ''}</p>
+                  </div>
+                  <div>
+                    <p style="
+                      margin: 0 0 5px 0;
+                      color: #4a5568;
+                      font-size: 14px;
+                      font-weight: 600;
+                      text-transform: uppercase;
+                    ">👥 Nombre enfants</p>
+                    <p style="
+                      margin: 0;
+                      color: #2d3748;
+                      font-size: 16px;
+                      font-weight: 600;
+                    ">${nbrChild} enfant${nbrChild > 1 ? 's' : ''}</p>
                   </div>
                   <div>
                     <p style="

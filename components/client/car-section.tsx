@@ -3,31 +3,53 @@
 import React, { useState } from "react";
 import { Car, Users, Mountain, Camera, MapPin, Shield, Star, ChevronLeft, ChevronRight, X } from "lucide-react";
 import { useTranslations } from "use-intl";
-import { CarSectionProps, Category, Vehicle, VehicleCategory } from "@/src/domain/entities/car";
 import { vehicles } from "@/src/infrastructure/repositories/mock-car-repository";
-
-
+import { Category, Vehicle } from "@/src/domain/entities/car";
+interface CarSectionProps {
+  className?: string;
+}
 
 const CarSection: React.FC<CarSectionProps> = ({ className = "" }) => {
-  const [selectedCategory, setSelectedCategory] = useState<VehicleCategory | 'all'>('all');
+  const [selectedCategory, setSelectedCategory] = useState<string>('');
   const [selectedVehicle, setSelectedVehicle] = useState<Vehicle | null>(null);
   const [currentImageIndex, setCurrentImageIndex] = useState<number>(0);
   const t = useTranslations("lng");
-
   
 
-  const categories: Category[] = [
-    { id: "all", name: "Tous", icon: Car },
-    { id: "4x4", name: "4x4 Premium", icon: Mountain },
-    { id: "pickup", name: "Pick-up", icon: Car },
-    { id: "minibus", name: "Minibus", icon: Users },
-    { id: "bus", name: "Bus", icon: Users },
-    { id: "compact4x4", name: "4x4 Compact", icon: Mountain }
-  ];
+const categories: Category[] = [
+  { 
+    id: "all", 
+    name: "Tous", 
+    icon: Car 
+  },
+  { 
+    id: "4x4", 
+    name: "4x4 Premium", 
+    icon: Mountain 
+  },
+  { 
+    id: "pickup", 
+    name: "Pick-up", 
+    icon: Car 
+  },
+  { 
+    id: "minibus", 
+    name: "Minibus", 
+    icon: Users 
+  },
+  { 
+    id: "bus", 
+    name: "Bus", 
+    icon: Users 
+  },
+  { 
+    id: "compact4x4", 
+    name: "4x4 Compact", 
+    icon: Mountain 
+  }
+];
 
-  const filteredVehicles: Vehicle[] = selectedCategory === "all" 
-    ? vehicles 
-    : vehicles.filter(vehicle => vehicle.category === selectedCategory);
+  const filteredVehicles: Vehicle[] =  vehicles.filter(vehicle => vehicle.categoryId === selectedCategory);
 
   const handleVehicleSelect = (vehicle: Vehicle): void => {
     setSelectedVehicle(vehicle);
@@ -59,7 +81,7 @@ const CarSection: React.FC<CarSectionProps> = ({ className = "" }) => {
     setCurrentImageIndex(index);
   };
 
-  const handleCategorySelect = (categoryId: VehicleCategory | 'all'): void => {
+  const handleCategorySelect = (categoryId: string): void => {
     setSelectedCategory(categoryId);
   };
 
