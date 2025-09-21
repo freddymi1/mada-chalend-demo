@@ -24,6 +24,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "./ui/dialog";
 import { useBooking } from "../providers/client/ClientBookingProvider";
 import { extraireJours } from "../helpers/extract-text";
 
@@ -42,6 +50,10 @@ export function BookingSection() {
     fetchCircuits,
     isLoading,
   } = useClientCircuit();
+
+  // État pour le popup de confirmation
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+  const [pendingFormData, setPendingFormData] = useState<any>(null);
 
   useEffect(() => {
     const loadCircuits = async () => {
@@ -90,7 +102,16 @@ export function BookingSection() {
       duration: formData.duration,
       preferences: formData.preferences,
     };
-    const res = await createReservation(data);
+
+    // Stocker les données et afficher le popup de confirmation
+    setPendingFormData(data);
+    setShowConfirmDialog(true);
+  };
+
+  const handleConfirmReservation = async () => {
+    if (!pendingFormData) return;
+
+    const res = await createReservation(pendingFormData);
 
     console.log("RESS", res);
     if (success) {
@@ -110,6 +131,15 @@ export function BookingSection() {
         preferences: "",
       });
     }
+
+    // Fermer le popup
+    setShowConfirmDialog(false);
+    setPendingFormData(null);
+  };
+
+  const handleCancelReservation = () => {
+    setShowConfirmDialog(false);
+    setPendingFormData(null);
   };
 
   const handleChange = (
@@ -227,6 +257,25 @@ export function BookingSection() {
     const month = String(today.getMonth() + 1).padStart(2, "0");
     const day = String(today.getDate()).padStart(2, "0");
     return `${year}-${month}-${day}`;
+  };
+
+  // Fonction pour formater les dates pour l'affichage
+  const formatDate = (dateString: string) => {
+    if (!dateString) return "";
+    const date = new Date(dateString);
+    return date.toLocaleDateString("fr-FR", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+    });
+  };
+
+  // Trouver le nom du circuit sélectionné
+  const getCircuitName = (circuitId: string) => {
+    const selectedCircuit = addedCircuits?.find(
+      (c) => (c.id || c._id) === circuitId
+    );
+    return selectedCircuit?.title || selectedCircuit?.nom || "Circuit sélectionné";
   };
 
   return (
@@ -536,6 +585,116 @@ export function BookingSection() {
           </Card>
         </div>
       </div>
+
+      {/* Popup de confirmation */}
+      <Dialog open={showConfirmDialog} onOpenChange={setShowConfirmDialog}>
+        <DialogContent className="max-w-lg">
+          <DialogHeader>
+            <DialogTitle>Confirmer votre réservation</DialogTitle>
+            <DialogDescription>
+              Veuillez vérifier les informations de votre réservation avant de confirmer.
+            </DialogDescription>
+          </DialogHeader>
+          
+          {pendingFormData && (
+            <div className="space-y-4 py-4">
+              <div className="grid grid-cols-2 gap-4 text-sm">
+                <div>
+                  <strong>Circuit :</strong>
+                  <p className="text-muted-foreground">
+                    {getCircuitName(pendingFormData.circuit)}
+                  </p>
+                </div>
+                <div>
+                  <strong>Durée :</strong>
+                  <p className="text-muted-foreground">
+                    {pendingFormData.duration} jour{parseInt(pendingFormData.duration) > 1 ? "s" : ""}
+                  </p>
+                </div>
+              </div>
+              
+              <div className="grid grid-cols-2 gap-4 text-sm">
+                <div>
+                  <strong>Client :</strong>
+                  <p className="text-muted-foreground">
+                    {pendingFormData.prenom} {pendingFormData.nom}
+                  </p>
+                </div>
+                <div>
+                  <strong>Email :</strong>
+                  <p className="text-muted-foreground">
+                    {pendingFormData.email}
+                  </p>
+                </div>
+              </div>
+              
+              <div className="grid grid-cols-3 gap-4 text-sm">
+                <div>
+                  <strong>Personnes :</strong>
+                  <p className="text-muted-foreground">
+                    {pendingFormData.personnes}
+                  </p>
+                </div>
+                <div>
+                  <strong>Adultes :</strong>
+                  <p className="text-muted-foreground">
+                    {pendingFormData.nbrAdult}
+                  </p>
+                </div>
+                <div>
+                  <strong>Enfants :</strong>
+                  <p className="text-muted-foreground">
+                    {pendingFormData.nbrChild}
+                  </p>
+                </div>
+              </div>
+              
+              {pendingFormData.startDate && (
+                <div className="grid grid-cols-2 gap-4 text-sm">
+                  <div>
+                    <strong>Date de début :</strong>
+                    <p className="text-muted-foreground">
+                      {formatDate(pendingFormData.startDate)}
+                    </p>
+                  </div>
+                  <div>
+                    <strong>Date de fin :</strong>
+                    <p className="text-muted-foreground">
+                      {formatDate(pendingFormData.endDate)}
+                    </p>
+                  </div>
+                </div>
+              )}
+              
+              {pendingFormData.preferences && (
+                <div className="text-sm">
+                  <strong>Préférences :</strong>
+                  <p className="text-muted-foreground mt-1">
+                    {pendingFormData.preferences}
+                  </p>
+                </div>
+              )}
+            </div>
+          )}
+          
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={handleCancelReservation}
+              disabled={loading}
+            >
+              Annuler
+            </Button>
+            <Button
+              onClick={handleConfirmReservation}
+              disabled={loading}
+              className="hover-glow"
+            >
+              {loading ? "Confirmation..." : "Confirmer la réservation"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </section>
   );
 }
