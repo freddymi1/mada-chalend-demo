@@ -68,40 +68,14 @@ export function ToursSection() {
                         <Calendar className="h-4 w-4" />
                         <span>{tour.duration}</span>
                       </div>
-                      <div className="flex items-center gap-2 text-muted-foreground">
-                        <Armchair className="h-4 w-4" />
-                        <span>
-                          {tour.placesDisponibles} / {tour.maxPeople}
-                        </span>
-                      </div>
+                      
                     </div>
                   </CardHeader>
                   <CardContent>
                     <p className="text-muted-foreground mb-4 text-pretty">
                       {tour.description}
                     </p>
-                    <div className="flex items-center justify-between">
-                      <div className="flex flex-wrap gap-2 mb-4">
-                        {tour.highlights.map((highlight: any) => (
-                          <span
-                            key={highlight.id}
-                            className="bg-primary/20 text-primary px-3 py-1 rounded-full text-sm transition-all duration-300 hover:bg-primary/20 hover:scale-105"
-                          >
-                            {highlight.text}
-                          </span>
-                        ))}
-                      </div>
-                      <div className="flex flex-wrap gap-2 mb-4">
-                        {tour.included.map((highlight: any) => (
-                          <span
-                            key={highlight.id}
-                            className="bg-primary/10 text-primary px-3 py-1 rounded-full text-sm transition-all duration-300 hover:bg-primary/20 hover:scale-105"
-                          >
-                            {highlight.text}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
+                   
                     <div className="flex gap-2">
                       <Link href={`/circuits/${tour.id}`} className="flex-1">
                         <Button
