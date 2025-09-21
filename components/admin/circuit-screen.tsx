@@ -109,7 +109,7 @@ const CircuitScreen = () => {
 
   const handleEdit = (circuit: Circuit) => {
     setEditingCircuit(circuit);
-    router.push(`/admin/circuits/edit/${circuit.id}`);
+    router.push(`/admin/circuits/add?update=true&id=${circuit.id}`);
   };
 
   const handleViewCircuitDetail = (circuit: Circuit) => {
@@ -118,7 +118,7 @@ const CircuitScreen = () => {
 
   const handleAddCircuit = () => {
     setEditingCircuit(null);
-    router.push(`/admin/circuits/add`);
+    router.push(`/admin/circuits/add?update=false`);
   };
 
   const handleFilterChange = (key: string, value: string) => {

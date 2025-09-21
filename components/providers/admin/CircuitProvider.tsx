@@ -1,6 +1,6 @@
 "use client";
-import React, { createContext, useContext, useState } from "react";
-import { useRouter } from "next/navigation";
+import React, { createContext, useContext, useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useToast } from "@/hooks/shared/use-toast";
 
 export interface ItineraryDay {
@@ -56,6 +56,8 @@ interface CircuitContextType {
   getCircuitById: (id: string) => void;
   circuitDetail: any;
   isLoading: boolean;
+  handleUpdate: (id: string) => void;
+  isUpdate: string | null;
 }
 
 const CircuitContext = createContext<CircuitContextType | undefined>(undefined);
@@ -82,6 +84,16 @@ export const CircuitProvider = ({
     included: [""],
     notIncluded: [""],
   });
+
+  const params = useSearchParams();
+  const id = params.get("id");
+  const isUpdate= params.get("update");
+
+  useEffect(() => {
+    if (id) {
+      getCircuitById(id.toString());
+    }
+  }, [id]);
 
   const handleInputChange = (
     e: React.ChangeEvent<
@@ -226,6 +238,18 @@ export const CircuitProvider = ({
         });
         setIsLoading(false);
         router.push("/admin/circuits");
+        setFormData({
+          title: "",
+          duration: "",
+          price: "",
+          maxPeople: "",
+          difficulty: "Facile",
+          description: "",
+          highlights: [""],
+          itinerary: [],
+          included: [""],
+          notIncluded: [""],
+        });
       } else {
         toast({
           title: "Error !",
@@ -237,6 +261,55 @@ export const CircuitProvider = ({
       toast({
         title: "Error !",
         description: "Erreur serveur lors de l'ajout du circuit",
+      });
+      setIsLoading(false);
+    }
+  };
+
+  const handleUpdate = async (id: string) => {
+    setIsLoading(true);
+    try {
+      const res = await fetch(`/api/circuit/update/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+      if (res.ok) {
+        const updatedCircuit = await res.json();
+        setAddedCircuits((prev) =>
+          prev.map((circuit) => (circuit.id === id ? updatedCircuit : circuit))
+        );
+        toast({
+          title: "Success !",
+          description: "Circuit mis à jour !",
+        });
+        setIsLoading(false);
+        router.push("/admin/circuits");
+        await getCircuitById(id);
+        await fetchCircuits();
+        setFormData({
+          title: "",
+          duration: "",
+          price: "",
+          maxPeople: "",
+          difficulty: "Facile",
+          description: "",
+          highlights: [""],
+          itinerary: [],
+          included: [""],
+          notIncluded: [""],
+        });
+      } else {
+        toast({
+          title: "Error !",
+          description: "Erreur lors de la mise à jour du circuit.",
+        });
+        setIsLoading(false);
+      }
+    } catch {
+      toast({
+        title: "Error !",
+        description: "Erreur lors de la mise à jour du circuit.",
       });
       setIsLoading(false);
     }
@@ -255,44 +328,44 @@ export const CircuitProvider = ({
           title: "Success !",
           description: "Circuit supprimé !",
         });
-        setIsLoading(false)
+        setIsLoading(false);
       } else {
         toast({
           title: "Error !",
           description: "Erreur lors de la suppression du circuit.",
         });
-        setIsLoading(false)
+        setIsLoading(false);
       }
     } catch {
       toast({
         title: "Error !",
         description: "Erreur lors de la suppression du circuit.",
       });
-      setIsLoading(false)
+      setIsLoading(false);
     }
   };
 
   const fetchCircuits = async () => {
-    setIsLoading(true)
+    setIsLoading(true);
     try {
       const res = await fetch("/api/circuit/get", { cache: "no-store" });
       if (res.ok) {
         const data = await res.json();
         setAddedCircuits(data);
-        setIsLoading(false)
+        setIsLoading(false);
       } else {
         toast({
           title: "Error !",
           description: "Erreur lors du chargement des circuits.",
         });
-        setIsLoading(false)
+        setIsLoading(false);
       }
     } catch (error) {
       toast({
         title: "Error !",
         description: "Erreur lors du chargement des circuits.",
       });
-      setIsLoading(false)
+      setIsLoading(false);
     }
   };
 
@@ -301,7 +374,37 @@ export const CircuitProvider = ({
       const res = await fetch(`/api/circuit/${id}`, { cache: "no-store" });
       if (res.ok) {
         const data = await res.json();
+        console.log("RESS", data);
         setCircuitDetail(data);
+        setFormData({
+          title: data.title || "",
+          duration: data.duration || "",
+          price: data.price || "",
+          maxPeople: data.maxPeople ? String(data.maxPeople) : "",
+          difficulty: data.difficulty || "Facile",
+          description: data.description || "",
+          highlights:
+            data.highlights && data.highlights.length > 0
+              ? data.highlights.map((item: any) => item.text)
+              : [],
+          itinerary:
+            data.itineraries && data.itineraries.length > 0
+              ? data.itineraries
+              : [],
+          // included=[
+          //     {
+          //         "id": "cmftzfi650002l104gj0owtwu",
+          //         "text": "Eau",
+          //         "circuitId": "cmftzfi650000l1041rf51pd1"
+          //     }
+          // ]
+          included: data.included?.length
+            ? data.included.map((item: any) => item.text)
+            : [],
+          notIncluded: data.notIncluded?.length
+            ? data.notIncluded.map((item: any) => item.text)
+            : [],
+        });
         return data;
       } else {
         toast({
@@ -339,6 +442,8 @@ export const CircuitProvider = ({
         getCircuitById,
         circuitDetail,
         isLoading,
+        handleUpdate,
+        isUpdate
       }}
     >
       {children}

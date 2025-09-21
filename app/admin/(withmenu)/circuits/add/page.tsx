@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { Plus, X, Upload, Calendar, ArrowLeft } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useCircuit } from "@/components/providers/admin/CircuitProvider";
 
 interface ItineraryDay {
@@ -15,6 +15,8 @@ interface ItineraryDay {
 
 const AddCircuit = () => {
   const router = useRouter();
+  const params = useSearchParams();
+  const id = params.get("id");
   const {
     formData,
     handleInputChange,
@@ -27,7 +29,19 @@ const AddCircuit = () => {
     handleImageUpload,
     handleSubmit,
     isLoading,
+    isUpdate,
+    handleUpdate
   } = useCircuit();
+  
+
+  const onSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (isUpdate && id) {
+      await handleUpdate(id);
+    } else {
+      await handleSubmit(e);
+    }
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 py-8">
@@ -42,11 +56,11 @@ const AddCircuit = () => {
               Retour
             </button>
             <h1 className="text-2xl font-bold text-gray-900">
-              Ajouter un Nouveau Circuit
+              {isUpdate ? "Modifier le Circuit" : "Ajouter un Nouveau Circuit"}
             </h1>
           </div>
 
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={onSubmit}>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
               <div>
                 <div className="space-y-6">
@@ -437,7 +451,8 @@ const AddCircuit = () => {
                 disabled={isLoading}
                 className="flex-1 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors duration-200"
               >
-                {isLoading ? "Loading..." : "Ajouter le Circuit"}
+                {/* {isLoading ? "Loading..." : "Ajouter le Circuit"} */}
+                {isLoading ? "Loading..." : isUpdate ? "Mettre à jour le Circuit" : "Ajouter le Circuit"}
               </button>
             </div>
           </form>
