@@ -16,6 +16,7 @@ import {
   Trash2,
   Users,
   X,
+  ChevronDown,
 } from "lucide-react";
 import { LoadingSpinner } from "../client/loading";
 
@@ -108,7 +109,6 @@ const CircuitScreen = () => {
 
   const handleEdit = (circuit: Circuit) => {
     setEditingCircuit(circuit);
-
     router.push(`/admin/circuits/edit/${circuit.id}`);
   };
 
@@ -118,7 +118,6 @@ const CircuitScreen = () => {
 
   const handleAddCircuit = () => {
     setEditingCircuit(null);
-
     router.push(`/admin/circuits/add`);
   };
 
@@ -145,19 +144,19 @@ const CircuitScreen = () => {
       {/* Header */}
       <div className="bg-white shadow-sm border-b">
         <div className="w-full px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-6">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center py-6 gap-4">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">
+              <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
                 Gestion des Circuits
               </h1>
-              <p className="text-gray-600 mt-1">
+              <p className="text-gray-600 mt-1 text-sm sm:text-base">
                 Gérez vos circuits touristiques Madagascar
               </p>
             </div>
-            <div className="flex space-x-3">
+            <div className="flex flex-col sm:flex-row w-full sm:w-auto space-y-2 sm:space-y-0 sm:space-x-3">
               <button
                 onClick={() => setShowFilters(!showFilters)}
-                className={`inline-flex items-center px-4 py-2 font-medium rounded-lg transition-colors duration-200 shadow-sm ${
+                className={`inline-flex items-center justify-center px-4 py-2 font-medium rounded-lg transition-colors duration-200 shadow-sm ${
                   showFilters || hasActiveFilters
                     ? "bg-blue-600 text-white hover:bg-blue-700"
                     : "bg-white text-gray-700 border border-gray-300 hover:bg-gray-50"
@@ -170,10 +169,11 @@ const CircuitScreen = () => {
               </button>
               <button
                 onClick={handleAddCircuit}
-                className="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors duration-200 shadow-sm"
+                className="inline-flex items-center justify-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors duration-200 shadow-sm"
               >
                 <Plus className="w-5 h-5 mr-2" />
-                Ajouter un Circuit
+                <span className="hidden sm:inline">Ajouter un Circuit</span>
+                <span className="sm:hidden">Ajouter</span>
               </button>
             </div>
           </div>
@@ -203,7 +203,7 @@ const CircuitScreen = () => {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {/* Filtre par difficulté */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -214,7 +214,7 @@ const CircuitScreen = () => {
                 onChange={(e) =>
                   handleFilterChange("difficulty", e.target.value)
                 }
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
               >
                 <option value="">Toutes</option>
                 <option value="Facile">Facile</option>
@@ -236,7 +236,7 @@ const CircuitScreen = () => {
                   onChange={(e) =>
                     handleFilterChange("minPrice", e.target.value)
                   }
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
                 />
                 <input
                   type="number"
@@ -245,7 +245,7 @@ const CircuitScreen = () => {
                   onChange={(e) =>
                     handleFilterChange("maxPrice", e.target.value)
                   }
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
                 />
               </div>
             </div>
@@ -263,7 +263,7 @@ const CircuitScreen = () => {
                   onChange={(e) =>
                     handleFilterChange("minDuration", e.target.value)
                   }
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
                 />
                 <input
                   type="number"
@@ -272,7 +272,7 @@ const CircuitScreen = () => {
                   onChange={(e) =>
                     handleFilterChange("maxDuration", e.target.value)
                   }
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
                 />
               </div>
             </div>
@@ -290,7 +290,7 @@ const CircuitScreen = () => {
                   onChange={(e) =>
                     handleFilterChange("minPeople", e.target.value)
                   }
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
                 />
                 <input
                   type="number"
@@ -299,7 +299,7 @@ const CircuitScreen = () => {
                   onChange={(e) =>
                     handleFilterChange("maxPeople", e.target.value)
                   }
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
                 />
               </div>
             </div>
@@ -308,38 +308,37 @@ const CircuitScreen = () => {
       )}
 
       {/* Stats Cards */}
-
       {isLoading ? (
         <LoadingSpinner />
       ) : (
         <div className="w-full px-4 sm:px-6 lg:px-8 py-6">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-            <div className="bg-white rounded-lg shadow-sm p-6 border">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 mb-6 sm:mb-8">
+            <div className="bg-white rounded-lg shadow-sm p-4 sm:p-6 border">
               <div className="flex items-center">
-                <div className="p-3 rounded-full bg-blue-100">
-                  <MapPin className="w-6 h-6 text-blue-600" />
+                <div className="p-2 sm:p-3 rounded-full bg-blue-100">
+                  <MapPin className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600" />
                 </div>
-                <div className="ml-4">
-                  <p className="text-sm font-medium text-gray-600">
+                <div className="ml-3 sm:ml-4">
+                  <p className="text-xs sm:text-sm font-medium text-gray-600">
                     Total Circuits
                   </p>
-                  <p className="text-2xl font-bold text-gray-900">
+                  <p className="text-xl sm:text-2xl font-bold text-gray-900">
                     {filteredCircuits.length}
                   </p>
                 </div>
               </div>
             </div>
 
-            <div className="bg-white rounded-lg shadow-sm p-6 border">
+            <div className="bg-white rounded-lg shadow-sm p-4 sm:p-6 border">
               <div className="flex items-center">
-                <div className="p-3 rounded-full bg-purple-100">
-                  <Clock className="w-6 h-6 text-purple-600" />
+                <div className="p-2 sm:p-3 rounded-full bg-purple-100">
+                  <Clock className="w-5 h-5 sm:w-6 sm:h-6 text-purple-600" />
                 </div>
-                <div className="ml-4">
-                  <p className="text-sm font-medium text-gray-600">
+                <div className="ml-3 sm:ml-4">
+                  <p className="text-xs sm:text-sm font-medium text-gray-600">
                     Circuits Actifs
                   </p>
-                  <p className="text-2xl font-bold text-gray-900">
+                  <p className="text-xl sm:text-2xl font-bold text-gray-900">
                     {filteredCircuits.length}
                   </p>
                 </div>
@@ -347,9 +346,9 @@ const CircuitScreen = () => {
             </div>
           </div>
 
-          {/* Circuits Table */}
+          {/* Desktop Table & Mobile Cards */}
           <div className="bg-white rounded-lg shadow-sm border overflow-hidden">
-            <div className="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
+            <div className="px-4 sm:px-6 py-4 border-b border-gray-200 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
               <h2 className="text-lg font-semibold text-gray-900">
                 Liste des Circuits
               </h2>
@@ -369,7 +368,8 @@ const CircuitScreen = () => {
               )}
             </div>
 
-            <div className="overflow-x-auto">
+            {/* Desktop Table */}
+            <div className="hidden lg:block overflow-x-auto">
               <table className="min-w-full divide-y divide-gray-200">
                 <thead className="bg-gray-50">
                   <tr>
@@ -382,9 +382,6 @@ const CircuitScreen = () => {
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Prix(€/pers)
                     </th>
-                    {/* <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Participants
-                  </th> */}
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Réservations
                     </th>
@@ -426,12 +423,6 @@ const CircuitScreen = () => {
                           {circuit.price}
                         </div>
                       </td>
-                      {/* <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="flex items-center text-sm text-gray-900">
-                        <Users className="w-4 h-4 mr-2 text-gray-400" />
-                        {circuit.maxPeople} max
-                      </div>
-                    </td> */}
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="flex items-center text-sm text-gray-900">
                           <Armchair className="w-4 h-4 mr-2 text-gray-400" />
@@ -493,17 +484,105 @@ const CircuitScreen = () => {
                 </tbody>
               </table>
             </div>
+
+            {/* Mobile/Tablet Card Layout */}
+            <div className="lg:hidden">
+              {filteredCircuits.map((circuit) => (
+                <div
+                  key={circuit.id}
+                  className="border-b border-gray-200 last:border-b-0 p-4 sm:p-6"
+                >
+                  <div className="flex justify-between items-start mb-3">
+                    <div className="flex-1 min-w-0 pr-4">
+                      <h3 className="text-sm sm:text-base font-medium text-gray-900 truncate">
+                        {circuit.title}
+                      </h3>
+                      <p className="text-xs sm:text-sm text-gray-500 mt-1 line-clamp-2">
+                        {circuit.description}
+                      </p>
+                    </div>
+                    <span
+                      className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getDifficultyColor(
+                        circuit.difficulty
+                      )}`}
+                    >
+                      {circuit.difficulty}
+                    </span>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4 mb-4">
+                    <div className="flex items-center text-sm text-gray-600">
+                      <Clock className="w-4 h-4 mr-2 text-gray-400" />
+                      <span className="text-xs sm:text-sm">{circuit.duration}</span>
+                    </div>
+                    <div className="text-sm font-medium text-gray-900">
+                      <span className="text-xs sm:text-sm">{circuit.price}</span>
+                    </div>
+                    <div className="flex items-center text-sm text-gray-600">
+                      <Armchair className="w-4 h-4 mr-2 text-gray-400" />
+                      <span className="text-xs sm:text-sm">
+                        {circuit.totalPersonnesReservees} réservations
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="mb-4">
+                    <div className="flex flex-wrap gap-1">
+                      {circuit.highlights
+                        .slice(0, 2)
+                        .map((highlight: any, index: number) => (
+                          <span
+                            key={highlight.id || index}
+                            className="inline-flex px-2 py-1 text-xs bg-blue-100 text-blue-800 rounded"
+                          >
+                            {highlight.text}
+                          </span>
+                        ))}
+                      {circuit.highlights.length > 2 && (
+                        <span className="inline-flex px-2 py-1 text-xs bg-gray-100 text-gray-600 rounded">
+                          +{circuit.highlights.length - 2} autres
+                        </span>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="flex justify-end space-x-4">
+                    <button
+                      onClick={() => handleViewCircuitDetail(circuit)}
+                      className="flex items-center text-sm text-blue-600 hover:text-blue-800 transition-colors duration-200"
+                    >
+                      <Eye className="w-4 h-4 mr-1" />
+                      <span className="hidden sm:inline">Voir</span>
+                    </button>
+                    <button
+                      onClick={() => handleEdit(circuit)}
+                      className="flex items-center text-sm text-green-600 hover:text-green-800 transition-colors duration-200"
+                    >
+                      <Edit className="w-4 h-4 mr-1" />
+                      <span className="hidden sm:inline">Modifier</span>
+                    </button>
+                    <button
+                      onClick={() => handleDelete(circuit.id)}
+                      className="flex items-center text-sm text-red-600 hover:text-red-800 transition-colors duration-200"
+                    >
+                      <Trash2 className="w-4 h-4 mr-1" />
+                      <span className="hidden sm:inline">Supprimer</span>
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
 
           {filteredCircuits.length === 0 && (
-            <div className="bg-white rounded-lg shadow-sm border p-12 text-center">
-              <MapPin className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-              <h3 className="text-lg font-medium text-gray-900 mb-2">
+            <div className="bg-white rounded-lg shadow-sm border p-8 sm:p-12 text-center">
+              <MapPin className="w-10 h-10 sm:w-12 sm:h-12 text-gray-400 mx-auto mb-4" />
+              <h3 className="text-base sm:text-lg font-medium text-gray-900 mb-2">
                 {hasActiveFilters
                   ? "Aucun circuit ne correspond aux filtres"
                   : "Aucun circuit trouvé"}
               </h3>
-              <p className="text-gray-600 mb-6">
+              <p className="text-sm sm:text-base text-gray-600 mb-6">
                 {hasActiveFilters
                   ? "Essayez de modifier vos critères de filtrage."
                   : "Commencez par ajouter votre premier circuit touristique."}
@@ -511,16 +590,16 @@ const CircuitScreen = () => {
               {hasActiveFilters ? (
                 <button
                   onClick={resetFilters}
-                  className="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors duration-200"
+                  className="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors duration-200 text-sm sm:text-base"
                 >
                   Réinitialiser les filtres
                 </button>
               ) : (
                 <button
                   onClick={handleAddCircuit}
-                  className="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors duration-200"
+                  className="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors duration-200 text-sm sm:text-base"
                 >
-                  <Plus className="w-5 h-5 mr-2" />
+                  <Plus className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
                   Ajouter un Circuit
                 </button>
               )}

@@ -127,7 +127,7 @@ const CircuitDetailScreen = () => {
           </div>
 
           {/* Stats Grid */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
               <div className="flex items-center space-x-3">
                 <Clock className="w-5 h-5 text-blue-600 dark:text-blue-400" />
@@ -191,7 +191,7 @@ const CircuitDetailScreen = () => {
                     Nombre des personnes
                   </p>
                   <p className="font-semibold text-gray-900 dark:text-white">
-                    {circuitDetail.totalPersonnesReservees} personnes
+                    {circuitDetail.totalPersonnesReservees} (Enfant: {circuitDetail.nbrChild ?? 0 } et Adulte: {circuitDetail.nbrAdult ?? 0 })
                   </p>
                 </div>
               </div>
