@@ -4,6 +4,7 @@ import WithMenuLayoutClient from "@/components/admin/WithMenuLayoutClient";
 import { CircuitProvider } from "@/components/providers/admin/CircuitProvider";
 import { AdminBookingProvider } from "@/components/providers/admin/BookingProvider";
 import { Toaster } from "@/components/client/ui/toaster";
+import { VehicleProvider } from "@/components/providers/admin/VehicleProvider";
 
 export const metadata: Metadata = {
   title: "Mada Chaland - Dashboard Admin",
@@ -19,7 +20,9 @@ export default function WithMenuLayout({
     <WithMenuLayoutClient>
       
       <CircuitProvider>
-        <AdminBookingProvider>{children}</AdminBookingProvider>
+        <AdminBookingProvider>
+          <VehicleProvider>{children}</VehicleProvider>
+        </AdminBookingProvider>
       </CircuitProvider>
     </WithMenuLayoutClient>
   );

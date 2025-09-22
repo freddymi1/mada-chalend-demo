@@ -46,7 +46,7 @@ export async function GET() {
       const reservationCount = circuit?.reservations?.length;
 
       // Places disponibles
-      const placesDisponibles = Math.max(0, circuit.maxPeople - totalPersonnes);
+      const placesDisponibles = Math.max(0, circuit?.maxPeople! - totalPersonnes);
 
       return {
         ...circuit,

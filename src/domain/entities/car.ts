@@ -24,7 +24,7 @@ export interface Vehicle {
   detailImages: string[];
   features: string[];
   description: string;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt?: Date;
+  updatedAt?: Date;
   categoryRel?: Category; // Relation optionnelle
 }
