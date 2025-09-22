@@ -11,6 +11,7 @@ import { PageTransition } from "@/components/client/page-transition";
 import "./globals.css";
 import { ClientCircuitProvider } from "@/components/providers/client/ClientCircuitProvider";
 import { ClientBookingProvider } from "@/components/providers/client/ClientBookingProvider";
+import { ClVehicleProvider } from "@/components/providers/client/ClVehicleProvider";
 
 export const metadata: Metadata = {
   title: "Mada Chaland - Agence de voyage à Madagascar",
@@ -39,7 +40,9 @@ export default async function RootLayout({
             <PageTransition>
               <ClientCircuitProvider>
                 <ClientBookingProvider>
-                  <Suspense fallback={null}>{children}</Suspense>
+                  <ClVehicleProvider>
+                    <Suspense fallback={null}>{children}</Suspense>
+                  </ClVehicleProvider>
                 </ClientBookingProvider>
               </ClientCircuitProvider>
             </PageTransition>
