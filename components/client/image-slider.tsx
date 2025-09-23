@@ -468,7 +468,7 @@ export function ImageSlider({
       )}
 
       {/* Contrôles textuels */}
-      {showControls && hasMultipleImages && (
+      {/* {showControls && hasMultipleImages && (
         <div className="flex items-center justify-between text-sm text-muted-foreground">
           <div className="flex items-center gap-4">
             <span>
@@ -480,7 +480,7 @@ export function ImageSlider({
             Espace: play/pause • Flèches: naviguer • R: reset
           </div>
         </div>
-      )}
+      )} */}
 
       {/* CSS pour les animations */}
       <style jsx>{`
