@@ -55,15 +55,15 @@
       "title": "Taratasy famandrihana",
       "name": "Anarana",
       "firstname": "Fanampin’anarana",
-      "circuit":"Ny Lalana",
+      "circuit": "Ny Lalana",
       "email": "Adiresy mailaka",
       "phone": "Finday",
-      "address":"Adiresy",
+      "address": "Adiresy",
       "personNumber": "Isan’ny olona",
       "date": "Daty tiana",
-      "startDate" : "Daty fihaingana",
-      "endDate" : "Daty farany",
-      "duration":"Faharetany,",
+      "startDate": "Daty fihaingana",
+      "endDate": "Daty farany",
+      "duration": "Faharetany,",
       "datePL": "Ohatra: Avy ny 15 ka hatramin’ny 25 Jolay 2024",
       "nb": "Safidy na fanamarihana",
       "nbPL": "Lazao ny safidinao, ny zavatra tianao, na vaovao ilaina...",
@@ -135,5 +135,29 @@
     "light": "Maivana",
     "dark": "Maizina",
     "system": "Rafitra"
+  },
+  "detailCircuit": {
+    "navigation": {
+      "home": "Fandraisana",
+      "tours": "Lalana fitsidihana"
+    },
+    "itinerary": {
+      "detailed": "Drafitra an-tsipiriany",
+      "day": "Andro"
+    },
+    "booking": {
+      "pricePerPerson": "isaky ny olona",
+      "reserveNow": "Manokàna izao",
+      "askInfo": "Mangataha fampahalalana"
+    },
+    "highlights": {
+      "title": "Zava-dehibe amin'ny fitsidihana"
+    },
+    "included": {
+      "title": "Ao anatin'ny vidiny"
+    },
+    "notIncluded": {
+      "title": "Tsy tafiditra"
+    }
   }
 }

@@ -5,6 +5,8 @@ import React, { useState, useEffect } from "react";
 import { useClVehicle } from "../providers/client/ClVehicleProvider";
 import { ImageModal } from "./image-modale";
 import { VehicleCard } from "./vehicle-card";
+import { LoadingSpinner } from "./loading";
+import { useTranslations } from "next-intl";
 
 
 const Grid = ({ className }: { className?: string }) => (
@@ -143,6 +145,7 @@ const CarSection: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [selectedVehicle, setSelectedVehicle] = useState<Vehicle | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const t = useTranslations('lng')
 
   const { vehicles, isLoading, fetchVehicles } = useClVehicle();
 
@@ -191,14 +194,14 @@ const CarSection: React.FC = () => {
                 isDark ? "text-white" : "text-gray-900"
               }`}
             >
-              Nos Véhicules
+              {t("car.title")}
             </h1>
             <p
               className={`text-lg ${
                 isDark ? "text-gray-400" : "text-gray-600"
               }`}
             >
-              Découvrez notre flotte de véhicules premium
+              {t("car.description")}
             </p>
           </div>
         </div>
@@ -255,9 +258,7 @@ const CarSection: React.FC = () => {
 
         {/* Vehicle Grid */}
         {isLoading ? (
-          <div className="flex justify-center items-center h-64">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-          </div>
+          <LoadingSpinner/>
         ) : (
           <div
             className={`grid gap-6 ${

@@ -100,7 +100,7 @@ const ClientCircuitDetailScreen = () => {
                           {circuitDetail?.duration}
                         </span>
                       </Badge>
-                      
+
                       <Badge
                         variant="secondary"
                         className="flex items-center gap-1 text-xs sm:text-sm"
@@ -132,7 +132,6 @@ const ClientCircuitDetailScreen = () => {
                 </div>
 
                 {/* Sidebar */}
-                
               </div>
               <div className="w-full my-6 flex flex-col gap-4">
                 {/* Highlights */}
@@ -145,7 +144,7 @@ const ClientCircuitDetailScreen = () => {
                   <CardHeader className="pb-4">
                     <CardTitle className="flex items-center gap-2 text-lg sm:text-xl">
                       <MapPin className="h-4 w-4 sm:h-5 sm:w-5 flex-shrink-0" />
-                      <span>Itinéraire détaillé</span>
+                      <span>{t("detailCircuit.itinerary.detailed")}</span>
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="px-2 sm:px-6">
@@ -211,110 +210,109 @@ const ClientCircuitDetailScreen = () => {
                   <CardTitle className="text-xl sm:text-2xl text-primary break-words flex items-center gap-4">
                     <span>{circuitDetail?.price} €</span>
                     <p className="text-muted-foreground text-sm sm:text-base">
-                      par personne
+                      {t("detailCircuit.booking.pricePerPerson")}
                     </p>
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="grid grid-cols 1 lg:grid-cols-2 gap-6">
                   <Link href={`/reservation?circuit=${circuitDetail?.id}`}>
                     <Button className="w-full hover-glow" size="lg">
-                      Réserver maintenant
+                      {t("detailCircuit.booking.reserveNow")}
                     </Button>
                   </Link>
                   <Link href="/contact">
                     <Button variant="outline" className="w-full bg-transparent">
-                      Demander des infos
+                      {t("detailCircuit.booking.askInfo")}
                     </Button>
                   </Link>
                 </CardContent>
               </Card>
               <div className="space-y-4 sm:space-y-6 w-full">
-                  {/* Booking card */}
+                {/* Booking card */}
 
-                  <Card
-                    className="animate-slide-up w-full"
-                    style={{
-                      animationDelay: "0.3s",
-                      animationFillMode: "both",
-                    }}
-                  >
-                    <CardHeader className="">
-                      <CardTitle className="flex items-center gap-2 text-lg sm:text-xl">
-                        <Camera className="h-4 w-4 sm:h-5 sm:w-5 flex-shrink-0" />
-                        <span>Points forts du circuit</span>
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="flex flex-col gap-2 mb-4">
-                        {circuitDetail?.highlights?.map((highlight: any) => (
-                          <div
-                            key={highlight.id}
-                            className="flex flex-col items-start gap-2"
-                          >
-                            <span className="bg-primary/20 text-primary px-3 py-1 rounded-full text-sm transition-all duration-300 hover:bg-primary/20 hover:scale-105">
-                              {highlight.text}
-                            </span>
-                          </div>
-                        ))}
-                      </div>
-                    </CardContent>
-                  </Card>
+                <Card
+                  className="animate-slide-up w-full"
+                  style={{
+                    animationDelay: "0.3s",
+                    animationFillMode: "both",
+                  }}
+                >
+                  <CardHeader className="">
+                    <CardTitle className="flex items-center gap-2 text-lg sm:text-xl">
+                      <Camera className="h-4 w-4 sm:h-5 sm:w-5 flex-shrink-0" />
+                      <span>{t("detailCircuit.highlights.title")}</span>
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="flex flex-col gap-2 mb-4">
+                      {circuitDetail?.highlights?.map((highlight: any) => (
+                        <div
+                          key={highlight.id}
+                          className="flex flex-col items-start gap-2"
+                        >
+                          <span className="bg-primary/20 text-primary px-3 py-1 rounded-full text-sm transition-all duration-300 hover:bg-primary/20 hover:scale-105">
+                            {highlight.text}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
 
-                  {/* Included/Not included */}
-                  <Card
-                    className="animate-fade-in w-full"
-                    style={{
-                      animationDelay: "0.6s",
-                      animationFillMode: "both",
-                    }}
-                  >
-                    <CardHeader>
-                      <CardTitle className="text-base sm:text-lg">
-                        Inclus dans le prix
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <ul className="space-y-2 text-xs sm:text-sm">
-                        {circuitDetail?.included?.map((item: any) => (
-                          <li key={item.id} className="flex items-start gap-2">
-                            <span className="text-green-500 mt-1 flex-shrink-0">
-                              ✓
-                            </span>
-                            <span className="break-words">{item.text}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </CardContent>
-                  </Card>
+                {/* Included/Not included */}
+                <Card
+                  className="animate-fade-in w-full"
+                  style={{
+                    animationDelay: "0.6s",
+                    animationFillMode: "both",
+                  }}
+                >
+                  <CardHeader>
+                    <CardTitle className="text-base sm:text-lg">
+                      {t("detailCircuit.included.title")}
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <ul className="space-y-2 text-xs sm:text-sm">
+                      {circuitDetail?.included?.map((item: any) => (
+                        <li key={item.id} className="flex items-start gap-2">
+                          <span className="text-green-500 mt-1 flex-shrink-0">
+                            ✓
+                          </span>
+                          <span className="break-words">{item.text}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </CardContent>
+                </Card>
 
-                  <Card
-                    className="animate-fade-in w-full"
-                    style={{
-                      animationDelay: "0.7s",
-                      animationFillMode: "both",
-                    }}
-                  >
-                    <CardHeader>
-                      <CardTitle className="text-base sm:text-lg">
-                        Non inclus
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <ul className="space-y-2 text-xs sm:text-sm">
-                        {circuitDetail?.notIncluded?.map((item: any) => (
-                          <li key={item.id} className="flex items-start gap-2">
-                            <span className="text-red-500 mt-1 flex-shrink-0">
-                              ✗
-                            </span>
-                            <span className="break-words">{item.text}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </CardContent>
-                  </Card>
-                </div>
+                <Card
+                  className="animate-fade-in w-full"
+                  style={{
+                    animationDelay: "0.7s",
+                    animationFillMode: "both",
+                  }}
+                >
+                  <CardHeader>
+                    <CardTitle className="text-base sm:text-lg">
+                      {t("detailCircuit.notIncluded.title")}
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <ul className="space-y-2 text-xs sm:text-sm">
+                      {circuitDetail?.notIncluded?.map((item: any) => (
+                        <li key={item.id} className="flex items-start gap-2">
+                          <span className="text-red-500 mt-1 flex-shrink-0">
+                            ✗
+                          </span>
+                          <span className="break-words">{item.text}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </CardContent>
+                </Card>
+              </div>
             </div>
-            
           </div>
 
           {/* Image Modal */}

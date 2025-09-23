@@ -1,7 +1,8 @@
 "use client";
 
-import { ChevronLeft, ChevronRight, X, Star, Users, Tag, Calendar } from "lucide-react";
-import { useEffect, useState } from "react";
+import { ChevronLeft, ChevronRight, X, Star, Users, Tag, Play, Pause } from "lucide-react";
+import { useTranslations } from "next-intl";
+import { useEffect, useState, useRef, useCallback } from "react";
 
 // Interface Vehicle
 interface Category {
@@ -33,9 +34,96 @@ export const ImageModal: React.FC<{
   images: string[];
   vehicle: Vehicle;
   isDark: boolean;
-}> = ({ isOpen, onClose, images, vehicle, isDark }) => {
+  autoSlideInterval?: number; // Durée en millisecondes (défaut: 5000ms)
+}> = ({ isOpen, onClose, images, vehicle, isDark, autoSlideInterval = 5000 }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [isAutoSliding, setIsAutoSliding] = useState(false);
+  const [slideDuration, setSlideDuration] = useState(300); // Durée de la transition en ms
+  const [isTransitioning, setIsTransitioning] = useState(false);
+  
+  const autoSlideRef = useRef<NodeJS.Timeout | null>(null);
+  const touchStartX = useRef<number>(0);
+  const touchEndX = useRef<number>(0);
+  const imageContainerRef = useRef<HTMLDivElement>(null);
+  
+  const t = useTranslations('lng');
 
+  // Fonction pour aller à l'image suivante avec transition
+  const goToNext = useCallback(() => {
+    if (isTransitioning || images.length <= 1) return;
+    
+    setIsTransitioning(true);
+    setCurrentImageIndex((prev) => (prev + 1) % images.length);
+    
+    setTimeout(() => {
+      setIsTransitioning(false);
+    }, slideDuration);
+  }, [images.length, isTransitioning, slideDuration]);
+
+  // Fonction pour aller à l'image précédente avec transition
+  const goToPrevious = useCallback(() => {
+    if (isTransitioning || images.length <= 1) return;
+    
+    setIsTransitioning(true);
+    setCurrentImageIndex((prev) => (prev - 1 + images.length) % images.length);
+    
+    setTimeout(() => {
+      setIsTransitioning(false);
+    }, slideDuration);
+  }, [images.length, isTransitioning, slideDuration]);
+
+  // Démarrer le slideshow automatique
+  const startAutoSlide = useCallback(() => {
+    if (images.length <= 1) return;
+    
+    setIsAutoSliding(true);
+    autoSlideRef.current = setInterval(() => {
+      goToNext();
+    }, autoSlideInterval);
+  }, [goToNext, autoSlideInterval, images.length]);
+
+  // Arrêter le slideshow automatique
+  const stopAutoSlide = useCallback(() => {
+    setIsAutoSliding(false);
+    if (autoSlideRef.current) {
+      clearInterval(autoSlideRef.current);
+      autoSlideRef.current = null;
+    }
+  }, []);
+
+  // Toggle du slideshow automatique
+  const toggleAutoSlide = () => {
+    if (isAutoSliding) {
+      stopAutoSlide();
+    } else {
+      startAutoSlide();
+    }
+  };
+
+  // Gestion des touches clavier
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (!isOpen) return;
+
+      if (e.key === "Escape") {
+        onClose();
+      } else if (e.key === "ArrowLeft") {
+        stopAutoSlide();
+        goToPrevious();
+      } else if (e.key === "ArrowRight") {
+        stopAutoSlide();
+        goToNext();
+      } else if (e.key === " ") {
+        e.preventDefault();
+        toggleAutoSlide();
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [isOpen, goToPrevious, goToNext, stopAutoSlide]);
+
+  // Gestion du scroll du body
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = "hidden";
@@ -48,29 +136,50 @@ export const ImageModal: React.FC<{
     };
   }, [isOpen]);
 
+  // Nettoyage à la fermeture
   useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (!isOpen) return;
+    if (!isOpen) {
+      stopAutoSlide();
+      setCurrentImageIndex(0);
+    }
+  }, [isOpen, stopAutoSlide]);
 
-      if (e.key === "Escape") {
-        onClose();
-      } else if (e.key === "ArrowLeft") {
-        goToPrevious();
-      } else if (e.key === "ArrowRight") {
-        goToNext();
-      }
-    };
-
-    document.addEventListener("keydown", handleKeyDown);
-    return () => document.removeEventListener("keydown", handleKeyDown);
-  }, [isOpen, currentImageIndex]);
-
-  const goToNext = () => {
-    setCurrentImageIndex((prev) => (prev + 1) % images.length);
+  // Gestion du swipe tactile
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+    stopAutoSlide(); // Arrêter le slideshow lors du toucher
   };
 
-  const goToPrevious = () => {
-    setCurrentImageIndex((prev) => (prev - 1 + images.length) % images.length);
+  const handleTouchMove = (e: React.TouchEvent) => {
+    touchEndX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchEnd = () => {
+    const swipeThreshold = 50; // Distance minimale pour déclencher un swipe
+    const swipeDistance = touchStartX.current - touchEndX.current;
+
+    if (Math.abs(swipeDistance) > swipeThreshold) {
+      if (swipeDistance > 0) {
+        // Swipe vers la gauche - image suivante
+        goToNext();
+      } else {
+        // Swipe vers la droite - image précédente
+        goToPrevious();
+      }
+    }
+  };
+
+  // Aller à une image spécifique
+  const goToSlide = (index: number) => {
+    if (index === currentImageIndex || isTransitioning) return;
+    
+    setIsTransitioning(true);
+    setCurrentImageIndex(index);
+    stopAutoSlide();
+    
+    setTimeout(() => {
+      setIsTransitioning(false);
+    }, slideDuration);
   };
 
   if (!isOpen) return null;
@@ -90,10 +199,17 @@ export const ImageModal: React.FC<{
         }`}
       >
         {/* Image Container */}
-        <div className="relative aspect-video bg-gray-100">
+        <div 
+          ref={imageContainerRef}
+          className="relative aspect-video bg-gray-100"
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
+        >
+          {/* Close Button */}
           <button
             onClick={onClose}
-            className={`p-1.5 sm:p-2 absolute top-2 right-2 bg-white/90 rounded-lg transition-colors z-10 ${
+            className={`p-1.5 sm:p-2 absolute top-2 right-2 bg-white/90 rounded-lg transition-colors z-20 ${
               isDark
                 ? "hover:bg-gray-800 text-gray-400 hover:text-white"
                 : "hover:bg-gray-100 text-gray-600 hover:text-gray-900"
@@ -101,33 +217,101 @@ export const ImageModal: React.FC<{
           >
             <X className="w-5 h-5 sm:w-6 sm:h-6" />
           </button>
-          <img
-            src={images[currentImageIndex]}
-            alt={`${vehicle.name} - Image ${currentImageIndex + 1}`}
-            className="w-full h-full object-cover"
-          />
+
+          {/* Auto Slide Control */}
+          {images.length > 1 && (
+            <button
+              onClick={toggleAutoSlide}
+              className={`p-2 absolute top-2 left-2 bg-black/50 text-white rounded-lg hover:bg-black/70 transition-colors z-20`}
+            >
+              {isAutoSliding ? (
+                <Pause className="w-4 h-4" />
+              ) : (
+                <Play className="w-4 h-4" />
+              )}
+            </button>
+          )}
+
+          {/* Main Image */}
+          <div className="relative w-full h-full overflow-hidden">
+            <img
+              src={images[currentImageIndex]}
+              alt={`${vehicle.name} - Image ${currentImageIndex + 1}`}
+              className={`w-full h-full object-cover transition-all duration-${slideDuration} ${
+                isTransitioning ? 'opacity-75 scale-105' : 'opacity-100 scale-100'
+              }`}
+              style={{
+                transitionDuration: `${slideDuration}ms`
+              }}
+            />
+          </div>
 
           {/* Navigation Arrows */}
           {images.length > 1 && (
             <>
               <button
-                onClick={goToPrevious}
-                className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 p-2 sm:p-3 bg-black/50 text-white rounded-full hover:bg-black/70 transition-colors"
+                onClick={() => {
+                  stopAutoSlide();
+                  goToPrevious();
+                }}
+                disabled={isTransitioning}
+                className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 p-2 sm:p-3 bg-black/50 text-white rounded-full hover:bg-black/70 transition-colors disabled:opacity-50 disabled:cursor-not-allowed z-10"
               >
                 <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6" />
               </button>
               <button
-                onClick={goToNext}
-                className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 p-2 sm:p-3 bg-black/50 text-white rounded-full hover:bg-black/70 transition-colors"
+                onClick={() => {
+                  stopAutoSlide();
+                  goToNext();
+                }}
+                disabled={isTransitioning}
+                className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 p-2 sm:p-3 bg-black/50 text-white rounded-full hover:bg-black/70 transition-colors disabled:opacity-50 disabled:cursor-not-allowed z-10"
               >
                 <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6" />
               </button>
             </>
           )}
-         
+
+          {/* Image Counter */}
+          {images.length > 1 && (
+            <div className="absolute bottom-4 right-4 px-3 py-1 bg-black/50 text-white text-sm rounded-full z-10">
+              {currentImageIndex + 1} / {images.length}
+            </div>
+          )}
+
+          {/* Slide Indicators */}
+          {images.length > 1 && images.length <= 10 && (
+            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-10">
+              {images.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => goToSlide(index)}
+                  disabled={isTransitioning}
+                  className={`w-2 h-2 rounded-full transition-all duration-200 ${
+                    index === currentImageIndex
+                      ? 'bg-white w-8'
+                      : 'bg-white/50 hover:bg-white/75'
+                  } disabled:cursor-not-allowed`}
+                />
+              ))}
+            </div>
+          )}
+
+          {/* Progress Bar for Auto Slide */}
+          {isAutoSliding && (
+            <div className="absolute bottom-0 left-0 w-full h-1 bg-black/20 z-10">
+              <div 
+                className="h-full bg-blue-500 transition-all linear"
+                style={{
+                  width: '100%',
+                  animation: `slideProgress ${autoSlideInterval}ms linear infinite`
+                }}
+              />
+            </div>
+          )}
         </div>
 
-      {/* Header - Section modifiée avec informations détaillées */}
+        {/* Header - Section modifiée avec informations détaillées */}
         <div
           className={`flex bg-secondary items-center justify-between p-6 border-b ${
             isDark ? "border-gray-700" : "border-gray-200"
@@ -179,7 +363,7 @@ export const ImageModal: React.FC<{
                     isDark ? "text-gray-400" : "text-gray-600"
                   }`}
                 >
-                  /jour
+                  /{t("car.day")}
                 </span>
               </div>
               <span
@@ -204,13 +388,9 @@ export const ImageModal: React.FC<{
                     isDark ? "text-gray-300" : "text-gray-600"
                   }`}
                 >
-                  {vehicle.passengers} passagers
+                  {vehicle.passengers} {t("car.seat")}
                 </span>
               </div>
-
-              
-
-              
             </div>
 
             {/* Description */}
@@ -231,7 +411,7 @@ export const ImageModal: React.FC<{
                   isDark ? "text-gray-200" : "text-gray-800"
                 }`}
               >
-                Équipements:
+                {t("car.details.equipment")}
               </h4>
               <div className="flex flex-wrap gap-2">
                 {vehicle.features.map((feature, index) => (
@@ -252,7 +432,7 @@ export const ImageModal: React.FC<{
             {/* Boutons d'action */}
             <div className="flex gap-3 pt-2">
               <button className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors">
-                Réserver
+                {t("car.details.booknow")}
               </button>
               <button 
                 className={`px-6 py-2 rounded-lg font-medium transition-colors ${
@@ -261,13 +441,51 @@ export const ImageModal: React.FC<{
                     : "bg-gray-200 text-gray-700 hover:bg-gray-300"
                 }`}
               >
-                Devis
+                {t("car.details.requestDevis")}
               </button>
             </div>
 
+            {/* Contrôles du slideshow (section supplémentaire) */}
+            {images.length > 1 && (
+              <div className={`flex items-center gap-4 pt-4 border-t ${
+                isDark ? "border-gray-700" : "border-gray-200"
+              }`}>
+                <span className={`text-sm ${
+                  isDark ? "text-gray-400" : "text-gray-600"
+                }`}>
+                  Slideshow:
+                </span>
+                <button
+                  onClick={toggleAutoSlide}
+                  className={`flex items-center gap-2 px-3 py-1 text-sm rounded-lg transition-colors ${
+                    isAutoSliding
+                      ? "bg-blue-600 text-white"
+                      : isDark
+                        ? "bg-gray-700 text-gray-300 hover:bg-gray-600"
+                        : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                  }`}
+                >
+                  {isAutoSliding ? <Pause className="w-3 h-3" /> : <Play className="w-3 h-3" />}
+                  {isAutoSliding ? 'Pause' : 'Play'}
+                </button>
+                <span className={`text-xs ${
+                  isDark ? "text-gray-500" : "text-gray-500"
+                }`}>
+                  Space pour play/pause, flèches pour naviguer
+                </span>
+              </div>
+            )}
           </div>
         </div>
       </div>
+
+      {/* CSS pour l'animation de la barre de progression */}
+      <style jsx>{`
+        @keyframes slideProgress {
+          from { width: 0%; }
+          to { width: 100%; }
+        }
+      `}</style>
     </div>
   );
 };

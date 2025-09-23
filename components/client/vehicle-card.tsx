@@ -2,6 +2,7 @@
 
 import { Vehicle } from "@/src/domain/entities/car";
 import { Eye, Heart, Star, Users } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 
 export const VehicleCard: React.FC<{
@@ -10,6 +11,7 @@ export const VehicleCard: React.FC<{
   onShowDetails: (vehicle: Vehicle) => void;
 }> = ({ vehicle, isDark, onShowDetails }) => {
   const [isFavorite, setIsFavorite] = useState(false);
+  const t = useTranslations('lng')
 
   return (
     <div
@@ -91,7 +93,7 @@ export const VehicleCard: React.FC<{
                 isDark ? "text-gray-300" : "text-gray-600"
               }`}
             >
-              {vehicle.passengers} passagers
+              {vehicle.passengers} {t("car.seat")}
             </span>
           </div>
         </div>
@@ -136,7 +138,7 @@ export const VehicleCard: React.FC<{
                 isDark ? "text-gray-400" : "text-gray-600"
               }`}
             >
-              /jour
+              /{t("car.day")}
             </span>
           </div>
         </div>
@@ -150,10 +152,10 @@ export const VehicleCard: React.FC<{
             }`}
           >
             <Eye className="w-4 h-4" />
-            Détail
+            {t("car.viewDetail")}
           </button>
           <button className="flex justify-center w-full px-6 py-2 bg-primary text-white rounded-lg font-medium transition-colors hover:scale-105">
-            Réserver
+            {t("car.details.booknow")}
           </button>
         </div>
       </div>

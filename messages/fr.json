@@ -13,7 +13,7 @@
     "booking": "Réservation",
     "blog": "Blog",
     "contact": "Contact",
-    "car":"Nos voiture"
+    "car": "Nos voitures"
   },
   "about": {
     "title": "Qui sommes-nous?",
@@ -48,31 +48,31 @@
     "book": "Réserver",
     "customTour": "Demandez votre circuit personnalisé"
   },
-  "book":{
-    "title":"Réservez votre voyage",
-    "subtitle":"Réservez facilement votre circuit avec Mada Chaland. Indiquez vos dates, le nombre de personnes et vos préférences, et nous vous proposerons un itinéraire sur mesure.",
-    "form":{
-      "title":"Formulaire de réservation",
-      "name":"Nom",
-      "circuit":"Circuit",
-      "firstname":"Prénom",
-      "email":"Adresse email",
-      "phone":"Téléphone",
-      "address":"Adresse",
-      "personNumber":"Nombre de personnes",
-      "startDate" : "Dates de départ",
-      "endDate" : "Dates fin",
-      "duration":"Durée du sejour",
-      "datePL":"Ex: Du 15 au 25 juillet 2024",
-      "nb":"Préférences ou remarques",
-      "nbPL":"Décrivez vos préférences, centres d'intérêt, ou toute information utile...",
-      "cta":"Envoyer ma demande"
+  "book": {
+    "title": "Réservez votre voyage",
+    "subtitle": "Réservez facilement votre circuit avec Mada Chaland. Indiquez vos dates, le nombre de personnes et vos préférences, et nous vous proposerons un itinéraire sur mesure.",
+    "form": {
+      "title": "Formulaire de réservation",
+      "name": "Nom",
+      "circuit": "Circuit",
+      "firstname": "Prénom",
+      "email": "Adresse email",
+      "phone": "Téléphone",
+      "address": "Adresse",
+      "personNumber": "Nombre de personnes",
+      "startDate": "Dates de départ",
+      "endDate": "Dates fin",
+      "duration": "Durée du sejour",
+      "datePL": "Ex: Du 15 au 25 juillet 2024",
+      "nb": "Préférences ou remarques",
+      "nbPL": "Décrivez vos préférences, centres d'intérêt, ou toute information utile...",
+      "cta": "Envoyer ma demande"
     }
   },
-  "blog":{
-    "title":"Nos conseils et récits de voyage",
-    "subtitle":"Découvrez nos articles pour mieux préparer votre voyage et plongez dans les légendes fascinantes de Madagascar.",
-    "viewMore":"Lire la suite"
+  "blog": {
+    "title": "Nos conseils et récits de voyage",
+    "subtitle": "Découvrez nos articles pour mieux préparer votre voyage et plongez dans les légendes fascinantes de Madagascar.",
+    "viewMore": "Lire la suite"
   },
   "contact": {
     "title": "Contactez-nous",
@@ -94,31 +94,31 @@
     "toastTitle": "Message envoyé !",
     "toastDescription": "Nous vous répondrons dans les plus brefs délais."
   },
-  "car":{
-    "title":"Location de Véhicules Touristiques",
-    "description":"Explorez Madagascar avec notre flotte de véhicules spécialement sélectionnés pour le tourisme. 4x4 pour les aventures, minibus pour les groupes, pick-ups pour l'équipement - nous avons le véhicule parfait pour votre voyage.",
-    "day":"jour",
-    "seat":"places",
-    "photo":"photos",
-    "other":"autres",
-    "viewDetail":"Voir détails",
-    "details":{
-      "day":"jour",
-      "book":"Description",
-      "assurence":"Assurance incluse",
-      "equipment":"Équipements",
-      "booknow":"Réserver maintenant",
-      "requestDevis":"Demander un devis"
+  "car": {
+    "title": "Location de Véhicules Touristiques",
+    "description": "Explorez Madagascar avec notre flotte de véhicules spécialement sélectionnés pour le tourisme. 4x4 pour les aventures, minibus pour les groupes, pick-ups pour l'équipement - nous avons le véhicule parfait pour votre voyage.",
+    "day": "jour",
+    "seat": "places",
+    "photo": "photos",
+    "other": "autres",
+    "viewDetail": "Voir détails",
+    "details": {
+      "day": "jour",
+      "book": "Description",
+      "assurence": "Assurance incluse",
+      "equipment": "Équipements",
+      "booknow": "Réserver maintenant",
+      "requestDevis": "Demander un devis"
     }
   },
-  "footer":{
-    "text":"Votre agence de voyage spécialisée dans les circuits sur mesure à Madagascar.",
-    "followOur":"Suivez-nous",
-    "legalInfos":{
-      "title":"Informations légales",
-      "legalMention":"Mentions légales",
-      "politic":"Politique de confidentialité",
-      "copyright":"© 2024 Mada Chaland. Tous droits réservés."
+  "footer": {
+    "text": "Votre agence de voyage spécialisée dans les circuits sur mesure à Madagascar.",
+    "followOur": "Suivez-nous",
+    "legalInfos": {
+      "title": "Informations légales",
+      "legalMention": "Mentions légales",
+      "politic": "Politique de confidentialité",
+      "copyright": "© 2024 Mada Chaland. Tous droits réservés."
     }
   },
   "common": {
@@ -134,5 +134,29 @@
     "light": "Mode clair",
     "dark": "Mode sombre",
     "system": "Système"
+  },
+  "detailCircuit": {
+    "navigation": {
+      "home": "Accueil",
+      "tours": "Circuits"
+    },
+    "itinerary": {
+      "detailed": "Itinéraire détaillé",
+      "day": "Jour"
+    },
+    "booking": {
+      "pricePerPerson": "par personne",
+      "reserveNow": "Réserver maintenant",
+      "askInfo": "Demander des infos"
+    },
+    "highlights": {
+      "title": "Points forts du circuit"
+    },
+    "included": {
+      "title": "Inclus dans le prix"
+    },
+    "notIncluded": {
+      "title": "Non inclus"
+    }
   }
 }

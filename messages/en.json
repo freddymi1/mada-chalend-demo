@@ -9,11 +9,11 @@
   "navigation": {
     "home": "Home",
     "about": "About",
-    "tours": "Our Tours",
+    "tours": "Our tours",
     "booking": "Booking",
     "blog": "Blog",
     "contact": "Contact",
-    "car":"Our car"
+    "car": "Our cars"
   },
   "about": {
     "title": "Who are we?",
@@ -56,13 +56,13 @@
       "name": "Last Name",
       "firstname": "First Name",
       "email": "Email Address",
-      "circuit":"Circuit",
+      "circuit": "Circuit",
       "phone": "Phone",
-      "address":"Address",
+      "address": "Address",
       "personNumber": "Number of people",
-      "startDate" : "Start date",
-      "endDate" : "End date",
-      "duration":"Duration",
+      "startDate": "Start date",
+      "endDate": "End date",
+      "duration": "Duration",
       "datePL": "Ex: From July 15 to 25, 2024",
       "nb": "Preferences or remarks",
       "nbPL": "Describe your preferences, interests, or any useful information...",
@@ -100,10 +100,10 @@
     "day": "day",
     "seat": "seats",
     "photo": "photos",
-    "other":"others",
+    "other": "others",
     "viewDetail": "View details",
     "details": {
-       "day":"day",
+      "day": "day",
       "book": "Description",
       "assurence": "Insurance included",
       "equipment": "Equipment",
@@ -134,5 +134,29 @@
     "light": "Light mode",
     "dark": "Dark mode",
     "system": "System"
+  },
+  "detailCircuit": {
+    "navigation": {
+      "home": "Home",
+      "tours": "Tours"
+    },
+    "itinerary": {
+      "detailed": "Detailed Itinerary",
+      "day": "Day"
+    },
+    "booking": {
+      "pricePerPerson": "per person",
+      "reserveNow": "Book Now",
+      "askInfo": "Request Information"
+    },
+    "highlights": {
+      "title": "Tour Highlights"
+    },
+    "included": {
+      "title": "Included in the Price"
+    },
+    "notIncluded": {
+      "title": "Not Included"
+    }
   }
 }
