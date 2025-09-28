@@ -83,7 +83,9 @@ model NotIncluded {
 
 model Reservation {
   id          String   @id @default(cuid())
-  circuitId   String   // Nouveau champ pour la relation
+  resType     String   @default("circuit")
+  circuitId   String?   // Nouveau champ pour la relation
+  vehicleId   String?
   nom         String
   prenom      String
   email       String
@@ -100,6 +102,7 @@ model Reservation {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   circuitRel  Circuit? @relation(fields: [circuitId], references: [id], onDelete: Cascade) // Relation
+  vehicleRel  Vehicle? @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
 
   @@map("reservations") // Changé de "reservation" à "reservations" pour plus de cohérence
 }
@@ -116,9 +119,11 @@ model Vehicle {
   detailImages  String[]
   features      String[]
   description   String
+  status        String @default("dispo")
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt
   categoryRel   Category       @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  reservations Reservation[]
 
   @@map("vehicles")
 }

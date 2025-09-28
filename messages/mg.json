@@ -51,11 +51,16 @@
   "book": {
     "title": "Mamoròna famandrihana ny dianao",
     "subtitle": "Ataovy mora ny famandrihana ny dianao miaraka amin’i Mada Chaland. Ampidiro ny daty tianao, ny isan’ny olona ary ny safidinao, dia hanolotra drafitra manokana ho anao izahay.",
+    "tabs": {
+      "circuit": "Lalana",
+      "car": "Fiara"
+    },
     "form": {
       "title": "Taratasy famandrihana",
       "name": "Anarana",
       "firstname": "Fanampin’anarana",
       "circuit": "Ny Lalana",
+      "car": "Fiara",
       "email": "Adiresy mailaka",
       "phone": "Finday",
       "address": "Adiresy",

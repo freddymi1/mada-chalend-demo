@@ -9,37 +9,23 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/client/ui/card";
-import { Button } from "@/components/client/ui/button";
-import { Input } from "@/components/client/ui/input";
-import { Label } from "@/components/client/ui/label";
-import { Textarea } from "@/components/client/ui/textarea";
-import { useToast } from "@/hooks/shared/use-toast";
 import { useTranslations } from "use-intl";
 import { useSearchParams } from "next/navigation";
 import { useClientCircuit } from "../providers/client/ClientCircuitProvider";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "./ui/select";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "./ui/dialog";
+
 import { useBooking } from "../providers/client/ClientBookingProvider";
 import { extraireJours } from "../helpers/extract-text";
+import { useClVehicle } from "../providers/client/ClVehicleProvider";
+import CircuitBooking from "./circuit-booking";
+import BookingOk from "./booking-ok";
+import CarBooking from "./car-booking";
 
 export function BookingSection() {
   const t = useTranslations("lng");
 
   const params = useSearchParams();
   const circuit = params.get("circuit");
+  const car = params.get("car");
 
   const { createReservation, loading, success } = useBooking();
 
@@ -54,6 +40,39 @@ export function BookingSection() {
   // État pour le popup de confirmation
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [pendingFormData, setPendingFormData] = useState<any>(null);
+
+  const { vehicles, fetchVehicles, getVehicleById, vehicleDetail } =
+    useClVehicle();
+
+  const [activeTabs, setActiveTabs] = useState<{
+    circuit: boolean;
+    voiture: boolean;
+  }>({
+    circuit: false,
+    voiture: true,
+  });
+
+  useEffect(() => {
+    if (car) {
+      getVehicleById(car.toString());
+    }
+  }, [car]);
+
+  useEffect(() => {
+    if (vehicleDetail) {
+      setFormData((prev) => ({
+        ...prev,
+        vehicle: vehicleDetail.id,
+      }));
+    }
+  }, [vehicleDetail]);
+
+  useEffect(() => {
+    const loadVehicles = async () => {
+      await fetchVehicles();
+    };
+    loadVehicles();
+  }, []);
 
   useEffect(() => {
     const loadCircuits = async () => {
@@ -70,6 +89,7 @@ export function BookingSection() {
 
   const [formData, setFormData] = useState({
     circuit: circuit ? circuit : "",
+    vehicle: car ? car : "",
     nom: "",
     prenom: "",
     email: "",
@@ -88,6 +108,8 @@ export function BookingSection() {
     e.preventDefault();
 
     const data = {
+      resType: activeTabs.circuit ? "circuit" : "car",
+      vehicle: formData.vehicle,
       circuit: formData.circuit,
       nom: formData.nom,
       prenom: formData.prenom,
@@ -113,24 +135,24 @@ export function BookingSection() {
 
     const res = await createReservation(pendingFormData);
 
-    console.log("RESS", res);
-    if (success) {
-      setFormData({
-        circuit: circuit ? circuit : "",
-        nom: "",
-        prenom: "",
-        email: "",
-        telephone: "",
-        address: "",
-        personnes: "",
-        nbrChild: "",
-        nbrAdult: "",
-        startDate: "",
-        endDate: "",
-        duration: "",
-        preferences: "",
-      });
-    }
+    // if (success) {
+    setFormData({
+      circuit: circuit ? circuit : "",
+      vehicle: car ? car : "",
+      nom: "",
+      prenom: "",
+      email: "",
+      telephone: "",
+      address: "",
+      personnes: "",
+      nbrChild: "",
+      nbrAdult: "",
+      startDate: "",
+      endDate: "",
+      duration: "",
+      preferences: "",
+    });
+    // }
 
     // Fermer le popup
     setShowConfirmDialog(false);
@@ -155,7 +177,7 @@ export function BookingSection() {
   const handlePersonnesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newPersonnes = e.target.value;
     const personnesNum = parseInt(newPersonnes) || 0;
-    
+
     setFormData((prev) => ({
       ...prev,
       personnes: newPersonnes,
@@ -169,11 +191,11 @@ export function BookingSection() {
     const newNbrAdult = e.target.value;
     const adultsNum = parseInt(newNbrAdult) || 0;
     const personnesNum = parseInt(formData.personnes) || 0;
-    
+
     // Limiter le nombre d'adultes au nombre total de personnes
     const maxAdults = Math.min(adultsNum, personnesNum);
     const remainingChildren = personnesNum - maxAdults;
-    
+
     setFormData((prev) => ({
       ...prev,
       nbrAdult: maxAdults.toString(),
@@ -187,10 +209,10 @@ export function BookingSection() {
     const childrenNum = parseInt(newNbrChild) || 0;
     const personnesNum = parseInt(formData.personnes) || 0;
     const adultsNum = parseInt(formData.nbrAdult) || 0;
-    
+
     // Limiter le nombre d'enfants pour que le total ne dépasse pas le nombre de personnes
     const maxChildren = Math.min(childrenNum, personnesNum - adultsNum);
-    
+
     setFormData((prev) => ({
       ...prev,
       nbrChild: Math.max(0, maxChildren).toString(),
@@ -204,6 +226,15 @@ export function BookingSection() {
     }));
     // Charger les détails du circuit sélectionné
     getCircuitById(value);
+  };
+
+  const handleCarChange = (value: string) => {
+    setFormData((prev) => ({
+      ...prev,
+      car: value,
+    }));
+    // Charger les détails du véhicule sélectionné
+    getVehicleById(value);
   };
 
   // Fonction pour calculer la date de fin
@@ -233,6 +264,20 @@ export function BookingSection() {
       }));
     }
   }, [circuitDetail?.duration]);
+
+  // Calcul duratio for reervation vehicle,  a partir de startDate et endDate
+  useEffect(() => {
+    if (formData?.startDate && formData?.endDate) {
+      const start = new Date(formData.startDate);
+      const end = new Date(formData.endDate);
+      const durationInDays =
+        Math.ceil((end.getTime() - start.getTime()) / (1000 * 3600 * 24)) + 1;
+      setFormData((prev) => ({
+        ...prev,
+        duration: durationInDays.toString(),
+      }));
+    }
+  }, [formData?.startDate, formData?.endDate]);
 
   // Calculer automatiquement la date de fin quand startDate ou duration change
   useEffect(() => {
@@ -275,7 +320,14 @@ export function BookingSection() {
     const selectedCircuit = addedCircuits?.find(
       (c) => (c.id || c._id) === circuitId
     );
-    return selectedCircuit?.title || selectedCircuit?.nom || "Circuit sélectionné";
+    return (
+      selectedCircuit?.title || selectedCircuit?.nom || "Circuit sélectionné"
+    );
+  };
+
+  const getVehicleName = (vehicleId: string) => {
+    const selectedVehicle = vehicles?.find((v) => v.id === vehicleId);
+    return selectedVehicle?.name || "Véhicule sélectionné";
   };
 
   return (
@@ -299,402 +351,86 @@ export function BookingSection() {
               <CardTitle>{t("book.form.title")}</CardTitle>
             </CardHeader>
             <CardContent>
-              <form onSubmit={handleSubmit} className="space-y-6">
-                {/* Select Circuit */}
-                <div
-                  className="space-y-2 animate-fade-in"
-                  style={{
-                    animationDelay: "0.4s",
-                    animationFillMode: "both",
-                  }}
+              {/* TABS */}
+              <div className="mb-6 w-full flex space-x-4">
+                <button
+                  className={`px-4 w-full py-2 rounded-t-lg font-medium ${
+                    activeTabs.circuit
+                      ? "bg-primary text-primary-foreground"
+                      : "bg-muted text-muted-foreground"
+                  }`}
+                  onClick={() =>
+                    setActiveTabs({ circuit: true, voiture: false })
+                  }
                 >
-                  <Label htmlFor="circuit">{t("book.form.circuit")} *</Label>
-                  <Select
-                    value={formData.circuit}
-                    onValueChange={handleCircuitChange}
-                    disabled={isLoading || !!circuit} // Désactivé si circuit en paramètre
-                  >
-                    <SelectTrigger className="w-full transition-all duration-300 focus:scale-105">
-                      <SelectValue
-                        placeholder={
-                          isLoading
-                            ? "Chargement des circuits..."
-                            : "Sélectionnez un circuit"
-                        }
-                      />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {addedCircuits?.map((circuitItem) => (
-                        <SelectItem
-                          key={circuitItem.id || circuitItem._id}
-                          value={circuitItem.id || circuitItem._id}
-                        >
-                          {circuitItem.title ||
-                            circuitItem.nom ||
-                            `Circuit ${circuitItem.id}`}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  {circuit && circuitDetail && (
-                    <p className="text-sm text-muted-foreground">
-                      Circuit sélectionné :{" "}
-                      {circuitDetail.title || circuitDetail.nom}
-                    </p>
-                  )}
-                </div>
-
-                <div className="grid md:grid-cols-2 gap-4">
-                  <div
-                    className="space-y-2 animate-fade-in"
-                    style={{
-                      animationDelay: "0.5s",
-                      animationFillMode: "both",
-                    }}
-                  >
-                    <Label htmlFor="nom">{t("book.form.name")} *</Label>
-                    <Input
-                      id="nom"
-                      name="nom"
-                      value={formData.nom}
-                      onChange={handleChange}
-                      required
-                      className="transition-all duration-300 focus:scale-105"
-                    />
-                  </div>
-                  <div
-                    className="space-y-2 animate-fade-in"
-                    style={{
-                      animationDelay: "0.6s",
-                      animationFillMode: "both",
-                    }}
-                  >
-                    <Label htmlFor="prenom">{t("book.form.firstname")} *</Label>
-                    <Input
-                      id="prenom"
-                      name="prenom"
-                      value={formData.prenom}
-                      onChange={handleChange}
-                      required
-                      className="transition-all duration-300 focus:scale-105"
-                    />
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                  <div
-                    className="space-y-2 animate-fade-in"
-                    style={{
-                      animationDelay: "0.7s",
-                      animationFillMode: "both",
-                    }}
-                  >
-                    <Label htmlFor="email">{t("book.form.email")} *</Label>
-                    <Input
-                      id="email"
-                      name="email"
-                      type="email"
-                      value={formData.email}
-                      onChange={handleChange}
-                      required
-                      className="transition-all duration-300 focus:scale-105"
-                    />
-                  </div>
-
-                  <div
-                    className="space-y-2 animate-fade-in"
-                    style={{
-                      animationDelay: "0.8s",
-                      animationFillMode: "both",
-                    }}
-                  >
-                    <Label htmlFor="telephone">{t("book.form.phone")}</Label>
-                    <Input
-                      id="telephone"
-                      name="telephone"
-                      type="tel"
-                      value={formData.telephone}
-                      onChange={handleChange}
-                      className="transition-all duration-300 focus:scale-105"
-                    />
-                  </div>
-                </div>
-
-                <div
-                  className="space-y-2 animate-fade-in"
-                  style={{ animationDelay: "0.9s", animationFillMode: "both" }}
+                  {t("book.tabs.circuit")}
+                </button>
+                <button
+                  className={`px-4 w-full py-2 rounded-t-lg font-medium ${
+                    activeTabs.voiture
+                      ? "bg-primary text-primary-foreground"
+                      : "bg-muted text-muted-foreground"
+                  }`}
+                  onClick={() =>
+                    setActiveTabs({ circuit: false, voiture: true })
+                  }
                 >
-                  <Label htmlFor="address">{t("book.form.address")} *</Label>
-                  <Input
-                    id="address"
-                    name="address"
-                    type="text"
-                    value={formData.address}
-                    onChange={handleChange}
-                    placeholder="Ex. Lot IIA xxx"
-                    required
-                    className="transition-all duration-300 focus:scale-105"
-                  />
-                </div>
+                  {t("book.tabs.car")}
+                </button>
+              </div>
 
-                <div
-                  className="space-y-2 animate-fade-in"
-                  style={{ animationDelay: "0.9s", animationFillMode: "both" }}
-                >
-                  <Label htmlFor="personnes">
-                    {t("book.form.personNumber")} *
-                  </Label>
-                  <Input
-                    id="personnes"
-                    name="personnes"
-                    type="number"
-                    min="1"
-                    value={formData.personnes}
-                    onChange={handlePersonnesChange}
-                    required
-                    className="transition-all duration-300 focus:scale-105"
-                  />
-                </div>
-
-                {/* Champs nbrAdult et nbrChild qui s'affichent seulement si personnes > 0 */}
-                {formData.personnes && parseInt(formData.personnes) > 0 && (
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                    <div
-                      className="space-y-2 animate-fade-in"
-                      style={{ animationDelay: "1s", animationFillMode: "both" }}
-                    >
-                      <Label htmlFor="nbrAdult">
-                        Nombre d'adultes *
-                      </Label>
-                      <Input
-                        id="nbrAdult"
-                        name="nbrAdult"
-                        type="number"
-                        min="0"
-                        max={formData.personnes}
-                        value={formData.nbrAdult}
-                        onChange={handleNbrAdultChange}
-                        required
-                        className="transition-all duration-300 focus:scale-105"
-                      />
-                    </div>
-                    <div
-                      className="space-y-2 animate-fade-in"
-                      style={{ animationDelay: "1.1s", animationFillMode: "both" }}
-                    >
-                      <Label htmlFor="nbrChild">
-                        Nombre d'enfants
-                      </Label>
-                      <Input
-                        id="nbrChild"
-                        name="nbrChild"
-                        type="number"
-                        min="0"
-                        max={Math.max(0, parseInt(formData.personnes) - parseInt(formData.nbrAdult || "0"))}
-                        value={formData.nbrChild}
-                        onChange={handleNbrChildChange}
-                        className="transition-all duration-300 focus:scale-105"
-                      />
-                    </div>
-                  </div>
-                )}
-
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                  <div
-                    className="space-y-2 animate-fade-in"
-                    style={{ animationDelay: "1.2s", animationFillMode: "both" }}
-                  >
-                    <Label htmlFor="startDate">
-                      {t("book.form.startDate")}
-                    </Label>
-                    <Input
-                      id="startDate"
-                      name="startDate"
-                      type="date"
-                      min={getTodayString()}
-                      value={formData.startDate}
-                      onChange={handleChange}
-                      className="transition-all duration-300 focus:scale-105"
-                    />
-                  </div>
-                  <div
-                    className="space-y-2 animate-fade-in"
-                    style={{ animationDelay: "1.2s", animationFillMode: "both" }}
-                  >
-                    <Label htmlFor="endDate">{t("book.form.endDate")}</Label>
-                    <Input
-                      id="endDate"
-                      name="endDate"
-                      type="date"
-                      value={formData.endDate}
-                      disabled // Désactivé car calculé automatiquement
-                      className="transition-all duration-300 focus:scale-105 bg-muted"
-                    />
-                  </div>
-                </div>
-
-                <div
-                  className="space-y-2 animate-fade-in"
-                  style={{ animationDelay: "1.3s", animationFillMode: "both" }}
-                >
-                  <Label htmlFor="duration">{t("book.form.duration")}</Label>
-                  <Input
-                    id="duration"
-                    name="duration"
-                    value={formData.duration}
-                    disabled
-                    className="transition-all duration-300 focus:scale-105 bg-muted"
-                  />
-                </div>
-
-                <div
-                  className="space-y-2 animate-fade-in"
-                  style={{ animationDelay: "1.4s", animationFillMode: "both" }}
-                >
-                  <Label htmlFor="preferences">{t("book.form.nb")}</Label>
-                  <Textarea
-                    id="preferences"
-                    name="preferences"
-                    placeholder={t("book.form.nbPL")}
-                    value={formData.preferences}
-                    onChange={handleChange}
-                    rows={4}
-                    className="transition-all duration-300 focus:scale-105"
-                  />
-                </div>
-
-                <div
-                  className="animate-bounce-in"
-                  style={{ animationDelay: "1.5s", animationFillMode: "both" }}
-                >
-                  <Button
-                    disabled={loading}
-                    type="submit"
-                    className="w-full hover-glow"
-                    size="lg"
-                  >
-                    {loading ? (
-                      <span>Loading...</span>
-                    ) : (
-                      <span>{t("book.form.cta")}</span>
-                    )}
-                  </Button>
-                </div>
-              </form>
+              {activeTabs.circuit ? (
+                <CircuitBooking
+                  circuit={circuit}
+                  circuitDetail={circuitDetail}
+                  addedCircuits={addedCircuits}
+                  isLoading={isLoading}
+                  formData={formData}
+                  handleChange={handleChange}
+                  handleCircuitChange={handleCircuitChange}
+                  handlePersonnesChange={handlePersonnesChange}
+                  handleNbrAdultChange={handleNbrAdultChange}
+                  handleNbrChildChange={handleNbrChildChange}
+                  handleSubmit={handleSubmit}
+                  loading={loading}
+                  getTodayString={getTodayString}
+                />
+              ) : (
+                <CarBooking
+                  vehicle={car}
+                  vehicles={vehicles}
+                  vehicleDetail={vehicleDetail}
+                  isLoading={isLoading}
+                  formData={formData}
+                  handleChange={handleChange}
+                  handleCarChange={handleCarChange}
+                  handlePersonnesChange={handlePersonnesChange}
+                  handleNbrAdultChange={handleNbrAdultChange}
+                  handleNbrChildChange={handleNbrChildChange}
+                  handleSubmit={handleSubmit}
+                  loading={loading}
+                  getTodayString={getTodayString}
+                />
+              )}
             </CardContent>
           </Card>
         </div>
       </div>
 
       {/* Popup de confirmation */}
-      <Dialog open={showConfirmDialog} onOpenChange={setShowConfirmDialog}>
-        <DialogContent className="max-w-lg">
-          <DialogHeader>
-            <DialogTitle>Confirmer votre réservation</DialogTitle>
-            <DialogDescription>
-              Veuillez vérifier les informations de votre réservation avant de confirmer.
-            </DialogDescription>
-          </DialogHeader>
-          
-          {pendingFormData && (
-            <div className="space-y-4 py-4">
-              <div className="grid grid-cols-2 gap-4 text-sm">
-                <div>
-                  <strong>Circuit :</strong>
-                  <p className="text-muted-foreground">
-                    {getCircuitName(pendingFormData.circuit)}
-                  </p>
-                </div>
-                <div>
-                  <strong>Durée :</strong>
-                  <p className="text-muted-foreground">
-                    {pendingFormData.duration} jour{parseInt(pendingFormData.duration) > 1 ? "s" : ""}
-                  </p>
-                </div>
-              </div>
-              
-              <div className="grid grid-cols-2 gap-4 text-sm">
-                <div>
-                  <strong>Client :</strong>
-                  <p className="text-muted-foreground">
-                    {pendingFormData.prenom} {pendingFormData.nom}
-                  </p>
-                </div>
-                <div>
-                  <strong>Email :</strong>
-                  <p className="text-muted-foreground">
-                    {pendingFormData.email}
-                  </p>
-                </div>
-              </div>
-              
-              <div className="grid grid-cols-3 gap-4 text-sm">
-                <div>
-                  <strong>Personnes :</strong>
-                  <p className="text-muted-foreground">
-                    {pendingFormData.personnes}
-                  </p>
-                </div>
-                <div>
-                  <strong>Adultes :</strong>
-                  <p className="text-muted-foreground">
-                    {pendingFormData.nbrAdult}
-                  </p>
-                </div>
-                <div>
-                  <strong>Enfants :</strong>
-                  <p className="text-muted-foreground">
-                    {pendingFormData.nbrChild}
-                  </p>
-                </div>
-              </div>
-              
-              {pendingFormData.startDate && (
-                <div className="grid grid-cols-2 gap-4 text-sm">
-                  <div>
-                    <strong>Date de début :</strong>
-                    <p className="text-muted-foreground">
-                      {formatDate(pendingFormData.startDate)}
-                    </p>
-                  </div>
-                  <div>
-                    <strong>Date de fin :</strong>
-                    <p className="text-muted-foreground">
-                      {formatDate(pendingFormData.endDate)}
-                    </p>
-                  </div>
-                </div>
-              )}
-              
-              {pendingFormData.preferences && (
-                <div className="text-sm">
-                  <strong>Préférences :</strong>
-                  <p className="text-muted-foreground mt-1">
-                    {pendingFormData.preferences}
-                  </p>
-                </div>
-              )}
-            </div>
-          )}
-          
-          <DialogFooter>
-            <Button
-              variant="outline"
-              onClick={handleCancelReservation}
-              disabled={loading}
-            >
-              Annuler
-            </Button>
-            <Button
-              onClick={handleConfirmReservation}
-              disabled={loading}
-              className="hover-glow"
-            >
-              {loading ? "Confirmation..." : "Confirmer la réservation"}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+
+      <BookingOk
+        restType={activeTabs.circuit ? "circuit" : "car"}
+        showConfirmDialog={showConfirmDialog}
+        setShowConfirmDialog={setShowConfirmDialog}
+        pendingFormData={pendingFormData}
+        loading={loading}
+        handleCancelReservation={handleCancelReservation}
+        handleConfirmReservation={handleConfirmReservation}
+        getCircuitName={getCircuitName}
+        getVehicleName={getVehicleName}
+        formatDate={formatDate}
+      />
     </section>
   );
 }

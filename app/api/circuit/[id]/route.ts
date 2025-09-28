@@ -48,7 +48,7 @@ export async function GET(
 
     const totalPersonnesReservees = stats._sum.personnes || 0;
     const reservationCount = stats._count.id || 0;
-    const placesDisponibles = Math.max(0, circuit.maxPeople - totalPersonnesReservees);
+    const placesDisponibles = Math.max(0, circuit.maxPeople! - totalPersonnesReservees);
 
     // Fusionner les données du circuit avec les statistiques
     const circuitWithStats = {

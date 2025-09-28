@@ -32,7 +32,9 @@ export async function POST(req: NextRequest) {
     console.log("BODY", body);
 
     const {
+      resType,
       circuit,
+      vehicle,
       nom,
       prenom,
       email,
@@ -51,41 +53,94 @@ export async function POST(req: NextRequest) {
     const personnesNumber = parseInt(personnes, 10);
     const durationNumber = parseInt(duration, 10);
 
-    // 🔹 Récupérer les détails du circuit
-    const circuitDetails = await prisma.circuit.findUnique({
-      where: { id: circuit },
-      select: {
-        id: true,
-        title: true,
-        description: true,
-      },
-    });
+    // Initialize variables for details
+    let circuitDetails = null;
+    let carsDetails = null;
 
-    if (!circuitDetails) {
-      return NextResponse.json(
-        { error: "Circuit non trouvé" },
-        { status: 404 }
-      );
+    // 🔹 Validate based on reservation type
+    if (resType === "circuit") {
+      if (!circuit) {
+        return NextResponse.json(
+          { error: "Circuit ID is required for circuit reservations" },
+          { status: 400 }
+        );
+      }
+
+      // 🔹 Récupérer les détails du circuit
+      circuitDetails = await prisma.circuit.findUnique({
+        where: { id: circuit },
+        select: {
+          id: true,
+          title: true,
+          description: true,
+        },
+      });
+
+      if (!circuitDetails) {
+        return NextResponse.json(
+          { error: "Circuit non trouvé" },
+          { status: 404 }
+        );
+      }
+    }
+
+    if (resType === "vehicle" || vehicle) {
+      if (!vehicle) {
+        return NextResponse.json(
+          { error: "Vehicle ID is required for vehicle reservations" },
+          { status: 400 }
+        );
+      }
+
+      carsDetails = await prisma.vehicle.findUnique({
+        where: { id: vehicle },
+        select: {
+          id: true,
+          name: true,
+          type: true,
+          passengers: true
+        }
+      });
+
+      if (!carsDetails) {
+        return NextResponse.json(
+          { error: "Vehicle non trouvé" },
+          { status: 404 }
+        );
+      }
+    }
+
+    // 🔹 Prepare reservation data based on type
+    const reservationData: any = {
+      resType,
+      nom,
+      prenom,
+      email,
+      telephone,
+      address,
+      personnes: Number(personnesNumber),
+      nbrChild: Number(nbrChild),
+      nbrAdult: Number(nbrAdult),
+      startDate: new Date(startDate),
+      endDate: new Date(endDate),
+      duration: durationNumber,
+      preferences,
+      status: "en_attente",
+    };
+
+    // Only add circuitId if it's a circuit reservation and circuit exists
+    if (resType === "circuit" && circuit) {
+      reservationData.circuitId = circuit;
+    }
+
+    // Only add vehicleId if it's provided and vehicle exists
+    if (vehicle) {
+      reservationData.vehicleId = vehicle;
     }
 
     // 🔹 Sauvegarde dans la BDD
     const reservation = await prisma.reservation.create({
-      data: {
-        circuitId: circuit,
-        nom,
-        prenom,
-        email,
-        telephone,
-        address,
-        personnes: Number(personnesNumber),
-        nbrChild: Number(nbrChild),
-        nbrAdult: Number(nbrAdult),
-        startDate: new Date(startDate),
-        endDate: new Date(endDate),
-        duration: durationNumber,
-        preferences,
-        status: "en_attente",
-      },
+      data: reservationData,
     });
 
     // 🔹 Formatage des dates
@@ -98,7 +153,12 @@ export async function POST(req: NextRequest) {
       });
     };
 
-    // 🔹 Email avec design élégant
+    // 🔹 Determine the title for email based on reservation type
+    const reservationTitle = resType === "circuit" 
+      ? circuitDetails?.title 
+      : carsDetails?.name;
+
+    // 🔹 Email with elegant design
     const htmlMessage = `
       <!DOCTYPE html>
       <html>
@@ -143,7 +203,7 @@ export async function POST(req: NextRequest) {
             ">Une demande de réservation vient d'être reçue</p>
           </div>
 
-          <!-- Circuit destacado -->
+          <!-- Service destacado -->
           <div style="
             background: rgba(255,255,255,0.95);
             margin: 0 20px;
@@ -157,16 +217,14 @@ export async function POST(req: NextRequest) {
               margin: 0 0 5px 0;
               font-size: 24px;
               font-weight: 600;
-            ">🗺️ ${circuitDetails.title}</h2>
-            
-            <div style="
-              margin-top: 10px;
-              display: flex;
-              justify-content: center;
-              gap: 20px;
-              flex-wrap: wrap;
-            ">
-            </div>
+            ">${resType === "circuit" ? "🗺️" : "🚗"} ${reservationTitle || 'Service'}</h2>
+            <p style="
+              color: #4a5568;
+              margin: 5px 0 0 0;
+              font-size: 14px;
+              text-transform: uppercase;
+              letter-spacing: 1px;
+            ">Type: ${resType}</p>
           </div>
 
           <!-- Main Content -->
@@ -224,11 +282,13 @@ export async function POST(req: NextRequest) {
                 <tr>
                   <td style="
                     padding: 12px 0;
+                    border-bottom: 1px solid #f7fafc;
                     color: #4a5568;
                     font-weight: 600;
                   ">Téléphone:</td>
                   <td style="
                     padding: 12px 0;
+                    border-bottom: 1px solid #f7fafc;
                     color: #2d3748;
                   ">
                     <a href="tel:${telephone}" style="
@@ -246,12 +306,7 @@ export async function POST(req: NextRequest) {
                   <td style="
                     padding: 12px 0;
                     color: #2d3748;
-                  ">
-                    <a href="tel:${address}" style="
-                      color: #667eea;
-                      text-decoration: none;
-                    ">${address}</a>
-                  </td>
+                  ">${address}</td>
                 </tr>
               </table>
             </div>
@@ -448,7 +503,7 @@ export async function POST(req: NextRequest) {
     await transporter.sendMail({
       from: `"Nouvelle Réservation" <${process.env.EMAIL_USER}>`,
       to: process.env.EMAIL_USER,
-      subject: `🎯 Nouvelle réservation: ${circuitDetails.title} - ${nom} ${prenom}`,
+      subject: `🎯 Nouvelle réservation: ${reservationTitle} - ${nom} ${prenom}`,
       html: htmlMessage,
     });
 

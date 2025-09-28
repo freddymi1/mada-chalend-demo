@@ -1,3 +1,4 @@
+import { Vehicle } from "./car";
 import { Circuit } from "./circuit";
 
 export enum Status {
@@ -9,7 +10,9 @@ export enum Status {
 
 export interface Reservation {
   id?: string;
-  circuit: string;
+  resType?: string;
+  circuit?: string;
+  vehicle?: string;
   nom: string;
   prenom: string;
   email: string;
@@ -23,6 +26,7 @@ export interface Reservation {
   duration: string; // nombre de jours
   preferences: string;
   circuitRel?: Circuit;
+  vehicleRel?: Vehicle;
   status?: Status; // facultatif
   createdAt?: any;
 }

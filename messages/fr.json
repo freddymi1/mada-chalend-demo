@@ -51,10 +51,15 @@
   "book": {
     "title": "Réservez votre voyage",
     "subtitle": "Réservez facilement votre circuit avec Mada Chaland. Indiquez vos dates, le nombre de personnes et vos préférences, et nous vous proposerons un itinéraire sur mesure.",
+    "tabs": {
+      "circuit": "Circuit",
+      "car": "Voiture"
+    },
     "form": {
       "title": "Formulaire de réservation",
       "name": "Nom",
       "circuit": "Circuit",
+      "car": "Véhicule",
       "firstname": "Prénom",
       "email": "Adresse email",
       "phone": "Téléphone",

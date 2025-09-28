@@ -3,6 +3,7 @@
 import { Vehicle } from "@/src/domain/entities/car";
 import { Eye, Heart, Star, Users } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 export const VehicleCard: React.FC<{
@@ -11,7 +12,9 @@ export const VehicleCard: React.FC<{
   onShowDetails: (vehicle: Vehicle) => void;
 }> = ({ vehicle, isDark, onShowDetails }) => {
   const [isFavorite, setIsFavorite] = useState(false);
-  const t = useTranslations('lng')
+  const t = useTranslations('lng');
+
+  const router = useRouter();
 
   return (
     <div
@@ -154,7 +157,7 @@ export const VehicleCard: React.FC<{
             <Eye className="w-4 h-4" />
             {t("car.viewDetail")}
           </button>
-          <button className="flex justify-center w-full px-6 py-2 bg-primary text-white rounded-lg font-medium transition-colors hover:scale-105">
+          <button onClick={()=>router.push(`/reservation?car=${vehicle.id}`)} className="flex justify-center w-full px-6 py-2 bg-primary text-white rounded-lg font-medium transition-colors hover:scale-105">
             {t("car.details.booknow")}
           </button>
         </div>

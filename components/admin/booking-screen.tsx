@@ -78,6 +78,7 @@ const BookingScreen = () => {
         reservation.nom.toLowerCase().includes(searchTerm.toLowerCase()) ||
         reservation.prenom.toLowerCase().includes(searchTerm.toLowerCase()) ||
         reservation.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        reservation.resType?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         reservation?.circuitRel?.title
           .toLowerCase()
           .includes(searchTerm.toLowerCase());

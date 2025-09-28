@@ -2,6 +2,7 @@
 
 import { ChevronLeft, ChevronRight, X, Star, Users, Tag, Play, Pause } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { useRouter } from "next/navigation";
 import { useEffect, useState, useRef, useCallback } from "react";
 
 // Interface Vehicle
@@ -45,6 +46,8 @@ export const ImageModal: React.FC<{
   const touchStartX = useRef<number>(0);
   const touchEndX = useRef<number>(0);
   const imageContainerRef = useRef<HTMLDivElement>(null);
+
+  const router = useRouter()
   
   const t = useTranslations('lng');
 
@@ -431,7 +434,7 @@ export const ImageModal: React.FC<{
 
             {/* Boutons d'action */}
             <div className="flex gap-3 pt-2">
-              <button className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors">
+              <button onClick={()=>router.push(`/reservation?car=${vehicle.id}`)} className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors">
                 {t("car.details.booknow")}
               </button>
               <button 

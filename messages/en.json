@@ -51,12 +51,17 @@
   "book": {
     "title": "Book your trip",
     "subtitle": "Easily book your tour with Mada Chaland. Enter your dates, the number of people, and your preferences, and we will suggest a tailor-made itinerary.",
+    "tabs": {
+      "circuit": "Circuit",
+      "car": "Car"
+    },
     "form": {
       "title": "Booking Form",
       "name": "Last Name",
       "firstname": "First Name",
       "email": "Email Address",
       "circuit": "Circuit",
+      "car": "Vehicle",
       "phone": "Phone",
       "address": "Address",
       "personNumber": "Number of people",
