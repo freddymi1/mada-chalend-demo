@@ -27,6 +27,7 @@ export function BookingSection() {
   const circuit = params.get("circuit");
   const car = params.get("car");
 
+
   const { createReservation, loading, success } = useBooking();
 
   const {
@@ -48,15 +49,9 @@ export function BookingSection() {
     circuit: boolean;
     voiture: boolean;
   }>({
-    circuit: false,
-    voiture: true,
+    circuit: true,
+    voiture: false,
   });
-
-  useEffect(() => {
-    if (car) {
-      getVehicleById(car.toString());
-    }
-  }, [car]);
 
   useEffect(() => {
     if (vehicleDetail) {
@@ -86,6 +81,12 @@ export function BookingSection() {
       getCircuitById(circuit.toString());
     }
   }, [circuit]);
+
+  useEffect(() => {
+    if (car) {
+      getVehicleById(car.toString());
+    }
+  }, [car]);
 
   const [formData, setFormData] = useState({
     circuit: circuit ? circuit : "",

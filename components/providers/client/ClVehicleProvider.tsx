@@ -79,7 +79,7 @@ export const ClVehicleProvider = ({ children }: { children: ReactNode }) => {
       } else {
         toast({
           title: "Erreur !",
-          description: "Erreur lors du chargement du véhicule.",
+          description: `Erreur lors du chargement du véhicule ${id}.`,
           variant: "destructive",
         });
         return null;
@@ -87,7 +87,7 @@ export const ClVehicleProvider = ({ children }: { children: ReactNode }) => {
     } catch (error) {
       toast({
         title: "Erreur !",
-        description: "Erreur lors du chargement du véhicule.",
+        description: `Erreur lors du chargement du véhicule ${id}.`,
         variant: "destructive",
       });
       return null;
