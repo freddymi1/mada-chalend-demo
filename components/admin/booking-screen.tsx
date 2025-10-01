@@ -25,7 +25,7 @@ const BookingScreen = () => {
   // Simulation des données de réservation basées sur votre format
 
   const { bookingData, getAllBokkingData, loading } = useAdminBooking();
-  const {handleUpdate, isLoading} = useVehicle()
+  const { handleUpdate, isLoading } = useVehicle();
 
   const [searchTerm, setSearchTerm] = useState("");
   const [restTypeFilter, setResTypeFilter] = useState("tous");
@@ -90,15 +90,14 @@ const BookingScreen = () => {
       const matchesStatus =
         statusFilter === "tous" || reservation.status === statusFilter;
 
-        const reservationFilter = restTypeFilter === "tous" || reservation.resType === restTypeFilter
+      const reservationFilter =
+        restTypeFilter === "tous" || reservation.resType === restTypeFilter;
 
       return matchesSearch && matchesStatus && reservationFilter;
     }
   );
 
-  const handleValidateBooking = (id: string)=>{
-
-  }
+  const handleValidateBooking = (id: string) => {};
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-indigo-50 p-6">
@@ -133,7 +132,7 @@ const BookingScreen = () => {
                 </div>
 
                 {/* Filtres */}
-                
+
                 <div className="flex gap-3">
                   <select
                     value={restTypeFilter}
@@ -234,13 +233,16 @@ const BookingScreen = () => {
                         </span>
 
                         <div className="flex gap-2">
-                          {
-                            reservation.status ==="en_attente" && (
-                              <button onClick={()=> handleValidateBooking(reservation?.id)} className="p-2 text-gray-400 cursor-pointer hover:text-green-600 hover:bg-indigo-50 rounded-lg transition-colors">
-                                <CheckCircle className="w-4 h-4"/>
-                              </button>
-                            )
-                          }
+                          {reservation.status === "en_attente" && (
+                            <button
+                              onClick={() =>
+                                handleValidateBooking(reservation?.id)
+                              }
+                              className="p-2 text-gray-400 cursor-pointer hover:text-green-600 hover:bg-indigo-50 rounded-lg transition-colors"
+                            >
+                              <CheckCircle className="w-4 h-4" />
+                            </button>
+                          )}
                           <button className="p-2 text-gray-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors">
                             <Eye className="w-4 h-4" />
                           </button>
@@ -293,41 +295,71 @@ const BookingScreen = () => {
                         <h4 className="font-medium text-gray-900 mb-3">
                           Détails du Voyage
                         </h4>
-                        <div className="bg-gradient-to-r from-indigo-50 to-blue-50 rounded-xl p-4">
-                          <a
-                            href={`/admin/circuits/${reservation?.circuitRel?.id}`}
-                            className="font-bold text-xl text-indigo-900 mb-2"
-                          >
-                            {reservation?.circuitRel?.title}
-                          </a>
-                          <div className="space-y-2 text-sm">
-                            <div className="flex justify-between">
-                              <span className="text-gray-600">Prix:</span>
-                              <span className="font-medium text-green-600">
-                                {reservation?.circuitRel?.price}€
-                              </span>
-                            </div>
-                            <div className="flex justify-between">
-                              <span className="text-gray-600">Difficulté:</span>
-                              <span className="font-medium text-black/80">
-                                {reservation?.circuitRel?.difficulty}
-                              </span>
-                            </div>
-                            <div className="flex justify-between">
-                              <span className="text-gray-600">Dates:</span>
-                              <span className="font-medium text-primary">
-                                {formatDate(reservation?.startDate)} -{" "}
-                                {formatDate(reservation?.endDate)}
-                              </span>
-                            </div>
-                            <div className="flex justify-between">
-                              <span className="text-gray-600">Durée:</span>
-                              <span className="font-medium text-black/80">
-                                {reservation?.circuitRel?.duration}
-                              </span>
+                        {reservation.resType === "circuit" ? (
+                          <div className="bg-gradient-to-r from-indigo-50 to-blue-50 rounded-xl p-4">
+                            <a
+                              href={`/admin/circuits/${reservation?.circuitRel?.id}`}
+                              className="font-bold text-xl text-indigo-900 mb-2"
+                            >
+                              {reservation?.circuitRel?.title}
+                            </a>
+                            <div className="space-y-2 text-sm">
+                              <div className="flex justify-between">
+                                <span className="text-gray-600">Prix:</span>
+                                <span className="font-medium text-green-600">
+                                  {reservation?.circuitRel?.price}€
+                                </span>
+                              </div>
+                              <div className="flex justify-between">
+                                <span className="text-gray-600">
+                                  Difficulté:
+                                </span>
+                                <span className="font-medium text-black/80">
+                                  {reservation?.circuitRel?.difficulty}
+                                </span>
+                              </div>
+                              <div className="flex justify-between">
+                                <span className="text-gray-600">Dates:</span>
+                                <span className="font-medium text-primary">
+                                  {formatDate(reservation?.startDate)} -{" "}
+                                  {formatDate(reservation?.endDate)}
+                                </span>
+                              </div>
+                              <div className="flex justify-between">
+                                <span className="text-gray-600">Durée:</span>
+                                <span className="font-medium text-black/80">
+                                  {reservation?.circuitRel?.duration}
+                                </span>
+                              </div>
                             </div>
                           </div>
-                        </div>
+                        ) : (
+                          <div className="bg-gradient-to-r from-indigo-50 to-blue-50 rounded-xl p-4">
+                            <a
+                              href={`/admin/circuits/${reservation?.vehicleRel?.id}`}
+                              className="font-bold text-xl text-indigo-900 mb-2"
+                            >
+                              {reservation?.vehicleRel?.name}
+                            </a>
+                            <div className="space-y-2 text-sm">
+                              <div className="flex justify-between">
+                                <span className="text-gray-600">Prix:</span>
+                                <span className="font-medium text-green-600">
+                                  {reservation?.vehicleRel?.pricePerDay}€/Jour
+                                </span>
+                              </div>
+                              
+                              <div className="flex justify-between">
+                                <span className="text-gray-600">Dates:</span>
+                                <span className="font-medium text-primary">
+                                  {formatDate(reservation?.startDate)} -{" "}
+                                  {formatDate(reservation?.endDate)}
+                                </span>
+                              </div>
+                              
+                            </div>
+                          </div>
+                        )}
                       </div>
                     </div>
 
