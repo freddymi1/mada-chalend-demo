@@ -21,6 +21,7 @@ export async function GET(req: Request) {
     const page = parseInt(searchParams.get('page') || '1');
     const limit = parseInt(searchParams.get('limit') || '10');
     const status = searchParams.get('status');
+    const resType = searchParams.get('resType');
     const search = searchParams.get('search');
 
     // Calcul de la pagination
@@ -29,8 +30,12 @@ export async function GET(req: Request) {
     // Construction du filtre WHERE
     const where: any = {};
 
-    if (status && status !== 'all') {
+    if (status && status !== 'all' ) {
       where.status = status;
+    }
+
+    if (resType && resType !== 'all' ) {
+      where.resType = resType;
     }
 
     if (search) {

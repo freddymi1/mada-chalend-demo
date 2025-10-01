@@ -12,6 +12,7 @@ export async function GET() {
     const vehicles = await prisma.vehicle.findMany({
         include: {
             categoryRel: true, // Include related category
+            reservations:true
         },
         orderBy: { createdAt: "desc" },
     });

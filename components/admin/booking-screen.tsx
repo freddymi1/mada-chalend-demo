@@ -14,17 +14,21 @@ import {
   Trash2,
   ChevronLeft,
   ChevronRight,
+  CheckCircle,
 } from "lucide-react";
 import { useAdminBooking } from "../providers/admin/BookingProvider";
 import { Reservation } from "@/src/domain/entities/reservation";
 import { LoadingSpinner } from "../client/loading";
+import { useVehicle } from "../providers/admin/VehicleProvider";
 
 const BookingScreen = () => {
   // Simulation des données de réservation basées sur votre format
 
   const { bookingData, getAllBokkingData, loading } = useAdminBooking();
+  const {handleUpdate, isLoading} = useVehicle()
 
   const [searchTerm, setSearchTerm] = useState("");
+  const [restTypeFilter, setResTypeFilter] = useState("tous");
   const [statusFilter, setStatusFilter] = useState("tous");
   const [dateFilter, setDateFilter] = useState("");
   const [showFilters, setShowFilters] = useState(false);
@@ -86,9 +90,15 @@ const BookingScreen = () => {
       const matchesStatus =
         statusFilter === "tous" || reservation.status === statusFilter;
 
-      return matchesSearch && matchesStatus;
+        const reservationFilter = restTypeFilter === "tous" || reservation.resType === restTypeFilter
+
+      return matchesSearch && matchesStatus && reservationFilter;
     }
   );
+
+  const handleValidateBooking = (id: string)=>{
+
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-indigo-50 p-6">
@@ -123,7 +133,17 @@ const BookingScreen = () => {
                 </div>
 
                 {/* Filtres */}
+                
                 <div className="flex gap-3">
+                  <select
+                    value={restTypeFilter}
+                    onChange={(e) => setResTypeFilter(e.target.value)}
+                    className="px-4 py-3 border text-black border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white min-w-32"
+                  >
+                    <option value="tous">Tous les reservations</option>
+                    <option value="circuit">Circuit</option>
+                    <option value="car">Voiture</option>
+                  </select>
                   <select
                     value={statusFilter}
                     onChange={(e) => setStatusFilter(e.target.value)}
@@ -149,7 +169,8 @@ const BookingScreen = () => {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6 pt-6 border-t border-gray-100">
                 <div className="text-center">
                   <div className="text-2xl font-bold text-indigo-600">
-                    {bookingData?.pagination?.totalCount}
+                    {/* {bookingData?.pagination?.totalCount} */}
+                    {filteredReservations?.length}
                   </div>
                   <div className="text-sm text-gray-600">
                     Total réservations
@@ -213,6 +234,13 @@ const BookingScreen = () => {
                         </span>
 
                         <div className="flex gap-2">
+                          {
+                            reservation.status ==="en_attente" && (
+                              <button onClick={()=> handleValidateBooking(reservation?.id)} className="p-2 text-gray-400 cursor-pointer hover:text-green-600 hover:bg-indigo-50 rounded-lg transition-colors">
+                                <CheckCircle className="w-4 h-4"/>
+                              </button>
+                            )
+                          }
                           <button className="p-2 text-gray-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors">
                             <Eye className="w-4 h-4" />
                           </button>
@@ -266,7 +294,10 @@ const BookingScreen = () => {
                           Détails du Voyage
                         </h4>
                         <div className="bg-gradient-to-r from-indigo-50 to-blue-50 rounded-xl p-4">
-                          <a href={`/admin/circuits/${reservation?.circuitRel?.id}`} className="font-bold text-xl text-indigo-900 mb-2">
+                          <a
+                            href={`/admin/circuits/${reservation?.circuitRel?.id}`}
+                            className="font-bold text-xl text-indigo-900 mb-2"
+                          >
                             {reservation?.circuitRel?.title}
                           </a>
                           <div className="space-y-2 text-sm">

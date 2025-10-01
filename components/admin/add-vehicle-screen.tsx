@@ -18,6 +18,7 @@ import {
   Loader,
 } from "lucide-react";
 import { useVehicle } from "../providers/admin/VehicleProvider";
+import { useSearchParams } from "next/navigation";
 
 // Theme hook
 const useTheme = () => {
@@ -40,6 +41,8 @@ const useTheme = () => {
 
 const AddVehicleScreen: React.FC = () => {
   const { isDark } = useTheme();
+  const params = useSearchParams();
+    const id = params.get("id");
   const {
     formData,
     setFormData,
@@ -151,8 +154,8 @@ const AddVehicleScreen: React.FC = () => {
     }
 
     // Utiliser handleSubmit ou handleUpdate selon le mode
-    if (isUpdate) {
-      handleUpdate(isUpdate);
+    if (isUpdate && id)  {
+      handleUpdate(id);
     } else {
       handleSubmit(e);
     }

@@ -47,6 +47,7 @@ const VehicleCard: React.FC<{
   deleteVehicle: (id: string) => void;
 }> = ({ vehicle, isDark, deleteVehicle }) => {
   const [isFavorite, setIsFavorite] = useState(false);
+  const router = useRouter();
 
   return (
     <div
@@ -176,7 +177,10 @@ const VehicleCard: React.FC<{
               /jour
             </span>
           </div>
-          <button className="px-6 py-2 bg-primary hover:bg-blue-700 text-white rounded-lg font-medium transition-colors">
+          <button
+            
+            className="px-6 py-2 bg-primary hover:bg-blue-700 text-white rounded-lg font-medium transition-colors"
+          >
             Réserver
           </button>
         </div>
@@ -194,6 +198,9 @@ const VehicleCard: React.FC<{
             Détail
           </button>
           <button
+            onClick={() =>
+              router.push(`/admin/vehicles/add?edit=true&id=${vehicle?.id}`)
+            }
             className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-colors ${
               isDark
                 ? "bg-gray-700 text-gray-300 hover:bg-green-600 hover:text-white"

@@ -44,6 +44,7 @@ interface VehicleContextType {
   // States
   isLoading: boolean;
   isUpdate: string | null;
+  id: string | null
 }
 
 const VehicleContext = createContext<VehicleContextType | undefined>(undefined);
@@ -70,7 +71,7 @@ export const VehicleProvider = ({ children }: { children: ReactNode }) => {
 
   const params = useSearchParams();
   const id = params.get("id");
-  const isUpdate = params.get("update");
+  const isUpdate = params.get("edit");
 
   useEffect(() => {
     if (id) {
@@ -467,6 +468,7 @@ export const VehicleProvider = ({ children }: { children: ReactNode }) => {
         vehicleDetail,
         
         // States
+        id,
         isLoading,
         isUpdate,
       }}
