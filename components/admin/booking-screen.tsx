@@ -24,7 +24,7 @@ import { useVehicle } from "../providers/admin/VehicleProvider";
 const BookingScreen = () => {
   // Simulation des données de réservation basées sur votre format
 
-  const { bookingData, getAllBokkingData, loading } = useAdminBooking();
+  const { bookingData, getAllBokkingData, loading, updateReservation } = useAdminBooking();
   const { handleUpdate, isLoading } = useVehicle();
 
   const [searchTerm, setSearchTerm] = useState("");
@@ -97,7 +97,16 @@ const BookingScreen = () => {
     }
   );
 
-  const handleValidateBooking = (id: string) => {};
+  const handleValidateBooking = async (id: string) => {
+  try {
+    const dataRes: Partial<Reservation> = {
+      status: "confirmee" as any // Make sure this matches your actual status values
+    };
+    await updateReservation(id, dataRes as any);
+  } catch (error) {
+    console.error("Error validating booking:", error);
+  }
+};
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-indigo-50 p-6">

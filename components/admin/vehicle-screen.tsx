@@ -236,7 +236,7 @@ const VehicleScreen: React.FC = () => {
     vehicles,
     handleDelete: deleteVehicle,
     fetchVehicles,
-    isLoading,
+    isLoading
   } = useVehicle();
 
   const router = useRouter();

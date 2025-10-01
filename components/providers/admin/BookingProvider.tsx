@@ -8,6 +8,7 @@ interface BookingContextType {
   loading: boolean;
   getAllBokkingData: () => Promise<void>;
   bookingData:BookingResponse | null
+  updateReservation:(id: string, data: Reservation) => void
 }
 
 const AdminBookingContext = createContext<BookingContextType | undefined>(undefined);
@@ -45,9 +46,42 @@ export const AdminBookingProvider = ({
     }
   };
 
+  const updateReservation = async(id:string, data: Reservation)=>{
+    try {
+      const res = await fetch(`/api/book/update/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+      
+      if (res.ok) {       
+        toast({
+          title: "Succès !",
+          description: "Reservation mis à jour !",
+        });
+        await getAllBokkingData()
+        setLoading(false);
+      } else {
+        toast({
+          title: "Erreur !",
+          description: "Erreur lors de la validation de reservation.",
+          variant: "destructive",
+        });
+        setLoading(false);
+      }
+    } catch {
+      toast({
+        title: "Erreur !",
+        description: "Erreur lors de la mise à jour du véhicule.",
+        variant: "destructive",
+      });
+      setLoading(false);
+    }
+  }
+
   return (
     <AdminBookingContext.Provider
-      value={{ loading, getAllBokkingData, bookingData }}
+      value={{ loading, getAllBokkingData, bookingData, updateReservation }}
     >
       {children}
     </AdminBookingContext.Provider>
