@@ -157,7 +157,7 @@ export function CarBookingSection() {
     return {
       isAvailable: vehicleData.isAvailable ?? true,
       activeReservationsCount: vehicleData.activeReservationsCount || 0,
-      bookedDates: vehicleData.bookedDates || vehicleData.reservations || []
+      bookedDates: vehicleData.bookedDates || []
     };
     
   } catch (error) {
@@ -189,7 +189,7 @@ export function CarBookingSection() {
 
   useEffect(() => {
     if (car) {
-      getVehicleById(car.toString());
+      getVehicleById(car);
     }
   }, [car]);
 
