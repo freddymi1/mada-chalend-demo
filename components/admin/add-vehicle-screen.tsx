@@ -18,7 +18,7 @@ import {
   Loader,
 } from "lucide-react";
 import { useVehicle } from "../providers/admin/VehicleProvider";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 // Theme hook
 const useTheme = () => {
@@ -42,6 +42,7 @@ const useTheme = () => {
 const AddVehicleScreen: React.FC = () => {
   const { isDark } = useTheme();
   const params = useSearchParams();
+  const router = useRouter()
     const id = params.get("id");
   const {
     formData,
@@ -173,6 +174,7 @@ const AddVehicleScreen: React.FC = () => {
         {/* Header */}
         <div className="flex items-center gap-4 mb-8">
           <button
+            onClick={()=> router.push("/admin/vehicles")}
             className={`p-2 rounded-lg transition-colors ${
               isDark
                 ? "bg-gray-800 text-gray-300 hover:bg-gray-700"
