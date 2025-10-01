@@ -442,7 +442,7 @@ export const ImageModal: React.FC<{
             {/* Boutons d'action */}
             <div className="flex gap-3 pt-2">
               <button
-                onClick={() => router.push(`/reservation?car=${vehicle.id}`)}
+                onClick={() => router.push(`/reservation/car?car=${vehicle.id}`)}
                 className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors"
               >
                 {t("car.details.booknow")}

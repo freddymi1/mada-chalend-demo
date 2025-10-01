@@ -11,6 +11,8 @@
     "about": "Momba anay",
     "tours": "Ny dianay",
     "booking": "Famandrihana",
+    "bookingCircuit": "Lalana",
+    "bookingCar": "Fiara",
     "blog": "Blog",
     "contact": "Fifandraisana",
     "car": "Ny fiarantsika"
@@ -50,6 +52,10 @@
   },
   "book": {
     "title": "Mamoròna famandrihana ny dianao",
+    "titleCar":"fandriho ny fiaranao",
+    "cardDispo":"Fahafahan'ny fiara",
+    "resPeriod": "Fe-potoana voatokana",
+    "at":"hatramin'ny",
     "subtitle": "Ataovy mora ny famandrihana ny dianao miaraka amin’i Mada Chaland. Ampidiro ny daty tianao, ny isan’ny olona ary ny safidinao, dia hanolotra drafitra manokana ho anao izahay.",
     "tabs": {
       "circuit": "Lalana",

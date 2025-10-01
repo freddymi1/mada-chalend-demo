@@ -11,6 +11,8 @@
     "about": "À propos",
     "tours": "Nos circuits",
     "booking": "Réservation",
+    "bookingCircuit": "Circuit",
+    "bookingCar": "Voiture",
     "blog": "Blog",
     "contact": "Contact",
     "car": "Nos voitures"
@@ -50,6 +52,10 @@
   },
   "book": {
     "title": "Réservez votre voyage",
+    "cardDispo":"Disponibilité du voiture",
+    "resPeriod":"Périodes réservées",
+    "titleCar":"Réservez une voiture",
+    "at":"au",
     "subtitle": "Réservez facilement votre circuit avec Mada Chaland. Indiquez vos dates, le nombre de personnes et vos préférences, et nous vous proposerons un itinéraire sur mesure.",
     "tabs": {
       "circuit": "Circuit",

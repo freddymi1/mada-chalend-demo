@@ -9,8 +9,8 @@ interface BookingOkProps {
   loading: boolean;
   handleCancelReservation: () => void;
   handleConfirmReservation: () => void;
-  getCircuitName: (circuitId: string) => string;
-    getVehicleName: (vehicleId: string) => string;
+  getCircuitName?: (circuitId: string) => string;
+  getVehicleName?: (vehicleId: string) => string;
   formatDate: (dateStr: string) => string;
 }
 
@@ -45,8 +45,8 @@ const BookingOk = ({
                   <p className="text-muted-foreground">
                     {/* {getCircuitName(pendingFormData.circuit)} */}
                     {restType === "circuit"
-                      ? getCircuitName(pendingFormData.circuit)
-                      : getVehicleName(pendingFormData.vehicle)}
+                      ? getCircuitName?.(pendingFormData.circuit)
+                      : getVehicleName?.(pendingFormData.vehicle)}
                   </p>
                 </div>
                 <div>

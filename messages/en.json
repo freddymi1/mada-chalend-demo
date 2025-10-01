@@ -11,6 +11,8 @@
     "about": "About",
     "tours": "Our tours",
     "booking": "Booking",
+    "bookingCircuit": "Book a Tour",
+    "bookingCar": "Book a Car",
     "blog": "Blog",
     "contact": "Contact",
     "car": "Our cars"
@@ -50,6 +52,10 @@
   },
   "book": {
     "title": "Book your trip",
+    "titleCar":"Book Car",
+    "cardDispo":"Car disponibility",
+    "resPeriod": "Reserved periods",
+    "at":"at",
     "subtitle": "Easily book your tour with Mada Chaland. Enter your dates, the number of people, and your preferences, and we will suggest a tailor-made itinerary.",
     "tabs": {
       "circuit": "Circuit",

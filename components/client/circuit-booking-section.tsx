@@ -20,12 +20,11 @@ import CircuitBooking from "./circuit-booking";
 import BookingOk from "./booking-ok";
 import CarBooking from "./car-booking";
 
-export function BookingSection() {
+export function CircuitBookingSection() {
   const t = useTranslations("lng");
 
   const params = useSearchParams();
   const circuit = params.get("circuit");
-  const car = params.get("car");
 
 
   const { createReservation, loading, success } = useBooking();
@@ -42,32 +41,7 @@ export function BookingSection() {
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [pendingFormData, setPendingFormData] = useState<any>(null);
 
-  const { vehicles, fetchVehicles, getVehicleById, vehicleDetail } =
-    useClVehicle();
 
-  const [activeTabs, setActiveTabs] = useState<{
-    circuit: boolean;
-    voiture: boolean;
-  }>({
-    circuit: true,
-    voiture: false,
-  });
-
-  useEffect(() => {
-    if (vehicleDetail) {
-      setFormData((prev) => ({
-        ...prev,
-        vehicle: vehicleDetail.id,
-      }));
-    }
-  }, [vehicleDetail]);
-
-  useEffect(() => {
-    const loadVehicles = async () => {
-      await fetchVehicles();
-    };
-    loadVehicles();
-  }, []);
 
   useEffect(() => {
     const loadCircuits = async () => {
@@ -82,15 +56,10 @@ export function BookingSection() {
     }
   }, [circuit]);
 
-  useEffect(() => {
-    if (car) {
-      getVehicleById(car.toString());
-    }
-  }, [car]);
+
 
   const [formData, setFormData] = useState({
     circuit: circuit ? circuit : "",
-    vehicle: car ? car : "",
     nom: "",
     prenom: "",
     email: "",
@@ -109,8 +78,7 @@ export function BookingSection() {
     e.preventDefault();
 
     const data = {
-      resType: activeTabs.circuit ? "circuit" : "car",
-      vehicle: formData.vehicle,
+      resType: "circuit",
       circuit: formData.circuit,
       nom: formData.nom,
       prenom: formData.prenom,
@@ -139,7 +107,6 @@ export function BookingSection() {
     // if (success) {
     setFormData({
       circuit: circuit ? circuit : "",
-      vehicle: car ? car : "",
       nom: "",
       prenom: "",
       email: "",
@@ -229,14 +196,6 @@ export function BookingSection() {
     getCircuitById(value);
   };
 
-  const handleCarChange = (value: string) => {
-    setFormData((prev) => ({
-      ...prev,
-      car: value,
-    }));
-    // Charger les détails du véhicule sélectionné
-    getVehicleById(value);
-  };
 
   // Fonction pour calculer la date de fin
   const calculateEndDate = (
@@ -326,11 +285,6 @@ export function BookingSection() {
     );
   };
 
-  const getVehicleName = (vehicleId: string) => {
-    const selectedVehicle = vehicles?.find((v) => v.id === vehicleId);
-    return selectedVehicle?.name || "Véhicule sélectionné";
-  };
-
   return (
     <section id="reservation" className="py-20 bg-muted/50">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -352,36 +306,9 @@ export function BookingSection() {
               <CardTitle>{t("book.form.title")}</CardTitle>
             </CardHeader>
             <CardContent>
-              {/* TABS */}
-              <div className="mb-6 w-full flex space-x-4">
-                <button
-                  className={`px-4 w-full py-2 rounded-t-lg font-medium ${
-                    activeTabs.circuit
-                      ? "bg-primary text-primary-foreground"
-                      : "bg-muted text-muted-foreground"
-                  }`}
-                  onClick={() =>
-                    setActiveTabs({ circuit: true, voiture: false })
-                  }
-                >
-                  {t("book.tabs.circuit")}
-                </button>
-                <button
-                  className={`px-4 w-full py-2 rounded-t-lg font-medium ${
-                    activeTabs.voiture
-                      ? "bg-primary text-primary-foreground"
-                      : "bg-muted text-muted-foreground"
-                  }`}
-                  onClick={() =>
-                    setActiveTabs({ circuit: false, voiture: true })
-                  }
-                >
-                  {t("book.tabs.car")}
-                </button>
-              </div>
+              
 
-              {activeTabs.circuit ? (
-                <CircuitBooking
+              <CircuitBooking
                   circuit={circuit}
                   circuitDetail={circuitDetail}
                   addedCircuits={addedCircuits}
@@ -396,23 +323,6 @@ export function BookingSection() {
                   loading={loading}
                   getTodayString={getTodayString}
                 />
-              ) : (
-                <CarBooking
-                  vehicle={car}
-                  vehicles={vehicles}
-                  vehicleDetail={vehicleDetail}
-                  isLoading={isLoading}
-                  formData={formData}
-                  handleChange={handleChange}
-                  handleCarChange={handleCarChange}
-                  handlePersonnesChange={handlePersonnesChange}
-                  handleNbrAdultChange={handleNbrAdultChange}
-                  handleNbrChildChange={handleNbrChildChange}
-                  handleSubmit={handleSubmit}
-                  loading={loading}
-                  getTodayString={getTodayString}
-                />
-              )}
             </CardContent>
           </Card>
         </div>
@@ -421,7 +331,7 @@ export function BookingSection() {
       {/* Popup de confirmation */}
 
       <BookingOk
-        restType={activeTabs.circuit ? "circuit" : "car"}
+        restType={"circuit"}
         showConfirmDialog={showConfirmDialog}
         setShowConfirmDialog={setShowConfirmDialog}
         pendingFormData={pendingFormData}
@@ -429,7 +339,6 @@ export function BookingSection() {
         handleCancelReservation={handleCancelReservation}
         handleConfirmReservation={handleConfirmReservation}
         getCircuitName={getCircuitName}
-        getVehicleName={getVehicleName}
         formatDate={formatDate}
       />
     </section>

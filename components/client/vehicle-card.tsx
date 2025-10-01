@@ -170,7 +170,7 @@ export const VehicleCard: React.FC<{
             <Eye className="w-4 h-4" />
             {t("car.viewDetail")}
           </button>
-          <button onClick={()=>router.push(`/reservation?car=${vehicle.id}`)} className="flex justify-center w-full px-6 py-2 bg-primary text-white rounded-lg font-medium transition-colors hover:scale-105">
+          <button onClick={()=>router.push(`/reservation/car?car=${vehicle.id}`)} className="flex justify-center w-full px-6 py-2 bg-primary text-white rounded-lg font-medium transition-colors hover:scale-105">
             {t("car.details.booknow")}
           </button>
         </div>

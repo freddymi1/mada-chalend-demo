@@ -87,7 +87,7 @@ export function ToursSection() {
                         </Button>
                       </Link>
                       <Link
-                        href={`/reservation?circuit=${tour.id}`}
+                        href={`/reservation/circuit?circuit=${tour.id}`}
                         className="flex-1"
                       >
                         <Button className="w-full hover-glow">

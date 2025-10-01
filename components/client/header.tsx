@@ -4,12 +4,13 @@ import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Button } from "@/components/client/ui/button";
-import { Menu, X, MapPin } from "lucide-react";
+import { Menu, X, MapPin, ChevronDown } from "lucide-react";
 import { LanguageSwitcher } from "./LanguageSwitcher";
 import { useTranslations } from "use-intl";
-
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "./ui/dropdown-menu";
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isBookingOpen, setIsBookingOpen] = useState(false);
   const pathname = usePathname();
   const t = useTranslations("lng");
 
@@ -18,9 +19,13 @@ export function Header() {
     { href: "/a-propos", label: `${t("navigation.about")}` },
     { href: "/circuits", label: `${t("navigation.tours")}` },
     { href: "/car", label: `${t("navigation.car")}` },
-    { href: "/reservation", label: `${t("navigation.booking")}` },
     { href: "/blog", label: `${t("navigation.blog")}` },
     { href: "/contact", label: `${t("navigation.contact")}` },
+  ];
+
+  const bookingItems = [
+    { href: "/reservation/circuit", label: `${t("navigation.bookingCircuit")}` },
+    { href: "/reservation/car", label: `${t("navigation.bookingCar")}` },
   ];
 
   return (
@@ -55,6 +60,26 @@ export function Header() {
                 {item.label}
               </Link>
             ))}
+            
+            {/* Dropdown Menu pour Réservation */}
+            <DropdownMenu>
+              <DropdownMenuTrigger className="flex items-center gap-1 text-foreground hover:text-primary transition-all duration-300 hover:scale-105 focus:outline-none">
+                {t("navigation.booking")}
+                <ChevronDown className="h-4 w-4" />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-48">
+                {bookingItems.map((item) => (
+                  <DropdownMenuItem key={item.href} asChild>
+                    <Link
+                      href={item.href}
+                      className="w-full cursor-pointer"
+                    >
+                      {item.label}
+                    </Link>
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
           </nav>
 
           {/* Right side: Language Switcher + Mobile Menu */}
@@ -98,6 +123,35 @@ export function Header() {
                   {item.label}
                 </Link>
               ))}
+              
+              {/* Mobile Booking Submenu */}
+              <div className="pt-2">
+                <button
+                  onClick={() => setIsBookingOpen(!isBookingOpen)}
+                  className="flex items-center justify-between w-full px-3 py-2 text-foreground hover:text-primary transition-all duration-300"
+                >
+                  <span>{t("navigation.booking")}</span>
+                  <ChevronDown
+                    className={`h-4 w-4 transition-transform duration-200 ${
+                      isBookingOpen ? "rotate-180" : ""
+                    }`}
+                  />
+                </button>
+                {isBookingOpen && (
+                  <div className="pl-4 space-y-1 mt-1">
+                    {bookingItems.map((item) => (
+                      <Link
+                        key={item.href}
+                        href={item.href}
+                        onClick={() => setIsMenuOpen(false)}
+                        className="block px-3 py-2 text-sm text-foreground hover:text-primary transition-all duration-300 hover:translate-x-2"
+                      >
+                        {item.label}
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         )}
