@@ -4,15 +4,16 @@ import React, { createContext, useContext, useState, ReactNode, useEffect } from
 import { useRouter, useSearchParams } from "next/navigation";
 import { Vehicle } from '@/src/domain/entities/car';
 import { useToast } from '@/hooks/shared/use-toast';
+import { VehicleDTO } from '@/src/domain/entities/vehicle';
 
 
 
 interface VehicleContextType {
   // Data management
-  vehicles: Vehicle[];
+  vehicles: VehicleDTO[];
   fetchVehicles: () => void;
   getVehicleById: (id: string) => void;
-  vehicleDetail: Vehicle | null;
+  vehicleDetail: VehicleDTO | null;
   
   // States
   isLoading: boolean;
@@ -24,9 +25,9 @@ const VehicleContext = createContext<VehicleContextType | undefined>(undefined);
 export const ClVehicleProvider = ({ children }: { children: ReactNode }) => {
   const router = useRouter();
   const { toast } = useToast();
-  const [vehicles, setVehicles] = useState<Vehicle[]>([]);
+  const [vehicles, setVehicles] = useState<VehicleDTO[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [vehicleDetail, setVehicleDetail] = useState<Vehicle | null>(null);
+  const [vehicleDetail, setVehicleDetail] = useState<VehicleDTO | null>(null);
 
 
   const params = useSearchParams();

@@ -104,6 +104,7 @@
     "description": "Explorez Madagascar avec notre flotte de véhicules spécialement sélectionnés pour le tourisme. 4x4 pour les aventures, minibus pour les groupes, pick-ups pour l'équipement - nous avons le véhicule parfait pour votre voyage.",
     "day": "jour",
     "seat": "places",
+    "bookStatus": "Reservé",
     "photo": "photos",
     "other": "autres",
     "viewDetail": "Voir détails",

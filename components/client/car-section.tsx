@@ -7,6 +7,7 @@ import { ImageModal } from "./image-modale";
 import { VehicleCard } from "./vehicle-card";
 import { LoadingSpinner } from "./loading";
 import { useTranslations } from "next-intl";
+import { VehicleDTO } from "@/src/domain/entities/vehicle";
 
 
 const Grid = ({ className }: { className?: string }) => (
@@ -143,7 +144,7 @@ const CarSection: React.FC = () => {
   const { isDark } = useTheme();
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
-  const [selectedVehicle, setSelectedVehicle] = useState<Vehicle | null>(null);
+  const [selectedVehicle, setSelectedVehicle] = useState<VehicleDTO | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const t = useTranslations('lng')
 
@@ -167,7 +168,7 @@ const CarSection: React.FC = () => {
       ? vehicles
       : vehicles.filter((vehicle) => vehicle.categoryId === selectedCategory);
 
-  const handleShowDetails = (vehicle: Vehicle) => {
+  const handleShowDetails = (vehicle: VehicleDTO) => {
     setSelectedVehicle(vehicle);
     setIsModalOpen(true);
   };

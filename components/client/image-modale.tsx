@@ -1,63 +1,56 @@
 "use client";
 
-import { ChevronLeft, ChevronRight, X, Star, Users, Tag, Play, Pause } from "lucide-react";
+import { VehicleDTO } from "@/src/domain/entities/vehicle";
+import {
+  ChevronLeft,
+  ChevronRight,
+  X,
+  Star,
+  Users,
+  Tag,
+  Play,
+  Pause,
+} from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { useEffect, useState, useRef, useCallback } from "react";
-
-// Interface Vehicle
-interface Category {
-  id: string;
-  name: string;
-  slug?: string;
-}
-
-interface Vehicle {
-  id: string;
-  name: string;
-  categoryId: string;
-  type: string;
-  passengers: number;
-  pricePerDay: number;
-  rating: number;
-  mainImage: string;
-  detailImages: string[];
-  features: string[];
-  description: string;
-  createdAt?: Date;
-  updatedAt?: Date;
-  categoryRel?: Category;
-}
 
 export const ImageModal: React.FC<{
   isOpen: boolean;
   onClose: () => void;
   images: string[];
-  vehicle: Vehicle;
+  vehicle: VehicleDTO;
   isDark: boolean;
   autoSlideInterval?: number; // Durée en millisecondes (défaut: 5000ms)
-}> = ({ isOpen, onClose, images, vehicle, isDark, autoSlideInterval = 5000 }) => {
+}> = ({
+  isOpen,
+  onClose,
+  images,
+  vehicle,
+  isDark,
+  autoSlideInterval = 5000,
+}) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isAutoSliding, setIsAutoSliding] = useState(false);
   const [slideDuration, setSlideDuration] = useState(300); // Durée de la transition en ms
   const [isTransitioning, setIsTransitioning] = useState(false);
-  
+
   const autoSlideRef = useRef<NodeJS.Timeout | null>(null);
   const touchStartX = useRef<number>(0);
   const touchEndX = useRef<number>(0);
   const imageContainerRef = useRef<HTMLDivElement>(null);
 
-  const router = useRouter()
-  
-  const t = useTranslations('lng');
+  const router = useRouter();
+
+  const t = useTranslations("lng");
 
   // Fonction pour aller à l'image suivante avec transition
   const goToNext = useCallback(() => {
     if (isTransitioning || images.length <= 1) return;
-    
+
     setIsTransitioning(true);
     setCurrentImageIndex((prev) => (prev + 1) % images.length);
-    
+
     setTimeout(() => {
       setIsTransitioning(false);
     }, slideDuration);
@@ -66,10 +59,10 @@ export const ImageModal: React.FC<{
   // Fonction pour aller à l'image précédente avec transition
   const goToPrevious = useCallback(() => {
     if (isTransitioning || images.length <= 1) return;
-    
+
     setIsTransitioning(true);
     setCurrentImageIndex((prev) => (prev - 1 + images.length) % images.length);
-    
+
     setTimeout(() => {
       setIsTransitioning(false);
     }, slideDuration);
@@ -78,7 +71,7 @@ export const ImageModal: React.FC<{
   // Démarrer le slideshow automatique
   const startAutoSlide = useCallback(() => {
     if (images.length <= 1) return;
-    
+
     setIsAutoSliding(true);
     autoSlideRef.current = setInterval(() => {
       goToNext();
@@ -175,11 +168,11 @@ export const ImageModal: React.FC<{
   // Aller à une image spécifique
   const goToSlide = (index: number) => {
     if (index === currentImageIndex || isTransitioning) return;
-    
+
     setIsTransitioning(true);
     setCurrentImageIndex(index);
     stopAutoSlide();
-    
+
     setTimeout(() => {
       setIsTransitioning(false);
     }, slideDuration);
@@ -202,7 +195,7 @@ export const ImageModal: React.FC<{
         }`}
       >
         {/* Image Container */}
-        <div 
+        <div
           ref={imageContainerRef}
           className="relative aspect-video bg-gray-100"
           onTouchStart={handleTouchStart}
@@ -241,10 +234,12 @@ export const ImageModal: React.FC<{
               src={images[currentImageIndex]}
               alt={`${vehicle.name} - Image ${currentImageIndex + 1}`}
               className={`w-full h-full object-cover transition-all duration-${slideDuration} ${
-                isTransitioning ? 'opacity-75 scale-105' : 'opacity-100 scale-100'
+                isTransitioning
+                  ? "opacity-75 scale-105"
+                  : "opacity-100 scale-100"
               }`}
               style={{
-                transitionDuration: `${slideDuration}ms`
+                transitionDuration: `${slideDuration}ms`,
               }}
             />
           </div>
@@ -292,8 +287,8 @@ export const ImageModal: React.FC<{
                   disabled={isTransitioning}
                   className={`w-2 h-2 rounded-full transition-all duration-200 ${
                     index === currentImageIndex
-                      ? 'bg-white w-8'
-                      : 'bg-white/50 hover:bg-white/75'
+                      ? "bg-white w-8"
+                      : "bg-white/50 hover:bg-white/75"
                   } disabled:cursor-not-allowed`}
                 />
               ))}
@@ -303,11 +298,11 @@ export const ImageModal: React.FC<{
           {/* Progress Bar for Auto Slide */}
           {isAutoSliding && (
             <div className="absolute bottom-0 left-0 w-full h-1 bg-black/20 z-10">
-              <div 
+              <div
                 className="h-full bg-blue-500 transition-all linear"
                 style={{
-                  width: '100%',
-                  animation: `slideProgress ${autoSlideInterval}ms linear infinite`
+                  width: "100%",
+                  animation: `slideProgress ${autoSlideInterval}ms linear infinite`,
                 }}
               />
             </div>
@@ -339,6 +334,7 @@ export const ImageModal: React.FC<{
                   </h1>
                 </div>
               )}
+
               <div className="flex items-center gap-2">
                 <Star className="w-5 h-5 text-yellow-400 fill-current" />
                 <span
@@ -353,25 +349,38 @@ export const ImageModal: React.FC<{
 
             {/* Prix et type */}
             <div className="flex items-center justify-between">
-              <div>
-                <span
-                  className={`text-2xl font-bold ${
-                    isDark ? "text-white" : "text-gray-900"
-                  }`}
-                >
-                  €{vehicle.pricePerDay}
-                </span>
-                <span
-                  className={`text-lg ml-2 ${
-                    isDark ? "text-gray-400" : "text-gray-600"
-                  }`}
-                >
-                  /{t("car.day")}
-                </span>
+              <div className="flex items-center gap-4">
+                <div>
+                  <span
+                    className={`text-2xl font-bold ${
+                      isDark ? "text-white" : "text-gray-900"
+                    }`}
+                  >
+                    €{vehicle.pricePerDay}
+                  </span>
+                  <span
+                    className={`text-lg ml-2 ${
+                      isDark ? "text-gray-400" : "text-gray-600"
+                    }`}
+                  >
+                    /{t("car.day")}
+                  </span>
+                </div>
+                <div>
+                  <button
+                    className={`text-md px-2 py-1 rounded-full flex items-center font-bold ${
+                      isDark ? "text-white" : "text-gray-900"
+                    } ${!vehicle.isAvailable && "bg-red-500"}`}
+                  >
+                    {!vehicle.isAvailable && t("car.bookStatus")}
+                  </button>
+                </div>
               </div>
               <span
                 className={`px-4 py-2 rounded-full text-sm font-medium ${
-                  isDark ? "bg-blue-600 text-white" : "bg-blue-100 text-blue-800"
+                  isDark
+                    ? "bg-blue-600 text-white"
+                    : "bg-blue-100 text-blue-800"
                 }`}
               >
                 {vehicle.type}
@@ -387,9 +396,7 @@ export const ImageModal: React.FC<{
                   }`}
                 />
                 <span
-                  className={`${
-                    isDark ? "text-gray-300" : "text-gray-600"
-                  }`}
+                  className={`${isDark ? "text-gray-300" : "text-gray-600"}`}
                 >
                   {vehicle.passengers} {t("car.seat")}
                 </span>
@@ -434,10 +441,13 @@ export const ImageModal: React.FC<{
 
             {/* Boutons d'action */}
             <div className="flex gap-3 pt-2">
-              <button onClick={()=>router.push(`/reservation?car=${vehicle.id}`)} className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors">
+              <button
+                onClick={() => router.push(`/reservation?car=${vehicle.id}`)}
+                className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors"
+              >
                 {t("car.details.booknow")}
               </button>
-              <button 
+              <button
                 className={`px-6 py-2 rounded-lg font-medium transition-colors ${
                   isDark
                     ? "bg-gray-700 text-gray-300 hover:bg-gray-600"
@@ -450,12 +460,16 @@ export const ImageModal: React.FC<{
 
             {/* Contrôles du slideshow (section supplémentaire) */}
             {images.length > 1 && (
-              <div className={`flex items-center gap-4 pt-4 border-t ${
-                isDark ? "border-gray-700" : "border-gray-200"
-              }`}>
-                <span className={`text-sm ${
-                  isDark ? "text-gray-400" : "text-gray-600"
-                }`}>
+              <div
+                className={`flex items-center gap-4 pt-4 border-t ${
+                  isDark ? "border-gray-700" : "border-gray-200"
+                }`}
+              >
+                <span
+                  className={`text-sm ${
+                    isDark ? "text-gray-400" : "text-gray-600"
+                  }`}
+                >
                   Slideshow:
                 </span>
                 <button
@@ -464,16 +478,22 @@ export const ImageModal: React.FC<{
                     isAutoSliding
                       ? "bg-blue-600 text-white"
                       : isDark
-                        ? "bg-gray-700 text-gray-300 hover:bg-gray-600"
-                        : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                      ? "bg-gray-700 text-gray-300 hover:bg-gray-600"
+                      : "bg-gray-200 text-gray-700 hover:bg-gray-300"
                   }`}
                 >
-                  {isAutoSliding ? <Pause className="w-3 h-3" /> : <Play className="w-3 h-3" />}
-                  {isAutoSliding ? 'Pause' : 'Play'}
+                  {isAutoSliding ? (
+                    <Pause className="w-3 h-3" />
+                  ) : (
+                    <Play className="w-3 h-3" />
+                  )}
+                  {isAutoSliding ? "Pause" : "Play"}
                 </button>
-                <span className={`text-xs ${
-                  isDark ? "text-gray-500" : "text-gray-500"
-                }`}>
+                <span
+                  className={`text-xs ${
+                    isDark ? "text-gray-500" : "text-gray-500"
+                  }`}
+                >
                   Space pour play/pause, flèches pour naviguer
                 </span>
               </div>
@@ -485,8 +505,12 @@ export const ImageModal: React.FC<{
       {/* CSS pour l'animation de la barre de progression */}
       <style jsx>{`
         @keyframes slideProgress {
-          from { width: 0%; }
-          to { width: 100%; }
+          from {
+            width: 0%;
+          }
+          to {
+            width: 100%;
+          }
         }
       `}</style>
     </div>

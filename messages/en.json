@@ -105,6 +105,7 @@
     "day": "day",
     "seat": "seats",
     "photo": "photos",
+    "bookStatus": "Booked",
     "other": "others",
     "viewDetail": "View details",
     "details": {

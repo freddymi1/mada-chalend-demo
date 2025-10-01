@@ -1,15 +1,16 @@
 "use client";
 
 import { Vehicle } from "@/src/domain/entities/car";
+import { VehicleDTO } from "@/src/domain/entities/vehicle";
 import { Eye, Heart, Star, Users } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 export const VehicleCard: React.FC<{
-  vehicle: Vehicle;
+  vehicle: VehicleDTO;
   isDark: boolean;
-  onShowDetails: (vehicle: Vehicle) => void;
+  onShowDetails: (vehicle: VehicleDTO) => void;
 }> = ({ vehicle, isDark, onShowDetails }) => {
   const [isFavorite, setIsFavorite] = useState(false);
   const t = useTranslations('lng');
@@ -128,6 +129,7 @@ export const VehicleCard: React.FC<{
         </div>
 
         <div className="flex items-center justify-between mb-4">
+          
           <div>
             <span
               className={`text-2xl font-bold ${
@@ -143,6 +145,17 @@ export const VehicleCard: React.FC<{
             >
               /{t("car.day")}
             </span>
+          </div>
+
+          <div>
+            <button
+              className={`text-md px-2 py-1 rounded-full flex items-center font-bold ${
+                isDark ? "text-white" : "text-gray-900"
+              } ${!vehicle.isAvailable && "bg-red-500"}`}
+            >
+              {!vehicle.isAvailable && t("car.bookStatus")}
+            </button>
+            
           </div>
         </div>
         <div className="flex items-center justify-between gap-4">
