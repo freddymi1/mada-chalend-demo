@@ -1,12 +1,16 @@
 "use client";
 
-import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
+import React, {
+  createContext,
+  useContext,
+  useState,
+  ReactNode,
+  useEffect,
+} from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Vehicle } from '@/src/domain/entities/car';
-import { useToast } from '@/hooks/shared/use-toast';
-import { VehicleDTO } from '@/src/domain/entities/vehicle';
-
-
+import { Vehicle } from "@/src/domain/entities/car";
+import { useToast } from "@/hooks/shared/use-toast";
+import { VehicleDTO } from "@/src/domain/entities/vehicle";
 
 interface VehicleContextType {
   // Data management
@@ -14,7 +18,7 @@ interface VehicleContextType {
   fetchVehicles: () => void;
   getVehicleById: (id: string) => void;
   vehicleDetail: VehicleDTO | null;
-  
+
   // States
   isLoading: boolean;
   isUpdate: string | null;
@@ -29,7 +33,6 @@ export const ClVehicleProvider = ({ children }: { children: ReactNode }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [vehicleDetail, setVehicleDetail] = useState<VehicleDTO | null>(null);
 
-
   const params = useSearchParams();
   const id = params.get("id");
   const isUpdate = params.get("update");
@@ -40,7 +43,6 @@ export const ClVehicleProvider = ({ children }: { children: ReactNode }) => {
     }
   }, [id]);
 
-
   // Data management
   const fetchVehicles = async () => {
     setIsLoading(true);
@@ -50,14 +52,7 @@ export const ClVehicleProvider = ({ children }: { children: ReactNode }) => {
         const data = await res.json();
         setVehicles(data);
         setIsLoading(false);
-      } else {
-        toast({
-          title: "Erreur !",
-          description: "Erreur lors du chargement des véhicules.",
-          variant: "destructive",
-        });
-        setIsLoading(false);
-      }
+      } 
     } catch (error) {
       toast({
         title: "Erreur !",
@@ -73,28 +68,20 @@ export const ClVehicleProvider = ({ children }: { children: ReactNode }) => {
       const res = await fetch(`/api/car/${id}`, { cache: "no-store" });
       if (res.ok) {
         const data = await res.json();
-        console.log("Vehicle details:", data);
         setVehicleDetail(data);
-        
+
         return data;
-      } else {
-        toast({
-          title: "Erreur !",
-          description: `Erreur lors du chargement du véhicule ${id}.`,
-          variant: "destructive",
-        });
-        return null;
+      
       }
     } catch (error) {
       toast({
         title: "Erreur !",
-        description: `Erreur lors du chargement du véhicule ${id}.`,
+        description: `Erreur lors du chargement du véhicule === ${id}.`,
         variant: "destructive",
       });
       return null;
     }
   };
-
 
   return (
     <VehicleContext.Provider
@@ -103,7 +90,7 @@ export const ClVehicleProvider = ({ children }: { children: ReactNode }) => {
         fetchVehicles,
         getVehicleById,
         vehicleDetail,
-        
+
         // States
         isLoading,
         isUpdate,
@@ -117,7 +104,7 @@ export const ClVehicleProvider = ({ children }: { children: ReactNode }) => {
 export const useClVehicle = (): VehicleContextType => {
   const context = useContext(VehicleContext);
   if (!context) {
-    throw new Error('useClVehicle must be used within a ClVehicleProvider');
+    throw new Error("useClVehicle must be used within a ClVehicleProvider");
   }
   return context;
 };

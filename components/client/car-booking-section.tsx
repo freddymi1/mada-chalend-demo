@@ -54,6 +54,44 @@ export function CarBookingSection() {
   const [vehicleAvailability, setVehicleAvailability] = useState<VehicleAvailability | null>(null);
   const [availabilityError, setAvailabilityError] = useState<string>("");
 
+  useEffect(() => {
+    if (vehicleDetail) {
+      setFormData((prev) => ({
+        ...prev,
+        vehicle: vehicleDetail.id,
+      }));
+    }
+  }, [vehicleDetail]);
+
+  useEffect(() => {
+    const loadVehicles = async () => {
+      await fetchVehicles();
+    };
+    loadVehicles();
+  }, []);
+
+  useEffect(() => {
+    if (car) {
+      getVehicleById(car);
+    }
+  }, [car]);
+
+  const [formData, setFormData] = useState({
+    vehicle: car ? car : "",
+    nom: "",
+    prenom: "",
+    email: "",
+    telephone: "",
+    address: "",
+    personnes: "",
+    nbrChild: "",
+    nbrAdult: "",
+    startDate: "",
+    endDate: "",
+    duration: "",
+    preferences: "",
+  });
+
   // Fonction pour vérifier si une date est disponible
   const isDateAvailable = useCallback((date: string): boolean => {
     if (!vehicleAvailability || !vehicleAvailability.bookedDates.length) {
@@ -171,43 +209,7 @@ export function CarBookingSection() {
   }
 };
 
-  useEffect(() => {
-    if (vehicleDetail) {
-      setFormData((prev) => ({
-        ...prev,
-        vehicle: vehicleDetail.id,
-      }));
-    }
-  }, [vehicleDetail]);
-
-  useEffect(() => {
-    const loadVehicles = async () => {
-      await fetchVehicles();
-    };
-    loadVehicles();
-  }, []);
-
-  useEffect(() => {
-    if (car) {
-      getVehicleById(car);
-    }
-  }, [car]);
-
-  const [formData, setFormData] = useState({
-    vehicle: car ? car : "",
-    nom: "",
-    prenom: "",
-    email: "",
-    telephone: "",
-    address: "",
-    personnes: "",
-    nbrChild: "",
-    nbrAdult: "",
-    startDate: "",
-    endDate: "",
-    duration: "",
-    preferences: "",
-  });
+  
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
