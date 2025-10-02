@@ -10,7 +10,7 @@ export async function GET(
   try {
     const { id } = params;
     
-    // Récupérer le circuit avec ses relations
+    // Récupérer le blog avec ses relations
     const blog = await prisma.blog.findUnique({
       where: { id },
       include: {
@@ -18,8 +18,8 @@ export async function GET(
           include: {
             comments: {
               where: {
-                isApproved: true, // Seulement les commentaires approuvés
-                parentId: null,   // Seulement les commentaires de premier niveau
+                isApproved: true,
+                parentId: null,
               },
               include: {
                 user: {
@@ -27,7 +27,6 @@ export async function GET(
                     id: true,
                     username: true,
                     email: true,
-                    // Ajoutez les champs User que vous voulez exposer
                   },
                 },
                 replies: {
@@ -43,7 +42,6 @@ export async function GET(
                       },
                     },
                     replies: {
-                      // Si vous voulez aussi les réponses aux réponses
                       where: {
                         isApproved: true,
                       },
@@ -61,13 +59,18 @@ export async function GET(
                 },
                 _count: {
                   select: {
-                    replies: true, // Compte le nombre de réponses
+                    replies: {
+                      where: {
+                        isApproved: true,
+                      },
+                    },
                   },
                 },
               },
               orderBy: { createdAt: "desc" },
             },
           },
+          orderBy: { createdAt: "desc" },
         },
         comments: {
           where: {
@@ -112,7 +115,11 @@ export async function GET(
             },
             _count: {
               select: {
-                replies: true,
+                replies: {
+                  where: {
+                    isApproved: true,
+                  },
+                },
               },
             },
           },
@@ -121,23 +128,29 @@ export async function GET(
         _count: {
           select: {
             articles: true,
-            comments: true,
+            comments: {
+              where: {
+                isApproved: true,
+                parentId: null,
+              },
+            },
           },
         },
       },
     });
 
     if (!blog) {
-      return NextResponse.json({ error: "blog non trouvé" }, { status: 404 });
+      return NextResponse.json({ error: "Blog non trouvé" }, { status: 404 });
     }
-
 
     return NextResponse.json(blog, { status: 200 });
   } catch (error) {
-    console.error("Error fetching circuit:", error);
+    console.error("Error fetching blog:", error);
     return NextResponse.json(
-      { error: "Erreur lors de la récupération du circuit" },
+      { error: "Erreur lors de la récupération du blog" },
       { status: 500 }
     );
+  } finally {
+    await prisma.$disconnect();
   }
 }

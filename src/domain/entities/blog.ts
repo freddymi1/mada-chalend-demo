@@ -1,3 +1,5 @@
+import { IComment } from "./comment";
+
 // Interface Blog
 export interface IBlog {
   id: string;
@@ -7,6 +9,7 @@ export interface IBlog {
   author?: string;
   image?: string;
   articles?: IArticle[]; // relation avec Article
+  comments?: IComment[]
 }
 
 // Interface Article
@@ -18,4 +21,5 @@ export interface IArticle {
   imageDescription?: string;
   blogId: string;
   blog?: IBlog; // relation inverse
+  comments?: IComment[]
 }

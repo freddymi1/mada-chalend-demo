@@ -17,6 +17,7 @@ import { useCiBlog } from "../providers/client/ClBlogProvider";
 import { useTranslations } from "next-intl";
 import { useAuthClient } from "@/src/hooks/useAuthClient";
 import { IComment } from "@/src/domain/entities/comment";
+import { toast } from "sonner";
 
 interface CommentSectionState {
   type: "blog" | "article";
@@ -47,244 +48,263 @@ interface CommentSectionProps {
   onSubmitComment: (type: "blog" | "article", itemId: string) => void;
   onReply: (comment: IComment) => void;
   onCancelReply: () => void;
+  isSubmitting: boolean;
 }
 
-// Déplacer CommentItem en dehors du composant principal
-const CommentItem: React.FC<CommentItemProps> = React.memo(({ comment, type, itemId, isDark, onReply }) => (
-  <div className="space-y-3">
-    <div
-      className={`rounded-lg p-4 ${
-        isDark ? "bg-gray-700" : "bg-gray-50"
-      }`}
-    >
-      <div className="flex items-start gap-3">
-        <div
-          className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 ${
-            isDark ? "bg-indigo-900" : "bg-indigo-100"
-          }`}
-        >
-          <User
-            className={`w-5 h-5 ${
-              isDark ? "text-indigo-300" : "text-indigo-600"
-            }`}
-          />
-        </div>
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center justify-between mb-2">
-            <h4
-              className={`font-semibold ${
-                isDark ? "text-white" : "text-gray-900"
-              }`}
-            >
-              {comment.user?.username}
-            </h4>
-            <span
-              className={`text-xs ${
-                isDark ? "text-gray-400" : "text-gray-500"
-              }`}
-            >
-              {new Date(comment.createdAt).toLocaleDateString("fr-FR", {
-                day: "numeric",
-                month: "short",
-                year: "numeric",
-                hour: "2-digit",
-                minute: "2-digit",
-              })}
-            </span>
-          </div>
-          <p
-            className={`text-sm mb-2 break-words ${
-              isDark ? "text-gray-300" : "text-gray-700"
-            }`}
-          >
-            {comment.content}
-          </p>
-          <button
-            onClick={() => onReply(comment)}
-            className={`text-xs font-medium ${
-              isDark
-                ? "text-indigo-400 hover:text-indigo-300"
-                : "text-indigo-600 hover:text-indigo-700"
-            }`}
-          >
-            Répondre
-          </button>
-        </div>
-      </div>
-    </div>
-
-    {comment.replies && comment.replies.length > 0 && (
-      <div className="ml-12 space-y-3">
-        {comment.replies.map((reply) => (
-          <CommentItem
-            key={reply.id}
-            comment={reply}
-            type={type}
-            itemId={itemId}
-            isDark={isDark}
-            onReply={onReply}
-          />
-        ))}
-      </div>
-    )}
-  </div>
-));
-
-CommentItem.displayName = "CommentItem";
-
-// Déplacer CommentSection en dehors du composant principal
-const CommentSection: React.FC<CommentSectionProps> = React.memo(({
-  type,
-  itemId,
-  title,
-  isDark,
-  isAuthenticated,
-  comments,
-  showCommentSection,
-  commentText,
-  replyTo,
-  onCommentClick,
-  onCloseSection,
-  onCommentTextChange,
-  onSubmitComment,
-  onReply,
-  onCancelReply,
-}) => {
-  const itemComments = comments.filter(
-    (comment) =>
-      (type === "blog" && comment.blogId === itemId) ||
-      (type === "article" && comment.articleId === itemId)
-  );
-  
-  const isOpen =
-    showCommentSection?.type === type && showCommentSection?.id === itemId;
-
-  return (
-    <div className="mt-6">
-      <button
-        onClick={() => onCommentClick(type, itemId)}
-        className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-colors ${
-          isDark
-            ? "bg-indigo-900 text-indigo-300 hover:bg-indigo-800"
-            : "bg-indigo-100 text-indigo-700 hover:bg-indigo-200"
-        }`}
+const CommentItem: React.FC<CommentItemProps> = React.memo(
+  ({ comment, type, itemId, isDark, onReply }) => (
+    <div className="space-y-3">
+      <div
+        className={`rounded-lg p-4 ${isDark ? "bg-gray-700" : "bg-gray-50"}`}
       >
-        <MessageCircle className="w-5 h-5" />
-        Commentaires ({itemComments.length})
-      </button>
-
-      {isOpen && (
-        <div
-          className={`mt-4 rounded-xl p-6 ${
-            isDark ? "bg-gray-800" : "bg-white"
-          }`}
-        >
-          <div className="flex items-center justify-between mb-4">
-            <h3
-              className={`text-xl font-bold ${
-                isDark ? "text-white" : "text-gray-900"
+        <div className="flex items-start gap-3">
+          <div
+            className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 ${
+              isDark ? "bg-indigo-900" : "bg-indigo-100"
+            }`}
+          >
+            <User
+              className={`w-5 h-5 ${
+                isDark ? "text-indigo-300" : "text-indigo-600"
+              }`}
+            />
+          </div>
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center justify-between mb-2">
+              <h4
+                className={`font-semibold ${
+                  isDark ? "text-white" : "text-gray-900"
+                }`}
+              >
+                {comment.user?.username || "Anonyme"}
+              </h4>
+              <span
+                className={`text-xs ${
+                  isDark ? "text-gray-400" : "text-gray-500"
+                }`}
+              >
+                {new Date(comment.createdAt).toLocaleDateString("fr-FR", {
+                  day: "numeric",
+                  month: "short",
+                  year: "numeric",
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })}
+              </span>
+            </div>
+            <p
+              className={`text-sm mb-2 break-words ${
+                isDark ? "text-gray-300" : "text-gray-700"
               }`}
             >
-              Commentaires sur {title}
-            </h3>
+              {comment.content}
+            </p>
             <button
-              onClick={onCloseSection}
-              className={`p-1 rounded-lg transition-colors ${
+              onClick={() => onReply(comment)}
+              className={`text-xs font-medium ${
                 isDark
-                  ? "hover:bg-gray-700 text-gray-400"
-                  : "hover:bg-gray-100 text-gray-600"
+                  ? "text-indigo-400 hover:text-indigo-300"
+                  : "text-indigo-600 hover:text-indigo-700"
               }`}
             >
-              <X className="w-5 h-5" />
+              Répondre
             </button>
           </div>
+        </div>
+      </div>
 
-          {/* Comment Input */}
-          <div className="mb-6">
-            {replyTo && (
-              <div
-                className={`mb-3 p-3 rounded-lg flex items-center justify-between ${
-                  isDark ? "bg-gray-700" : "bg-gray-100"
-                }`}
-              >
-                <span
-                  className={`text-sm ${
-                    isDark ? "text-gray-300" : "text-gray-700"
-                  }`}
-                >
-                  Répondre à{" "}
-                  <strong>{replyTo.user?.username}</strong>
-                </span>
-                <button
-                  onClick={onCancelReply}
-                  className={`p-1 rounded ${
-                    isDark
-                      ? "hover:bg-gray-600 text-gray-400"
-                      : "hover:bg-gray-200 text-gray-600"
-                  }`}
-                >
-                  <X className="w-4 h-4" />
-                </button>
-              </div>
-            )}
-            <div className="flex gap-3">
-              <textarea
-                value={commentText}
-                onChange={(e) => onCommentTextChange(e.target.value)}
-                placeholder="Écrivez votre commentaire..."
-                rows={3}
-                className={`flex-1 px-4 py-3 rounded-lg border-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none ${
-                  isDark
-                    ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400"
-                    : "bg-white border-gray-200 text-gray-900 placeholder-gray-500"
-                }`}
-              />
-              <button
-                onClick={() => onSubmitComment(type, itemId)}
-                disabled={!commentText.trim()}
-                className={`px-6 py-3 rounded-lg font-medium transition-colors flex items-center gap-2 h-fit ${
-                  commentText.trim()
-                    ? "bg-indigo-600 hover:bg-indigo-700 text-white"
-                    : "bg-gray-300 text-gray-500 cursor-not-allowed"
-                }`}
-              >
-                <Send className="w-5 h-5" />
-                Envoyer
-              </button>
-            </div>
-          </div>
-
-          {/* Comments List */}
-          <div className="space-y-4">
-            {itemComments.length === 0 ? (
-              <p
-                className={`text-center py-8 ${
-                  isDark ? "text-gray-400" : "text-gray-600"
-                }`}
-              >
-                Aucun commentaire pour le moment. Soyez le premier à
-                commenter !
-              </p>
-            ) : (
-              itemComments
-                .filter((c) => !c.parentId)
-                .map((comment) => (
-                  <CommentItem
-                    key={comment.id}
-                    comment={comment}
-                    type={type}
-                    itemId={itemId}
-                    isDark={isDark}
-                    onReply={onReply}
-                  />
-                ))
-            )}
-          </div>
+      {comment.replies && comment.replies.length > 0 && (
+        <div className="ml-12 space-y-3">
+          {comment.replies.map((reply) => (
+            <CommentItem
+              key={reply.id}
+              comment={reply}
+              type={type}
+              itemId={itemId}
+              isDark={isDark}
+              onReply={onReply}
+            />
+          ))}
         </div>
       )}
     </div>
-  );
-});
+  )
+);
+
+CommentItem.displayName = "CommentItem";
+
+const CommentSection: React.FC<CommentSectionProps> = React.memo(
+  ({
+    type,
+    itemId,
+    title,
+    isDark,
+    isAuthenticated,
+    comments,
+    showCommentSection,
+    commentText,
+    replyTo,
+    onCommentClick,
+    onCloseSection,
+    onCommentTextChange,
+    onSubmitComment,
+    onReply,
+    onCancelReply,
+    isSubmitting,
+  }) => {
+    const itemComments = comments.filter(
+      (comment) =>
+        (type === "blog" && comment.blogId === itemId) ||
+        (type === "article" && comment.articleId === itemId)
+    );
+
+    const isOpen =
+      showCommentSection?.type === type && showCommentSection?.id === itemId;
+
+    return (
+      <div className="mt-6">
+        <button
+          onClick={() => onCommentClick(type, itemId)}
+          className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-colors ${
+            isDark
+              ? "bg-indigo-900 text-indigo-300 hover:bg-indigo-800"
+              : "bg-indigo-100 text-indigo-700 hover:bg-indigo-200"
+          }`}
+        >
+          <MessageCircle className="w-5 h-5" />
+          Commentaires ({itemComments.length})
+        </button>
+
+        {isOpen && (
+          <div
+            className={`mt-4 rounded-xl p-6 ${
+              isDark ? "bg-gray-800" : "bg-white"
+            }`}
+          >
+            <div className="flex items-center justify-between mb-4">
+              <h3
+                className={`text-xl font-bold ${
+                  isDark ? "text-white" : "text-gray-900"
+                }`}
+              >
+                Commentaires sur {title}
+              </h3>
+              <button
+                onClick={onCloseSection}
+                className={`p-1 rounded-lg transition-colors ${
+                  isDark
+                    ? "hover:bg-gray-700 text-gray-400"
+                    : "hover:bg-gray-100 text-gray-600"
+                }`}
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Comment Input */}
+            {isAuthenticated ? (
+              <div className="mb-6">
+                {replyTo && (
+                  <div
+                    className={`mb-3 p-3 rounded-lg flex items-center justify-between ${
+                      isDark ? "bg-gray-700" : "bg-gray-100"
+                    }`}
+                  >
+                    <span
+                      className={`text-sm ${
+                        isDark ? "text-gray-300" : "text-gray-700"
+                      }`}
+                    >
+                      Répondre à <strong>{replyTo.user?.username}</strong>
+                    </span>
+                    <button
+                      onClick={onCancelReply}
+                      className={`p-1 rounded ${
+                        isDark
+                          ? "hover:bg-gray-600 text-gray-400"
+                          : "hover:bg-gray-200 text-gray-600"
+                      }`}
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  </div>
+                )}
+                <div className="flex gap-3">
+                  <textarea
+                    value={commentText}
+                    onChange={(e) => onCommentTextChange(e.target.value)}
+                    placeholder="Écrivez votre commentaire..."
+                    rows={3}
+                    className={`flex-1 px-4 py-3 rounded-lg border-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none ${
+                      isDark
+                        ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400"
+                        : "bg-white border-gray-200 text-gray-900 placeholder-gray-500"
+                    }`}
+                  />
+                  <button
+                    onClick={() => onSubmitComment(type, itemId)}
+                    disabled={!commentText.trim() || isSubmitting}
+                    className={`px-6 py-3 rounded-lg font-medium transition-colors flex items-center gap-2 h-fit ${
+                      commentText.trim()
+                        ? "bg-indigo-600 hover:bg-indigo-700 text-white"
+                        : "bg-gray-300 text-gray-500 cursor-not-allowed"
+                    }`}
+                  >
+                    {isSubmitting ? (
+                      <div>Loading...</div>
+                    ) : (
+                      <div className="flex">
+                        <Send className="w-5 h-5" />
+                        Envoyer
+                      </div>
+                    )}
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div
+                className={`mb-6 p-4 rounded-lg text-center ${
+                  isDark ? "bg-gray-700" : "bg-gray-100"
+                }`}
+              >
+                <p className={isDark ? "text-gray-300" : "text-gray-700"}>
+                  Vous devez être connecté pour commenter.
+                </p>
+              </div>
+            )}
+
+            {/* Comments List */}
+            <div className="space-y-4">
+              {itemComments.length === 0 ? (
+                <p
+                  className={`text-center py-8 ${
+                    isDark ? "text-gray-400" : "text-gray-600"
+                  }`}
+                >
+                  Aucun commentaire pour le moment. Soyez le premier à commenter
+                  !
+                </p>
+              ) : (
+                itemComments
+                  .filter((c) => !c.parentId)
+                  .map((comment) => (
+                    <CommentItem
+                      key={comment.id}
+                      comment={comment}
+                      type={type}
+                      itemId={itemId}
+                      isDark={isDark}
+                      onReply={onReply}
+                    />
+                  ))
+              )}
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  }
+);
 
 CommentSection.displayName = "CommentSection";
 
@@ -298,17 +318,41 @@ const CiBlogDetailScreen = () => {
   const { blogDetail, getBlogById, isLoading } = useCiBlog();
   const { user, isAuthenticated } = useAuthClient();
 
-  // States for comments
   const [comments, setComments] = useState<IComment[]>([]);
-  const [showCommentSection, setShowCommentSection] = useState<CommentSectionState | null>(null);
+  const [showCommentSection, setShowCommentSection] =
+    useState<CommentSectionState | null>(null);
   const [commentText, setCommentText] = useState<string>("");
   const [replyTo, setReplyTo] = useState<IComment | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     if (id) {
       getBlogById(id.toString());
     }
   }, [id]);
+
+  // CORRECTION: Initialiser les commentaires depuis blogDetail
+  useEffect(() => {
+    if (blogDetail) {
+      const allComments: IComment[] = [];
+
+      // Ajouter les commentaires du blog
+      if (blogDetail.comments) {
+        allComments.push(...blogDetail.comments);
+      }
+
+      // Ajouter les commentaires des articles
+      if (blogDetail.articles) {
+        blogDetail.articles.forEach((article: any) => {
+          if (article.comments) {
+            allComments.push(...article.comments);
+          }
+        });
+      }
+
+      setComments(allComments);
+    }
+  }, [blogDetail]);
 
   const handleCommentClick = (type: "blog" | "article", itemId: string) => {
     if (!isAuthenticated) {
@@ -319,47 +363,96 @@ const CiBlogDetailScreen = () => {
     setReplyTo(null);
   };
 
-  const handleSubmitComment = (type: "blog" | "article", itemId: string) => {
-    if (!commentText.trim() || !user) return;
+  function getAuthTokenClient(): string | null {
+    if (typeof window === "undefined") {
+      return null;
+    }
+    let token = localStorage.getItem("authTokenClient");
+    if (token) return token;
+    token = sessionStorage.getItem("authTokenClient");
+    if (token) return token;
+    return null;
+  }
 
-    const newComment: IComment = {
-      id: `temp-${Date.now()}`,
-      content: commentText,
-      userId: user.id,
-      user: {
-        id: user.id,
-        username: user.username || "Anonymous",
-        email: user.email,
-        role: user.role || "user",
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-      },
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-      parentId: replyTo?.id || undefined,
-      blogId: type === "blog" ? itemId : undefined,
-      articleId: type === "article" ? itemId : undefined,
-      isApproved: true,
-      replies: [],
-    };
+  const handleSubmitComment = async (
+    type: "blog" | "article",
+    itemId: string
+  ) => {
+    if (!commentText.trim() || !user || isSubmitting) return;
 
-    setComments((prev) => {
-      if (replyTo) {
-        return prev.map((comment) => {
-          if (comment.id === replyTo.id) {
-            return {
-              ...comment,
-              replies: [...(comment.replies || []), newComment],
-            };
-          }
-          return comment;
-        });
+    setIsSubmitting(true);
+    const token = getAuthTokenClient();
+
+    if (!token) {
+      toast.error("Utilisateur non authentifié");
+      setIsSubmitting(false);
+      return;
+    }
+
+    try {
+      const response = await fetch("/api/comment/post", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          content: commentText,
+          userId: user.id,
+          parentId: replyTo?.id || null,
+          blogId: type === "blog" ? itemId : null,
+          articleId: type === "article" ? itemId : null,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        toast.success(
+          "Commentaire ajouté avec succès ! En attente d'approbation."
+        );
+        setCommentText("");
+        setReplyTo(null);
+
+        if (data.comment) {
+          setComments((prev) => {
+            if (replyTo) {
+              return prev.map((comment) => {
+                if (comment.id === replyTo.id) {
+                  return {
+                    ...comment,
+                    replies: [...(comment.replies || []), data.comment],
+                  };
+                }
+                if (comment.replies && comment.replies.length > 0) {
+                  return {
+                    ...comment,
+                    replies: comment.replies.map((reply) => {
+                      if (reply.id === replyTo.id) {
+                        return {
+                          ...reply,
+                          replies: [...(reply.replies || []), data.comment],
+                        };
+                      }
+                      return reply;
+                    }),
+                  };
+                }
+                return comment;
+              });
+            }
+            return [data.comment, ...prev];
+          });
+        }
+      } else {
+        toast.error(data.error || "Erreur lors de l'ajout du commentaire");
       }
-      return [...prev, newComment];
-    });
-
-    setCommentText("");
-    setReplyTo(null);
+    } catch (error) {
+      console.error("Erreur:", error);
+      toast.error("Erreur de connexion au serveur");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleReply = (comment: IComment) => {
@@ -434,7 +527,6 @@ const CiBlogDetailScreen = () => {
       }`}
     >
       <div className="px-6 py-8 container mx-auto">
-        {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center gap-4">
             <button
@@ -453,7 +545,6 @@ const CiBlogDetailScreen = () => {
           </div>
         </div>
 
-        {/* Main Image */}
         {blogDetail.image && (
           <div className="mb-8 rounded-2xl overflow-hidden shadow-2xl">
             <img
@@ -464,13 +555,11 @@ const CiBlogDetailScreen = () => {
           </div>
         )}
 
-        {/* Blog Header Card */}
         <div
           className={`rounded-xl p-8 shadow-lg mb-8 ${
             isDark ? "bg-gray-800" : "bg-white"
           }`}
         >
-          {/* Title */}
           <h1
             className={`text-4xl font-bold mb-4 ${
               isDark ? "text-white" : "text-gray-900"
@@ -479,7 +568,6 @@ const CiBlogDetailScreen = () => {
             {blogDetail.title}
           </h1>
 
-          {/* Subtitle */}
           {blogDetail.subtitle && (
             <p
               className={`text-xl mb-6 ${
@@ -490,7 +578,6 @@ const CiBlogDetailScreen = () => {
             </p>
           )}
 
-          {/* Meta Information */}
           <div className="flex flex-wrap gap-4 mb-6">
             {blogDetail.author && (
               <div
@@ -536,7 +623,6 @@ const CiBlogDetailScreen = () => {
             )}
           </div>
 
-          {/* Description */}
           {blogDetail.description && (
             <div>
               <h2
@@ -556,7 +642,6 @@ const CiBlogDetailScreen = () => {
             </div>
           )}
 
-          {/* Blog Comments Section */}
           <CommentSection
             type="blog"
             itemId={blogDetail.id}
@@ -573,10 +658,10 @@ const CiBlogDetailScreen = () => {
             onSubmitComment={handleSubmitComment}
             onReply={handleReply}
             onCancelReply={handleCancelReply}
+            isSubmitting={isSubmitting}
           />
         </div>
 
-        {/* Articles Section */}
         {blogDetail.articles && blogDetail.articles.length > 0 && (
           <div>
             <h2
@@ -596,7 +681,6 @@ const CiBlogDetailScreen = () => {
                   }`}
                 >
                   <div className="grid md:grid-cols-2 gap-6">
-                    {/* Article Image */}
                     <div
                       className={`relative h-64 md:h-auto ${
                         index % 2 === 0 ? "md:order-1" : "md:order-2"
@@ -630,13 +714,11 @@ const CiBlogDetailScreen = () => {
                       )}
                     </div>
 
-                    {/* Article Content */}
                     <div
                       className={`p-6 flex flex-col justify-center ${
                         index % 2 === 0 ? "md:order-2" : "md:order-1"
                       }`}
                     >
-                      {/* Article Number Badge */}
                       <div className="mb-4">
                         <span
                           className={`inline-block px-3 py-1 rounded-full text-sm font-semibold ${
@@ -649,7 +731,6 @@ const CiBlogDetailScreen = () => {
                         </span>
                       </div>
 
-                      {/* Article Title */}
                       {article.title && (
                         <h3
                           className={`text-2xl font-bold mb-4 ${
@@ -660,7 +741,6 @@ const CiBlogDetailScreen = () => {
                         </h3>
                       )}
 
-                      {/* Article Caption */}
                       {article.caption && (
                         <p
                           className={`text-lg leading-relaxed whitespace-pre-wrap ${
@@ -670,35 +750,33 @@ const CiBlogDetailScreen = () => {
                           {article.caption}
                         </p>
                       )}
-
-                      
                     </div>
                   </div>
-                  {/* Article Comments Section */}
-                      <CommentSection
-                        type="article"
-                        itemId={article.id}
-                        title={article.title || `l'article ${index + 1}`}
-                        isDark={isDark}
-                        isAuthenticated={isAuthenticated}
-                        comments={comments}
-                        showCommentSection={showCommentSection}
-                        commentText={commentText}
-                        replyTo={replyTo}
-                        onCommentClick={handleCommentClick}
-                        onCloseSection={handleCloseSection}
-                        onCommentTextChange={handleCommentTextChange}
-                        onSubmitComment={handleSubmitComment}
-                        onReply={handleReply}
-                        onCancelReply={handleCancelReply}
-                      />
+
+                  <CommentSection
+                    type="article"
+                    itemId={article.id}
+                    title={article.title || `l'article ${index + 1}`}
+                    isDark={isDark}
+                    isAuthenticated={isAuthenticated}
+                    comments={comments}
+                    showCommentSection={showCommentSection}
+                    commentText={commentText}
+                    replyTo={replyTo}
+                    onCommentClick={handleCommentClick}
+                    onCloseSection={handleCloseSection}
+                    onCommentTextChange={handleCommentTextChange}
+                    onSubmitComment={handleSubmitComment}
+                    onReply={handleReply}
+                    onCancelReply={handleCancelReply}
+                    isSubmitting={isSubmitting}
+                  />
                 </div>
               ))}
             </div>
           </div>
         )}
 
-        {/* No Articles State */}
         {(!blogDetail.articles || blogDetail.articles.length === 0) && (
           <div
             className={`rounded-xl p-12 text-center ${
@@ -717,11 +795,7 @@ const CiBlogDetailScreen = () => {
             >
               {t("blog.details.noArticle")}
             </h3>
-            <p
-              className={`mb-6 ${
-                isDark ? "text-gray-400" : "text-gray-600"
-              }`}
-            >
+            <p className={`mb-6 ${isDark ? "text-gray-400" : "text-gray-600"}`}>
               Ce blog ne contient pas encore d'articles
             </p>
           </div>
