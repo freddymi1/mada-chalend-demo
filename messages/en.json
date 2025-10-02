@@ -83,7 +83,13 @@
   "blog": {
     "title": "Our travel tips and stories",
     "subtitle": "Discover our articles to better prepare your trip and dive into Madagascar's fascinating legends.",
-    "viewMore": "Read more"
+    "viewMore": "Read more",
+    "details":{
+      "title":"Blog details",
+       "article":"Article",
+       "description":"Description",
+       "noArticle":"No article"
+    }
   },
   "contact": {
     "title": "Contact Us",

@@ -83,7 +83,13 @@
   "blog": {
     "title": "Nos conseils et récits de voyage",
     "subtitle": "Découvrez nos articles pour mieux préparer votre voyage et plongez dans les légendes fascinantes de Madagascar.",
-    "viewMore": "Lire la suite"
+    "viewMore": "Lire la suite",
+    "details":{
+      "title":"Detail du blog",
+       "article":"Article",
+       "description":"Description",
+       "noArticle":"Aucun article"
+    }
   },
   "contact": {
     "title": "Contactez-nous",

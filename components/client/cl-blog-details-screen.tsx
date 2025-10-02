@@ -14,11 +14,13 @@ import {
 import { useParams, useRouter } from "next/navigation";
 import React, { useEffect } from "react";
 import { useCiBlog } from "../providers/client/ClBlogProvider";
+import { useTranslations } from "next-intl";
 
 const CiBlogDetailScreen = () => {
   const { isDark } = useTheme();
   const router = useRouter();
   const params = useParams();
+  const t  = useTranslations("lng")
   const id = params?.id;
 
   const { blogDetail, getBlogById, isLoading } = useCiBlog();
@@ -99,7 +101,7 @@ const CiBlogDetailScreen = () => {
           >
             <ArrowLeft className="w-5 h-5" />
           </button>
-          <div className="text-xl lg:text-4xl font-bold mb-2">Detail du blog</div>
+          <div className="text-xl lg:text-4xl font-bold mb-2">{t("blog.details.title")}</div>
           </div>
 
           
@@ -196,7 +198,7 @@ const CiBlogDetailScreen = () => {
                   isDark ? "text-white" : "text-gray-900"
                 }`}
               >
-                Description
+                {t("blog.details.description")}
               </h2>
               <p
                 className={`text-lg leading-relaxed whitespace-pre-wrap ${
@@ -217,7 +219,7 @@ const CiBlogDetailScreen = () => {
                 isDark ? "text-white" : "text-gray-900"
               }`}
             >
-              Articles
+              {t("blog.details.article")}
             </h2>
 
             <div className="space-y-6">
@@ -328,7 +330,7 @@ const CiBlogDetailScreen = () => {
                 isDark ? "text-white" : "text-gray-900"
               }`}
             >
-              Aucun article
+              {t("blog.details.noArticle")}
             </h3>
             <p
               className={`mb-6 ${

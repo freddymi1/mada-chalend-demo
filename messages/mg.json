@@ -84,7 +84,13 @@
   "blog": {
     "title": "Torohevitra sy tantara momba ny dia",
     "subtitle": "Jereo ny lahatsoratray mba hahamora ny fanomanana ny dianao ary midira amin’ny angano mahafinaritra any Madagasikara.",
-    "viewMore": "Hamaky bebe kokoa"
+    "viewMore": "Hamaky bebe kokoa",
+    "details":{
+      "title":"Fampahafantarana misimisy kokoa",
+      "article":"Article",
+      "description":"Description",
+      "noArticle":"Tsy misy article"
+    }
   },
   "contact": {
     "title": "Mifandraisa aminay",
