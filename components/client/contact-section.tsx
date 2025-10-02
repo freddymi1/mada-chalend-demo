@@ -641,7 +641,7 @@ export function ContactSection() {
         className="animate-bounce-in"
         style={{ animationDelay: "1.3s", animationFillMode: "both" }}
       >
-        <Button type="submit" className="w-full hover-glow" size="lg">
+        <Button disabled={loading} type="submit" className="w-full hover-glow" size="lg">
           <Building className="w-5 h-5 mr-2" />
           Envoyer la demande de partenariat
         </Button>

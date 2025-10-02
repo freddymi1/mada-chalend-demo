@@ -18,27 +18,10 @@ import { Vehicle } from "@/src/domain/entities/car";
 import { useVehicle } from "../providers/admin/VehicleProvider";
 import { useRouter } from "next/navigation";
 import { LoadingSpinner } from "../client/loading";
+import { useTheme } from "@/src/hooks/useTheme";
 
 // Theme hook
-const useTheme = () => {
-  const [isDark, setIsDark] = useState(false);
 
-  useEffect(() => {
-    // Check system preference
-    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
-    setIsDark(mediaQuery.matches);
-
-    // Listen for changes
-    const handleChange = (e: MediaQueryListEvent) => {
-      setIsDark(e.matches);
-    };
-
-    mediaQuery.addEventListener("change", handleChange);
-    return () => mediaQuery.removeEventListener("change", handleChange);
-  }, []);
-
-  return { isDark, setIsDark };
-};
 
 // Vehicle Card Component
 const VehicleCard: React.FC<{

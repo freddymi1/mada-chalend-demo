@@ -10,7 +10,8 @@ import {
   Bus, 
   Users, 
   Settings, 
-  LineChart 
+  LineChart, 
+  BookOpen
 } from "lucide-react"; // ajoute ici tous les icônes nécessaires
 import { useAuth } from "@/src/hooks/useAuth";
 
@@ -51,6 +52,13 @@ export const menuItems = [
     path: "/admin/analytics",
     icon: "LineChart",
   },
+
+  {
+    id: "blog",
+    nom: "Blog",
+    path: "/admin/blog",
+    icon: "BookOpen",
+  },
   {
     id: "parametres",
     nom: "Paramètres",
@@ -67,6 +75,7 @@ const iconMap: Record<string, React.ElementType> = {
   Users,
   Settings,
   LineChart,
+  BookOpen
 };
 
 const SideMenu = () => {
