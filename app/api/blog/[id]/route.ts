@@ -14,8 +14,116 @@ export async function GET(
     const blog = await prisma.blog.findUnique({
       where: { id },
       include: {
-        articles: true,
-       
+        articles: {
+          include: {
+            comments: {
+              where: {
+                isApproved: true, // Seulement les commentaires approuvés
+                parentId: null,   // Seulement les commentaires de premier niveau
+              },
+              include: {
+                user: {
+                  select: {
+                    id: true,
+                    username: true,
+                    email: true,
+                    // Ajoutez les champs User que vous voulez exposer
+                  },
+                },
+                replies: {
+                  where: {
+                    isApproved: true,
+                  },
+                  include: {
+                    user: {
+                      select: {
+                        id: true,
+                        username: true,
+                        email: true,
+                      },
+                    },
+                    replies: {
+                      // Si vous voulez aussi les réponses aux réponses
+                      where: {
+                        isApproved: true,
+                      },
+                      include: {
+                        user: {
+                          select: {
+                            id: true,
+                            username: true,
+                            email: true,
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+                _count: {
+                  select: {
+                    replies: true, // Compte le nombre de réponses
+                  },
+                },
+              },
+              orderBy: { createdAt: "desc" },
+            },
+          },
+        },
+        comments: {
+          where: {
+            isApproved: true,
+            parentId: null,
+          },
+          include: {
+            user: {
+              select: {
+                id: true,
+                username: true,
+                email: true,
+              },
+            },
+            replies: {
+              where: {
+                isApproved: true,
+              },
+              include: {
+                user: {
+                  select: {
+                    id: true,
+                    username: true,
+                    email: true,
+                  },
+                },
+                replies: {
+                  where: {
+                    isApproved: true,
+                  },
+                  include: {
+                    user: {
+                      select: {
+                        id: true,
+                        username: true,
+                        email: true,
+                      },
+                    },
+                  },
+                },
+              },
+            },
+            _count: {
+              select: {
+                replies: true,
+              },
+            },
+          },
+          orderBy: { createdAt: "desc" },
+        },
+        _count: {
+          select: {
+            articles: true,
+            comments: true,
+          },
+        },
       },
     });
 
