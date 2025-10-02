@@ -2,17 +2,26 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { Button } from "@/components/client/ui/button";
-import { Menu, X, MapPin, ChevronDown } from "lucide-react";
+import { Menu, X, MapPin, ChevronDown, LogIn, LogOut } from "lucide-react";
 import { LanguageSwitcher } from "./LanguageSwitcher";
 import { useTranslations } from "use-intl";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "./ui/dropdown-menu";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "./ui/dropdown-menu";
+import { useAuthClient } from "@/src/hooks/useAuthClient";
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isBookingOpen, setIsBookingOpen] = useState(false);
   const pathname = usePathname();
+  const router = useRouter();
   const t = useTranslations("lng");
+  const { user, logout, isAuthenticated } = useAuthClient();
+  console.log("isAuthenticated",isAuthenticated);
 
   const navItems = [
     { href: "/", label: `${t("navigation.home")}` },
@@ -24,7 +33,10 @@ export function Header() {
   ];
 
   const bookingItems = [
-    { href: "/reservation/circuit", label: `${t("navigation.bookingCircuit")}` },
+    {
+      href: "/reservation/circuit",
+      label: `${t("navigation.bookingCircuit")}`,
+    },
     { href: "/reservation/car", label: `${t("navigation.bookingCar")}` },
   ];
 
@@ -60,7 +72,7 @@ export function Header() {
                 {item.label}
               </Link>
             ))}
-            
+
             {/* Dropdown Menu pour Réservation */}
             <DropdownMenu>
               <DropdownMenuTrigger className="flex items-center gap-1 text-foreground hover:text-primary transition-all duration-300 hover:scale-105 focus:outline-none">
@@ -70,10 +82,7 @@ export function Header() {
               <DropdownMenuContent align="end" className="w-48">
                 {bookingItems.map((item) => (
                   <DropdownMenuItem key={item.href} asChild>
-                    <Link
-                      href={item.href}
-                      className="w-full cursor-pointer"
-                    >
+                    <Link href={item.href} className="w-full cursor-pointer">
                       {item.label}
                     </Link>
                   </DropdownMenuItem>
@@ -86,13 +95,31 @@ export function Header() {
           <div className="flex items-center gap-2">
             <LanguageSwitcher />
 
+            {isAuthenticated ? (
+              <button
+                onClick={logout}
+                className="cursor-pointer flex items-center space-x-2 bg-transparent border border-indigo-400 hover:text-slate-700 rounded-md px-3 py-2.5 text-sm hover:bg-indigo-50 transition-colors duration-200 justify-between"
+              >
+                <LogOut className="h-6 w-6" />
+                <span>{user?.username}</span>
+              </button>
+            ) : (
+              <button
+                onClick={() => router.push("/auth/login")}
+                className="cursor-pointer flex items-center space-x-2 bg-transparent border border-indigo-400 hover:text-slate-700 rounded-md px-3 py-2.5 text-sm hover:bg-indigo-50 transition-colors duration-200 justify-between"
+              >
+                <LogIn className="h-6 w-6" />
+                <span>Log In</span>
+              </button>
+            )}
+
             {/* Mobile menu button */}
             <div className="md:hidden">
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
-                className="transition-transform duration-200 hover:scale-110"
+                className="transition-transform duration-200hover:scale-110"
               >
                 {isMenuOpen ? (
                   <X className="h-6 w-6" />
@@ -123,7 +150,7 @@ export function Header() {
                   {item.label}
                 </Link>
               ))}
-              
+
               {/* Mobile Booking Submenu */}
               <div className="pt-2">
                 <button

@@ -1,7 +1,9 @@
 "use client";
 
 import { useAuth } from "@/src/hooks/useAuth";
+import { useAuthClient } from "@/src/hooks/useAuthClient";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import React, { useState } from "react";
 
 const LoginScreen = () => {
@@ -14,7 +16,7 @@ const LoginScreen = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const router = useRouter();
-  const { login, isLoading } = useAuth();
+  const { login, isLoading } = useAuthClient();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -35,13 +37,8 @@ const LoginScreen = () => {
       const data = await response.json();
 
       if (response.ok) {
-        // Utiliser UNIQUEMENT la fonction login du hook
-        // Elle s'occupe déjà du stockage et de la redirection
         login(data.token, data.user, formData.rememberMe);
-
         console.log("Connexion réussie:", data);
-        // SUPPRIMER le stockage manuel ci-dessous
-        // La fonction login() du hook fait déjà ce travail
       } else {
         setError(data.message || "Erreur de connexion");
       }
@@ -50,7 +47,7 @@ const LoginScreen = () => {
       setError("Erreur de connexion au serveur");
     }
   };
-  
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
     setFormData((prev) => ({
@@ -58,12 +55,11 @@ const LoginScreen = () => {
       [name]: type === "checkbox" ? checked : value,
     }));
 
-    // Clear error when user starts typing
     if (error) setError("");
   };
 
   return (
-    <div className="min-h-screen flex">
+    <div className="min-h-[93vh] flex">
       {/* Section gauche - Image de fond */}
       <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden">
         <div
@@ -76,20 +72,18 @@ const LoginScreen = () => {
           <div className="absolute inset-0 bg-gradient-to-br from-blue-600/80 to-purple-700/80"></div>
         </div>
 
-        {/* Contenu superposé */}
         <div className="relative z-10 flex flex-col justify-center p-12 text-white">
           <div className="max-w-md">
             <h1 className="text-4xl font-bold mb-6 leading-tight">
-              Bienvenue sur notre plateforme d'administration
+              Bienvenue sur notre plateforme
             </h1>
             <p className="text-xl opacity-90 mb-8 leading-relaxed">
-              Gérez votre site touristique de Madagascar avec simplicité et
-              efficacité.
+              Connectez-vous pour découvrir et réserver facilement nos services
+              touristiques à Madagascar.
             </p>
           </div>
         </div>
 
-        {/* Particules décoratives */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <div className="absolute top-1/4 left-1/4 w-2 h-2 bg-white/20 rounded-full animate-ping"></div>
           <div
@@ -124,11 +118,9 @@ const LoginScreen = () => {
               </svg>
             </div>
             <h2 className="text-3xl font-bold text-gray-900 mb-2">
-              Connexion Admin
+              Connexion Client
             </h2>
-            <p className="text-gray-600">
-              Accédez à votre espace d'administration
-            </p>
+            <p className="text-gray-600">Accédez à votre espace client</p>
           </div>
 
           {/* Message d'erreur */}
@@ -173,7 +165,7 @@ const LoginScreen = () => {
                   value={formData.email}
                   onChange={handleChange}
                   className="w-full px-4 py-3 pl-11 text-blue-900 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-white"
-                  placeholder="admin@madachaland.ord"
+                  placeholder="admin@madachaland.org"
                   disabled={isLoading}
                 />
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -355,46 +347,50 @@ const LoginScreen = () => {
                 </>
               )}
             </button>
-          </form>
 
-          {/* Informations de test */}
-          <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-xl">
-            <h3 className="text-sm font-medium text-blue-800 mb-2">
-              Informations de test :
-            </h3>
-            <p className="text-xs text-blue-600">
-              <strong>Email:</strong> admin@madachaland.org
-              <br />
-              <strong>Mot de passe:</strong> Admin@123
-            </p>
-          </div>
+            {/* Lien vers Signup */}
+            <div className="mt-6">
+              <div className="relative">
+                <div className="absolute inset-0 flex items-center">
+                  <div className="w-full border-t border-gray-300"></div>
+                </div>
+                <div className="relative flex justify-center text-sm">
+                  <span className="px-2 bg-gray-50 text-gray-500">
+                    Nouveau sur la plateforme ?
+                  </span>
+                </div>
+              </div>
 
-          {/* Footer */}
-          <div className="mt-8 text-center">
-            <p className="text-sm text-gray-600">
-              © 2024 Mada Chaland. Tous droits réservés.
-            </p>
-            <div className="mt-2 flex justify-center space-x-4 text-xs text-gray-500">
-              <button className="hover:text-gray-700 transition-colors">
-                Politique de confidentialité
-              </button>
-              <span>•</span>
-              <button className="hover:text-gray-700 transition-colors">
-                Conditions d'utilisation
-              </button>
-              <span>•</span>
-              <button className="hover:text-gray-700 transition-colors">
-                Support
-              </button>
+              <div className="mt-6">
+                <Link
+                  href="/auth/signup"
+                  className="w-full flex justify-center items-center py-3 px-4 border-2 border-blue-600 text-sm font-medium rounded-xl text-blue-600 bg-white hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98]"
+                >
+                  <svg
+                    className="w-5 h-5 mr-2"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"
+                    />
+                  </svg>
+                  Créer un compte
+                </Link>
+              </div>
             </div>
-          </div>
+          </form>
         </div>
       </div>
     </div>
   );
 };
 
-const LoginPage = () => {
+const ClLoginScreen = () => {
   return (
     <div>
       <LoginScreen />
@@ -402,4 +398,4 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage;
+export default ClLoginScreen;
