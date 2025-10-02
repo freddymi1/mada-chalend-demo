@@ -52,10 +52,10 @@
   },
   "book": {
     "title": "Réservez votre voyage",
-    "cardDispo":"Disponibilité du voiture",
-    "resPeriod":"Périodes réservées",
-    "titleCar":"Réservez une voiture",
-    "at":"au",
+    "cardDispo": "Disponibilité du voiture",
+    "resPeriod": "Périodes réservées",
+    "titleCar": "Réservez une voiture",
+    "at": "au",
     "subtitle": "Réservez facilement votre circuit avec Mada Chaland. Indiquez vos dates, le nombre de personnes et vos préférences, et nous vous proposerons un itinéraire sur mesure.",
     "tabs": {
       "circuit": "Circuit",
@@ -101,6 +101,18 @@
       "message": "Message *",
       "messagePlaceholder": "Votre message...",
       "submit": "Envoyer le message"
+    },
+    "success": {
+      "circuit": "Votre demande de circuit a été envoyée !",
+      "partenariat": "Votre demande de partenariat a été envoyée !",
+      "autre": "Votre demande a été envoyée !"
+    },
+    "toast": {
+      "successTitle": "Message envoyé !",
+      "errorTitle": "Erreur",
+      "serverErrorTitle": "Erreur serveur",
+      "errorMessage": "Impossible d’envoyer le message.",
+      "serverErrorMessage": "Veuillez réessayer plus tard."
     },
     "toastTitle": "Message envoyé !",
     "toastDescription": "Nous vous répondrons dans les plus brefs délais."

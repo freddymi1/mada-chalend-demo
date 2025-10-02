@@ -103,6 +103,18 @@
       "messagePlaceholder": "Ny hafatrao...",
       "submit": "Alefaso ny hafatra"
     },
+    "success": {
+      "circuit": "Nalefa ny fangatahana circuit-nao!",
+      "partenariat": "Nalefa ny fangatahana fiaraha-miasa!",
+      "autre": "Nalefa ny fangatahanao!"
+    },
+    "toast": {
+      "successTitle": "Hafatra nalefa!",
+      "errorTitle": "Hadisoana",
+      "serverErrorTitle": "Olana amin'ny serveur",
+      "errorMessage": "Tsy afaka nandefa ny hafatra.",
+      "serverErrorMessage": "Andramo indray afaka kelikely."
+    },
     "toastTitle": "Hafatra nalefa!",
     "toastDescription": "Hiverina aminao izahay haingana araka izay azo atao."
   },

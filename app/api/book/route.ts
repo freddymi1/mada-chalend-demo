@@ -501,7 +501,7 @@ export async function POST(req: NextRequest) {
 
     // 🔹 Envoi du mail à l'admin
     await transporter.sendMail({
-      from: `"Nouvelle Réservation" <${process.env.EMAIL_USER}>`,
+      from: `"Nouvelle Réservation" <${email}>`,
       to: process.env.EMAIL_USER,
       subject: `🎯 Nouvelle réservation: ${reservationTitle} - ${nom} ${prenom}`,
       html: htmlMessage,

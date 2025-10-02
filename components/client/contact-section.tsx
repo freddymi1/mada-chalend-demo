@@ -2,7 +2,7 @@
 
 import type React from "react";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Card,
   CardContent,
@@ -32,6 +32,7 @@ import {
 } from "lucide-react";
 import { useToast } from "@/hooks/shared/use-toast";
 import { useTranslations } from "use-intl";
+import { useClientCircuit } from "../providers/client/ClientCircuitProvider";
 
 // Types pour les différents formulaires
 type FormType = "circuit" | "partenariat" | "autre";
@@ -78,6 +79,20 @@ export function ContactSection() {
   const t = useTranslations("lng");
 
   const [activeForm, setActiveForm] = useState<FormType>("circuit");
+  const [loading, setLoading] = useState(false)
+
+  const {
+      addedCircuits,
+      fetchCircuits,
+      isLoading,
+    } = useClientCircuit();
+
+    useEffect(() => {
+        const loadCircuits = async () => {
+          await fetchCircuits();
+        };
+        loadCircuits();
+      }, []);
 
   // État pour formulaire circuit
   const [circuitData, setCircuitData] = useState<CircuitFormData>({
@@ -119,60 +134,103 @@ export function ContactSection() {
     message: "",
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
+    setLoading(true)
     let successMessage = "";
+    let payload: any = null;
+
     switch (activeForm) {
       case "circuit":
-        successMessage = "Votre demande de circuit a été envoyée !";
-        setCircuitData({
-          nom: "",
-          prenom: "",
-          email: "",
-          telephone: "",
-          adresse: "",
-          nbPersonnes: "",
-          dateDepart: "",
-          circuitDemande: "",
-          budget: "",
-          duree: "",
-          message: "",
-        });
+        payload = { ...circuitData, type: "circuit" };
+        successMessage = `${t("contact.success.circuit")}`;
         break;
+
       case "partenariat":
-        successMessage = "Votre demande de partenariat a été envoyée !";
-        setPartenariatData({
-          nom: "",
-          prenom: "",
-          email: "",
-          telephone: "",
-          nomEntreprise: "",
-          objet: "",
-          typePartenariat: "",
-          description: "",
-          message: "",
-        });
+        payload = { ...partenariatData, type: "partenariat" };
+        successMessage = `${t("contact.success.partenariat")}`;
         break;
+
       case "autre":
-        successMessage = "Votre demande a été envoyée !";
-        setAutreData({
-          nom: "",
-          prenom: "",
-          email: "",
-          telephone: "",
-          adresse: "",
-          objet: "",
-          typeService: "",
-          message: "",
-        });
+        payload = { ...autreData, type: "autre" };
+        successMessage = `${t("contact.success.autre")}`;
         break;
     }
 
-    toast({
-      title: "Message envoyé !",
-      description: successMessage,
-    });
+    if (!payload) return;
+
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      const result = await res.json();
+
+      if (result.success) {
+        toast({
+          title: `${t("contact.toast.successTitle")}`,
+          description: successMessage,
+        });
+
+        setLoading(false)
+
+        // Reset des formulaires
+        if (activeForm === "circuit") {
+          setCircuitData({
+            nom: "",
+            prenom: "",
+            email: "",
+            telephone: "",
+            adresse: "",
+            nbPersonnes: "",
+            dateDepart: "",
+            circuitDemande: "",
+            budget: "",
+            duree: "",
+            message: "",
+          });
+        } else if (activeForm === "partenariat") {
+          setPartenariatData({
+            nom: "",
+            prenom: "",
+            email: "",
+            telephone: "",
+            nomEntreprise: "",
+            objet: "",
+            typePartenariat: "",
+            description: "",
+            message: "",
+          });
+        } else if (activeForm === "autre") {
+          setAutreData({
+            nom: "",
+            prenom: "",
+            email: "",
+            telephone: "",
+            adresse: "",
+            objet: "",
+            typeService: "",
+            message: "",
+          });
+        }
+      } else {
+        toast({
+          title: `${t("contact.toast.errorTitle")}`,
+          description: `${t("contact.toast.errorMessage")}`,
+          variant: "destructive",
+        });
+        setLoading(false)
+      }
+    } catch (error) {
+      console.error("Erreur handleSubmit:", error);
+      toast({
+        title: `${t("contact.toast.serverErrorTitle")}`,
+        description: `${t("contact.toast.serverErrorMessage")}`,
+        variant: "destructive",
+      });
+    }
   };
 
   const handleCircuitChange = (
@@ -364,16 +422,11 @@ export function ContactSection() {
               <SelectValue placeholder="Choisir un circuit" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="andasibe">Andasibe-Mantadia</SelectItem>
-              <SelectItem value="ankarana">Ankarana</SelectItem>
-              <SelectItem value="isalo">Isalo</SelectItem>
-              <SelectItem value="tsingy">Tsingy de Bemaraha</SelectItem>
-              <SelectItem value="nosy-be">Nosy Be</SelectItem>
-              <SelectItem value="sainte-marie">Sainte-Marie</SelectItem>
-              <SelectItem value="circuit-sud">Grand Sud</SelectItem>
-              <SelectItem value="circuit-nord">Grand Nord</SelectItem>
-              <SelectItem value="circuit-ouest">Côte Ouest</SelectItem>
-              <SelectItem value="personnalise">Circuit personnalisé</SelectItem>
+              <SelectItem value="all">Selectionner un circuit</SelectItem>
+              {addedCircuits.map((cr)=>(
+
+              <SelectItem key={cr.id} value={cr.id}>{cr.title}</SelectItem>
+              ))}
             </SelectContent>
           </Select>
         </div>

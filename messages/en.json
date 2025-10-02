@@ -102,6 +102,18 @@
       "messagePlaceholder": "Your message...",
       "submit": "Send Message"
     },
+    "success": {
+      "circuit": "Your circuit request has been sent!",
+      "partenariat": "Your partnership request has been sent!",
+      "autre": "Your request has been sent!"
+    },
+    "toast": {
+      "successTitle": "Message sent!",
+      "errorTitle": "Error",
+      "serverErrorTitle": "Server error",
+      "errorMessage": "Unable to send the message.",
+      "serverErrorMessage": "Please try again later."
+    },
     "toastTitle": "Message sent!",
     "toastDescription": "We will get back to you as soon as possible."
   },

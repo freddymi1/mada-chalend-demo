@@ -37,7 +37,7 @@ model Circuit {
   updatedAt    DateTime       @updatedAt
   itineraries  Itinerary[]    // Relation avec Itinerary
   reservations Reservation[]  // Relation avec Reservation (nouvelle relation)
-
+  circuitRequest CircuitRequest[]
   @@map("circuits")
 }
 
@@ -137,4 +137,60 @@ model Category {
   vehicles  Vehicle[]
 
   @@map("categories")
+}
+
+// schema.prisma (extrait)
+
+model CircuitRequest {
+  id             String         @id @default(cuid())
+  nom            String
+  prenom         String
+  email          String
+  telephone      String
+  adresse        String?
+  nbPersonnes    Int?         // si tu préfères String, remplace par String
+  dateDepart     DateTime?    // nullable si non renseigné
+  circuitId      String?      // nom ou id du circuit demandé
+  budget         String?       // si budget en nombre, sinon String
+  duree          String?      // ex: "3 jours"
+  message        String?
+
+  circuitRel  Circuit? @relation(fields: [circuitId], references: [id], onDelete: Cascade)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@map("circuit_request")
+}
+
+model PartenariatRequest {
+  id               String         @id @default(cuid())
+  nom              String
+  prenom           String
+  email            String
+  telephone        String
+  nomEntreprise    String?
+  objet            String?
+  typePartenariat  String?   // ex: "sponsorship", "collaboration"
+  description      String?
+  message          String?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@map("partner_request")
+}
+
+model AutreRequest {
+  id          String         @id @default(cuid())
+  nom         String
+  prenom      String
+  email       String
+  telephone   String
+  adresse     String?
+  objet       String?
+  typeService String?   // ex: "support", "infos", "reservation"
+  message     String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("other_request")
 }
