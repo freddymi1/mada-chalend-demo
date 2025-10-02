@@ -11,18 +11,17 @@ import {
   Loader2,
   Image as ImageIcon,
 } from "lucide-react";
-import { useParams, useRouter, useSearchParams } from "next/navigation";
-import React, { useEffect, useState } from "react";
-import { useBlog } from "../providers/admin/BlogProvider";
+import { useParams, useRouter } from "next/navigation";
+import React, { useEffect } from "react";
+import { useCiBlog } from "../providers/client/ClBlogProvider";
 
-const BlogDetailScreen = () => {
+const CiBlogDetailScreen = () => {
   const { isDark } = useTheme();
   const router = useRouter();
   const params = useParams();
   const id = params?.id;
 
-  const { blogDetail, getBlogById, handleDelete, isLoading } = useBlog();
-  const [deleteConfirm, setDeleteConfirm] = useState(false);
+  const { blogDetail, getBlogById, isLoading } = useCiBlog();
 
   useEffect(() => {
     if (id) {
@@ -30,24 +29,6 @@ const BlogDetailScreen = () => {
     }
   }, [id]);
 
-  const handleDeleteClick = () => {
-    setDeleteConfirm(true);
-  };
-
-  const confirmDelete = () => {
-    if (id) {
-      handleDelete(id.toString());
-      router.push("/admin/blogs");
-    }
-  };
-
-  const formatDate = (date: string) => {
-    return new Date(date).toLocaleDateString("fr-FR", {
-      day: "numeric",
-      month: "long",
-      year: "numeric",
-    });
-  };
 
   if (isLoading) {
     return (
@@ -104,12 +85,12 @@ const BlogDetailScreen = () => {
           : "bg-gradient-to-br from-slate-50 to-indigo-50"
       }`}
     >
-      <div className="px-6 py-8 mx-auto">
+      <div className="px-6 py-8 container mx-auto">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center gap-4">
             <button
-            onClick={() => router.push("/admin/blog")}
+            onClick={() => router.push("/blog")}
             className={`p-2 rounded-lg transition-colors ${
               isDark
                 ? "bg-gray-800 text-gray-300 hover:bg-gray-700"
@@ -121,24 +102,7 @@ const BlogDetailScreen = () => {
           <div className="text-xl lg:text-4xl font-bold mb-2">Detail du blog</div>
           </div>
 
-          <div className="flex gap-2">
-            <button
-              onClick={() =>
-                router.push(`/admin/blog/add?edit=true&id=${blogDetail.id}`)
-              }
-              className="flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition-colors"
-            >
-              <Edit className="w-4 h-4" />
-              Modifier
-            </button>
-            <button
-              onClick={handleDeleteClick}
-              className="flex items-center gap-2 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors"
-            >
-              <Trash2 className="w-4 h-4" />
-              Supprimer
-            </button>
-          </div>
+          
         </div>
 
         {/* Main Image */}
@@ -386,52 +350,9 @@ const BlogDetailScreen = () => {
         )}
       </div>
 
-      {/* Delete Confirmation Modal */}
-      {deleteConfirm && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div
-            className={`rounded-xl p-6 max-w-md w-full ${
-              isDark ? "bg-gray-800" : "bg-white"
-            }`}
-          >
-            <h3
-              className={`text-xl font-bold mb-4 ${
-                isDark ? "text-white" : "text-gray-900"
-              }`}
-            >
-              Confirmer la suppression
-            </h3>
-            <p
-              className={`mb-6 ${
-                isDark ? "text-gray-400" : "text-gray-600"
-              }`}
-            >
-              Êtes-vous sûr de vouloir supprimer ce blog et tous ses articles ?
-              Cette action est irréversible.
-            </p>
-            <div className="flex gap-3">
-              <button
-                onClick={() => setDeleteConfirm(false)}
-                className={`flex-1 px-4 py-2 rounded-lg font-medium transition-colors ${
-                  isDark
-                    ? "bg-gray-700 hover:bg-gray-600 text-gray-300"
-                    : "bg-gray-200 hover:bg-gray-300 text-gray-700"
-                }`}
-              >
-                Annuler
-              </button>
-              <button
-                onClick={confirmDelete}
-                className="flex-1 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg font-medium transition-colors"
-              >
-                Supprimer
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      
     </div>
   );
 };
 
-export default BlogDetailScreen;
+export default CiBlogDetailScreen;

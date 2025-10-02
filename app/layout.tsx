@@ -12,6 +12,7 @@ import "./globals.css";
 import { ClientCircuitProvider } from "@/components/providers/client/ClientCircuitProvider";
 import { ClientBookingProvider } from "@/components/providers/client/ClientBookingProvider";
 import { ClVehicleProvider } from "@/components/providers/client/ClVehicleProvider";
+import { CiBlogProvider } from "@/components/providers/client/ClBlogProvider";
 
 export const metadata: Metadata = {
   title: "Mada Chaland - Agence de voyage à Madagascar",
@@ -41,7 +42,9 @@ export default async function RootLayout({
               <ClientCircuitProvider>
                 <ClientBookingProvider>
                   <ClVehicleProvider>
+                    <CiBlogProvider>
                     <Suspense fallback={null}>{children}</Suspense>
+                    </CiBlogProvider>
                   </ClVehicleProvider>
                 </ClientBookingProvider>
               </ClientCircuitProvider>

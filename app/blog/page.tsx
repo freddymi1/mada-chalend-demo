@@ -1,7 +1,7 @@
 import { Header } from "@/components/client/header"
-import { BlogSection } from "@/components/client/blog-section"
 import { Footer } from "@/components/client/footer"
 import { Toaster } from "@/components/client/ui/toaster"
+import BlogSection from "@/components/client/blog-section"
 
 export default function BlogPage() {
   return (
