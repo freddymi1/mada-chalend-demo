@@ -6,6 +6,7 @@ import { AdminBookingProvider } from "@/components/providers/admin/BookingProvid
 import { Toaster } from "@/components/client/ui/toaster";
 import { VehicleProvider } from "@/components/providers/admin/VehicleProvider";
 import { BlogProvider } from "@/components/providers/admin/BlogProvider";
+import { CommentProvider } from "@/components/providers/admin/CommentProvider";
 
 export const metadata: Metadata = {
   title: "Mada Chaland - Dashboard Admin",
@@ -22,7 +23,9 @@ export default function WithMenuLayout({
       <CircuitProvider>
         <AdminBookingProvider>
           <VehicleProvider>
-            <BlogProvider>{children}</BlogProvider>
+            <BlogProvider>
+              <CommentProvider>{children}</CommentProvider>
+            </BlogProvider>
           </VehicleProvider>
         </AdminBookingProvider>
       </CircuitProvider>

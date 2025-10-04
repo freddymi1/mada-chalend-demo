@@ -10,6 +10,9 @@ import {
   MessageCircle,
   Send,
   X,
+  Edit2,
+  Trash2,
+  Save,
 } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
@@ -29,7 +32,15 @@ interface CommentItemProps {
   type: "blog" | "article";
   itemId: string;
   isDark: boolean;
+  currentUserId: string | undefined;
   onReply: (comment: IComment) => void;
+  onEdit: (comment: IComment) => void;
+  onDelete: (commentId: string) => void;
+  editingCommentId: string | null;
+  editText: string;
+  onEditTextChange: (text: string) => void;
+  onSaveEdit: () => void;
+  onCancelEdit: () => void;
 }
 
 interface CommentSectionProps {
@@ -42,93 +53,193 @@ interface CommentSectionProps {
   showCommentSection: CommentSectionState | null;
   commentText: string;
   replyTo: IComment | null;
+  currentUserId: string | undefined;
   onCommentClick: (type: "blog" | "article", itemId: string) => void;
   onCloseSection: () => void;
   onCommentTextChange: (text: string) => void;
   onSubmitComment: (type: "blog" | "article", itemId: string) => void;
   onReply: (comment: IComment) => void;
   onCancelReply: () => void;
+  onEdit: (comment: IComment) => void;
+  onDelete: (commentId: string) => void;
   isSubmitting: boolean;
+  editingCommentId: string | null;
+  editText: string;
+  onEditTextChange: (text: string) => void;
+  onSaveEdit: () => void;
+  onCancelEdit: () => void;
 }
 
 const CommentItem: React.FC<CommentItemProps> = React.memo(
-  ({ comment, type, itemId, isDark, onReply }) => (
-    <div className="space-y-3">
-      <div
-        className={`rounded-lg p-4 ${isDark ? "bg-gray-700" : "bg-gray-50"}`}
-      >
-        <div className="flex items-start gap-3">
-          <div
-            className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 ${
-              isDark ? "bg-indigo-900" : "bg-indigo-100"
-            }`}
-          >
-            <User
-              className={`w-5 h-5 ${
-                isDark ? "text-indigo-300" : "text-indigo-600"
-              }`}
-            />
-          </div>
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center justify-between mb-2">
-              <h4
-                className={`font-semibold ${
-                  isDark ? "text-white" : "text-gray-900"
-                }`}
-              >
-                {comment.user?.username || "Anonyme"}
-              </h4>
-              <span
-                className={`text-xs ${
-                  isDark ? "text-gray-400" : "text-gray-500"
-                }`}
-              >
-                {new Date(comment.createdAt).toLocaleDateString("fr-FR", {
-                  day: "numeric",
-                  month: "short",
-                  year: "numeric",
-                  hour: "2-digit",
-                  minute: "2-digit",
-                })}
-              </span>
-            </div>
-            <p
-              className={`text-sm mb-2 break-words ${
-                isDark ? "text-gray-300" : "text-gray-700"
-              }`}
-            >
-              {comment.content}
-            </p>
-            <button
-              onClick={() => onReply(comment)}
-              className={`text-xs font-medium ${
-                isDark
-                  ? "text-indigo-400 hover:text-indigo-300"
-                  : "text-indigo-600 hover:text-indigo-700"
-              }`}
-            >
-              Répondre
-            </button>
-          </div>
-        </div>
-      </div>
+  ({
+    comment,
+    type,
+    itemId,
+    isDark,
+    currentUserId,
+    onReply,
+    onEdit,
+    onDelete,
+    editingCommentId,
+    editText,
+    onEditTextChange,
+    onSaveEdit,
+    onCancelEdit,
+  }) => {
+    const isOwner = currentUserId === comment.userId;
+    const isEditing = editingCommentId === comment.id;
 
-      {comment.replies && comment.replies.length > 0 && (
-        <div className="ml-12 space-y-3">
-          {comment.replies.map((reply) => (
-            <CommentItem
-              key={reply.id}
-              comment={reply}
-              type={type}
-              itemId={itemId}
-              isDark={isDark}
-              onReply={onReply}
-            />
-          ))}
+    return (
+      <div className="space-y-3">
+        <div
+          className={`rounded-lg p-4 ${isDark ? "bg-gray-700" : "bg-gray-50"}`}
+        >
+          <div className="flex items-start gap-3">
+            <div
+              className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 ${
+                isDark ? "bg-indigo-900" : "bg-indigo-100"
+              }`}
+            >
+              <User
+                className={`w-5 h-5 ${
+                  isDark ? "text-indigo-300" : "text-indigo-600"
+                }`}
+              />
+            </div>
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center justify-between mb-2">
+                <h4
+                  className={`font-semibold ${
+                    isDark ? "text-white" : "text-gray-900"
+                  }`}
+                >
+                  {comment.user?.username || "Anonyme"}
+                </h4>
+                <span
+                  className={`text-xs ${
+                    isDark ? "text-gray-400" : "text-gray-500"
+                  }`}
+                >
+                  {new Date(comment.createdAt).toLocaleDateString("fr-FR", {
+                    day: "numeric",
+                    month: "short",
+                    year: "numeric",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })}
+                </span>
+              </div>
+
+              {isEditing ? (
+                <div className="space-y-2">
+                  <textarea
+                    value={editText}
+                    onChange={(e) => onEditTextChange(e.target.value)}
+                    className={`w-full px-3 py-2 rounded-lg border-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none ${
+                      isDark
+                        ? "bg-gray-600 border-gray-500 text-white placeholder-gray-400"
+                        : "bg-white border-gray-200 text-gray-900 placeholder-gray-500"
+                    }`}
+                    rows={3}
+                  />
+                  <div className="flex gap-2">
+                    <button
+                      onClick={onSaveEdit}
+                      className="flex items-center gap-1 px-3 py-1 rounded bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium transition-colors"
+                    >
+                      <Save className="w-4 h-4" />
+                      Enregistrer
+                    </button>
+                    <button
+                      onClick={onCancelEdit}
+                      className={`px-3 py-1 rounded text-sm font-medium transition-colors ${
+                        isDark
+                          ? "bg-gray-600 hover:bg-gray-500 text-gray-300"
+                          : "bg-gray-200 hover:bg-gray-300 text-gray-700"
+                      }`}
+                    >
+                      Annuler
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <>
+                  <p
+                    className={`text-sm mb-2 break-words ${
+                      isDark ? "text-gray-300" : "text-gray-700"
+                    }`}
+                  >
+                    {comment.content}
+                  </p>
+                  <div className="flex items-center gap-3">
+                    <button
+                      onClick={() => onReply(comment)}
+                      className={`text-xs font-medium ${
+                        isDark
+                          ? "text-indigo-400 hover:text-indigo-300"
+                          : "text-indigo-600 hover:text-indigo-700"
+                      }`}
+                    >
+                      Répondre
+                    </button>
+                    {isOwner && (
+                      <>
+                        <button
+                          onClick={() => onEdit(comment)}
+                          className={`flex items-center gap-1 text-xs font-medium ${
+                            isDark
+                              ? "text-blue-400 hover:text-blue-300"
+                              : "text-blue-600 hover:text-blue-700"
+                          }`}
+                        >
+                          <Edit2 className="w-3 h-3" />
+                          Modifier
+                        </button>
+                        <button
+                          onClick={() => onDelete(comment.id)}
+                          className={`flex items-center gap-1 text-xs font-medium ${
+                            isDark
+                              ? "text-red-400 hover:text-red-300"
+                              : "text-red-600 hover:text-red-700"
+                          }`}
+                        >
+                          <Trash2 className="w-3 h-3" />
+                          Supprimer
+                        </button>
+                      </>
+                    )}
+                  </div>
+                </>
+              )}
+            </div>
+          </div>
         </div>
-      )}
-    </div>
-  )
+
+        {comment.replies && comment.replies.length > 0 && (
+          <div className="ml-12 space-y-3">
+            {comment.replies.map((reply) => (
+              <CommentItem
+                key={reply.id}
+                comment={reply}
+                type={type}
+                itemId={itemId}
+                isDark={isDark}
+                currentUserId={currentUserId}
+                onReply={onReply}
+                onEdit={onEdit}
+                onDelete={onDelete}
+                editingCommentId={editingCommentId}
+                editText={editText}
+                onEditTextChange={onEditTextChange}
+                onSaveEdit={onSaveEdit}
+                onCancelEdit={onCancelEdit}
+              />
+            ))}
+          </div>
+        )}
+      </div>
+    );
+  }
 );
 
 CommentItem.displayName = "CommentItem";
@@ -144,13 +255,21 @@ const CommentSection: React.FC<CommentSectionProps> = React.memo(
     showCommentSection,
     commentText,
     replyTo,
+    currentUserId,
     onCommentClick,
     onCloseSection,
     onCommentTextChange,
     onSubmitComment,
     onReply,
     onCancelReply,
+    onEdit,
+    onDelete,
     isSubmitting,
+    editingCommentId,
+    editText,
+    onEditTextChange,
+    onSaveEdit,
+    onCancelEdit,
   }) => {
     const itemComments = comments.filter(
       (comment) =>
@@ -294,7 +413,15 @@ const CommentSection: React.FC<CommentSectionProps> = React.memo(
                       type={type}
                       itemId={itemId}
                       isDark={isDark}
+                      currentUserId={currentUserId}
                       onReply={onReply}
+                      onEdit={onEdit}
+                      onDelete={onDelete}
+                      editingCommentId={editingCommentId}
+                      editText={editText}
+                      onEditTextChange={onEditTextChange}
+                      onSaveEdit={onSaveEdit}
+                      onCancelEdit={onCancelEdit}
                     />
                   ))
               )}
@@ -324,6 +451,8 @@ const CiBlogDetailScreen = () => {
   const [commentText, setCommentText] = useState<string>("");
   const [replyTo, setReplyTo] = useState<IComment | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [editingCommentId, setEditingCommentId] = useState<string | null>(null);
+  const [editText, setEditText] = useState<string>("");
 
   useEffect(() => {
     if (id) {
@@ -331,17 +460,14 @@ const CiBlogDetailScreen = () => {
     }
   }, [id]);
 
-  // CORRECTION: Initialiser les commentaires depuis blogDetail
   useEffect(() => {
     if (blogDetail) {
       const allComments: IComment[] = [];
 
-      // Ajouter les commentaires du blog
       if (blogDetail.comments) {
         allComments.push(...blogDetail.comments);
       }
 
-      // Ajouter les commentaires des articles
       if (blogDetail.articles) {
         blogDetail.articles.forEach((article: any) => {
           if (article.comments) {
@@ -455,6 +581,109 @@ const CiBlogDetailScreen = () => {
     }
   };
 
+  const handleEdit = (comment: IComment) => {
+    setEditingCommentId(comment.id);
+    setEditText(comment.content);
+  };
+
+  const handleSaveEdit = async () => {
+    if (!editText.trim() || !editingCommentId) return;
+
+    const token = getAuthTokenClient();
+    if (!token) {
+      toast.error("Utilisateur non authentifié");
+      return;
+    }
+
+    try {
+      const response = await fetch(`/api/comment/update/${editingCommentId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          content: editText,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        toast.success("Commentaire modifié avec succès");
+        setComments((prev) =>
+          prev.map((comment) => {
+            if (comment.id === editingCommentId) {
+              return { ...comment, content: editText };
+            }
+            if (comment.replies) {
+              return {
+                ...comment,
+                replies: comment.replies.map((reply) =>
+                  reply.id === editingCommentId
+                    ? { ...reply, content: editText }
+                    : reply
+                ),
+              };
+            }
+            return comment;
+          })
+        );
+        setEditingCommentId(null);
+        setEditText("");
+      } else {
+        toast.error(data.error || "Erreur lors de la modification");
+      }
+    } catch (error) {
+      console.error("Erreur:", error);
+      toast.error("Erreur de connexion au serveur");
+    }
+  };
+
+  const handleCancelEdit = () => {
+    setEditingCommentId(null);
+    setEditText("");
+  };
+
+  const handleDelete = async (commentId: string) => {
+    if (!confirm("Êtes-vous sûr de vouloir supprimer ce commentaire ?")) {
+      return;
+    }
+
+    const token = getAuthTokenClient();
+    if (!token) {
+      toast.error("Utilisateur non authentifié");
+      return;
+    }
+
+    try {
+      const response = await fetch(`/api/comment/delete/${commentId}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (response.ok) {
+        toast.success("Commentaire supprimé avec succès");
+        setComments((prev) =>
+          prev
+            .filter((comment) => comment.id !== commentId)
+            .map((comment) => ({
+              ...comment,
+              replies: comment.replies?.filter((reply) => reply.id !== commentId),
+            }))
+        );
+      } else {
+        const data = await response.json();
+        toast.error(data.error || "Erreur lors de la suppression");
+      }
+    } catch (error) {
+      console.error("Erreur:", error);
+      toast.error("Erreur de connexion au serveur");
+    }
+  };
+
   const handleReply = (comment: IComment) => {
     setReplyTo(comment);
   };
@@ -465,6 +694,10 @@ const CiBlogDetailScreen = () => {
 
   const handleCommentTextChange = (text: string) => {
     setCommentText(text);
+  };
+
+  const handleEditTextChange = (text: string) => {
+    setEditText(text);
   };
 
   const handleCancelReply = () => {
@@ -652,13 +885,21 @@ const CiBlogDetailScreen = () => {
             showCommentSection={showCommentSection}
             commentText={commentText}
             replyTo={replyTo}
+            currentUserId={user?.id}
             onCommentClick={handleCommentClick}
             onCloseSection={handleCloseSection}
             onCommentTextChange={handleCommentTextChange}
             onSubmitComment={handleSubmitComment}
             onReply={handleReply}
             onCancelReply={handleCancelReply}
+            onEdit={handleEdit}
+            onDelete={handleDelete}
             isSubmitting={isSubmitting}
+            editingCommentId={editingCommentId}
+            editText={editText}
+            onEditTextChange={handleEditTextChange}
+            onSaveEdit={handleSaveEdit}
+            onCancelEdit={handleCancelEdit}
           />
         </div>
 
@@ -763,13 +1004,21 @@ const CiBlogDetailScreen = () => {
                     showCommentSection={showCommentSection}
                     commentText={commentText}
                     replyTo={replyTo}
+                    currentUserId={user?.id}
                     onCommentClick={handleCommentClick}
                     onCloseSection={handleCloseSection}
                     onCommentTextChange={handleCommentTextChange}
                     onSubmitComment={handleSubmitComment}
                     onReply={handleReply}
                     onCancelReply={handleCancelReply}
+                    onEdit={handleEdit}
+                    onDelete={handleDelete}
                     isSubmitting={isSubmitting}
+                    editingCommentId={editingCommentId}
+                    editText={editText}
+                    onEditTextChange={handleEditTextChange}
+                    onSaveEdit={handleSaveEdit}
+                    onCancelEdit={handleCancelEdit}
                   />
                 </div>
               ))}

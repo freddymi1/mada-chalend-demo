@@ -120,7 +120,7 @@ export async function POST(req: NextRequest) {
         blogId: blogId || null,
         articleId: articleId || null,
         parentId: parentId || null,
-        isApproved: true,
+        isApproved: false,
       },
       include: {
         user: {

@@ -15,7 +15,7 @@ export async function GET(req: NextRequest) {
     const articleId = searchParams.get("articleId");
 
     const where: any = {
-      isApproved: true,
+    //   isApproved: true,
       // parentId: null,
     };
 
