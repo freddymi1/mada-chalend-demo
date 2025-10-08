@@ -236,8 +236,6 @@ export const CircuitProvider = ({
           title: "Felicitation !",
           description: "Circuit ajouté avec succès !",
         });
-        setIsLoading(false);
-        router.push("/admin/circuits");
         setFormData({
           title: "",
           duration: "",
@@ -250,6 +248,9 @@ export const CircuitProvider = ({
           included: [""],
           notIncluded: [""],
         });
+        setIsLoading(false);
+        router.push("/admin/circuits");
+        
       } else {
         toast({
           title: "Error !",

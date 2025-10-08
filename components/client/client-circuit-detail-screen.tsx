@@ -43,6 +43,7 @@ const ClientCircuitDetailScreen = () => {
   } | null>(null);
 
   const circuitImages = getCircuitImages(circuitDetail);
+  console.log("IMAGES", circuitImages);
 
   const handleImageClick = (day: any) => {
     setSelectedImage({
@@ -117,7 +118,27 @@ const ClientCircuitDetailScreen = () => {
                   </div>
 
                   {/* Image slider */}
-                  <div
+                  {circuitImages &&
+                    circuitImages.length > 0 &&
+                    circuitImages.some(
+                      (img: string) => img && img.trim() !== ""
+                    ) && (
+                      <div
+                        className="animate-fade-in w-full"
+                        style={{
+                          animationDelay: "0.2s",
+                          animationFillMode: "both",
+                        }}
+                      >
+                        <ImageSlider
+                          images={circuitImages.filter(
+                            (img: string) => img && img.trim() !== ""
+                          )}
+                          title={circuitDetail?.title}
+                        />
+                      </div>
+                    )}
+                  {/* <div
                     className="animate-fade-in w-full"
                     style={{
                       animationDelay: "0.2s",
@@ -128,7 +149,7 @@ const ClientCircuitDetailScreen = () => {
                       images={circuitImages}
                       title={circuitDetail?.title}
                     />
-                  </div>
+                  </div> */}
                 </div>
 
                 {/* Sidebar */}
@@ -166,21 +187,24 @@ const ClientCircuitDetailScreen = () => {
                             </div>
 
                             <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
-                              <div
-                                className="!w-full max-h-96 flex items-center justify-end rounded-lg overflow-hidden cursor-pointer group relative"
-                                onClick={() => handleImageClick(day)}
-                              >
-                                <img
-                                  src={day.image}
-                                  alt={day.imageDescription}
-                                  className="w-full h-full object-cover hover:scale-110 transition-transform duration-300"
-                                />
-                                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300 flex items-center justify-center">
-                                  <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-white/90 rounded-full p-2">
-                                    <Camera className="h-4 w-4 text-gray-700" />
+                              {day.image !== "" && (
+                                <div
+                                  className="!w-full max-h-96 flex items-center justify-end rounded-lg overflow-hidden cursor-pointer group relative"
+                                  onClick={() => handleImageClick(day)}
+                                >
+                                  <img
+                                    src={day.image}
+                                    alt={day.imageDescription}
+                                    className="w-full h-full object-cover hover:scale-110 transition-transform duration-300"
+                                  />
+                                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300 flex items-center justify-center">
+                                    <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-white/90 rounded-full p-2">
+                                      <Camera className="h-4 w-4 text-gray-700" />
+                                    </div>
                                   </div>
                                 </div>
-                              </div>
+                              )}
+
                               <div>
                                 <p className="text-muted-foreground text-xs sm:text-sm mb-2 break-words">
                                   {day.description}
@@ -215,7 +239,9 @@ const ClientCircuitDetailScreen = () => {
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="grid grid-cols 1 lg:grid-cols-2 gap-6">
-                  <Link href={`/reservation/circuit?circuit=${circuitDetail?.id}`}>
+                  <Link
+                    href={`/reservation/circuit?circuit=${circuitDetail?.id}`}
+                  >
                     <Button className="w-full hover-glow" size="lg">
                       {t("detailCircuit.booking.reserveNow")}
                     </Button>

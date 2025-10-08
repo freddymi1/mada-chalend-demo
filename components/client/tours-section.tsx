@@ -54,7 +54,10 @@ export function ToursSection() {
                 >
                   <div className="aspect-video relative overflow-hidden">
                     <img
-                      src={tour?.itineraries[0]?.image || "/placeholder.svg"}
+                      src={
+                        tour?.itineraries[0]?.image ||
+                        "https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=800&auto=format&fit=crop"
+                      }
                       alt={tour.title}
                       className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
                     />
@@ -68,14 +71,13 @@ export function ToursSection() {
                         <Calendar className="h-4 w-4" />
                         <span>{tour.duration}</span>
                       </div>
-                      
                     </div>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-muted-foreground mb-4 text-pretty">
+                    <p className="text-muted-foreground mb-4 text-pretty line-clamp-3">
                       {tour.description}
                     </p>
-                   
+
                     <div className="flex gap-2">
                       <Link href={`/circuits/${tour.id}`} className="flex-1">
                         <Button
