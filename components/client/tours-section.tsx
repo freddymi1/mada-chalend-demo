@@ -56,7 +56,7 @@ export function ToursSection() {
                     <img
                       src={
                         tour?.itineraries[0]?.image ||
-                        "https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=800&auto=format&fit=crop"
+                        "/tsiribihina-landscap.jpg"
                       }
                       alt={tour.title}
                       className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
