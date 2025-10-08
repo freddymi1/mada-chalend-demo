@@ -106,7 +106,7 @@ export function ToursSection() {
               className="text-center animate-bounce-in"
               style={{ animationDelay: "0.8s", animationFillMode: "both" }}
             >
-              <Link href="/reservation">
+              <Link href="/contact">
                 <Button size="lg" className="hover-lift hover-glow">
                   {t("tours.customTour")}
                 </Button>
