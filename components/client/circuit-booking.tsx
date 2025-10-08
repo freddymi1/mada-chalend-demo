@@ -2,56 +2,68 @@ import React from "react";
 import { Button } from "./ui/button";
 import { useTranslations } from "next-intl";
 import { Label } from "./ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "./ui/select";
 import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
 
 interface PropsData {
-    circuit?: string | null; // Circuit ID passé en paramètre (optionnel)
-    circuitDetail?: any; // Détails du circuit passé en paramètre (optionnel)
-    addedCircuits?: any[]; // Liste des circuits disponibles
-    isLoading?: boolean; // Indicateur de chargement des circuits
-    formData: {
-        circuit: string;
-        nom: string;
-        prenom: string;
-        email: string;
-        telephone: string;
-        address: string;
-        personnes: string;
-        nbrAdult: string;
-        nbrChild: string;
-        startDate: string;
-        endDate: string;
-        duration: string;
-        preferences: string;
-    };
-    handleChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
-    handleCircuitChange: (value: string) => void;
-    handlePersonnesChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-    handleNbrAdultChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-    handleNbrChildChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-    handleSubmit: (e: React.FormEvent) => void;
-    loading: boolean; // Indicateur de soumission du formulaire
-    getTodayString: () => string; // Fonction pour obtenir la date actuelle au format YYYY-MM-DD
+  circuit?: string | null; // Circuit ID passé en paramètre (optionnel)
+  circuitDetail?: any; // Détails du circuit passé en paramètre (optionnel)
+  addedCircuits?: any[]; // Liste des circuits disponibles
+  isLoading?: boolean; // Indicateur de chargement des circuits
+  formData: {
+    circuit: string;
+    nom: string;
+    prenom: string;
+    email: string;
+    telephone: string;
+    address: string;
+    personnes: string;
+    nbrAdult: string;
+    nbrChild: string;
+    nbrAge2_3: string;
+    nbrAge4_7: string;
+    nbrAge8_10: string;
+    nbrAge11: string;
+    startDate: string;
+    endDate: string;
+    duration: string;
+    preferences: string;
+  };
+  handleChange: (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => void;
+  handleCircuitChange: (value: string) => void;
+  handlePersonnesChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  handleNbrAdultChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  handleNbrChildChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  handleSubmit: (e: React.FormEvent) => void;
+  loading: boolean; // Indicateur de soumission du formulaire
+  getTodayString: () => string; // Fonction pour obtenir la date actuelle au format YYYY-MM-DD
 }
 
 const CircuitBooking = ({
-    circuit,
-    circuitDetail,
-    addedCircuits,
-    isLoading = false,
-    formData,
-    handleChange,
-    handleCircuitChange,
-    handlePersonnesChange,
-    handleNbrAdultChange,
-    handleNbrChildChange,
-    handleSubmit,
-    loading,
-    getTodayString,
+  circuit,
+  circuitDetail,
+  addedCircuits,
+  isLoading = false,
+  formData,
+  handleChange,
+  handleCircuitChange,
+  handlePersonnesChange,
+  handleNbrAdultChange,
+  handleNbrChildChange,
+  handleSubmit,
+  loading,
+  getTodayString,
 }: PropsData) => {
-    const t = useTranslations("lng");
+  const t = useTranslations("lng");
   return (
     <div>
       <form onSubmit={handleSubmit} className="space-y-6">
@@ -251,6 +263,91 @@ const CircuitBooking = ({
                 )}
                 value={formData.nbrChild}
                 onChange={handleNbrChildChange}
+                className="transition-all duration-300 focus:scale-105"
+              />
+            </div>
+          </div>
+        )}
+
+        {formData.nbrChild && parseInt(formData.nbrChild) > 0 && (
+          <div className="grid grid-cols-1 lg:grid-cols-2 p-4 rounded-lg bg-white/5 gap-4">
+            <div
+              className="space-y-2 animate-fade-in"
+              style={{
+                animationDelay: "1s",
+                animationFillMode: "both",
+              }}
+            >
+              <Label htmlFor="nbrAge2_3">2 à 3 ans *</Label>
+              <Input
+                id="nbrAge2_3"
+                name="nbrAge2_3"
+                type="number"
+                min="0"
+                max={formData.personnes}
+                value={formData.nbrAge2_3}
+                onChange={handleChange}
+                required
+                className="transition-all duration-300 focus:scale-105"
+              />
+            </div>
+            <div
+              className="space-y-2 animate-fade-in"
+              style={{
+                animationDelay: "1s",
+                animationFillMode: "both",
+              }}
+            >
+              <Label htmlFor="nbrAge4_7">4 à 7 ans *</Label>
+              <Input
+                id="nbrAge4_7"
+                name="nbrAge4_7"
+                type="number"
+                min="0"
+                max={formData.personnes}
+                value={formData.nbrAge4_7}
+                onChange={handleChange}
+                required
+                className="transition-all duration-300 focus:scale-105"
+              />
+            </div>
+            <div
+              className="space-y-2 animate-fade-in"
+              style={{
+                animationDelay: "1s",
+                animationFillMode: "both",
+              }}
+            >
+              <Label htmlFor="nbrAge8_10">2 à 3 ans *</Label>
+              <Input
+                id="nbrAge8_10"
+                name="nbrAge8_10"
+                type="number"
+                min="0"
+                max={formData.personnes}
+                value={formData.nbrAge8_10}
+                onChange={handleChange}
+                required
+                className="transition-all duration-300 focus:scale-105"
+              />
+            </div>
+            <div
+              className="space-y-2 animate-fade-in"
+              style={{
+                animationDelay: "1s",
+                animationFillMode: "both",
+              }}
+            >
+              <Label htmlFor="nbrAge11">11 ans et plus *</Label>
+              <Input
+                id="nbrAge11"
+                name="nbrAge11"
+                type="number"
+                min="0"
+                max={formData.personnes}
+                value={formData.nbrAge11}
+                onChange={handleChange}
+                required
                 className="transition-all duration-300 focus:scale-105"
               />
             </div>

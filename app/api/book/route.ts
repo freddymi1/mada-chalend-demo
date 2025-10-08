@@ -42,6 +42,10 @@ export async function POST(req: NextRequest) {
       address,
       personnes,
       nbrChild,
+      nbrAge2_3,
+nbrAge4_7,
+nbrAge8_10,
+nbrAge11,
       nbrAdult,
       startDate,
       endDate,
@@ -121,6 +125,10 @@ export async function POST(req: NextRequest) {
       personnes: Number(personnesNumber),
       nbrChild: Number(nbrChild),
       nbrAdult: Number(nbrAdult),
+      nbrAge2_3: Number(nbrAge2_3),
+      nbrAge4_7: Number(nbrAge4_7),
+      nbrAge8_10: Number(nbrAge8_10),
+      nbrAge11: Number(nbrAge11),
       startDate: new Date(startDate),
       endDate: new Date(endDate),
       duration: durationNumber,
@@ -401,6 +409,7 @@ export async function POST(req: NextRequest) {
                       font-weight: 600;
                     ">${nbrAdult} adulte${nbrAdult > 1 ? 's' : ''}</p>
                   </div>
+                  
                   <div>
                     <p style="
                       margin: 0 0 5px 0;
@@ -416,6 +425,69 @@ export async function POST(req: NextRequest) {
                       font-weight: 600;
                     ">${nbrChild} enfant${nbrChild > 1 ? 's' : ''}</p>
                   </div>
+                  <div>
+                    <p style="
+                      margin: 0 0 5px 0;
+                      color: #4a5568;
+                      font-size: 14px;
+                      font-weight: 600;
+                      text-transform: uppercase;
+                    ">👥 2 a 3 ans</p>
+                    <p style="
+                      margin: 0;
+                      color: #2d3748;
+                      font-size: 16px;
+                      font-weight: 600;
+                    ">${nbrAge2_3} enfant${nbrAge2_3 > 1 ? 's' : ''}</p>
+                  </div>
+                  <div>
+                    <p style="
+                      margin: 0 0 5px 0;
+                      color: #4a5568;
+                      font-size: 14px;
+                      font-weight: 600;
+                      text-transform: uppercase;
+                    ">👥 4 a 7 ans</p>
+                    <p style="
+                      margin: 0;
+                      color: #2d3748;
+                      font-size: 16px;
+                      font-weight: 600;
+                    ">${nbrAge4_7} enfant${nbrAge4_7 > 1 ? 's' : ''}</p>
+                  </div>
+
+                  <div>
+                    <p style="
+                      margin: 0 0 5px 0;
+                      color: #4a5568;
+                      font-size: 14px;
+                      font-weight: 600;
+                      text-transform: uppercase;
+                    ">👥 8 a 10 ans</p>
+                    <p style="
+                      margin: 0;
+                      color: #2d3748;
+                      font-size: 16px;
+                      font-weight: 600;
+                    ">${nbrAge8_10} enfant${nbrAge8_10 > 1 ? 's' : ''}</p>
+                  </div>
+
+                  <div>
+                    <p style="
+                      margin: 0 0 5px 0;
+                      color: #4a5568;
+                      font-size: 14px;
+                      font-weight: 600;
+                      text-transform: uppercase;
+                    ">👥 + 11ans</p>
+                    <p style="
+                      margin: 0;
+                      color: #2d3748;
+                      font-size: 16px;
+                      font-weight: 600;
+                    ">${nbrAge11} enfant${nbrAge11 > 1 ? 's' : ''}</p>
+                  </div>
+
                   <div>
                     <p style="
                       margin: 0 0 5px 0;

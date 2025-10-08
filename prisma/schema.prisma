@@ -82,6 +82,10 @@ model Reservation {
   personnes   Int
   nbrChild    Int       @default(0)
   nbrAdult    Int       @default(0)
+  nbrAge2_3   Int?       @default(0)
+  nbrAge4_7   Int?       @default(0)
+  nbrAge8_10  Int?       @default(0)
+  nbrAge11    Int?       @default(0)
   startDate   DateTime
   endDate     DateTime
   duration    Int

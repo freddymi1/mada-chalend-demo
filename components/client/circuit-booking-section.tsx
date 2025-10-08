@@ -26,7 +26,6 @@ export function CircuitBookingSection() {
   const params = useSearchParams();
   const circuit = params.get("circuit");
 
-
   const { createReservation, loading, success } = useBooking();
 
   const {
@@ -41,8 +40,6 @@ export function CircuitBookingSection() {
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [pendingFormData, setPendingFormData] = useState<any>(null);
 
-
-
   useEffect(() => {
     const loadCircuits = async () => {
       await fetchCircuits();
@@ -56,8 +53,6 @@ export function CircuitBookingSection() {
     }
   }, [circuit]);
 
-
-
   const [formData, setFormData] = useState({
     circuit: circuit ? circuit : "",
     nom: "",
@@ -68,6 +63,10 @@ export function CircuitBookingSection() {
     personnes: "",
     nbrChild: "",
     nbrAdult: "",
+    nbrAge2_3: "0",
+    nbrAge4_7: "0",
+    nbrAge8_10: "0",
+    nbrAge11: "0",
     startDate: "",
     endDate: "",
     duration: "",
@@ -88,6 +87,10 @@ export function CircuitBookingSection() {
       personnes: formData.personnes,
       nbrChild: formData.nbrChild,
       nbrAdult: formData.nbrAdult,
+      nbrAge2_3: formData.nbrAge2_3 || 0,
+      nbrAge4_7: formData.nbrAge4_7 || 0,
+      nbrAge8_10: formData.nbrAge8_10 || 0,
+      nbrAge11: formData.nbrAge11 || 0,
       startDate: formData.startDate,
       endDate: formData.endDate,
       duration: formData.duration,
@@ -115,6 +118,10 @@ export function CircuitBookingSection() {
       personnes: "",
       nbrChild: "",
       nbrAdult: "",
+      nbrAge2_3: "",
+      nbrAge4_7: "",
+      nbrAge8_10: "",
+      nbrAge11: "",
       startDate: "",
       endDate: "",
       duration: "",
@@ -195,7 +202,6 @@ export function CircuitBookingSection() {
     // Charger les détails du circuit sélectionné
     getCircuitById(value);
   };
-
 
   // Fonction pour calculer la date de fin
   const calculateEndDate = (
@@ -306,23 +312,21 @@ export function CircuitBookingSection() {
               <CardTitle>{t("book.form.title")}</CardTitle>
             </CardHeader>
             <CardContent>
-              
-
               <CircuitBooking
-                  circuit={circuit}
-                  circuitDetail={circuitDetail}
-                  addedCircuits={addedCircuits}
-                  isLoading={isLoading}
-                  formData={formData}
-                  handleChange={handleChange}
-                  handleCircuitChange={handleCircuitChange}
-                  handlePersonnesChange={handlePersonnesChange}
-                  handleNbrAdultChange={handleNbrAdultChange}
-                  handleNbrChildChange={handleNbrChildChange}
-                  handleSubmit={handleSubmit}
-                  loading={loading}
-                  getTodayString={getTodayString}
-                />
+                circuit={circuit}
+                circuitDetail={circuitDetail}
+                addedCircuits={addedCircuits}
+                isLoading={isLoading}
+                formData={formData}
+                handleChange={handleChange}
+                handleCircuitChange={handleCircuitChange}
+                handlePersonnesChange={handlePersonnesChange}
+                handleNbrAdultChange={handleNbrAdultChange}
+                handleNbrChildChange={handleNbrChildChange}
+                handleSubmit={handleSubmit}
+                loading={loading}
+                getTodayString={getTodayString}
+              />
             </CardContent>
           </Card>
         </div>
