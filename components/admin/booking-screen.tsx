@@ -15,6 +15,7 @@ import {
   ChevronLeft,
   ChevronRight,
   CheckCircle,
+  User,
 } from "lucide-react";
 import { useAdminBooking } from "../providers/admin/BookingProvider";
 import { Reservation } from "@/src/domain/entities/reservation";
@@ -296,6 +297,59 @@ const BookingScreen = () => {
                               {reservation?.personnes} personne(s)
                             </span>
                           </div>
+
+                          <div className="flex items-center gap-3 text-sm">
+                            <Users className="w-4 h-4 text-gray-400" />
+                            <span className="text-gray-600">
+                              {reservation?.nbrAdult} adulte(s)
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-3 text-sm">
+                            <Users className="w-4 h-4 text-gray-400" />
+                            <span className="text-gray-600">
+                              {reservation?.nbrChild} enfant(s)
+                            </span>
+                          </div>
+
+                          {
+                            reservation?.nbrAge2_3 > 0 && (
+                              <div className="flex items-center gap-3 text-sm">
+                                <Users className="w-4 h-4 text-gray-400" />
+                                <span className="text-gray-600">
+                                  {reservation?.nbrAge2_3} enfant(s) de 2 à 3 ans
+                                </span>
+                              </div>
+                            )
+                          }
+
+                          {reservation?.nbrAge4_7 > 0 && (
+                            <div className="flex items-center gap-3 text-sm">
+                              <Users className="w-4 h-4 text-gray-400" />
+                              <span className="text-gray-600">
+                                {reservation?.nbrAge4_7} enfant(s) de 4 à 7 ans
+                              </span>
+                            </div>
+                          )}
+                          {
+                            reservation?.nbrAge8_10 > 0 && (
+                              <div className="flex items-center gap-3 text-sm">
+                                <Users className="w-4 h-4 text-gray-400" />
+                                <span className="text-gray-600">
+                                  {reservation?.nbrAge8_10} enfant(s) de 8 à 10 ans
+                                </span>
+                              </div>
+                            )
+                          }
+                          {
+                            reservation?.nbrAge11 > 0 && (
+                              <div className="flex items-center gap-3 text-sm">
+                                <Users className="w-4 h-4 text-gray-400" />
+                                <span className="text-gray-600">
+                                  {reservation?.nbrAge11} enfant(s) de 11 ans et plus
+                                </span>
+                              </div>
+                            )
+                          }
                         </div>
                       </div>
 
