@@ -182,14 +182,14 @@ const ClientCircuitDetailScreen = () => {
                                 {day.day}
                               </div>
                               <h4 className="font-semibold mb-1 text-sm sm:text-base break-words">
-                                {day.title} - {day.imageDescription}
+                                {day.title}
                               </h4>
                             </div>
 
                             <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
                               {day.image !== "" && (
                                 <div
-                                  className="!w-full max-h-96 flex items-center justify-end rounded-lg overflow-hidden cursor-pointer group relative"
+                                  className="!w-full max-h-96 flex flex-col items-start justify-end rounded-lg overflow-hidden cursor-pointer group relative"
                                   onClick={() => handleImageClick(day)}
                                 >
                                   <img
@@ -202,6 +202,9 @@ const ClientCircuitDetailScreen = () => {
                                       <Camera className="h-4 w-4 text-gray-700" />
                                     </div>
                                   </div>
+                                  <h4 className="font-semibold mt-1 text-left text-sm sm:text-base lg:text-lg break-words">
+                                    {day.imageDescription}
+                                  </h4>
                                 </div>
                               )}
 
