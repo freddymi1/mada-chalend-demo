@@ -60,12 +60,12 @@ export const menuItems = [
     path: "/admin/blog",
     icon: "BookOpen",
   },
-  {
-    id: "comment",
-    nom: "Commentaires",
-    path: "/admin/comments",
-    icon: "MessageCircle",
-  },
+  // {
+  //   id: "comment",
+  //   nom: "Commentaires",
+  //   path: "/admin/comments",
+  //   icon: "MessageCircle",
+  // },
   {
     id: "parametres",
     nom: "Paramètres",
@@ -83,7 +83,7 @@ const iconMap: Record<string, React.ElementType> = {
   Settings,
   LineChart,
   BookOpen,
-  MessageCircle
+  // MessageCircle
 };
 
 const SideMenu = () => {

@@ -178,7 +178,7 @@ const BlogSection = () => {
 
                   {/* Action Buttons */}
                   <div className="flex gap-2">
-                    <button
+                    {/* <button
                       onClick={() =>
                         isAuthenticated
                           ? router.push(`/blog/${blog.id}`)
@@ -192,7 +192,7 @@ const BlogSection = () => {
                     >
                       <MessageCircle className="w-4 h-4" />
                       <span className="text-sm font-medium">Commentaire</span>
-                    </button>
+                    </button> */}
                     <button
                       onClick={() => router.push(`/blog/${blog.id}`)}
                       className={`flex-1 flex items-center justify-center gap-2 px-4 py-2 rounded-lg transition-colors ${

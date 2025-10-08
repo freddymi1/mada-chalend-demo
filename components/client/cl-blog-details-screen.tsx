@@ -875,7 +875,7 @@ const CiBlogDetailScreen = () => {
             </div>
           )}
 
-          <CommentSection
+          {/* <CommentSection
             type="blog"
             itemId={blogDetail.id}
             title="ce blog"
@@ -900,7 +900,7 @@ const CiBlogDetailScreen = () => {
             onEditTextChange={handleEditTextChange}
             onSaveEdit={handleSaveEdit}
             onCancelEdit={handleCancelEdit}
-          />
+          /> */}
         </div>
 
         {blogDetail.articles && blogDetail.articles.length > 0 && (
@@ -994,7 +994,7 @@ const CiBlogDetailScreen = () => {
                     </div>
                   </div>
 
-                  <CommentSection
+                  {/* <CommentSection
                     type="article"
                     itemId={article.id}
                     title={article.title || `l'article ${index + 1}`}
@@ -1019,7 +1019,7 @@ const CiBlogDetailScreen = () => {
                     onEditTextChange={handleEditTextChange}
                     onSaveEdit={handleSaveEdit}
                     onCancelEdit={handleCancelEdit}
-                  />
+                  /> */}
                 </div>
               ))}
             </div>
