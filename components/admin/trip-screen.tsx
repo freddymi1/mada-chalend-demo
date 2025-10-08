@@ -19,19 +19,20 @@ import {
   ChevronDown,
 } from "lucide-react";
 import { LoadingSpinner } from "../client/loading";
+import { TripTravel } from "@/src/domain/entities/trip";
+import { useTrip } from "../providers/admin/TripProvider";
 
-const CircuitScreen = () => {
+const TripScreen = () => {
   const router = useRouter();
-  const [editingCircuit, setEditingCircuit] = useState<Circuit | null>(null);
+  const [editingTrip, setEditingTrip] = useState<TripTravel | null>(null);
   const [showFilters, setShowFilters] = useState(false);
   const {
-    addedCircuits: circuits,
+    addedTrips,
     handleDelete,
-    fetchCircuits,
+    fetchTrips,
     isLoading,
-  } = useCircuit();
+  } = useTrip();
   const [filters, setFilters] = useState({
-    difficulty: "",
     minPrice: "",
     maxPrice: "",
     minDuration: "",
@@ -41,10 +42,10 @@ const CircuitScreen = () => {
   });
 
   useEffect(() => {
-    const loadCircuit = () => {
-      fetchCircuits();
+    const loadTrip = () => {
+      fetchTrips();
     };
-    loadCircuit();
+    loadTrip();
   }, []);
 
   // Fonction pour extraire la valeur numérique du prix
@@ -59,14 +60,12 @@ const CircuitScreen = () => {
   };
 
   // Filtrer les circuits selon les critères sélectionnés
-  const filteredCircuits = circuits.filter((circuit) => {
+  const filteredTrips = addedTrips.filter((trip) => {
     // Filtre par difficulté
-    if (filters.difficulty && circuit.difficulty !== filters.difficulty) {
-      return false;
-    }
+  
 
     // Filtre par prix
-    const priceValue = getPriceValue(circuit.price);
+    const priceValue = getPriceValue(trip.price);
     if (filters.minPrice && priceValue < parseInt(filters.minPrice)) {
       return false;
     }
@@ -75,7 +74,7 @@ const CircuitScreen = () => {
     }
 
     // Filtre par durée
-    const durationValue = getDurationValue(circuit.duration);
+    const durationValue = getDurationValue(trip.duration);
     if (filters.minDuration && durationValue < parseInt(filters.minDuration)) {
       return false;
     }
@@ -84,10 +83,10 @@ const CircuitScreen = () => {
     }
 
     // Filtre par nombre de participants
-    if (filters.minPeople && circuit.maxPeople < parseInt(filters.minPeople)) {
+    if (filters.minPeople && trip.maxPeople < parseInt(filters.minPeople)) {
       return false;
     }
-    if (filters.maxPeople && circuit.maxPeople > parseInt(filters.maxPeople)) {
+    if (filters.maxPeople && trip.maxPeople > parseInt(filters.maxPeople)) {
       return false;
     }
 
@@ -107,18 +106,18 @@ const CircuitScreen = () => {
     }
   };
 
-  const handleEdit = (circuit: Circuit) => {
-    setEditingCircuit(circuit);
-    router.push(`/admin/circuits/add?update=true&id=${circuit.id}`);
+  const handleEdit = (trip: TripTravel) => {
+    setEditingTrip(trip);
+    router.push(`/admin/trips/add?update=true&id=${trip.id}`);
   };
 
-  const handleViewCircuitDetail = (circuit: Circuit) => {
-    router.push(`/admin/circuits/${circuit.id}`);
+  const handleViewTripDetail = (trip: TripTravel) => {
+    router.push(`/admin/trip/${trip.id}`);
   };
 
-  const handleAddCircuit = () => {
-    setEditingCircuit(null);
-    router.push(`/admin/circuits/add?update=false`);
+  const handleAddTrip = () => {
+    setEditingTrip(null);
+    router.push(`/admin/trip/add?update=false`);
   };
 
   const handleFilterChange = (key: string, value: string) => {
@@ -127,7 +126,6 @@ const CircuitScreen = () => {
 
   const resetFilters = () => {
     setFilters({
-      difficulty: "",
       minPrice: "",
       maxPrice: "",
       minDuration: "",
@@ -147,10 +145,10 @@ const CircuitScreen = () => {
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center py-6 gap-4">
             <div>
               <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
-                Gestion des Circuits
+                Gestion des voyages
               </h1>
               <p className="text-gray-600 mt-1 text-sm sm:text-base">
-                Gérez vos circuits touristiques Madagascar
+                Gérez vos voyages touristiques Madagascar
               </p>
             </div>
             <div className="flex flex-col sm:flex-row w-full sm:w-auto space-y-2 sm:space-y-0 sm:space-x-3">
@@ -168,11 +166,11 @@ const CircuitScreen = () => {
                   `(${Object.values(filters).filter((v) => v !== "").length})`}
               </button>
               <button
-                onClick={handleAddCircuit}
-                className="inline-flex items-center justify-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors duration-200 shadow-sm"
+                onClick={handleAddTrip}
+                className="inline-flex items-center justify-center px-4 py-2 bg-primary text-white font-medium rounded-lg transition-colors duration-200 shadow-sm"
               >
                 <Plus className="w-5 h-5 mr-2" />
-                <span className="hidden sm:inline">Ajouter un Circuit</span>
+                <span className="hidden sm:inline">Ajouter un Voyage</span>
                 <span className="sm:hidden">Ajouter</span>
               </button>
             </div>
@@ -189,7 +187,7 @@ const CircuitScreen = () => {
               {hasActiveFilters && (
                 <button
                   onClick={resetFilters}
-                  className="text-sm text-blue-600 hover:text-blue-800"
+                  className="text-sm text-primary hover:text-blue-800"
                 >
                   Réinitialiser
                 </button>
@@ -205,25 +203,6 @@ const CircuitScreen = () => {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {/* Filtre par difficulté */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Difficulté
-              </label>
-              <select
-                value={filters.difficulty}
-                onChange={(e) =>
-                  handleFilterChange("difficulty", e.target.value)
-                }
-                className="w-full px-3 py-2 border text-slate-800 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
-              >
-                <option value="">Toutes</option>
-                <option value="Facile">Facile</option>
-                <option value="Modéré">Modéré</option>
-                <option value="Difficile">Difficile</option>
-              </select>
-            </div>
-
-            {/* Filtre par prix */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Prix (€)
@@ -290,7 +269,7 @@ const CircuitScreen = () => {
                   onChange={(e) =>
                     handleFilterChange("minPeople", e.target.value)
                   }
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                  className="w-full px-3 py-2 border text-slate-800 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
                 />
                 <input
                   type="number"
@@ -299,7 +278,7 @@ const CircuitScreen = () => {
                   onChange={(e) =>
                     handleFilterChange("maxPeople", e.target.value)
                   }
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                  className="w-full px-3 py-2 border text-slate-800 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
                 />
               </div>
             </div>
@@ -320,10 +299,10 @@ const CircuitScreen = () => {
                 </div>
                 <div className="ml-3 sm:ml-4">
                   <p className="text-xs sm:text-sm font-medium text-gray-600">
-                    Total Circuits
+                    Total Voyage
                   </p>
                   <p className="text-xl sm:text-2xl font-bold text-gray-900">
-                    {filteredCircuits.length}
+                    {filteredTrips.length}
                   </p>
                 </div>
               </div>
@@ -336,10 +315,10 @@ const CircuitScreen = () => {
                 </div>
                 <div className="ml-3 sm:ml-4">
                   <p className="text-xs sm:text-sm font-medium text-gray-600">
-                    Circuits Actifs
+                    Voyage Actifs
                   </p>
                   <p className="text-xl sm:text-2xl font-bold text-gray-900">
-                    {filteredCircuits.length}
+                    {filteredTrips.length}
                   </p>
                 </div>
               </div>
@@ -350,12 +329,12 @@ const CircuitScreen = () => {
           <div className="bg-white rounded-lg shadow-sm border overflow-hidden">
             <div className="px-4 sm:px-6 py-4 border-b border-gray-200 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
               <h2 className="text-lg font-semibold text-gray-900">
-                Liste des Circuits
+                Liste des Voyages organisés
               </h2>
               {hasActiveFilters && (
                 <div className="flex items-center">
                   <span className="text-sm text-gray-600 mr-2">
-                    {filteredCircuits.length} circuit(s) correspondant aux
+                    {filteredTrips.length} voyage(s) correspondant aux
                     filtres
                   </span>
                   <button
@@ -386,7 +365,10 @@ const CircuitScreen = () => {
                       Réservations
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Difficulté
+                      Start Date
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      End Date
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Points Forts
@@ -397,50 +379,61 @@ const CircuitScreen = () => {
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                  {filteredCircuits.map((circuit) => (
+                  {filteredTrips.map((trip) => (
                     <tr
-                      key={circuit.id}
+                      key={trip.id}
                       className="hover:bg-gray-50 transition-colors duration-200"
                     >
                       <td className="px-6 py-4">
                         <div className="max-w-xs">
                           <div className="text-sm font-medium text-gray-900 truncate">
-                            {circuit.title}
+                            {trip.title}
                           </div>
                           <div className="text-sm text-gray-500 mt-1 line-clamp-2">
-                            {circuit.description}
+                            {trip.description}
                           </div>
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="flex items-center text-sm text-gray-900">
                           <Clock className="w-4 h-4 mr-2 text-gray-400" />
-                          {circuit.duration}
+                          {trip.duration}
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="text-sm font-medium text-gray-900">
-                          {circuit.price}
+                          {trip.price}
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="flex items-center text-sm text-gray-900">
                           <Armchair className="w-4 h-4 mr-2 text-gray-400" />
-                          {circuit.totalPersonnesReservees}
+                          {trip.totalPersonnesReservees}
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <span
                           className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getDifficultyColor(
-                            circuit.difficulty
+                            trip.startDate
                           )}`}
                         >
-                          {circuit.difficulty}
+                          {trip.startDate}
                         </span>
                       </td>
+
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <span
+                          className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getDifficultyColor(
+                            trip.endDate
+                          )}`}
+                        >
+                          {trip.endDate}
+                        </span>
+                      </td>
+
                       <td className="px-6 py-4">
                         <div className="flex flex-wrap gap-1 max-w-xs">
-                          {circuit.highlights
+                          {trip.highlights
                             .slice(0, 3)
                             .map((highlight: any, index: number) => (
                               <span
@@ -450,9 +443,9 @@ const CircuitScreen = () => {
                                 {highlight.text}
                               </span>
                             ))}
-                          {circuit.highlights.length > 3 && (
+                          {trip.highlights.length > 3 && (
                             <span className="inline-flex px-2 py-1 text-xs bg-gray-100 text-gray-600 rounded">
-                              +{circuit.highlights.length - 3}
+                              +{trip.highlights.length - 3}
                             </span>
                           )}
                         </div>
@@ -460,19 +453,19 @@ const CircuitScreen = () => {
                       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                         <div className="flex items-center justify-end space-x-4">
                           <button
-                            onClick={() => handleViewCircuitDetail(circuit)}
+                            onClick={() => handleViewTripDetail(trip)}
                             className="text-gray-400 cursor-pointer hover:text-blue-600 transition-colors duration-200"
                           >
                             <Eye className="w-4 h-4" />
                           </button>
                           <button
-                            onClick={() => handleEdit(circuit)}
+                            onClick={() => handleEdit(trip)}
                             className="text-gray-400 cursor-pointer hover:text-green-600 transition-colors duration-200"
                           >
                             <Edit className="w-4 h-4" />
                           </button>
                           <button
-                            onClick={() => handleDelete(circuit.id)}
+                            onClick={() => handleDelete(trip.id)}
                             className="text-gray-400 cursor-pointer hover:text-red-600 transition-colors duration-200"
                           >
                             <Trash2 className="w-4 h-4" />
@@ -487,48 +480,51 @@ const CircuitScreen = () => {
 
             {/* Mobile/Tablet Card Layout */}
             <div className="lg:hidden">
-              {filteredCircuits.map((circuit) => (
+              {filteredTrips.map((trip) => (
                 <div
-                  key={circuit.id}
+                  key={trip.id}
                   className="border-b border-gray-200 last:border-b-0 p-4 sm:p-6"
                 >
                   <div className="flex justify-between items-start mb-3">
                     <div className="flex-1 min-w-0 pr-4">
                       <h3 className="text-sm sm:text-base font-medium text-gray-900 truncate">
-                        {circuit.title}
+                        {trip.title}
                       </h3>
                       <p className="text-xs sm:text-sm text-gray-500 mt-1 line-clamp-2">
-                        {circuit.description}
+                        {trip.description}
                       </p>
                     </div>
                     <span
-                      className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getDifficultyColor(
-                        circuit.difficulty
-                      )}`}
+                      className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full`}
                     >
-                      {circuit.difficulty}
+                      {trip.startDate}
+                    </span>
+                    <span
+                      className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full`}
+                    >
+                      {trip.endDate}
                     </span>
                   </div>
 
                   <div className="grid grid-cols-2 gap-4 mb-4">
                     <div className="flex items-center text-sm text-gray-600">
                       <Clock className="w-4 h-4 mr-2 text-gray-400" />
-                      <span className="text-xs sm:text-sm">{circuit.duration}</span>
+                      <span className="text-xs sm:text-sm">{trip.duration}</span>
                     </div>
                     <div className="text-sm font-medium text-gray-900">
-                      <span className="text-xs sm:text-sm">{circuit.price}</span>
+                      <span className="text-xs sm:text-sm">{trip.price}</span>
                     </div>
                     <div className="flex items-center text-sm text-gray-600">
                       <Armchair className="w-4 h-4 mr-2 text-gray-400" />
                       <span className="text-xs sm:text-sm">
-                        {circuit.totalPersonnesReservees} réservations
+                        {trip.totalPersonnesReservees} réservations
                       </span>
                     </div>
                   </div>
 
                   <div className="mb-4">
                     <div className="flex flex-wrap gap-1">
-                      {circuit.highlights
+                      {trip.highlights
                         .slice(0, 2)
                         .map((highlight: any, index: number) => (
                           <span
@@ -538,9 +534,9 @@ const CircuitScreen = () => {
                             {highlight.text}
                           </span>
                         ))}
-                      {circuit.highlights.length > 2 && (
+                      {trip.highlights.length > 2 && (
                         <span className="inline-flex px-2 py-1 text-xs bg-gray-100 text-gray-600 rounded">
-                          +{circuit.highlights.length - 2} autres
+                          +{trip.highlights.length - 2} autres
                         </span>
                       )}
                     </div>
@@ -548,21 +544,21 @@ const CircuitScreen = () => {
 
                   <div className="flex justify-end space-x-4">
                     <button
-                      onClick={() => handleViewCircuitDetail(circuit)}
+                      onClick={() => handleViewTripDetail(trip)}
                       className="flex items-center text-sm text-blue-600 hover:text-blue-800 transition-colors duration-200"
                     >
                       <Eye className="w-4 h-4 mr-1" />
                       <span className="hidden sm:inline">Voir</span>
                     </button>
                     <button
-                      onClick={() => handleEdit(circuit)}
+                      onClick={() => handleEdit(trip)}
                       className="flex items-center text-sm text-green-600 hover:text-green-800 transition-colors duration-200"
                     >
                       <Edit className="w-4 h-4 mr-1" />
                       <span className="hidden sm:inline">Modifier</span>
                     </button>
                     <button
-                      onClick={() => handleDelete(circuit.id)}
+                      onClick={() => handleDelete(trip.id)}
                       className="flex items-center text-sm text-red-600 hover:text-red-800 transition-colors duration-200"
                     >
                       <Trash2 className="w-4 h-4 mr-1" />
@@ -574,7 +570,7 @@ const CircuitScreen = () => {
             </div>
           </div>
 
-          {filteredCircuits.length === 0 && (
+          {filteredTrips.length === 0 && (
             <div className="bg-white rounded-lg shadow-sm border p-8 sm:p-12 text-center">
               <MapPin className="w-10 h-10 sm:w-12 sm:h-12 text-gray-400 mx-auto mb-4" />
               <h3 className="text-base sm:text-lg font-medium text-gray-900 mb-2">
@@ -590,17 +586,17 @@ const CircuitScreen = () => {
               {hasActiveFilters ? (
                 <button
                   onClick={resetFilters}
-                  className="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors duration-200 text-sm sm:text-base"
+                  className="inline-flex items-center px-4 py-2 bg-primary text-white font-medium rounded-lg transition-colors duration-200 text-sm sm:text-base"
                 >
                   Réinitialiser les filtres
                 </button>
               ) : (
                 <button
-                  onClick={handleAddCircuit}
-                  className="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors duration-200 text-sm sm:text-base"
+                  onClick={handleAddTrip}
+                  className="inline-flex items-center px-4 py-2 bg-primary text-white font-medium rounded-lg transition-colors duration-200 text-sm sm:text-base"
                 >
                   <Plus className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
-                  Ajouter un Circuit
+                  Ajouter un voyage
                 </button>
               )}
             </div>
@@ -611,4 +607,4 @@ const CircuitScreen = () => {
   );
 };
 
-export default CircuitScreen;
+export default TripScreen;

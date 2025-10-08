@@ -12,7 +12,8 @@ import {
   Settings, 
   LineChart, 
   BookOpen,
-  MessageCircle
+  CarIcon,
+  Waypoints,
 } from "lucide-react"; // ajoute ici tous les icônes nécessaires
 import { useAuth } from "@/src/hooks/useAuth";
 
@@ -28,6 +29,12 @@ export const menuItems = [
     nom: "Circuits",
     path: "/admin/circuits",
     icon: "LineChart",
+  },
+   {
+    id: "trip",
+    nom: "Voyage organisé",
+    path: "/admin/trip",
+    icon: "Waypoints",
   },
   {
     id: "vehicles",
@@ -60,12 +67,6 @@ export const menuItems = [
     path: "/admin/blog",
     icon: "BookOpen",
   },
-  // {
-  //   id: "comment",
-  //   nom: "Commentaires",
-  //   path: "/admin/comments",
-  //   icon: "MessageCircle",
-  // },
   {
     id: "parametres",
     nom: "Paramètres",
@@ -83,6 +84,7 @@ const iconMap: Record<string, React.ElementType> = {
   Settings,
   LineChart,
   BookOpen,
+  Waypoints
   // MessageCircle
 };
 
