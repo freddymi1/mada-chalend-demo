@@ -138,18 +138,7 @@ const ClientCircuitDetailScreen = () => {
                         />
                       </div>
                     )}
-                  {/* <div
-                    className="animate-fade-in w-full"
-                    style={{
-                      animationDelay: "0.2s",
-                      animationFillMode: "both",
-                    }}
-                  >
-                    <ImageSlider
-                      images={circuitImages}
-                      title={circuitDetail?.title}
-                    />
-                  </div> */}
+                  
                 </div>
 
                 {/* Sidebar */}
@@ -167,6 +156,13 @@ const ClientCircuitDetailScreen = () => {
                       <MapPin className="h-4 w-4 sm:h-5 sm:w-5 flex-shrink-0" />
                       <span>{t("detailCircuit.itinerary.detailed")}</span>
                     </CardTitle>
+                    <div className="h-64">
+                      <img
+                        src="/map.png"
+                        alt="map"
+                        className="w-full h-full object-cover rounded-lg"
+                      />
+                    </div>
                   </CardHeader>
                   <CardContent className="px-2 sm:px-6">
                     <div className="space-y-4 sm:space-y-6">
