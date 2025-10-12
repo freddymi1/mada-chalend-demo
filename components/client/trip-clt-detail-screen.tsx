@@ -22,8 +22,10 @@ import {
 } from "lucide-react";
 import { useTrip } from "../providers/admin/TripProvider";
 import { useCltTrip } from "../providers/client/TripCltProvider";
+import { useTranslations } from "next-intl";
 
 const TripCltDetailScreen = () => {
+  const t = useTranslations("lng");
   const { id } = useParams();
   const router = useRouter();
   const { tripDetail, getTripById } = useCltTrip();
@@ -199,8 +201,6 @@ const TripCltDetailScreen = () => {
               </div>
             </div>
 
-            
-
             <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
               <div className="flex items-center space-x-3">
                 <span className="w-5 h-5 text-red-600 dark:text-red-400 font-bold">
@@ -279,6 +279,18 @@ const TripCltDetailScreen = () => {
               </ul>
             </div>
           )}
+        </div>
+
+        <div className="flex items-center justify-center w-full ">
+          <button
+            onClick={() =>
+              router.push(`/reservation/trip?trip=${tripDetail?.id}`)
+            }
+            className="w-auto group/btn relative my-6 px-6 py-3 bg-primary text-white font-semibold rounded-lg transition-all duration-300 hover:shadow-lg hover:shadow-purple-500/30 active:scale-95 flex items-center justify-center gap-2"
+          >
+            <span>{t("ourTrip.booking")}</span>
+            <ChevronRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
+          </button>
         </div>
 
         {/* Daily Itinerary */}
