@@ -2,6 +2,7 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useToast } from "@/hooks/shared/use-toast";
+import { TripTravel } from "@/src/domain/entities/trip";
 
 export interface Program {
   day: number;
@@ -55,7 +56,7 @@ interface TripContextType {
   handleDelete: (id: string) => void;
   fetchTrips: () => void;
   getTripById: (id: string) => void;
-  tripDetail: any;
+  tripDetail: TripTravel | null;
   isLoading: boolean;
   handleUpdate: (id: string) => void;
   isUpdate: string | null;

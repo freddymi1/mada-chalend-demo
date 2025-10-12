@@ -35,6 +35,7 @@ export async function POST(req: NextRequest) {
       resType,
       circuit,
       vehicle,
+      tripTravel,
       nom,
       prenom,
       email,
@@ -43,9 +44,9 @@ export async function POST(req: NextRequest) {
       personnes,
       nbrChild,
       nbrAge2_3,
-nbrAge4_7,
-nbrAge8_10,
-nbrAge11,
+      nbrAge4_7,
+      nbrAge8_10,
+      nbrAge11,
       nbrAdult,
       startDate,
       endDate,
@@ -60,6 +61,7 @@ nbrAge11,
     // Initialize variables for details
     let circuitDetails = null;
     let carsDetails = null;
+    let tripDetails = null;
 
     // 🔹 Validate based on reservation type
     if (resType === "circuit") {
@@ -102,13 +104,39 @@ nbrAge11,
           id: true,
           name: true,
           type: true,
-          passengers: true
-        }
+          passengers: true,
+        },
       });
 
       if (!carsDetails) {
         return NextResponse.json(
           { error: "Vehicle non trouvé" },
+          { status: 404 }
+        );
+      }
+    }
+
+    if (resType === "trip") {
+      if (!tripTravel) {
+        return NextResponse.json(
+          { error: "Trip ID is required for trip reservations" },
+          { status: 400 }
+        );
+      }
+
+      // 🔹 Récupérer les détails du trip
+      tripDetails = await prisma.tripTravel.findUnique({
+        where: { id: tripTravel },
+        select: {
+          id: true,
+          title: true,
+          description: true,
+        },
+      });
+
+      if (!tripDetails) {
+        return NextResponse.json(
+          { error: "Trip non trouvé" },
           { status: 404 }
         );
       }
@@ -146,6 +174,11 @@ nbrAge11,
       reservationData.vehicleId = vehicle;
     }
 
+    // Only add tripId if it's a trip reservation and trip exists
+    if (resType === "trip" && tripTravel) {
+      reservationData.tripTravelId = tripTravel;
+    }
+
     // 🔹 Sauvegarde dans la BDD
     const reservation = await prisma.reservation.create({
       data: reservationData,
@@ -153,18 +186,26 @@ nbrAge11,
 
     // 🔹 Formatage des dates
     const formatDate = (dateString: string) => {
-      return new Date(dateString).toLocaleDateString('fr-FR', {
-        weekday: 'long',
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
+      return new Date(dateString).toLocaleDateString("fr-FR", {
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric",
       });
     };
 
     // 🔹 Determine the title for email based on reservation type
-    const reservationTitle = resType === "circuit" 
-      ? circuitDetails?.title 
-      : carsDetails?.name;
+    let reservationTitle = "";
+
+    if (resType === "circuit") {
+      reservationTitle = circuitDetails?.title || "";
+    } else if (resType === "trip") {
+      reservationTitle = tripDetails?.title || "";
+    } else {
+      reservationTitle = carsDetails?.name || "";
+    }
+
+    
 
     // 🔹 Email with elegant design
     const htmlMessage = `
@@ -225,7 +266,9 @@ nbrAge11,
               margin: 0 0 5px 0;
               font-size: 24px;
               font-weight: 600;
-            ">${resType === "circuit" ? "🗺️" : "🚗"} ${reservationTitle || 'Service'}</h2>
+            ">${resType === "circuit" ? "🗺️" : "🚗"} ${
+      reservationTitle || "Service"
+    }</h2>
             <p style="
               color: #4a5568;
               margin: 5px 0 0 0;
@@ -392,7 +435,7 @@ nbrAge11,
                       color: #2d3748;
                       font-size: 16px;
                       font-weight: 600;
-                    ">${personnes} personne${personnes > 1 ? 's' : ''}</p>
+                    ">${personnes} personne${personnes > 1 ? "s" : ""}</p>
                   </div>
                   <div>
                     <p style="
@@ -407,7 +450,7 @@ nbrAge11,
                       color: #2d3748;
                       font-size: 16px;
                       font-weight: 600;
-                    ">${nbrAdult} adulte${nbrAdult > 1 ? 's' : ''}</p>
+                    ">${nbrAdult} adulte${nbrAdult > 1 ? "s" : ""}</p>
                   </div>
                   
                   <div>
@@ -423,7 +466,7 @@ nbrAge11,
                       color: #2d3748;
                       font-size: 16px;
                       font-weight: 600;
-                    ">${nbrChild} enfant${nbrChild > 1 ? 's' : ''}</p>
+                    ">${nbrChild} enfant${nbrChild > 1 ? "s" : ""}</p>
                   </div>
                   <div>
                     <p style="
@@ -438,7 +481,7 @@ nbrAge11,
                       color: #2d3748;
                       font-size: 16px;
                       font-weight: 600;
-                    ">${nbrAge2_3} enfant${nbrAge2_3 > 1 ? 's' : ''}</p>
+                    ">${nbrAge2_3} enfant${nbrAge2_3 > 1 ? "s" : ""}</p>
                   </div>
                   <div>
                     <p style="
@@ -453,7 +496,7 @@ nbrAge11,
                       color: #2d3748;
                       font-size: 16px;
                       font-weight: 600;
-                    ">${nbrAge4_7} enfant${nbrAge4_7 > 1 ? 's' : ''}</p>
+                    ">${nbrAge4_7} enfant${nbrAge4_7 > 1 ? "s" : ""}</p>
                   </div>
 
                   <div>
@@ -469,7 +512,7 @@ nbrAge11,
                       color: #2d3748;
                       font-size: 16px;
                       font-weight: 600;
-                    ">${nbrAge8_10} enfant${nbrAge8_10 > 1 ? 's' : ''}</p>
+                    ">${nbrAge8_10} enfant${nbrAge8_10 > 1 ? "s" : ""}</p>
                   </div>
 
                   <div>
@@ -485,7 +528,7 @@ nbrAge11,
                       color: #2d3748;
                       font-size: 16px;
                       font-weight: 600;
-                    ">${nbrAge11} enfant${nbrAge11 > 1 ? 's' : ''}</p>
+                    ">${nbrAge11} enfant${nbrAge11 > 1 ? "s" : ""}</p>
                   </div>
 
                   <div>
@@ -501,14 +544,16 @@ nbrAge11,
                       color: #2d3748;
                       font-size: 16px;
                       font-weight: 600;
-                    ">${duration} jour${duration > 1 ? 's' : ''}</p>
+                    ">${duration} jour${duration > 1 ? "s" : ""}</p>
                   </div>
                 </div>
               </div>
             </div>
 
             <!-- Preferences -->
-            ${preferences ? `
+            ${
+              preferences
+                ? `
             <div style="margin-bottom: 30px;">
               <h3 style="
                 color: #2d3748;
@@ -531,7 +576,9 @@ nbrAge11,
                 ">${preferences}</p>
               </div>
             </div>
-            ` : ''}
+            `
+                : ""
+            }
 
             <!-- Status -->
             <div style="

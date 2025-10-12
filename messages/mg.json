@@ -15,7 +15,30 @@
     "bookingCar": "Fiara",
     "blog": "Blog",
     "contact": "Fifandraisana",
-    "car": "Ny fiarantsika"
+    "car": "Ny fiarantsika",
+    "trip": "Ny dia",
+    "bookingTrip": "Famandrihana dia"
+  },
+  "ourTrip": {
+    "title": "Ny dianay",
+    "description": "Jereo ny dianay manerana an'i Madagasikara, dia manokana ho an'ny tsirairay.",
+    "loading": "Loading trips...",
+    "badge": "Jereo ny dianay",
+    "days": "Andro",
+    "booked": "Voafidy",
+    "spotsLeft": "Toerana sisa",
+    "highlights": "Tanjona",
+    "viewDetails": "Jereo ny antsipiriany",
+    "noTrips": "Tsy misy dia azo atao",
+    "pricePerPerson": "Vidiny isam-batan'olona",
+    "availableSpots": "Toerana misy",
+    "included": "Anisan'izany",
+    "notIncluded": "Tsy anisan'izany",
+    "itinerary": "Drafitra",
+    "day": "Andro",
+    "close": "Akatona",
+    "travelDates": "Daty fitsangatsanganana",
+    "booking": "Famandrihana"
   },
   "about": {
     "title": "Iza moa izahay?",
@@ -78,7 +101,8 @@
       "datePL": "Ohatra: Avy ny 15 ka hatramin’ny 25 Jolay 2024",
       "nb": "Safidy na fanamarihana",
       "nbPL": "Lazao ny safidinao, ny zavatra tianao, na vaovao ilaina...",
-      "cta": "Alefaso ny fangatahana"
+      "cta": "Alefaso ny fangatahana",
+      "trip": "Diany"
     }
   },
   "blog": {

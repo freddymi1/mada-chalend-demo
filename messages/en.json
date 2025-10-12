@@ -15,7 +15,30 @@
     "bookingCar": "Book a Car",
     "blog": "Blog",
     "contact": "Contact",
-    "car": "Our cars"
+    "car": "Our cars",
+    "trip": "Our trips",
+    "bookingTrip": "Book a Trip"
+  },
+  "ourTrip": {
+    "title": "Our trips",
+    "description": "Discover our trips across Madagascar, tailor-made tours for all tastes.",
+    "loading": "Loading trips...",
+    "badge": "Discover Our Adventures",
+    "days": "Days",
+    "booked": "Booked",
+    "spotsLeft": "spots left",
+    "highlights": "Highlights",
+    "viewDetails": "View details",
+    "noTrips": "No trips available",
+    "pricePerPerson": "Price per person",
+    "availableSpots": "Available spots",
+    "included": "Included",
+    "notIncluded": "Not included",
+    "itinerary": "Itinerary",
+    "day": "Day",
+    "close": "Close",
+    "travelDates": "Travel Dates",
+    "booking": "Booking"
   },
   "about": {
     "title": "Who are we?",
@@ -77,7 +100,8 @@
       "datePL": "Ex: From July 15 to 25, 2024",
       "nb": "Preferences or remarks",
       "nbPL": "Describe your preferences, interests, or any useful information...",
-      "cta": "Send my request"
+      "cta": "Send my request",
+      "trip": "Trip"
     }
   },
   "blog": {

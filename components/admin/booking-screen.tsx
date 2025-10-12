@@ -152,6 +152,7 @@ const BookingScreen = () => {
                     <option value="tous">Tous les reservations</option>
                     <option value="circuit">Circuit</option>
                     <option value="car">Voiture</option>
+                    <option value="trip">Voyage</option>
                   </select>
                   <select
                     value={statusFilter}

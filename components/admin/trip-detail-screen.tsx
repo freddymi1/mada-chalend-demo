@@ -137,7 +137,7 @@ const TripDetailScreen = () => {
                     Durée
                   </p>
                   <p className="font-semibold text-gray-900 dark:text-white">
-                    {tripDetail.duration} jour(s) et {tripDetail.duration - 1} nuit(s)
+                    {tripDetail.duration} jour(s) et {Number(tripDetail.duration) - 1} nuit(s)
                   </p>
                 </div>
               </div>
@@ -206,7 +206,7 @@ const TripDetailScreen = () => {
                     Date
                   </p>
                   <p className="font-semibold text-gray-900 dark:text-white">
-                    {tripDetail.startDate} - {tripDetail.endDate}
+                    {tripDetail.startDate instanceof Date ? tripDetail.startDate.toLocaleDateString() : tripDetail.startDate} - {tripDetail.endDate instanceof Date ? tripDetail.endDate.toLocaleDateString() : tripDetail.endDate}
                   </p>
                 </div>
               </div>
@@ -345,11 +345,11 @@ const TripDetailScreen = () => {
         )}
 
         {/* Daily Itinerary */}
-        {tripDetail.itineraries && tripDetail.itineraries.length > 0 && (
+        {tripDetail.program && tripDetail.program.length > 0 && (
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border dark:border-gray-700 p-6">
             <h3 className="font-semibold text-lg mb-6 text-gray-900 dark:text-white flex items-center">
               <Calendar className="w-5 h-5 mr-2" />
-              Programmes par jour ({tripDetail.itineraries.length}{" "}
+              Programmes par jour ({tripDetail.program.length}{" "}
               jours)
             </h3>
             <div className="space-y-6">

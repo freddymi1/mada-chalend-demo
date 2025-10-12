@@ -27,6 +27,7 @@ export function Header() {
     { href: "/", label: `${t("navigation.home")}` },
     { href: "/a-propos", label: `${t("navigation.about")}` },
     { href: "/circuits", label: `${t("navigation.tours")}` },
+    { href: "/trip", label: `${t("navigation.trip")}` },
     { href: "/car", label: `${t("navigation.car")}` },
     { href: "/blog", label: `${t("navigation.blog")}` },
     { href: "/contact", label: `${t("navigation.contact")}` },
@@ -38,11 +39,12 @@ export function Header() {
       label: `${t("navigation.bookingCircuit")}`,
     },
     { href: "/reservation/car", label: `${t("navigation.bookingCar")}` },
+    { href: "/reservation/trip", label: `${t("navigation.bookingTrip")}` },
   ];
 
   return (
     <header className="sticky top-0 z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="xl:container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center">
             <Link
@@ -60,7 +62,7 @@ export function Header() {
           </div>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-8">
+          <nav className="hidden xl:flex items-center space-x-8">
             {navItems.map((item) => (
               <Link
                 key={item.href}
@@ -95,7 +97,7 @@ export function Header() {
           <div className="flex items-center gap-2">
             <LanguageSwitcher />
 
-            {isAuthenticated ? (
+            {/* {isAuthenticated ? (
               <button
                 onClick={logout}
                 className="cursor-pointer flex items-center space-x-2 bg-transparent border border-indigo-400 hover:text-slate-700 rounded-md px-3 py-2.5 text-sm hover:bg-indigo-50 transition-colors duration-200 justify-between"
@@ -111,20 +113,20 @@ export function Header() {
                 <LogIn className="h-6 w-6" />
                 <span>Log In</span>
               </button>
-            )}
+            )} */}
 
             {/* Mobile menu button */}
-            <div className="md:hidden">
+            <div className="xl:hidden">
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
-                className="transition-transform duration-200hover:scale-110"
+                className="transition-transform duration-200 hover:scale-110"
               >
                 {isMenuOpen ? (
-                  <X className="h-6 w-6" />
+                  <X className="h-10 w-10" />
                 ) : (
-                  <Menu className="h-6 w-6" />
+                  <Menu className="h-10 w-10" />
                 )}
               </Button>
             </div>
@@ -133,7 +135,7 @@ export function Header() {
 
         {/* Mobile Navigation */}
         {isMenuOpen && (
-          <div className="md:hidden absolute top-full left-0 right-0 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/95 border-b shadow-lg animate-slide-down">
+          <div className="xl:hidden absolute top-full left-0 right-0 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/95 border-b shadow-lg animate-slide-down">
             <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
               {navItems.map((item, index) => (
                 <Link

@@ -1,5 +1,12 @@
 import { Reservation } from "./reservation";
 
+export interface Program {
+  day: number;
+  title: string;
+  description: string;
+  image: string;
+  imageDescription: string;
+}
 export interface TripTravel {
   id: string;
   title: string;
@@ -8,15 +15,11 @@ export interface TripTravel {
   endDate: Date;
   price: string;
   maxPeople?: number;
+  nbrChild?: number;
+  nbrAdult?: number;
   description: string;
   highlights: string[];
-  program: Array<{
-    day: number;
-    title: string;
-    description: string;
-    image: string;
-    imageDescription: string;
-  }>;
+  program: Program[];
   included: string[];
   notIncluded: string[];
   reservations?: Reservation[];

@@ -45,14 +45,14 @@ export const ClientBookingProvider = ({
       toast({
         title: "Demande envoyée !",
         description:
-          "Nous vous contacterons dans les plus brefs délais pour finaliser votre circuit.",
+          "Nous vous contacterons dans les plus brefs délais pour finaliser votre réservation.",
       });
 
       setSuccess(true);
     } catch (err: any) {
       toast({
         title: "Error !",
-        description: "Erreur lors de reservation.",
+        description: "Erreur lors de la réservation.",
       });
       setError(err.message || "Erreur inconnue");
     } finally {

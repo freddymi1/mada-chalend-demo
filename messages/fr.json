@@ -15,7 +15,30 @@
     "bookingCar": "Voiture",
     "blog": "Blog",
     "contact": "Contact",
-    "car": "Nos voitures"
+    "car": "Nos voitures",
+    "trip": "Nos voyages",
+    "bookingTrip": "Voyage organisé"
+  },
+  "ourTrip": {
+    "title": "Nos voyages",
+    "description": "Découvrez nos voyages à travers Madagascar, des circuits sur mesure pour tous les goûts.",
+    "loading": "Chargement des voyages...",
+    "badge": "Découvrez nos aventures",
+    "days": "Jours",
+    "booked": "Réservé",
+    "spotsLeft": "places restantes",
+    "highlights": "Points forts",
+    "viewDetails": "Voir les détails",
+    "noTrips": "Aucun voyage disponible",
+    "pricePerPerson": "Prix par personne",
+    "availableSpots": "Places disponibles",
+    "included": "Inclus",
+    "notIncluded": "Non inclus",
+    "itinerary": "Itinéraire",
+    "day": "Jour",
+    "close": "Fermer",
+    "travelDates": "Dates de voyage",
+    "booking": "Réservation"
   },
   "about": {
     "title": "Qui sommes-nous?",
@@ -77,7 +100,8 @@
       "datePL": "Ex: Du 15 au 25 juillet 2024",
       "nb": "Préférences ou remarques",
       "nbPL": "Décrivez vos préférences, centres d'intérêt, ou toute information utile...",
-      "cta": "Envoyer ma demande"
+      "cta": "Envoyer ma demande",
+      "trip": "Voyage"
     }
   },
   "blog": {

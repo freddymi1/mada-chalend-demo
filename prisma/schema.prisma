@@ -126,11 +126,11 @@ model Reservation {
   nbrAge4_7    Int?        @default(0)
   nbrAge8_10   Int?        @default(0)
   nbrAge11     Int?        @default(0)
-  startDate    DateTime
-  endDate      DateTime
-  duration     Int
-  preferences  String
-  status       String
+  startDate    DateTime?
+  endDate      DateTime?
+  duration     Int?
+  preferences  String?
+  status       String?
   createdAt    DateTime    @default(now())
   updatedAt    DateTime    @updatedAt
   circuitRel   Circuit?    @relation(fields: [circuitId], references: [id], onDelete: Cascade) // Relation
