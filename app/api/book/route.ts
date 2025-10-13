@@ -230,7 +230,19 @@ export async function POST(req: NextRequest) {
       reservationTitle = carsDetails?.name || "";
     }
 
-    
+    let debut = ""
+    let fin = ""
+
+    if (resType === "circuit") {
+      debut = formatDate(reservationData.startDate);
+      fin = formatDate(reservationData.endDate);
+    } else if (resType === "trip") {
+      debut = formatDate(reservationData.startDate);
+      fin = formatDate(reservationData.endDate);
+    } else {
+      debut = formatDate(reservationData.startDate);
+      fin = formatDate(reservationData.endDate);
+    }
 
     // 🔹 Email with elegant design
     const htmlMessage = `
@@ -423,7 +435,7 @@ export async function POST(req: NextRequest) {
                       color: #2d3748;
                       font-size: 16px;
                       font-weight: 600;
-                    ">${formatDate(startDate)}</p>
+                    ">${formatDate(debut)}</p>
                   </div>
                   <div>
                     <p style="
@@ -438,7 +450,7 @@ export async function POST(req: NextRequest) {
                       color: #2d3748;
                       font-size: 16px;
                       font-weight: 600;
-                    ">${formatDate(endDate)}</p>
+                    ">${formatDate(fin)}</p>
                   </div>
                 </div>
                 
