@@ -38,6 +38,8 @@ export function TripBookingScreen() {
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [pendingFormData, setPendingFormData] = useState<any>(null);
 
+  const [selectedDate, setSelectedDate] = useState<string | null>(null);
+
   useEffect(() => {
     const loadTrips = async () => {
       await fetchTrips();
@@ -53,6 +55,7 @@ export function TripBookingScreen() {
 
   const [formData, setFormData] = useState({
     tripTravel: tripTravel ? tripTravel : "",
+    travelDate: selectedDate || "",
     nom: "",
     prenom: "",
     email: "",
@@ -77,6 +80,7 @@ export function TripBookingScreen() {
     const data = {
       resType: "trip",
       tripTravel: formData.tripTravel,
+      travelDate: formData.travelDate,
       nom: formData.nom,
       prenom: formData.prenom,
       email: formData.email,
@@ -100,6 +104,8 @@ export function TripBookingScreen() {
     setShowConfirmDialog(true);
   };
 
+  console.log("DATE", formData.travelDate);
+
   const handleConfirmReservation = async () => {
     if (!pendingFormData) return;
 
@@ -108,6 +114,7 @@ export function TripBookingScreen() {
     // if (success) {
     setFormData({
       tripTravel: tripTravel ? tripTravel : "",
+      travelDate: selectedDate || "",
       nom: "",
       prenom: "",
       email: "",
@@ -243,6 +250,13 @@ export function TripBookingScreen() {
     return selectedTrip?.title || "Trip sélectionné";
   };
 
+  const handleTravelDatesChange = (date: string) => {
+    setFormData((prev) => ({
+      ...prev,
+      travelDate: date,
+    }));
+  };
+
   return (
     <section id="reservation" className="py-20 bg-muted/50">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -278,6 +292,7 @@ export function TripBookingScreen() {
                 handleSubmit={handleSubmit}
                 loading={loading}
                 getTodayString={getTodayString}
+                handleTravelDatesChange={handleTravelDatesChange}
               />
             </CardContent>
           </Card>

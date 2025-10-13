@@ -32,7 +32,10 @@ const AddTripPage = () => {
     handleSubmit,
     isLoading,
     isUpdate,
-    handleUpdate
+    handleUpdate,
+    handleTravelDatesChange,
+    addTravelDate,
+    removeTravelDate,
   } = useTrip();
 
   const onSubmit = async (e: React.FormEvent) => {
@@ -42,9 +45,29 @@ const AddTripPage = () => {
     } else {
       await handleSubmit(e);
     }
-  }
+  };
 
   console.log("IS UPDATE:", isUpdate);
+
+  // Add this helper function at the top of your component
+  const formatDateForInput = (date: any): string => {
+    if (!date) return "";
+
+    // If it's a string, parse it and format
+    if (typeof date === "string") {
+      const parsed = new Date(date);
+      if (isNaN(parsed.getTime())) return "";
+      return parsed.toISOString().split("T")[0];
+    }
+
+    // If it's a Date object
+    if (date instanceof Date) {
+      if (isNaN(date.getTime())) return "";
+      return date.toISOString().split("T")[0];
+    }
+
+    return "";
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 py-8">
@@ -59,7 +82,9 @@ const AddTripPage = () => {
               Retour
             </button>
             <h1 className="text-2xl font-bold text-gray-900">
-              {isUpdate === "true" ? "Modifier le voyage" : "Ajouter un Nouveau Voyage"}
+              {isUpdate === "true"
+                ? "Modifier le voyage"
+                : "Ajouter un Nouveau Voyage"}
             </h1>
           </div>
 
@@ -112,36 +137,6 @@ const AddTripPage = () => {
                       />
                     </div>
                   </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Date debut
-                      </label>
-                      <input
-                        type="date"
-                        name="startDate"
-                        value={formData.startDate}
-                        onChange={handleInputChange}
-                        className="w-full px-3 py-2 text-black border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder=""
-                        required
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Date fin
-                      </label>
-                      <input
-                        type="date"
-                        name="endDate"
-                        value={formData.endDate}
-                        onChange={handleInputChange}
-                        className="w-full px-3 py-2 text-black border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder=""
-                        required
-                      />
-                    </div>
-                  </div>
 
                   <div className="grid grid-cols-1 gap-4">
                     <div>
@@ -158,7 +153,6 @@ const AddTripPage = () => {
                         required
                       />
                     </div>
-                    
                   </div>
 
                   <div>
@@ -174,6 +168,79 @@ const AddTripPage = () => {
                       placeholder="Description du voyage..."
                       required
                     />
+                  </div>
+
+                  {/* Travel dates */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Dates de voyage
+                    </label>
+                    {formData.travelDates.map((date, index) => (
+                      <div key={index} className="flex items-center mb-2">
+                        <div>
+                          <label
+                            htmlFor={`startDate-${index}`}
+                            className="sr-only"
+                          >
+                            Date de début
+                          </label>
+                          <input
+                            type="date"
+                            id={`startDate-${index}`}
+                            value={formatDateForInput(date.startDate)}
+                            onChange={(e) =>
+                              handleTravelDatesChange(
+                                index,
+                                "startDate",
+                                new Date(e.target.value)
+                              )
+                            }
+                            className="flex-1 px-3 py-2 text-black border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            required
+                          />
+                        </div>
+                        <span className="mx-2">à</span>
+                        <div>
+                          <label
+                            htmlFor={`endDate-${index}`}
+                            className="sr-only"
+                          >
+                            Date de fin
+                          </label>
+                          <input
+                            type="date"
+                            id={`endDate-${index}`}
+                            value={formatDateForInput(date.endDate)}
+                            onChange={(e) =>
+                              handleTravelDatesChange(
+                                index,
+                                "endDate",
+                                new Date(e.target.value)
+                              )
+                            }
+                            className="flex-1 px-3 py-2 text-black border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            required
+                          />
+                        </div>
+                        {formData.travelDates.length > 1 && (
+                          <button
+                            type="button"
+                            onClick={() => removeTravelDate(index)}
+                            className="ml-2 p-2 text-red-600 hover:bg-red-100 rounded-full"
+                          >
+                            <X className="w-5 h-5" />
+                          </button>
+                        )}
+                      </div>
+                    ))}
+                    <button
+                      type="button"
+                      onClick={addTravelDate}
+                      className="mt-2 inline-flex items-center px-3 py-1 text-sm bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg"
+                    >
+                      <Plus className="w-4 h-4 mr-1" />
+                      Ajouter une date de voyage
+                    </button>
                   </div>
 
                   {/* Points forts */}
@@ -315,9 +382,7 @@ const AddTripPage = () => {
                   {formData.program.length === 0 ? (
                     <div className="text-center py-6 bg-gray-50 rounded-lg border border-dashed border-gray-300">
                       <Calendar className="w-12 h-12 text-gray-400 mx-auto mb-2" />
-                      <p className="text-gray-600">
-                        Aucun programme ajouté
-                      </p>
+                      <p className="text-gray-600">Aucun programme ajouté</p>
                     </div>
                   ) : (
                     <div className="space-y-4">
@@ -471,7 +536,11 @@ const AddTripPage = () => {
                 className="flex-1 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors duration-200"
               >
                 {/* {isLoading ? "Loading..." : "Ajouter le Circuit"} */}
-                {isLoading ? "Loading..." : isUpdate === "true" ? "Mettre à jour le voyage" : "Ajouter le voyage"}
+                {isLoading
+                  ? "Loading..."
+                  : isUpdate === "true"
+                  ? "Mettre à jour le voyage"
+                  : "Ajouter le voyage"}
               </button>
             </div>
           </form>

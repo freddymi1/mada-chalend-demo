@@ -35,8 +35,6 @@ model TripTravel {
   id           String        @id @default(cuid())
   title        String
   duration     String
-  startDate    DateTime
-  endDate      DateTime
   price        String
   maxPeople    Int?
   description  String
@@ -47,8 +45,19 @@ model TripTravel {
   updatedAt    DateTime      @updatedAt
   program      Program[] // Relation avec Itinerary
   reservations Reservation[] // Relation avec Reservation (nouvelle relation)
+  travelDates  TravelDates[] // Relation avec TravelDates
 
   @@map("trip")
+}
+
+model TravelDates{
+  id          String   @id @default(cuid())
+  startDate   DateTime
+  endDate     DateTime
+  tripTravelId String
+  tripTravel  TripTravel @relation(fields: [tripTravelId], references: [id], onDelete: Cascade)
+
+  @@map("travel_dates")
 }
 
 model Itinerary {
@@ -58,6 +67,7 @@ model Itinerary {
   description      String
   image            String
   imageDescription String
+  distance         Int?
   circuitId        String
   circuit          Circuit @relation(fields: [circuitId], references: [id], onDelete: Cascade)
 

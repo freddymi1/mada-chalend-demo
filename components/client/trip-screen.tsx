@@ -14,6 +14,14 @@ import {
 import { TripTravel } from "@/src/domain/entities/trip";
 import { useCltTrip } from "../providers/client/TripCltProvider";
 import { useRouter } from "next/navigation";
+export const formatDate = (dateStr: string | Date): string => {
+  const date = new Date(dateStr);
+  return date.toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  });
+};
 
 const TripScreen = () => {
   const t = useTranslations("lng");
@@ -29,15 +37,6 @@ const TripScreen = () => {
     };
     loadTrip();
   }, []);
-
-  const formatDate = (dateStr: string | Date): string => {
-    const date = new Date(dateStr);
-    return date.toLocaleDateString("en-US", {
-      month: "short",
-      day: "numeric",
-      year: "numeric",
-    });
-  };
 
   const calculateOccupancyRate = (trip: TripTravel): number => {
     if (!trip.maxPeople) return 0;
@@ -179,9 +178,15 @@ const TripScreen = () => {
                     <p className="text-xs text-slate-400 mb-1">
                       {t("ourTrip.travelDates") || "Travel Dates"}
                     </p>
-                    <p className="text-sm font-semibold text-white">
-                      {formatDate(trip.startDate)} → {formatDate(trip.endDate)}
-                    </p>
+                    {trip.travelDates.map((date) => (
+                      <p
+                        key={date.id}
+                        className="text-sm font-semibold text-white"
+                      >
+                        {formatDate(date.startDate)} →{" "}
+                        {formatDate(date.endDate)}
+                      </p>
+                    ))}
                   </div>
 
                   {/* Highlights */}
@@ -206,7 +211,9 @@ const TripScreen = () => {
                   <div className="mt-4 flex flex-col gap-6">
                     {/* Book Button */}
                     <button
-                      onClick={() => router.push(`/reservation/trip?trip=${trip?.id}`)}
+                      onClick={() =>
+                        router.push(`/reservation/trip?trip=${trip?.id}`)
+                      }
                       className="w-full group/btn relative px-6 py-3 bg-primary text-white font-semibold rounded-lg transition-all duration-300 hover:shadow-lg hover:shadow-purple-500/30 active:scale-95 flex items-center justify-center gap-2"
                     >
                       <span>{t("ourTrip.booking")}</span>

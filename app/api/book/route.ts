@@ -36,6 +36,7 @@ export async function POST(req: NextRequest) {
       circuit,
       vehicle,
       tripTravel,
+      travelDate,
       nom,
       prenom,
       email,
@@ -62,6 +63,7 @@ export async function POST(req: NextRequest) {
     let circuitDetails = null;
     let carsDetails = null;
     let tripDetails = null;
+    let travelDatesDetails = null;
 
     // 🔹 Validate based on reservation type
     if (resType === "circuit") {
@@ -116,6 +118,24 @@ export async function POST(req: NextRequest) {
       }
     }
 
+    if(travelDate){
+      travelDatesDetails = await prisma.travelDates.findUnique({
+        where: { id: travelDate },
+        select: {
+          id: true,
+          startDate: true,
+          endDate: true,
+        },
+      });
+
+      if (!travelDatesDetails) {
+        return NextResponse.json(
+          { error: "Travel dates not found" },
+          { status: 404 }
+        );
+      }
+    }
+
     if (resType === "trip") {
       if (!tripTravel) {
         return NextResponse.json(
@@ -140,6 +160,7 @@ export async function POST(req: NextRequest) {
           { status: 404 }
         );
       }
+
     }
 
     // 🔹 Prepare reservation data based on type
@@ -177,6 +198,10 @@ export async function POST(req: NextRequest) {
     // Only add tripId if it's a trip reservation and trip exists
     if (resType === "trip" && tripTravel) {
       reservationData.tripTravelId = tripTravel;
+      if (travelDatesDetails) {
+        reservationData.startDate = travelDatesDetails.startDate;
+        reservationData.endDate = travelDatesDetails.endDate;
+      }
     }
 
     // 🔹 Sauvegarde dans la BDD

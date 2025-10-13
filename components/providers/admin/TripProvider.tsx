@@ -2,7 +2,7 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useToast } from "@/hooks/shared/use-toast";
-import { TripTravel } from "@/src/domain/entities/trip";
+import { TravelDates, TripTravel } from "@/src/domain/entities/trip";
 
 export interface Program {
   day: number;
@@ -12,13 +12,14 @@ export interface Program {
   imageDescription: string;
 }
 
+
+
 interface TripFormData {
   title: string;
   duration: string;
   price: string;
   maxPeople?: string;
-  startDate: string;
-  endDate: string;
+  travelDates: TravelDates[];
   description: string;
   highlights: string[];
   program: Program[];
@@ -60,6 +61,13 @@ interface TripContextType {
   isLoading: boolean;
   handleUpdate: (id: string) => void;
   isUpdate: string | null;
+  handleTravelDatesChange: (
+    index: number,
+    field: keyof TravelDates,
+    value: string | Date
+  ) => void;
+  addTravelDate: () => void;
+  removeTravelDate: (index: number) => void;
 }
 
 const TripContext = createContext<TripContextType | undefined>(undefined);
@@ -79,8 +87,7 @@ export const TripProvider = ({
     duration: "",
     price: "",
     maxPeople: "",
-    startDate: "",
-    endDate: "",
+    travelDates: [],
     description: "",
     highlights: [""],
     program: [],
@@ -165,6 +172,34 @@ export const TripProvider = ({
     setFormData((prev) => ({ ...prev, program: reorderedProgram }));
   };
 
+  const handleTravelDatesChange = (
+    index: number,
+    field: keyof TravelDates,
+    value: string | Date
+  ) => {
+    const newTravelDates = [...formData.travelDates];
+    newTravelDates[index] = { ...newTravelDates[index], [field]: value };
+    setFormData((prev) => ({ ...prev, travelDates: newTravelDates }));
+  };
+
+  const addTravelDate = () => {
+    const newDate: TravelDates = {
+      id: "", // or generate a unique id if needed
+      tripTravelId: "", // set the appropriate tripTravelId if available
+      startDate: new Date(),
+      endDate: new Date(),
+    };
+    setFormData((prev) => ({
+      ...prev,
+      travelDates: [...prev.travelDates, newDate],
+    }));
+  };
+
+  const removeTravelDate = (index: number) => {
+    const newTravelDates = formData.travelDates.filter((_, i) => i !== index);
+    setFormData((prev) => ({ ...prev, travelDates: newTravelDates }));
+  };
+
   const handleImageUpload = async (
     index: number,
     e: React.ChangeEvent<HTMLInputElement>
@@ -217,8 +252,7 @@ export const TripProvider = ({
       duration: formData.duration,
       price: formData.price,
       maxPeople: parseInt(formData?.maxPeople!),
-      startDate: formData.startDate,
-      endDate: formData.endDate,
+      travelDates: formData.travelDates,
       description: formData.description,
       highlights: filteredHighlights,
       included: filteredIncluded,
@@ -245,8 +279,7 @@ export const TripProvider = ({
           duration: "",
           price: "",
           maxPeople: "",
-          startDate: "",
-          endDate: "",
+          travelDates: [],
           description: "",
           highlights: [""],
           program: [],
@@ -298,8 +331,7 @@ export const TripProvider = ({
           duration: "",
           price: "",
           maxPeople: "",
-          startDate: "",
-          endDate: "",
+          travelDates: [],
           description: "",
           highlights: [""],
           program: [],
@@ -388,8 +420,7 @@ export const TripProvider = ({
           duration: data.duration || "",
           price: data.price || "",
           maxPeople: data.maxPeople ? String(data.maxPeople) : "",
-          startDate: data.startDate || "",
-          endDate: data.endDate || "",
+          travelDates: data.travelDates || [],
           description: data.description || "",
           highlights:
             data.highlights && data.highlights.length > 0
@@ -399,13 +430,7 @@ export const TripProvider = ({
             data.program && data.program.length > 0
               ? data.program
               : [],
-          // included=[
-          //     {
-          //         "id": "cmftzfi650002l104gj0owtwu",
-          //         "text": "Eau",
-          //         "circuitId": "cmftzfi650000l1041rf51pd1"
-          //     }
-          // ]
+         
           included: data.included?.length
             ? data.included.map((item: any) => item.text)
             : [],
@@ -451,7 +476,10 @@ export const TripProvider = ({
         tripDetail,
         isLoading,
         handleUpdate,
-        isUpdate
+        isUpdate,
+        handleTravelDatesChange,
+        addTravelDate,
+        removeTravelDate
       }}
     >
       {children}

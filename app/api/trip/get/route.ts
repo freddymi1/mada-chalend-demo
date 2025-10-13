@@ -14,6 +14,7 @@ export async function GET() {
         included: true,
         notIncluded: true,
         program: true,
+        travelDates: true,
         reservations: {
           select: {
             id: true,
@@ -54,7 +55,8 @@ export async function GET() {
         totalPersonnesReservees: totalPersonnes,
         placesDisponibles,
         // Optionnel: inclure toutes les réservations ou seulement les confirmées
-        reservations: trip.reservations
+        reservations: trip.reservations,
+        isDispo: placesDisponibles > 0
       };
     });
 

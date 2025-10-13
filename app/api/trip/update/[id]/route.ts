@@ -14,8 +14,13 @@ export async function PUT(request: Request, { params }: { params: { id: string }
         duration: data.duration,
         price: data.price,
         maxPeople: data.maxPeople ? Number(data.maxPeople) : null,
-        startDate: data.startDate ? new Date(data.startDate) : undefined,
-        endDate: data.endDate ? new Date(data.endDate) : undefined,
+        travelDates: {
+          deleteMany: { tripTravelId: id },
+          create: data.travelDates?.map((date: any) => ({
+            startDate: new Date(date.startDate),
+            endDate: new Date(date.endDate),
+          })),
+        },
         description: data.description,
 
         // ⚡ Highlights (si c’est un tableau de string => delete + recrée)

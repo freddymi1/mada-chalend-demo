@@ -93,22 +93,9 @@ const TripScreen = () => {
     return true;
   });
 
-  const getDifficultyColor = (difficulty: string) => {
-    switch (difficulty.toLowerCase()) {
-      case "facile":
-        return "bg-green-100 text-green-800";
-      case "modéré":
-        return "bg-yellow-100 text-yellow-800";
-      case "difficile":
-        return "bg-red-100 text-red-800";
-      default:
-        return "bg-gray-100 text-gray-800";
-    }
-  };
-
   const handleEdit = (trip: TripTravel) => {
     setEditingTrip(trip);
-    router.push(`/admin/trips/add?update=true&id=${trip.id}`);
+    router.push(`/admin/trip/add?update=true&id=${trip.id}`);
   };
 
   const handleViewTripDetail = (trip: TripTravel) => {
@@ -365,11 +352,9 @@ const TripScreen = () => {
                       Réservations
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Start Date
+                      Dates
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      End Date
-                    </th>
+                    
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Points Forts
                     </th>
@@ -412,23 +397,16 @@ const TripScreen = () => {
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <span
-                          className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getDifficultyColor(
-                            trip.startDate
-                          )}`}
-                        >
-                          {trip.startDate}
-                        </span>
-                      </td>
-
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <span
-                          className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getDifficultyColor(
-                            trip.endDate
-                          )}`}
-                        >
-                          {trip.endDate}
-                        </span>
+                        <div className="flex flex-col gap-2">
+                          {trip.travelDates.map((date: any, index: number) => (
+                            <div key={index} className="flex items-center">
+                              <Clock className="w-4 h-4 mr-2 text-gray-400" />
+                              <span className="text-sm text-gray-900">
+                                {date.startDate} - {date.endDate}
+                              </span>
+                            </div>
+                          ))}
+                        </div>
                       </td>
 
                       <td className="px-6 py-4">

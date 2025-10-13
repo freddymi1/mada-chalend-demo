@@ -101,7 +101,8 @@
       "nb": "Preferences or remarks",
       "nbPL": "Describe your preferences, interests, or any useful information...",
       "cta": "Send my request",
-      "trip": "Trip"
+      "trip": "Trip",
+      "travelDates": "Travel Dates"
     }
   },
   "blog": {

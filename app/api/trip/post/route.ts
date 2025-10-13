@@ -11,8 +11,7 @@ export async function POST(req: NextRequest) {
       duration,
       price,
       maxPeople,
-      startDate,
-      endDate,
+      travelDates,
       description,
       highlights = [], // Default to empty array
       included = [],   // Default to empty array
@@ -34,8 +33,12 @@ export async function POST(req: NextRequest) {
         duration,
         price,
         maxPeople: Number(maxPeople),
-        startDate: new Date(startDate),
-        endDate: new Date(endDate),
+        travelDates: {
+          create: travelDates.map((date: any) => ({
+            startDate: new Date(date.startDate),
+            endDate: new Date(date.endDate),
+          })),
+        },
         description,
         highlights: {
           create: highlights.map((text: string) => ({ text })),

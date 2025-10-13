@@ -12,6 +12,7 @@ import {
 import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
 import { TripTravel } from "@/src/domain/entities/trip";
+import { formatDate } from "./trip-screen";
 
 interface PropsData {
   trip?: string | null; // Trip ID passé en paramètre (optionnel)
@@ -20,6 +21,7 @@ interface PropsData {
   isLoading?: boolean; // Indicateur de chargement des trips
   formData: {
     tripTravel: string;
+    travelDate: string;
     nom: string;
     prenom: string;
     email: string;
@@ -44,6 +46,7 @@ interface PropsData {
   handleSubmit: (e: React.FormEvent) => void;
   loading: boolean; // Indicateur de soumission du formulaire
   getTodayString: () => string; // Fonction pour obtenir la date actuelle au format YYYY-MM-DD
+  handleTravelDatesChange: (date: string) => void;
 }
 
 const TripBooking = ({
@@ -60,8 +63,10 @@ const TripBooking = ({
   handleSubmit,
   loading,
   getTodayString,
+  handleTravelDatesChange
 }: PropsData) => {
   const t = useTranslations("lng");
+  console.log("DATES", tripDetail?.travelDates);
   return (
     <div>
       <form onSubmit={handleSubmit} className="space-y-6">
@@ -102,6 +107,31 @@ const TripBooking = ({
               Trip sélectionné : {tripDetail.title || ""}
             </p>
           )}
+        </div>
+
+        {/* Select travel dates */}
+        <div className="space-y-2 animate-fade-in">
+          <Label htmlFor="travelDates">{t("book.form.travelDates")} *</Label>
+          <Select
+            value={formData.travelDate}
+            onValueChange={handleTravelDatesChange}
+            disabled={isLoading}
+          >
+            <SelectTrigger className="w-full transition-all duration-300 focus:scale-105">
+              <SelectValue
+                placeholder={
+                  isLoading ? "Chargement des dates..." : "Sélectionnez des dates"
+                }
+              />
+            </SelectTrigger>
+            <SelectContent>
+              {tripDetail?.travelDates?.map((date) => (
+                <SelectItem key={date.id} value={date.id}>
+                  {formatDate(date.startDate)} → {formatDate(date.endDate)}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
 
         <div className="grid md:grid-cols-2 gap-4">

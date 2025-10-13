@@ -18,7 +18,8 @@ export async function GET(
         included: true,
         notIncluded: true,
         program: true,
-        reservations: true
+        reservations: true,
+        travelDates: true
       },
     });
 

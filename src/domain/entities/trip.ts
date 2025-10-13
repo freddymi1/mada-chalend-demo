@@ -7,12 +7,19 @@ export interface Program {
   image: string;
   imageDescription: string;
 }
+
+export interface TravelDates {
+  id: string;
+  startDate: Date;
+  endDate: Date;
+  tripTravelId: string;
+}
+
 export interface TripTravel {
   id: string;
   title: string;
   duration: string;
-  startDate: Date;
-  endDate: Date;
+  travelDates: TravelDates[];
   price: string;
   maxPeople?: number;
   nbrChild?: number;
