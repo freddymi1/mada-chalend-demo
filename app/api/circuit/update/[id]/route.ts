@@ -16,6 +16,7 @@ export async function PUT(request: Request, { params }: { params: { id: string }
         maxPeople: data.maxPeople ? Number(data.maxPeople) : null, // 🔥 cast en Int ou null
         difficulty: data.difficulty,
         description: data.description,
+        itinereryImage: data.itinereryImage,
 
         // ⚡ Highlights (si c’est un tableau de string => delete + recrée)
         highlights: {

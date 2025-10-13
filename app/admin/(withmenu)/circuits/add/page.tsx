@@ -30,9 +30,12 @@ const AddCircuit = () => {
     handleSubmit,
     isLoading,
     isUpdate,
-    handleUpdate
+    handleUpdate,
+    handleItineraryImageChange,
+    handleItineraryImageUpload,
+    isLoadingUpload,
+    handleItineraryImageRemove
   } = useCircuit();
-  
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -41,7 +44,7 @@ const AddCircuit = () => {
     } else {
       await handleSubmit(e);
     }
-  }
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 py-8">
@@ -285,8 +288,45 @@ const AddCircuit = () => {
                 </div>
               </div>
               <div>
+                {/* Circuit image */}
+                <div className="relative">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Image du circuit
+                  </label>
+                  {formData.itinereryImage ? (
+                    <div className="relative w-full border-2 border-dashed border-gray-300 rounded-lg">
+                      <img
+                        src={formData.itinereryImage}
+                        alt="Aperçu de l'image"
+                        className="mt-2 w-full object-cover h-auto max-h-60 rounded-lg"
+                      />
+                      <button
+                        type="button"
+                        onClick={handleItineraryImageRemove}
+                        className="absolute -top-2 -right-2 bg-red-500 text-white cursor-pointer rounded-full p-1 hover:bg-red-600"
+                      >
+                        <X className="w-3 h-3" />
+                      </button>
+                    </div>
+                  ) : (
+                    <label className="flex flex-col items-center justify-center w-full h-40 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-blue-500 transition">
+                      <Upload className="w-10 h-10 text-gray-400" />
+                      {isLoadingUpload ? (
+                        <span className="text-xs text-gray-500 mt-1">Uploading...</span>
+                      ) : (
+                        <span className="text-xs text-gray-500 mt-1">Upload</span>
+                      )}
+                      <input
+                        type="file"
+                        className="hidden"
+                        accept="image/*"
+                        onChange={(e)=>handleItineraryImageUpload(e)}
+                      />
+                    </label>
+                  )}
+                </div>
                 {/* Itinéraire */}
-                <div>
+                <div className="mt-8">
                   <div className="flex items-center justify-between mb-4">
                     <label className="block text-sm font-medium text-gray-700">
                       Itinéraire
@@ -452,7 +492,11 @@ const AddCircuit = () => {
                 className="flex-1 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors duration-200"
               >
                 {/* {isLoading ? "Loading..." : "Ajouter le Circuit"} */}
-                {isLoading ? "Loading..." : isUpdate ? "Mettre à jour le Circuit" : "Ajouter le Circuit"}
+                {isLoading
+                  ? "Loading..."
+                  : isUpdate
+                  ? "Mettre à jour le Circuit"
+                  : "Ajouter le Circuit"}
               </button>
             </div>
           </form>

@@ -18,6 +18,7 @@ interface CircuitFormData {
   maxPeople?: string;
   difficulty: string;
   description: string;
+  itinereryImage: string;
   highlights: string[];
   itinerary: ItineraryDay[];
   included: string[];
@@ -58,6 +59,10 @@ interface CircuitContextType {
   isLoading: boolean;
   handleUpdate: (id: string) => void;
   isUpdate: string | null;
+  handleItineraryImageChange: (imageUrl: string) => void;
+  handleItineraryImageUpload: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  isLoadingUpload: boolean;
+  handleItineraryImageRemove: () => void;
 }
 
 const CircuitContext = createContext<CircuitContextType | undefined>(undefined);
@@ -79,15 +84,18 @@ export const CircuitProvider = ({
     maxPeople: "",
     difficulty: "Facile",
     description: "",
+    itinereryImage: "",
     highlights: [""],
     itinerary: [],
     included: [""],
     notIncluded: [""],
   });
 
+  const [isLoadingUpload, setIsLoadingUpload] = useState(false);
+
   const params = useSearchParams();
   const id = params.get("id");
-  const isUpdate= params.get("update");
+  const isUpdate = params.get("update");
 
   useEffect(() => {
     if (id) {
@@ -162,6 +170,58 @@ export const CircuitProvider = ({
     setFormData((prev) => ({ ...prev, itinerary: reorderedItinerary }));
   };
 
+  const handleItineraryImageChange = (imageUrl: string) => {
+    setFormData((prev) => ({ ...prev, itinereryImage: imageUrl }));
+  };
+
+  const handleItineraryImageRemove = () => {
+    setFormData((prev) => ({ ...prev, itinereryImage: "" }));
+  };
+
+  // Upload one image for itinerary
+  const handleItineraryImageUpload = async (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const files = e.target?.files;
+    setIsLoadingUpload(true);
+
+    if (files && files[0]) {
+      const file = files[0];
+      const formDataUpload = new FormData();
+      formDataUpload.append("file", file);
+
+      try {
+        const res = await fetch("/api/upload", {
+          method: "POST",
+          body: formDataUpload,
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+          console.log("URL:", data.url);
+          handleItineraryImageChange(data.url);
+          toast({
+            title: "Success !",
+            description: "Image téléchargée avec succès !",
+          });
+          setIsLoadingUpload(false);
+        } else {
+          toast({
+            title: "Error !",
+            description: "Erreur lors de l'upload de l'image",
+          });
+          setIsLoadingUpload(false);
+        }
+      } catch (error) {
+        toast({
+          title: "Error !",
+          description: "Erreur lors de l'upload de l'image",
+        });
+        setIsLoadingUpload(false);
+      }
+    }
+  };
+
   const handleImageUpload = async (
     index: number,
     e: React.ChangeEvent<HTMLInputElement>
@@ -216,6 +276,7 @@ export const CircuitProvider = ({
       maxPeople: parseInt(formData?.maxPeople!),
       difficulty: formData.difficulty,
       description: formData.description,
+      itinereryImage: formData.itinereryImage,
       highlights: filteredHighlights,
       included: filteredIncluded,
       notIncluded: filteredNotIncluded,
@@ -243,6 +304,7 @@ export const CircuitProvider = ({
           maxPeople: "",
           difficulty: "Facile",
           description: "",
+          itinereryImage: "",
           highlights: [""],
           itinerary: [],
           included: [""],
@@ -250,7 +312,6 @@ export const CircuitProvider = ({
         });
         setIsLoading(false);
         router.push("/admin/circuits");
-        
       } else {
         toast({
           title: "Error !",
@@ -295,6 +356,7 @@ export const CircuitProvider = ({
           maxPeople: "",
           difficulty: "Facile",
           description: "",
+          itinereryImage: "",
           highlights: [""],
           itinerary: [],
           included: [""],
@@ -384,6 +446,7 @@ export const CircuitProvider = ({
           maxPeople: data.maxPeople ? String(data.maxPeople) : "",
           difficulty: data.difficulty || "Facile",
           description: data.description || "",
+          itinereryImage: data.itinereryImage || "",
           highlights:
             data.highlights && data.highlights.length > 0
               ? data.highlights.map((item: any) => item.text)
@@ -392,13 +455,7 @@ export const CircuitProvider = ({
             data.itineraries && data.itineraries.length > 0
               ? data.itineraries
               : [],
-          // included=[
-          //     {
-          //         "id": "cmftzfi650002l104gj0owtwu",
-          //         "text": "Eau",
-          //         "circuitId": "cmftzfi650000l1041rf51pd1"
-          //     }
-          // ]
+
           included: data.included?.length
             ? data.included.map((item: any) => item.text)
             : [],
@@ -444,7 +501,11 @@ export const CircuitProvider = ({
         circuitDetail,
         isLoading,
         handleUpdate,
-        isUpdate
+        isUpdate,
+        handleItineraryImageChange,
+        handleItineraryImageUpload,
+        isLoadingUpload,
+        handleItineraryImageRemove
       }}
     >
       {children}

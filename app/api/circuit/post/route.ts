@@ -13,6 +13,7 @@ export async function POST(req: NextRequest) {
       maxPeople,
       difficulty,
       description,
+      itinereryImage,
       highlights = [], // Default to empty array
       included = [],   // Default to empty array
       notIncluded = [], // Default to empty array
@@ -35,6 +36,7 @@ export async function POST(req: NextRequest) {
         maxPeople: Number(maxPeople),
         difficulty,
         description,
+        itinereryImage,
         highlights: {
           create: highlights.map((text: string) => ({ text })),
         },

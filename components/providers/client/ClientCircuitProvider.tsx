@@ -18,6 +18,7 @@ interface CircuitFormData {
   maxPeople: string;
   difficulty: string;
   description: string;
+  itinereryImage: string;
   highlights: string[];
   itinerary: ItineraryDay[];
   included: string[];

@@ -8,6 +8,7 @@ export interface Circuit {
   maxPeople: number;
   difficulty: string;
   description: string;
+  itinereryImage: string;
   highlights: string[];
   itinerary: Array<{
     day: number;

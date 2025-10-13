@@ -18,6 +18,7 @@ model Circuit {
   maxPeople      Int?
   difficulty     String
   description    String
+  itinereryImage String?
   highlights     Highlight[] // Tableau de points forts
   included       Included[] // Tableau inclus
   notIncluded    NotIncluded[] // Tableau non inclus

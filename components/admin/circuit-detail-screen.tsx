@@ -83,11 +83,19 @@ const CircuitDetailScreen = () => {
               </h1>
             </div>
             <div className="flex items-center space-x-3">
-              <button onClick={() => router.push("/admin/circuits/add")} className="flex items-center px-4 py-2 text-sm bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors">
+              <button
+                onClick={() => router.push("/admin/circuits/add")}
+                className="flex items-center px-4 py-2 text-sm bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
+              >
                 <Plus className="w-4 h-4 mr-2" />
                 Ajouter
               </button>
-              <button onClick={() => router.push(`/admin/circuits/add?update=true&id=${id}`)} className="flex items-center px-4 py-2 text-sm bg-primary text-white rounded-lg transition-colors">
+              <button
+                onClick={() =>
+                  router.push(`/admin/circuits/add?update=true&id=${id}`)
+                }
+                className="flex items-center px-4 py-2 text-sm bg-primary text-white rounded-lg transition-colors"
+              >
                 <Edit className="w-4 h-4 mr-2" />
                 Modifier
               </button>
@@ -191,7 +199,9 @@ const CircuitDetailScreen = () => {
                     Nombre des personnes
                   </p>
                   <p className="font-semibold text-gray-900 dark:text-white">
-                    {circuitDetail.totalPersonnesReservees} (Enfant: {circuitDetail.nbrChild ?? 0 } et Adulte: {circuitDetail.nbrAdult ?? 0 })
+                    {circuitDetail.totalPersonnesReservees} (Enfant:{" "}
+                    {circuitDetail.nbrChild ?? 0} et Adulte:{" "}
+                    {circuitDetail.nbrAdult ?? 0})
                   </p>
                 </div>
               </div>
@@ -342,8 +352,27 @@ const CircuitDetailScreen = () => {
             </div>
           </div>
         )}
+        {/* Image du circuit */}
+        {circuitDetail.itinereryImage && (
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border dark:border-gray-700 p-6 mb-6">
+            <h3 className="font-semibold text-lg mb-4 text-gray-900 dark:text-white flex items-center">
+              <Camera className="w-5 h-5 mr-2" />
+              Image du circuit
+            </h3>
+            <div className="relative">
+              <div className="aspect-video bg-gray-100 dark:bg-gray-700 rounded-lg overflow-hidden">
+                <img
+                  src={circuitDetail.itinereryImage}
+                  alt={`Circuit ${circuitDetail.title}`}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Daily Itinerary */}
+
         {circuitDetail.itineraries && circuitDetail.itineraries.length > 0 && (
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border dark:border-gray-700 p-6">
             <h3 className="font-semibold text-lg mb-6 text-gray-900 dark:text-white flex items-center">
