@@ -16,6 +16,7 @@ export interface Circuit {
     description: string;
     image: string;
     imageDescription: string;
+    distance: number;
   }>;
   included: string[];
   notIncluded: string[];

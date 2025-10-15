@@ -19,6 +19,7 @@ import {
   ArrowLeft,
   Plus,
   Armchair,
+  Map,
 } from "lucide-react";
 
 const CircuitDetailScreen = () => {
@@ -385,28 +386,91 @@ const CircuitDetailScreen = () => {
                 (itinerary: any, index: number) => (
                   <div
                     key={itinerary.id}
-                    className="border dark:border-gray-700 rounded-lg overflow-hidden"
+                    className="border dark:border-gray-700 rounded-lg overflow-hidden relative"
                   >
-                    <div className="lg:flex">
+                    <div className="lg:flex lg:h-[400px]">
+                      {" "}
+                      {/* Hauteur réduite et plus adaptée */}
                       {/* Image */}
                       {itinerary.image && (
-                        <div className="lg:w-1/3">
+                        <div className="lg:w-1/3 relative">
                           <img
                             src={itinerary.image}
                             alt={
                               itinerary.imageDescription ||
                               `Jour ${itinerary.day}`
                             }
-                            className="w-full h-48 lg:h-full object-cover"
+                            className="w-full max-h-82 lg:h-full object-cover"
                           />
+
+                          {/* Timeline repositionnée à droite */}
+                          <div className="absolute top-4 right-2 !z-50 bg-white dark:bg-gray-800 text-gray-900 dark:text-white rounded-lg px-3 py-2 text-xs font-medium shadow-lg">
+                            <div className="relative">
+                              {/* Ligne verticale continue */}
+                              <div className="absolute left-[6px] top-0 bottom-0 w-0.5 bg-gray-300 dark:bg-gray-600"></div>
+
+                              {circuitDetail.itineraries
+                                .filter(
+                                  (it: any, i: number) =>
+                                    i >= 0 && i <= index + 1
+                                )
+                                .map((it: any, i: number) => {
+                                  const isCurrentItem = i === index;
+                                  const isLastInList =
+                                    i === circuitDetail.itineraries.length - 1;
+                                  const isNextItem = i === index + 1;
+
+                                  return (
+                                    <div
+                                      className="flex flex-col items-start relative mb-3 last:mb-0"
+                                      key={it.id}
+                                    >
+                                      {/* Point et description */}
+                                      <div className="flex items-center gap-2 relative z-10">
+                                        <MapPin
+                                          className={`w-4 h-4 text-gray-400 ${
+                                            isCurrentItem
+                                              ? "text-green-500"
+                                              : isNextItem
+                                              ? "text-orange-500"
+                                              : "text-blue-500"
+                                          }`}
+                                        />
+                                        {/* <div
+                                          className={`w-2 h-2 rounded-full mr-2 ${
+                                            isCurrentItem
+                                              ? "bg-green-500"
+                                              : isNextItem
+                                              ? "bg-orange-500"
+                                              : "bg-blue-500"
+                                          }`}
+                                        /> */}
+                                        <span className="text-xs font-medium max-w-[120px] truncate">
+                                          {it.imageDescription}
+                                        </span>
+                                      </div>
+
+                                      {/* Distance (sauf pour le dernier élément) */}
+                                      {!isLastInList && (
+                                        <div className="flex gap-2 items-center relative z-10 mt-2">
+                                          <Clock className="w-4 h-4 text-blue-400" />
+                                          <span className="text-xs text-gray-500 dark:text-gray-400">
+                                            {it.distance} km
+                                          </span>
+                                        </div>
+                                      )}
+                                    </div>
+                                  );
+                                })}
+                            </div>
+                          </div>
                         </div>
                       )}
-
                       {/* Content */}
                       <div
                         className={`p-6 ${
                           itinerary.image ? "lg:w-2/3" : "w-full"
-                        } bg-gray-50 dark:bg-gray-700`}
+                        } bg-gray-50 dark:bg-gray-700 flex flex-col`}
                       >
                         <div className="flex items-center mb-4">
                           <div className="bg-blue-600 text-white rounded-full w-8 h-8 flex items-center justify-center font-semibold text-sm mr-4">
@@ -424,7 +488,7 @@ const CircuitDetailScreen = () => {
                           </div>
                         </div>
 
-                        <div className="prose max-w-none">
+                        <div className="prose max-w-none flex-grow">
                           {itinerary.description
                             .split("\n\n")
                             .map((paragraph: any, pIndex: any) => (

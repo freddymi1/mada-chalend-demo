@@ -53,6 +53,7 @@ export async function POST(req: NextRequest) {
             description: it.description,
             image: it.image,
             imageDescription: it.imageDescription,
+            distance: Number(it.distance),
           })),
         },
       },

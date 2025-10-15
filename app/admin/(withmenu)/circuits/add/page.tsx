@@ -397,6 +397,24 @@ const AddCircuit = () => {
                                 placeholder="Description de l'image..."
                               />
                             </div>
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700 mb-1">
+                                Distance
+                              </label>
+                              <input
+                                type="number"
+                                value={day.distance}
+                                onChange={(e) =>
+                                  handleItineraryChange(
+                                    index,
+                                    "distance",
+                                    e.target.value
+                                  )
+                                }
+                                className="w-full px-3 py-2 text-black border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                placeholder="Distance..."
+                              />
+                            </div>
                           </div>
 
                           <div className="mb-4">

@@ -33,6 +33,7 @@ export async function PUT(request: Request, { params }: { params: { id: string }
             description: it.description,
             image: it.image,
             imageDescription: it.imageDescription,
+            distance: Number(it.distance),
           })),
         },
 

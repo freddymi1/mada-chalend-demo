@@ -9,6 +9,7 @@ export interface ItineraryDay {
   description: string;
   image: string;
   imageDescription: string;
+  distance: number;
 }
 
 interface CircuitFormData {
@@ -153,6 +154,7 @@ export const CircuitProvider = ({
       description: "",
       image: "",
       imageDescription: "",
+      distance: 0,
     };
     setFormData((prev) => ({
       ...prev,
