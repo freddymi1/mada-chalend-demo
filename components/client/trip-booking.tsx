@@ -127,14 +127,9 @@ const TripBooking = ({
               />
             </SelectTrigger>
             <SelectContent>
-              {tripDetail?.travelDates
-                ?.filter(
-                  (item) =>
-                    Number(item.maxPeople) > Number(item.placesDisponibles)
-                )
-                .map((date) => (
+              {tripDetail?.travelDates.map((date) => (
                   <SelectItem key={date.id} value={date.id}>
-                    {formatDate(date.startDate)} → {formatDate(date.endDate)}
+                    {formatDate(date.startDate)} → {formatDate(date.endDate)} : <span className="font-semibold">{date.placesDisponibles}/{date.maxPeople} places disponibles</span>
                   </SelectItem>
                 ))}
             </SelectContent>
