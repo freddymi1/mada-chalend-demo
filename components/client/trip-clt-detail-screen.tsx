@@ -174,12 +174,12 @@ const TripCltDetailScreen = () => {
                           {date.placesDisponibles}
                         </p>
                       </div>
-                      <div className="flex items-center gap-2">
+                      {/* <div className="flex items-center gap-2">
                         <DollarSign className="w-4 h-4 text-blue-400" />
                         <p className="text-sm font-semibold">
                           €{date.price}
                         </p>
-                      </div>
+                      </div> */}
                     </div>
                   </div>
                 </div>
