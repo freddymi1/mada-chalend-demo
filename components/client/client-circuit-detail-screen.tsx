@@ -15,10 +15,8 @@ import { Toaster } from "@/components/client/ui/toaster";
 import {
   Calendar,
   MapPin,
-  Users,
   Star,
   Camera,
-  Armchair,
   Clock,
 } from "lucide-react";
 import Link from "next/link";
