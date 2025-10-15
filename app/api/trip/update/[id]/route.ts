@@ -12,7 +12,7 @@ export async function PUT(request: Request, { params }: { params: { id: string }
       data: {
         title: data.title,
         price: data.price,
-        
+        duration: data.duration,
         travelDates: {
           deleteMany: { tripTravelId: id },
           create: data.travelDates?.map((date: any) => ({
@@ -27,7 +27,7 @@ export async function PUT(request: Request, { params }: { params: { id: string }
 
         // ⚡ Highlights (si c’est un tableau de string => delete + recrée)
         highlights: {
-          deleteMany: { circuitId: id },
+          deleteMany: { tripTravelId: id },
           create: data.highlights?.map((text: string) => ({ text })),
         },
 

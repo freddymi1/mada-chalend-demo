@@ -393,6 +393,9 @@ const TripScreen = () => {
                                 <span className="text-sm text-gray-500 ml-2">
                                   {date.maxPeople} participants max
                                 </span>
+                                <span className="text-sm text-gray-500 ml-2">
+                                  {date.placesDisponibles} places disponibles
+                                </span>
                               </div>
                             ))
                           ) : (

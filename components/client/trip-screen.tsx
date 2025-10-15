@@ -167,12 +167,11 @@ const TripScreen = () => {
                   </p>
 
                   {/* Quick Stats */}
-                  {/* <div className="grid grid-cols-2 gap-3 mb-6">
+                  <div className="grid grid-cols-2 gap-3 mb-6">
                     <div className="flex items-center gap-2 text-slate-300">
-                      <Users className="w-4 h-4 text-emerald-400" />
+                      <Calendar className="w-4 h-4 text-emerald-400" />
                       <span className="text-sm">
-                        {trip.placesDisponibles}{" "}
-                        {t("ourTrip.spotsLeft") || "spots left"}
+                        {trip.duration}
                       </span>
                     </div>
                     <div className="flex items-center gap-2 text-slate-300">
@@ -181,7 +180,7 @@ const TripScreen = () => {
                         ${trip.price}
                       </span>
                     </div>
-                  </div> */}
+                  </div>
 
                   {/* Dates */}
                   <div className="w-full mb-6">

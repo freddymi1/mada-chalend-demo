@@ -35,6 +35,7 @@ model TripTravel {
   id           String        @id @default(cuid())
   title        String
   price        String
+  duration     String? @default("0")
   description  String
   highlights   Highlight[] // Tableau de points forts
   included     Included[] // Tableau inclus

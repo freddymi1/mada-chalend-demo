@@ -123,6 +123,20 @@ const AddTripPage = () => {
                         required
                       />
                     </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Durée
+                      </label>
+                      <input
+                        type="text"
+                        name="duration"
+                        value={formData.duration}
+                        onChange={handleInputChange}
+                        className="w-full px-3 py-2 text-black border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="3"
+                        required
+                      />
+                    </div>
                   </div>
 
                   <div>
@@ -148,8 +162,8 @@ const AddTripPage = () => {
                     </label>
                     {formData.travelDates.map((date, index) => (
                       <div key={index} className="w-full">
-                        <div className="flex items-center mb-2">
-                          <div>
+                        <div className="flex flex-col lg:flex-row w-full items-center mb-2">
+                          <div className="w-full">
                             <label
                               htmlFor={`startDate-${index}`}
                               className="block text-sm font-medium text-gray-700 mb-1"
@@ -167,12 +181,12 @@ const AddTripPage = () => {
                                   new Date(e.target.value)
                                 )
                               }
-                              className="flex-1 px-3 py-2 text-black border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              className="w-full flex-1 px-3 py-2 text-black border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                               required
                             />
                           </div>
                           <span className="mx-2">à</span>
-                          <div>
+                          <div className="w-full">
                             <label
                               htmlFor={`endDate-${index}`}
                               className="block text-sm font-medium text-gray-700 mb-1"
@@ -190,7 +204,7 @@ const AddTripPage = () => {
                                   new Date(e.target.value)
                                 )
                               }
-                              className="flex-1 px-3 py-2 text-black border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              className="flex-1 w-full px-3 py-2 text-black border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                               required
                             />
                           </div>
@@ -204,7 +218,7 @@ const AddTripPage = () => {
                             </button>
                           )}
                         </div>
-                        <div>
+                        {/* <div>
                           <label className="block text-sm font-medium text-gray-700 mb-1">
                             Durée
                           </label>
@@ -219,9 +233,9 @@ const AddTripPage = () => {
                           <p className="text-xs text-gray-500 mt-1">
                             Durée calculée automatiquement
                           </p>
-                        </div>
-                        <div className="flex items-center gap-4 mb-2">
-                          <div>
+                        </div> */}
+                        <div className="flex w-full items-center gap-4 mb-2">
+                          <div className="w-full">
                             <label
                               htmlFor={`maxPeople-${index}`}
                               className="block text-sm font-medium text-gray-700 mb-1"
@@ -239,11 +253,11 @@ const AddTripPage = () => {
                                   e.target.value
                                 )
                               }
-                              className="flex-1 px-3 py-2 text-black border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              className="flex-1 w-full px-3 py-2 text-black border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                               required
                             />
                           </div>
-                          <div>
+                          {/* <div>
                             <label
                               htmlFor={`price-${index}`}
                               className="block text-sm font-medium text-gray-700 mb-1"
@@ -264,7 +278,7 @@ const AddTripPage = () => {
                               className="flex-1 px-3 py-2 text-black border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                               required
                             />
-                          </div>
+                          </div> */}
                         </div>
                       </div>
                     ))}

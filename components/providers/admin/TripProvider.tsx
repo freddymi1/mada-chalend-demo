@@ -15,6 +15,7 @@ export interface Program {
 interface TripFormData {
   title: string;
   price: string;
+  duration: string;
   travelDates: TravelDates[];
   description: string;
   highlights: string[];
@@ -83,6 +84,7 @@ export const TripProvider = ({
   const [formData, setFormData] = useState<TripFormData>({
     title: "",
     price: "",
+    duration: "",
     travelDates: [],
     description: "",
     highlights: [""],
@@ -304,6 +306,7 @@ export const TripProvider = ({
     const circuitData = {
       title: formData.title,
       price: formData.price,
+      duration: formData.duration,
       travelDates: formData.travelDates,
       description: formData.description,
       highlights: filteredHighlights,
@@ -329,6 +332,7 @@ export const TripProvider = ({
         setFormData({
           title: "",
           price: "",
+          duration: "",
           travelDates: [],
           description: "",
           highlights: [""],
@@ -379,6 +383,7 @@ export const TripProvider = ({
         setFormData({
           title: "",
           price: "",
+          duration: "",
           travelDates: [],
           description: "",
           highlights: [""],
@@ -466,6 +471,7 @@ export const TripProvider = ({
         setFormData({
           title: data.title || "",
           price: data.price || "",
+          duration: data.duration || "",
           travelDates: data.travelDates || [],
           description: data.description || "",
           highlights:

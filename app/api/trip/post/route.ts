@@ -30,6 +30,7 @@ export async function POST(req: NextRequest) {
       data: {
         title,
         price,
+        duration,
         travelDates: {
           create: travelDates.map((date: any) => ({
             startDate: new Date(date.startDate),

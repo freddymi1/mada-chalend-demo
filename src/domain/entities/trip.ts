@@ -24,6 +24,7 @@ export interface TripTravel {
   title: string;
   travelDates: TravelDates[];
   price: string;
+  duration: string;
   description: string;
   highlights: string[];
   program: Program[];
