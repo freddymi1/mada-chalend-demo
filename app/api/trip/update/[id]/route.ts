@@ -11,14 +11,16 @@ export async function PUT(request: Request, { params }: { params: { id: string }
       where: { id },
       data: {
         title: data.title,
-        duration: data.duration,
         price: data.price,
-        maxPeople: data.maxPeople ? Number(data.maxPeople) : null,
+        
         travelDates: {
           deleteMany: { tripTravelId: id },
           create: data.travelDates?.map((date: any) => ({
             startDate: new Date(date.startDate),
             endDate: new Date(date.endDate),
+            maxPeople: date.maxPeople ? Number(date.maxPeople) : null,
+            price: date.price ? Number(date.price) : null,
+            duration: date.duration ? Number(date.duration) : null,
           })),
         },
         description: data.description,

@@ -12,18 +12,18 @@ export interface TravelDates {
   id: string;
   startDate: Date;
   endDate: Date;
+  duration: number;
+  maxPeople: string;
+  price: string;
   tripTravelId: string;
+  placesDisponibles?: number;
 }
 
 export interface TripTravel {
   id: string;
   title: string;
-  duration: string;
   travelDates: TravelDates[];
   price: string;
-  maxPeople?: number;
-  nbrChild?: number;
-  nbrAdult?: number;
   description: string;
   highlights: string[];
   program: Program[];

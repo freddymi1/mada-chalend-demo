@@ -36,6 +36,7 @@ const AddTripPage = () => {
     handleTravelDatesChange,
     addTravelDate,
     removeTravelDate,
+    formatDuration
   } = useTrip();
 
   const onSubmit = async (e: React.FormEvent) => {
@@ -110,20 +111,6 @@ const AddTripPage = () => {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Durée
-                      </label>
-                      <input
-                        type="text"
-                        name="duration"
-                        value={formData.duration}
-                        onChange={handleInputChange}
-                        className="w-full px-3 py-2 text-black border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="5 jours / 4 nuits"
-                        required
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
                         Prix
                       </label>
                       <input
@@ -133,23 +120,6 @@ const AddTripPage = () => {
                         onChange={handleInputChange}
                         className="w-full px-3 py-2 text-black border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                         placeholder="€850"
-                        required
-                      />
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-1 gap-4">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Participants max
-                      </label>
-                      <input
-                        type="number"
-                        name="maxPeople"
-                        value={formData.maxPeople}
-                        onChange={handleInputChange}
-                        className="w-full px-3 py-2 text-black border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="8"
                         required
                       />
                     </div>
@@ -171,66 +141,131 @@ const AddTripPage = () => {
                   </div>
 
                   {/* Travel dates */}
+
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
                       Dates de voyage
                     </label>
                     {formData.travelDates.map((date, index) => (
-                      <div key={index} className="flex items-center mb-2">
+                      <div key={index} className="w-full">
+                        <div className="flex items-center mb-2">
+                          <div>
+                            <label
+                              htmlFor={`startDate-${index}`}
+                              className="block text-sm font-medium text-gray-700 mb-1"
+                            >
+                              Date de début
+                            </label>
+                            <input
+                              type="date"
+                              id={`startDate-${index}`}
+                              value={formatDateForInput(date.startDate)}
+                              onChange={(e) =>
+                                handleTravelDatesChange(
+                                  index,
+                                  "startDate",
+                                  new Date(e.target.value)
+                                )
+                              }
+                              className="flex-1 px-3 py-2 text-black border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              required
+                            />
+                          </div>
+                          <span className="mx-2">à</span>
+                          <div>
+                            <label
+                              htmlFor={`endDate-${index}`}
+                              className="block text-sm font-medium text-gray-700 mb-1"
+                            >
+                              Date de fin
+                            </label>
+                            <input
+                              type="date"
+                              id={`endDate-${index}`}
+                              value={formatDateForInput(date.endDate)}
+                              onChange={(e) =>
+                                handleTravelDatesChange(
+                                  index,
+                                  "endDate",
+                                  new Date(e.target.value)
+                                )
+                              }
+                              className="flex-1 px-3 py-2 text-black border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              required
+                            />
+                          </div>
+                          {formData.travelDates.length > 1 && (
+                            <button
+                              type="button"
+                              onClick={() => removeTravelDate(index)}
+                              className="ml-2 p-2 text-red-600 hover:bg-red-100 rounded-full"
+                            >
+                              <X className="w-5 h-5" />
+                            </button>
+                          )}
+                        </div>
                         <div>
-                          <label
-                            htmlFor={`startDate-${index}`}
-                            className="sr-only"
-                          >
-                            Date de début
+                          <label className="block text-sm font-medium text-gray-700 mb-1">
+                            Durée
                           </label>
                           <input
-                            type="date"
-                            id={`startDate-${index}`}
-                            value={formatDateForInput(date.startDate)}
-                            onChange={(e) =>
-                              handleTravelDatesChange(
-                                index,
-                                "startDate",
-                                new Date(e.target.value)
-                              )
-                            }
-                            className="flex-1 px-3 py-2 text-black border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            required
+                            type="text"
+                            id={`duration-${index}`}
+                            value={formatDuration(date.duration)}
+                            readOnly
+                            className="w-full px-3 py-2 text-black border border-gray-300 rounded-lg bg-gray-100 cursor-not-allowed"
+                            placeholder="La durée sera calculée automatiquement"
                           />
+                          <p className="text-xs text-gray-500 mt-1">
+                            Durée calculée automatiquement
+                          </p>
                         </div>
-                        <span className="mx-2">à</span>
-                        <div>
-                          <label
-                            htmlFor={`endDate-${index}`}
-                            className="sr-only"
-                          >
-                            Date de fin
-                          </label>
-                          <input
-                            type="date"
-                            id={`endDate-${index}`}
-                            value={formatDateForInput(date.endDate)}
-                            onChange={(e) =>
-                              handleTravelDatesChange(
-                                index,
-                                "endDate",
-                                new Date(e.target.value)
-                              )
-                            }
-                            className="flex-1 px-3 py-2 text-black border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            required
-                          />
+                        <div className="flex items-center gap-4 mb-2">
+                          <div>
+                            <label
+                              htmlFor={`maxPeople-${index}`}
+                              className="block text-sm font-medium text-gray-700 mb-1"
+                            >
+                              Participants max
+                            </label>
+                            <input
+                              type="number"
+                              id={`maxPeople-${index}`}
+                              value={date.maxPeople}
+                              onChange={(e) =>
+                                handleTravelDatesChange(
+                                  index,
+                                  "maxPeople",
+                                  e.target.value
+                                )
+                              }
+                              className="flex-1 px-3 py-2 text-black border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              required
+                            />
+                          </div>
+                          <div>
+                            <label
+                              htmlFor={`price-${index}`}
+                              className="block text-sm font-medium text-gray-700 mb-1"
+                            >
+                              Prix
+                            </label>
+                            <input
+                              type="number"
+                              id={`price-${index}`}
+                              value={date.price}
+                              onChange={(e) =>
+                                handleTravelDatesChange(
+                                  index,
+                                  "price",
+                                  e.target.value
+                                )
+                              }
+                              className="flex-1 px-3 py-2 text-black border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              required
+                            />
+                          </div>
                         </div>
-                        {formData.travelDates.length > 1 && (
-                          <button
-                            type="button"
-                            onClick={() => removeTravelDate(index)}
-                            className="ml-2 p-2 text-red-600 hover:bg-red-100 rounded-full"
-                          >
-                            <X className="w-5 h-5" />
-                          </button>
-                        )}
                       </div>
                     ))}
                     <button

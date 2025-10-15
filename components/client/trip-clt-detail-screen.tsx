@@ -19,10 +19,12 @@ import {
   ArrowLeft,
   Plus,
   Armchair,
+  DollarSign,
 } from "lucide-react";
 import { useTrip } from "../providers/admin/TripProvider";
 import { useCltTrip } from "../providers/client/TripCltProvider";
 import { useTranslations } from "next-intl";
+import { formatDate } from "./trip-screen";
 
 const TripCltDetailScreen = () => {
   const t = useTranslations("lng");
@@ -135,91 +137,58 @@ const TripCltDetailScreen = () => {
           </div>
 
           {/* Stats Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
-              <div className="flex items-center space-x-3">
-                <Star className="w-5 h-5 text-yellow-600 dark:text-yellow-400" />
-                <div>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">
-                    Date
-                  </p>
-                  <p className="font-semibold text-gray-900 dark:text-white">
-                    {tripDetail.startDate instanceof Date
-                      ? tripDetail.startDate.toLocaleDateString("fr-FR")
-                      : new Date(tripDetail.startDate).toLocaleDateString(
-                          "fr-FR"
-                        )}{" "}
-                    -{" "}
-                    {tripDetail.endDate instanceof Date
-                      ? tripDetail.endDate.toLocaleDateString("fr-FR")
-                      : new Date(tripDetail.endDate).toLocaleDateString(
-                          "fr-FR"
-                        )}
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
-              <div className="flex items-center space-x-3">
-                <Clock className="w-5 h-5 text-blue-600 dark:text-blue-400" />
-                <div>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">
-                    Durée
-                  </p>
-                  <p className="font-semibold text-gray-900 dark:text-white">
-                    {tripDetail.duration} jour(s) et{" "}
-                    {Number(tripDetail.duration) - 1} nuit(s)
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
-              <div className="flex items-center space-x-3">
-                <Users className="w-5 h-5 text-green-600 dark:text-green-400" />
-                <div>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">
-                    Max personnes
-                  </p>
-                  <p className="font-semibold text-gray-900 dark:text-white">
-                    {tripDetail.maxPeople}
-                  </p>
-                </div>
-              </div>
-            </div>
+          <div className="flex flex-col items-center">
+            <p className="text-xl font-bold  text-gray-100 dark:text-white">Dates</p>
 
-            <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
-              <div className="flex items-center space-x-3">
-                <Armchair className="w-5 h-5 text-primary" />
-                <div>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">
-                    Places disponnibles
-                  </p>
-                  <p className="font-semibold text-gray-900 dark:text-white">
-                    {tripDetail.placesDisponibles}
-                  </p>
+            <div className="grid grid-cols-1 mt-4 w-full md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {tripDetail.travelDates.map((date) => (
+                <div
+                  key={date.id}
+                  className="bg-gray-200 dark:bg-gray-700 rounded-lg p-4"
+                >
+                  <div className="flex flex-col gap-4 items-center space-x-3">
+                    <Star className="w-5 h-5 text-yellow-600 dark:text-yellow-400" />
+                    <div>
+                      <div className="font-semibold text-gray-900 dark:text-white">
+                        <div className="flex items-center justify-between gap-4">
+                          <div className="flex items-center gap-2">
+                            <Calendar className="w-4 h-4 text-blue-400" />
+                            <p className="text-sm font-semibold">
+                              {formatDate(date.startDate)} →{" "}
+                              {formatDate(date.endDate)}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-4 justify-center w-full">
+                      <div className="flex items-center gap-2">
+                        <Users className="w-4 h-4 text-blue-400" />
+                        <p className="text-sm font-semibold">
+                          {date.maxPeople} max
+                        </p>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Armchair className="w-4 h-4 text-blue-400" />
+                        <p className="text-sm font-semibold">
+                          {date.placesDisponibles}
+                        </p>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <DollarSign className="w-4 h-4 text-blue-400" />
+                        <p className="text-sm font-semibold">
+                          €{date.price}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
-
-            <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
-              <div className="flex items-center space-x-3">
-                <span className="w-5 h-5 text-red-600 dark:text-red-400 font-bold">
-                  €
-                </span>
-                <div>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">
-                    Prix
-                  </p>
-                  <p className="font-semibold text-gray-900 dark:text-white">
-                    {tripDetail.price}€/pers
-                  </p>
-                </div>
-              </div>
+              ))}
             </div>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+        <div className="w-full mb-6">
           {/* Highlights */}
           {tripDetail.highlights && tripDetail.highlights.length > 0 && (
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border dark:border-gray-700 p-6">
@@ -227,7 +196,7 @@ const TripCltDetailScreen = () => {
                 <Star className="w-5 h-5 mr-2" />
                 Points forts
               </h3>
-              <ul className="space-y-3">
+              <ul className="lg:flex flex-wrap items-center gap-4">
                 {tripDetail.highlights.map((highlight: any) => (
                   <li key={highlight.id} className="flex items-start space-x-3">
                     <Star className="w-4 h-4 text-yellow-500 dark:text-yellow-400 mt-0.5 flex-shrink-0" />
@@ -239,7 +208,9 @@ const TripCltDetailScreen = () => {
               </ul>
             </div>
           )}
+        </div>
 
+        <div className="grid grid-cols-1 lg:grid-cols-3 items-start gap-6 mb-6">
           {/* Included */}
           {tripDetail.included && tripDetail.included.length > 0 && (
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border dark:border-gray-700 p-6">

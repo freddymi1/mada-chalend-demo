@@ -12,13 +12,9 @@ export interface Program {
   imageDescription: string;
 }
 
-
-
 interface TripFormData {
   title: string;
-  duration: string;
   price: string;
-  maxPeople?: string;
   travelDates: TravelDates[];
   description: string;
   highlights: string[];
@@ -68,6 +64,8 @@ interface TripContextType {
   ) => void;
   addTravelDate: () => void;
   removeTravelDate: (index: number) => void;
+  formatDateForInput: (date: Date | string) => string;
+  formatDuration: (days: number) => string;
 }
 
 const TripContext = createContext<TripContextType | undefined>(undefined);
@@ -84,9 +82,7 @@ export const TripProvider = ({
   const [tripDetail, setTripDetail] = useState<any>(null);
   const [formData, setFormData] = useState<TripFormData>({
     title: "",
-    duration: "",
     price: "",
-    maxPeople: "",
     travelDates: [],
     description: "",
     highlights: [""],
@@ -97,13 +93,36 @@ export const TripProvider = ({
 
   const params = useSearchParams();
   const id = params.get("id");
-  const isUpdate= params.get("update");
+  const isUpdate = params.get("update");
 
   useEffect(() => {
     if (id) {
       getTripById(id.toString());
     }
   }, [id]);
+
+  // Fonction pour formater la date pour l'input date
+  const formatDateForInput = (date: Date | string): string => {
+    if (!date) return '';
+    const d = new Date(date);
+    return d.toISOString().split('T')[0];
+  };
+
+  // Fonction pour calculer la durée en jours
+  const calculateDuration = (startDate: Date, endDate: Date): number => {
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+    const timeDiff = end.getTime() - start.getTime();
+    const dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
+    return dayDiff > 0 ? dayDiff : 0;
+  };
+
+  // Fonction pour formater la durée en texte
+  const formatDuration = (days: number): string => {
+    if (days <= 0) return "0 jour";
+    const nights = days - 1;
+    return `${days} jour${days > 1 ? 's' : ''} / ${nights} nuit${nights > 1 ? 's' : ''}`;
+  };
 
   const handleInputChange = (
     e: React.ChangeEvent<
@@ -178,17 +197,52 @@ export const TripProvider = ({
     value: string | Date
   ) => {
     const newTravelDates = [...formData.travelDates];
+    
+    // Mettre à jour la valeur du champ
     newTravelDates[index] = { ...newTravelDates[index], [field]: value };
+    
+    // Si startDate ou endDate change, recalculer la durée automatiquement
+    if (field === 'startDate' || field === 'endDate') {
+      const startDate = field === 'startDate' ? value : newTravelDates[index].startDate;
+      const endDate = field === 'endDate' ? value : newTravelDates[index].endDate;
+      
+      if (startDate && endDate) {
+        const start = new Date(startDate);
+        const end = new Date(endDate);
+        
+        // Validation : endDate ne peut pas être avant startDate
+        if (end < start) {
+          toast({
+            title: "Erreur de date",
+            description: "La date de fin ne peut pas être avant la date de début",
+            variant: "destructive"
+          });
+          return; // Ne pas mettre à jour si les dates sont invalides
+        }
+        
+        const days = calculateDuration(start, end);
+        newTravelDates[index].duration = days;
+      }
+    }
+    
     setFormData((prev) => ({ ...prev, travelDates: newTravelDates }));
   };
 
   const addTravelDate = () => {
+    const today = new Date();
+    const endDate = new Date();
+    endDate.setDate(today.getDate() + 7); // 7 jours par défaut
+    
     const newDate: TravelDates = {
-      id: "", // or generate a unique id if needed
-      tripTravelId: "", // set the appropriate tripTravelId if available
-      startDate: new Date(),
-      endDate: new Date(),
+      id: "",
+      tripTravelId: "",
+      startDate: today,
+      endDate: endDate,
+      maxPeople: "",
+      price: "",
+      duration: calculateDuration(today, endDate)
     };
+    
     setFormData((prev) => ({
       ...prev,
       travelDates: [...prev.travelDates, newDate],
@@ -249,9 +303,7 @@ export const TripProvider = ({
 
     const circuitData = {
       title: formData.title,
-      duration: formData.duration,
       price: formData.price,
-      maxPeople: parseInt(formData?.maxPeople!),
       travelDates: formData.travelDates,
       description: formData.description,
       highlights: filteredHighlights,
@@ -276,9 +328,7 @@ export const TripProvider = ({
         });
         setFormData({
           title: "",
-          duration: "",
           price: "",
-          maxPeople: "",
           travelDates: [],
           description: "",
           highlights: [""],
@@ -328,9 +378,7 @@ export const TripProvider = ({
         await fetchTrips();
         setFormData({
           title: "",
-          duration: "",
           price: "",
-          maxPeople: "",
           travelDates: [],
           description: "",
           highlights: [""],
@@ -417,9 +465,7 @@ export const TripProvider = ({
         setTripDetail(data);
         setFormData({
           title: data.title || "",
-          duration: data.duration || "",
           price: data.price || "",
-          maxPeople: data.maxPeople ? String(data.maxPeople) : "",
           travelDates: data.travelDates || [],
           description: data.description || "",
           highlights:
@@ -479,7 +525,9 @@ export const TripProvider = ({
         isUpdate,
         handleTravelDatesChange,
         addTravelDate,
-        removeTravelDate
+        removeTravelDate,
+        formatDateForInput,
+        formatDuration
       }}
     >
       {children}

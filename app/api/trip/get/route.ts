@@ -3,7 +3,7 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-// 🚨 ça force Next/Vercel à exécuter à chaque appel (pas de cache CDN)
+// 🚨 force exécution à chaque appel (pas de cache CDN sur Vercel)
 export const dynamic = "force-dynamic";
 
 export async function GET() {
@@ -23,43 +23,80 @@ export async function GET() {
             personnes: true,
             startDate: true,
             endDate: true,
-            status: true
-          }
-        }
+            status: true,
+            travelDateId: true, // ✅ nécessaire pour relier à TravelDates
+          },
+        },
       },
       orderBy: { createdAt: "desc" },
     });
 
-    // Calculer les statistiques pour chaque trip
-    const tripsWithStats = trips.map(trip => {
-      // Filtrer les réservations confirmées (vous pouvez ajuster selon vos besoins)
-      const confirmedReservations = trip.reservations.filter(
-        reservation => reservation.status === "confirmé" // ou "confirmed" selon votre modèle
-      );
+    // 1️⃣ Calculer les statistiques pour chaque trip
+    const tripsWithStats = trips.map((trip) => {
+      // --- Créer une map des réservations par date ---
+      const statsByDate: Record<
+        string,
+        { totalPersonnesReservees: number; reservationCount: number }
+      > = {};
 
-      // Total des personnes dans les réservations confirmées
-      const totalPersonnes = trip?.reservations.reduce(
-        (sum, reservation) => sum + reservation.personnes,
+      for (const res of trip.reservations) {
+        if (!res.travelDateId) continue;
+        if (!statsByDate[res.travelDateId]) {
+          statsByDate[res.travelDateId] = {
+            totalPersonnesReservees: 0,
+            reservationCount: 0,
+          };
+        }
+        statsByDate[res.travelDateId].totalPersonnesReservees += res.personnes;
+        statsByDate[res.travelDateId].reservationCount += 1;
+      }
+
+      // --- Calculer les places disponibles pour chaque date ---
+      const travelDatesWithStats = trip.travelDates.map((date) => {
+        const stats = statsByDate[date.id] || {
+          totalPersonnesReservees: 0,
+          reservationCount: 0,
+        };
+
+        const placesDisponibles = Math.max(
+          0,
+          (date.maxPeople ?? 0) - stats.totalPersonnesReservees
+        );
+
+        return {
+          ...date,
+          ...stats,
+          placesDisponibles,
+        };
+      });
+
+      // --- Totaux globaux du trip ---
+      const totalPersonnesReservees = travelDatesWithStats.reduce(
+        (sum, d) => sum + d.totalPersonnesReservees,
         0
       );
 
-      // Nombre total de réservations confirmées
-      const reservationCount = trip?.reservations?.length;
+      const reservationCount = travelDatesWithStats.reduce(
+        (sum, d) => sum + d.reservationCount,
+        0
+      );
 
-      // Places disponibles
-      const placesDisponibles = Math.max(0, trip?.maxPeople! - totalPersonnes);
+      const placesDisponiblesGlobal = travelDatesWithStats.reduce(
+        (sum, d) => sum + d.placesDisponibles,
+        0
+      );
 
       return {
         ...trip,
+        travelDates: travelDatesWithStats,
         reservationCount,
-        totalPersonnesReservees: totalPersonnes,
-        placesDisponibles,
-        // Optionnel: inclure toutes les réservations ou seulement les confirmées
-        reservations: trip.reservations,
-        isDispo: placesDisponibles > 0
+        totalPersonnesReservees,
+        placesDisponibles: placesDisponiblesGlobal,
+        isDispo: placesDisponiblesGlobal > 0,
       };
     });
 
+    // --- Réponse ---
     return NextResponse.json(tripsWithStats, {
       status: 200,
       headers: {

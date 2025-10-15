@@ -10,6 +10,9 @@ import {
   ChevronRight,
   Check,
   X,
+  Calendar,
+  Armchair,
+  EuroIcon,
 } from "lucide-react";
 import { TripTravel } from "@/src/domain/entities/trip";
 import { useCltTrip } from "../providers/client/TripCltProvider";
@@ -39,9 +42,26 @@ const TripScreen = () => {
   }, []);
 
   const calculateOccupancyRate = (trip: TripTravel): number => {
-    if (!trip.maxPeople) return 0;
-    const booked = trip.maxPeople - (trip.placesDisponibles ?? 0);
-    return Math.round((booked / trip.maxPeople) * 100);
+    if (!trip.travelDates || trip.travelDates.length === 0) return 0;
+
+    // Somme des capacités totales et des places disponibles de toutes les dates
+    const totalCapacity = trip.travelDates.reduce(
+      (sum, date) => sum + (Number(date.maxPeople) ?? 0),
+      0
+    );
+
+    const totalAvailable = trip.travelDates.reduce(
+      (sum, date) => sum + (Number(date.placesDisponibles) ?? 0),
+      0
+    );
+
+    if (totalCapacity === 0) return 0;
+
+    // Nombre total de places réservées
+    const totalBooked = totalCapacity - totalAvailable;
+
+    // Calcul du taux d’occupation global
+    return Math.round((totalBooked / totalCapacity) * 100);
   };
 
   const getText = (item: any): string => {
@@ -135,16 +155,6 @@ const TripScreen = () => {
                       {t("ourTrip.booked") || "Booked"}
                     </div>
                   </div>
-
-                  {/* Duration Badge */}
-                  <div className="absolute bottom-4 left-4">
-                    <div className="flex items-center gap-2 bg-slate-900/80 backdrop-blur-sm px-3 py-2 rounded-lg border border-slate-700/50">
-                      <Clock className="w-4 h-4 text-blue-400" />
-                      <span className="text-sm font-semibold text-white">
-                        {trip.duration} {t("ourTrip.days") || "Days"}
-                      </span>
-                    </div>
-                  </div>
                 </div>
 
                 {/* Content */}
@@ -157,7 +167,7 @@ const TripScreen = () => {
                   </p>
 
                   {/* Quick Stats */}
-                  <div className="grid grid-cols-2 gap-3 mb-6">
+                  {/* <div className="grid grid-cols-2 gap-3 mb-6">
                     <div className="flex items-center gap-2 text-slate-300">
                       <Users className="w-4 h-4 text-emerald-400" />
                       <span className="text-sm">
@@ -171,21 +181,46 @@ const TripScreen = () => {
                         ${trip.price}
                       </span>
                     </div>
-                  </div>
+                  </div> */}
 
                   {/* Dates */}
-                  <div className="bg-slate-700/30 rounded-lg p-3 mb-6 border border-slate-600/30">
-                    <p className="text-xs text-slate-400 mb-1">
+                  <div className="w-full mb-6">
+                    <p className="text-xl text-white mb-1">
                       {t("ourTrip.travelDates") || "Travel Dates"}
                     </p>
                     {trip.travelDates.map((date) => (
-                      <p
+                      <div
                         key={date.id}
-                        className="text-sm font-semibold text-white"
+                        className="bg-slate-700/30 rounded-lg p-3 border border-slate-600/30 flex flex-col items-start  mb-4"
                       >
-                        {formatDate(date.startDate)} →{" "}
-                        {formatDate(date.endDate)}
-                      </p>
+                        <div className="flex items-center gap-2">
+                          <Calendar className="w-4 h-4 text-blue-400" />
+                          <p className="text-sm font-semibold text-white">
+                            {formatDate(date.startDate)} →{" "}
+                            {formatDate(date.endDate)}
+                          </p>
+                        </div>
+                        <div className="flex items-center gap-4">
+                          <div className="flex items-center gap-2">
+                            <Users className="w-4 h-4 text-blue-400" />
+                            <p className="text-sm font-semibold text-white">
+                              {date.maxPeople} max
+                            </p>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <Armchair className="w-4 h-4 text-blue-400" />
+                            <p className="text-sm font-semibold text-white">
+                              {date.placesDisponibles}
+                            </p>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <EuroIcon className="w-4 h-4 text-blue-400" />
+                            <p className="text-sm font-semibold text-white">
+                              {date.price}€
+                            </p>
+                          </div>
+                        </div>
+                      </div>
                     ))}
                   </div>
 

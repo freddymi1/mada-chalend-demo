@@ -63,7 +63,7 @@ const TripBooking = ({
   handleSubmit,
   loading,
   getTodayString,
-  handleTravelDatesChange
+  handleTravelDatesChange,
 }: PropsData) => {
   const t = useTranslations("lng");
   console.log("DATES", tripDetail?.travelDates);
@@ -120,16 +120,23 @@ const TripBooking = ({
             <SelectTrigger className="w-full transition-all duration-300 focus:scale-105">
               <SelectValue
                 placeholder={
-                  isLoading ? "Chargement des dates..." : "Sélectionnez des dates"
+                  isLoading
+                    ? "Chargement des dates..."
+                    : "Sélectionnez des dates"
                 }
               />
             </SelectTrigger>
             <SelectContent>
-              {tripDetail?.travelDates?.map((date) => (
-                <SelectItem key={date.id} value={date.id}>
-                  {formatDate(date.startDate)} → {formatDate(date.endDate)}
-                </SelectItem>
-              ))}
+              {tripDetail?.travelDates
+                ?.filter(
+                  (item) =>
+                    Number(item.maxPeople) > Number(item.placesDisponibles)
+                )
+                .map((date) => (
+                  <SelectItem key={date.id} value={date.id}>
+                    {formatDate(date.startDate)} → {formatDate(date.endDate)}
+                  </SelectItem>
+                ))}
             </SelectContent>
           </Select>
         </div>

@@ -34,9 +34,7 @@ model Circuit {
 model TripTravel {
   id           String        @id @default(cuid())
   title        String
-  duration     String
   price        String
-  maxPeople    Int?
   description  String
   highlights   Highlight[] // Tableau de points forts
   included     Included[] // Tableau inclus
@@ -53,9 +51,13 @@ model TripTravel {
 model TravelDates{
   id          String   @id @default(cuid())
   startDate   DateTime
+  duration    Int? @default(0)
   endDate     DateTime
+  maxPeople    Int? @default(0)
+  price        Int? @default(0)
   tripTravelId String
   tripTravel  TripTravel @relation(fields: [tripTravelId], references: [id], onDelete: Cascade)
+  reservations  Reservation[]
 
   @@map("travel_dates")
 }
@@ -67,7 +69,7 @@ model Itinerary {
   description      String
   image            String
   imageDescription String
-  distance         Int?
+  distance         Int? @default(0)
   circuitId        String
   circuit          Circuit @relation(fields: [circuitId], references: [id], onDelete: Cascade)
 
@@ -148,6 +150,9 @@ model Reservation {
   vehicleRel   Vehicle?    @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
   tripTravelId String?
   TripTravel   TripTravel? @relation(fields: [tripTravelId], references: [id])
+  travelDateId   String?     // ✅ nouvelle clé étrangère vers TravelDates
+  travelDate     TravelDates? @relation(fields: [travelDateId], references: [id], onDelete: Cascade)
+
 
   @@map("reservations") // Changé de "reservation" à "reservations" pour plus de cohérence
 }

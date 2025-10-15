@@ -183,6 +183,7 @@ export async function POST(req: NextRequest) {
       duration: durationNumber,
       preferences,
       status: "en_attente",
+      travelDateId: travelDate
     };
 
     // Only add circuitId if it's a circuit reservation and circuit exists

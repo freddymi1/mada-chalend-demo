@@ -9,8 +9,8 @@ export async function GET(
 ) {
   try {
     const { id } = params;
-    
-    // Récupérer le trip avec ses relations
+
+    // 1️⃣ Récupérer le trip avec ses relations
     const trip = await prisma.tripTravel.findUnique({
       where: { id },
       include: {
@@ -19,44 +19,72 @@ export async function GET(
         notIncluded: true,
         program: true,
         reservations: true,
-        travelDates: true
+        travelDates: true,
       },
     });
 
     if (!trip) {
-      return NextResponse.json({ error: "trip non trouvé" }, { status: 404 });
+      return NextResponse.json({ error: "Trip non trouvé" }, { status: 404 });
     }
 
-    // Récupérer les statistiques de réservation pour ce circuit
+    // 2️⃣ Récupérer les statistiques de réservation par date de voyage
     const reservationStats = await prisma.reservation.groupBy({
-      by: ['tripTravelId'],
-      where: {
-        tripTravelId: id,
-        // status: "confirmé"
-      },
-      _sum: {
-        personnes: true
-      },
-      _count: {
-        id: true
-      }
+      by: ["travelDateId"],
+      where: { tripTravelId: id },
+      _sum: { personnes: true },
+      _count: { id: true },
     });
 
-    const stats = reservationStats[0] || {
-      _sum: { personnes: 0 },
-      _count: { id: 0 }
-    };
+    // 3️⃣ Construire une map des réservations par date
+    const statsByDate: Record<
+      string,
+      { totalPersonnesReservees: number; reservationCount: number }
+    > = {};
 
-    const totalPersonnesReservees = stats._sum.personnes || 0;
-    const reservationCount = stats._count.id || 0;
-    const placesDisponibles = Math.max(0, trip.maxPeople! - totalPersonnesReservees);
+    for (const stat of reservationStats) {
+      if (stat.travelDateId !== null) {
+        statsByDate[stat.travelDateId] = {
+          totalPersonnesReservees: stat._sum.personnes || 0,
+          reservationCount: stat._count.id || 0,
+        };
+      }
+    }
 
-    // Fusionner les données du trip avec les statistiques
+    // 4️⃣ Fusionner les stats dans chaque travelDate
+    const travelDatesWithStats = trip.travelDates.map((date) => {
+      const stats = statsByDate[date.id] || {
+        totalPersonnesReservees: 0,
+        reservationCount: 0,
+      };
+
+      const placesDisponibles = Math.max(
+        0,
+        (date.maxPeople ?? 0) - stats.totalPersonnesReservees
+      );
+
+      return {
+        ...date,
+        ...stats,
+        placesDisponibles,
+      };
+    });
+
+    // 5️⃣ Calculer les totaux globaux
+    const totalPersonnesReservees = travelDatesWithStats.reduce(
+      (sum, d) => sum + d.totalPersonnesReservees,
+      0
+    );
+    const reservationCount = travelDatesWithStats.reduce(
+      (sum, d) => sum + d.reservationCount,
+      0
+    );
+
+    // 6️⃣ Fusionner le tout dans la réponse finale
     const tripWithStats = {
       ...trip,
-      reservationCount,
+      travelDates: travelDatesWithStats,
       totalPersonnesReservees,
-      placesDisponibles,
+      reservationCount,
     };
 
     return NextResponse.json(tripWithStats, { status: 200 });

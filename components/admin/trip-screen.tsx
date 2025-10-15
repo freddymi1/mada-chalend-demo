@@ -21,17 +21,13 @@ import {
 import { LoadingSpinner } from "../client/loading";
 import { TripTravel } from "@/src/domain/entities/trip";
 import { useTrip } from "../providers/admin/TripProvider";
+import { formatDate } from "../client/trip-screen";
 
 const TripScreen = () => {
   const router = useRouter();
   const [editingTrip, setEditingTrip] = useState<TripTravel | null>(null);
   const [showFilters, setShowFilters] = useState(false);
-  const {
-    addedTrips,
-    handleDelete,
-    fetchTrips,
-    isLoading,
-  } = useTrip();
+  const { addedTrips, handleDelete, fetchTrips, isLoading } = useTrip();
   const [filters, setFilters] = useState({
     minPrice: "",
     maxPrice: "",
@@ -54,15 +50,11 @@ const TripScreen = () => {
   };
 
   // Fonction pour extraire la valeur numérique de la durée
-  const getDurationValue = (duration: string) => {
-    const match = duration.match(/(\d+)/);
-    return match ? parseInt(match[0]) : 0;
-  };
+ 
 
   // Filtrer les circuits selon les critères sélectionnés
   const filteredTrips = addedTrips.filter((trip) => {
     // Filtre par difficulté
-  
 
     // Filtre par prix
     const priceValue = getPriceValue(trip.price);
@@ -73,14 +65,7 @@ const TripScreen = () => {
       return false;
     }
 
-    // Filtre par durée
-    const durationValue = getDurationValue(trip.duration);
-    if (filters.minDuration && durationValue < parseInt(filters.minDuration)) {
-      return false;
-    }
-    if (filters.maxDuration && durationValue > parseInt(filters.maxDuration)) {
-      return false;
-    }
+  
 
     // Filtre par nombre de participants
     if (filters.minPeople && trip.maxPeople < parseInt(filters.minPeople)) {
@@ -244,7 +229,7 @@ const TripScreen = () => {
             </div>
 
             {/* Filtre par participants */}
-            <div>
+            {/* <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Participants max
               </label>
@@ -268,7 +253,7 @@ const TripScreen = () => {
                   className="w-full px-3 py-2 border text-slate-800 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
                 />
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       )}
@@ -321,8 +306,7 @@ const TripScreen = () => {
               {hasActiveFilters && (
                 <div className="flex items-center">
                   <span className="text-sm text-gray-600 mr-2">
-                    {filteredTrips.length} voyage(s) correspondant aux
-                    filtres
+                    {filteredTrips.length} voyage(s) correspondant aux filtres
                   </span>
                   <button
                     onClick={resetFilters}
@@ -354,7 +338,7 @@ const TripScreen = () => {
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Dates
                     </th>
-                    
+
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Points Forts
                     </th>
@@ -398,14 +382,24 @@ const TripScreen = () => {
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="flex flex-col gap-2">
-                          {trip.travelDates.map((date: any, index: number) => (
-                            <div key={index} className="flex items-center">
-                              <Clock className="w-4 h-4 mr-2 text-gray-400" />
-                              <span className="text-sm text-gray-900">
-                                {date.startDate} - {date.endDate}
-                              </span>
-                            </div>
-                          ))}
+                          {trip.travelDates && trip.travelDates.length > 0 ? (
+                            trip.travelDates.map((date: any, index: number) => (
+                              <div key={index} className="flex items-center">
+                                <Clock className="w-4 h-4 mr-2 text-gray-400" />
+                                <span className="text-sm text-gray-900">
+                                  {formatDate(date.startDate)} →{" "}
+                                  {formatDate(date.endDate)}
+                                </span>
+                                <span className="text-sm text-gray-500 ml-2">
+                                  {date.maxPeople} participants max
+                                </span>
+                              </div>
+                            ))
+                          ) : (
+                            <span className="text-sm text-gray-500 italic">
+                              Aucune date définie
+                            </span>
+                          )}
                         </div>
                       </td>
 
@@ -487,7 +481,9 @@ const TripScreen = () => {
                   <div className="grid grid-cols-2 gap-4 mb-4">
                     <div className="flex items-center text-sm text-gray-600">
                       <Clock className="w-4 h-4 mr-2 text-gray-400" />
-                      <span className="text-xs sm:text-sm">{trip.duration}</span>
+                      <span className="text-xs sm:text-sm">
+                        {trip.duration}
+                      </span>
                     </div>
                     <div className="text-sm font-medium text-gray-900">
                       <span className="text-xs sm:text-sm">{trip.price}</span>

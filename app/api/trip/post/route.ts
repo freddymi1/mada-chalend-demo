@@ -10,11 +10,10 @@ export async function POST(req: NextRequest) {
       title,
       duration,
       price,
-      maxPeople,
       travelDates,
       description,
       highlights = [], // Default to empty array
-      included = [],   // Default to empty array
+      included = [], // Default to empty array
       notIncluded = [], // Default to empty array
       program = [], // Default to empty array
     } = body;
@@ -30,13 +29,14 @@ export async function POST(req: NextRequest) {
     const newTrip = await prisma.tripTravel.create({
       data: {
         title,
-        duration,
         price,
-        maxPeople: Number(maxPeople),
         travelDates: {
           create: travelDates.map((date: any) => ({
             startDate: new Date(date.startDate),
             endDate: new Date(date.endDate),
+            maxPeople: Number(date.maxPeople),
+            price: Number(date.price),
+            duration: Number(date.duration),
           })),
         },
         description,
