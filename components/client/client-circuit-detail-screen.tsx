@@ -12,7 +12,15 @@ import {
 } from "@/components/client/ui/card";
 import { Badge } from "@/components/client/ui/badge";
 import { Toaster } from "@/components/client/ui/toaster";
-import { Calendar, MapPin, Users, Star, Camera, Armchair } from "lucide-react";
+import {
+  Calendar,
+  MapPin,
+  Users,
+  Star,
+  Camera,
+  Armchair,
+  Clock,
+} from "lucide-react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -138,7 +146,6 @@ const ClientCircuitDetailScreen = () => {
                         />
                       </div>
                     )}
-                  
                 </div>
 
                 {/* Sidebar */}
@@ -156,80 +163,142 @@ const ClientCircuitDetailScreen = () => {
                       <MapPin className="h-4 w-4 sm:h-5 sm:w-5 flex-shrink-0" />
                       <span>{t("detailCircuit.itinerary.detailed")}</span>
                     </CardTitle>
-                    {
-                      circuitDetail?.itinereryImage ? (
-                        <div className="h-auto">
-                          <img
-                            src={circuitDetail.itinereryImage}
-                            alt="map"
-                            className="w-full h-full mt-6 object-cover rounded-lg"
-                          />
-                        </div>
-                      ) : (
-                        <div className="h-auto">
-                          <img
-                            src="/map.png"
-                            alt="map"
-                            className="w-full h-full mt-6 object-cover rounded-lg"
-                          />
-                        </div>
-                      )
-                    }
+                    {circuitDetail?.itinereryImage ? (
+                      <div className="h-auto">
+                        <img
+                          src={circuitDetail.itinereryImage}
+                          alt="map"
+                          className="w-full h-full mt-6 object-cover rounded-lg"
+                        />
+                      </div>
+                    ) : (
+                      <div className="h-auto">
+                        <img
+                          src="/map.png"
+                          alt="map"
+                          className="w-full h-full mt-6 object-cover rounded-lg"
+                        />
+                      </div>
+                    )}
                   </CardHeader>
                   <CardContent className="px-2 sm:px-6">
                     <div className="space-y-4 sm:space-y-6">
-                      {circuitDetail?.itineraries?.map((day: any) => (
-                        <div
-                          key={day.id}
-                          className="flex flex-col gap-3 p-3 sm:p-4 rounded-lg bg-muted/50 hover:bg-muted transition-colors w-full"
-                        >
-                          {/* Day content */}
-                          <div className="flex flex-col gap-3 sm:gap-4 w-full min-w-0">
-                            <div className="flex items-center gap-6">
-                              <div className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold text-xs sm:text-sm">
-                                {day.day}
+                      {circuitDetail?.itineraries?.map(
+                        (day: any, index: number) => (
+                          <div
+                            key={day.id}
+                            className="flex flex-col gap-3 p-3 sm:p-4 rounded-lg bg-muted/50 hover:bg-muted transition-colors w-full"
+                          >
+                            {/* Day content */}
+                            <div className="flex flex-col gap-3 sm:gap-4 w-full min-w-0">
+                              <div className="flex items-center gap-6">
+                                <div className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold text-xs sm:text-sm">
+                                  {day.day}
+                                </div>
+                                <h4 className="font-semibold mb-1 text-sm sm:text-base break-words">
+                                  {day.title}
+                                </h4>
                               </div>
-                              <h4 className="font-semibold mb-1 text-sm sm:text-base break-words">
-                                {day.title}
-                              </h4>
-                            </div>
 
-                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
-                              {day.image !== "" && (
-                                <div
-                                  className="!w-full max-h-96 flex flex-col items-start justify-end rounded-lg overflow-hidden cursor-pointer group relative"
-                                  onClick={() => handleImageClick(day)}
-                                >
-                                  <img
-                                    src={day.image}
-                                    alt={day.imageDescription}
-                                    className="w-full h-full object-cover hover:scale-110 transition-transform duration-300"
-                                  />
-                                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300 flex items-center justify-center">
-                                    <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-white/90 rounded-full p-2">
-                                      <Camera className="h-4 w-4 text-gray-700" />
+                              <div className="grid lg:h-[400px] grid-cols-1 lg:grid-cols-2 gap-10">
+                                {day.image !== "" && (
+                                  <div
+                                    className="!w-full max-h-96 flex flex-col items-start justify-end rounded-lg overflow-hidden cursor-pointer group relative"
+                                    onClick={() => handleImageClick(day)}
+                                  >
+                                    <img
+                                      src={day.image}
+                                      alt={day.imageDescription}
+                                      className="w-full max-h-82 lg:h-full object-cover hover:scale-110 transition-transform duration-300"
+                                    />
+                                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300 flex items-center justify-center">
+                                      <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-white/90 rounded-full p-2">
+                                        <Camera className="h-4 w-4 text-gray-700" />
+                                      </div>
+                                    </div>
+                                    <h4 className="font-semibold mt-1 text-left text-sm sm:text-base lg:text-lg break-words">
+                                      {day.imageDescription}
+                                    </h4>
+                                    <div className="absolute !top-6 -right-2 !z-50 bg-white dark:bg-gray-800 text-gray-900 dark:text-white rounded-lg px-3 py-2 text-xs font-medium shadow-lg">
+                                      <div className="relative">
+                                        {/* Ligne verticale continue */}
+                                        <div className="absolute left-[6px] top-0 bottom-0 w-0.5 bg-gray-300 dark:bg-gray-600"></div>
+
+                                        {circuitDetail.itineraries
+                                          .filter(
+                                            (it: any, i: number) =>
+                                              i >= 0 && i <= index + 1
+                                          )
+                                          .map((it: any, i: number) => {
+                                            const isCurrentItem = i === index;
+                                            const isLastInList =
+                                              i ===
+                                              circuitDetail.itineraries.length -
+                                                1;
+                                            const isNextItem = i === index + 1;
+
+                                            return (
+                                              <div
+                                                className="flex flex-col items-start relative mb-3 last:mb-0"
+                                                key={it.id}
+                                              >
+                                                {/* Point et description */}
+                                                <div className="flex items-center gap-2 relative z-10">
+                                                  <MapPin
+                                                    className={`w-4 h-4 text-gray-400 ${
+                                                      isCurrentItem
+                                                        ? "text-green-500"
+                                                        : isNextItem
+                                                        ? "text-orange-500"
+                                                        : "text-blue-500"
+                                                    }`}
+                                                  />
+                                                  {/* <div
+                                          className={`w-2 h-2 rounded-full mr-2 ${
+                                            isCurrentItem
+                                              ? "bg-green-500"
+                                              : isNextItem
+                                              ? "bg-orange-500"
+                                              : "bg-blue-500"
+                                          }`}
+                                        /> */}
+                                                  <span className="text-xs font-medium max-w-[120px] truncate">
+                                                    {it.imageDescription}
+                                                  </span>
+                                                </div>
+
+                                                {/* Distance (sauf pour le dernier élément) */}
+                                                {!isLastInList && (
+                                                  <div className="flex gap-2 items-center relative z-10 mt-2">
+                                                    <Clock className="w-4 h-4 text-blue-400" />
+                                                    <span className="text-xs text-gray-500 dark:text-gray-400">
+                                                      {it.distance} km
+                                                    </span>
+                                                  </div>
+                                                )}
+                                              </div>
+                                            );
+                                          })}
+                                      </div>
                                     </div>
                                   </div>
-                                  <h4 className="font-semibold mt-1 text-left text-sm sm:text-base lg:text-lg break-words">
-                                    {day.imageDescription}
-                                  </h4>
-                                </div>
-                              )}
+                                )}
 
-                              <div>
-                                <p className="text-muted-foreground text-xs sm:text-sm mb-2 break-words">
-                                  {day.description}
-                                </p>
-                                <p className="text-xs text-muted-foreground italic break-words">
-                                  {day.imageDescription}
-                                </p>
+                                <div>
+                                  <p className="text-muted-foreground text-xs sm:text-sm mb-2 break-words">
+                                    {day.description}
+                                  </p>
+                                  <p className="text-xs text-muted-foreground italic break-words">
+                                    {day.imageDescription}
+                                  </p>
+                                </div>
                               </div>
                             </div>
-                          </div>
 
-                          {/* Day image */}
-                        </div>
-                      ))}
+                            {/* Day image */}
+                          </div>
+                        )
+                      )}
                     </div>
                   </CardContent>
                 </Card>
