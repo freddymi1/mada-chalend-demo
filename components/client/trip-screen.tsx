@@ -203,15 +203,10 @@ const TripScreen = () => {
                           <div className="flex items-center gap-2">
                             <Users className="w-4 h-4 text-blue-400" />
                             <p className="text-sm font-semibold text-white">
-                              {date.maxPeople} max
+                              {date.placesDisponibles} / {date.maxPeople}
                             </p>
                           </div>
-                          <div className="flex items-center gap-2">
-                            <Armchair className="w-4 h-4 text-blue-400" />
-                            <p className="text-sm font-semibold text-white">
-                              {date.placesDisponibles}
-                            </p>
-                          </div>
+                          
                           {/* <div className="flex items-center gap-2">
                             <EuroIcon className="w-4 h-4 text-blue-400" />
                             <p className="text-sm font-semibold text-white">
