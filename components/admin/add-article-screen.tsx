@@ -4,6 +4,7 @@ import { ArrowLeft, Plus, Trash2, Upload, Image as ImageIcon } from "lucide-reac
 import { useRouter, useSearchParams } from "next/navigation";
 import React from "react";
 import { useBlog } from "../providers/admin/BlogProvider";
+import ArticleEditor from "./editor";
 
 const AddBlogScreen = () => {
   const { isDark } = useTheme();
@@ -116,76 +117,6 @@ const AddBlogScreen = () => {
                 />
               </div>
 
-              {/* Subtitle */}
-              <div>
-                <label
-                  className={`block text-sm font-medium mb-2 ${
-                    isDark ? "text-gray-300" : "text-gray-700"
-                  }`}
-                >
-                  Sous-titre
-                </label>
-                <input
-                  type="text"
-                  name="subtitle"
-                  value={formData.subtitle}
-                  onChange={handleInputChange}
-                  className={`w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 focus:ring-indigo-500 ${
-                    isDark
-                      ? "bg-gray-700 border-gray-600 text-white"
-                      : "bg-white border-gray-300 text-gray-900"
-                  }`}
-                  placeholder="Entrez le sous-titre"
-                />
-              </div>
-
-              {/* Author */}
-              <div>
-                <label
-                  className={`block text-sm font-medium mb-2 ${
-                    isDark ? "text-gray-300" : "text-gray-700"
-                  }`}
-                >
-                  Auteur
-                </label>
-                <input
-                  type="text"
-                  name="author"
-                  value={formData.author}
-                  onChange={handleInputChange}
-                  className={`w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 focus:ring-indigo-500 ${
-                    isDark
-                      ? "bg-gray-700 border-gray-600 text-white"
-                      : "bg-white border-gray-300 text-gray-900"
-                  }`}
-                  placeholder="Nom de l'auteur"
-                />
-              </div>
-
-              {/* Description */}
-              <div>
-                <label
-                  className={`block text-sm font-medium mb-2 ${
-                    isDark ? "text-gray-300" : "text-gray-700"
-                  }`}
-                >
-                  Description *
-                </label>
-                <textarea
-                  name="description"
-                  value={formData.description}
-                  onChange={handleInputChange}
-                  required
-                  rows={5}
-                  className={`w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 focus:ring-indigo-500 ${
-                    isDark
-                      ? "bg-gray-700 border-gray-600 text-white"
-                      : "bg-white border-gray-300 text-gray-900"
-                  }`}
-                  placeholder="Description complète du blog"
-                />
-              </div>
-
               {/* Main Image Upload */}
               <div>
                 <label
@@ -240,7 +171,7 @@ const AddBlogScreen = () => {
                   isDark ? "text-white" : "text-gray-900"
                 }`}
               >
-                Articles
+                Questions
               </h2>
               <button
                 type="button"
@@ -248,7 +179,7 @@ const AddBlogScreen = () => {
                 className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg transition-colors"
               >
                 <Plus className="w-5 h-5" />
-                Ajouter un article
+                Ajouter une question
               </button>
             </div>
 
@@ -268,7 +199,7 @@ const AddBlogScreen = () => {
                         isDark ? "text-white" : "text-gray-900"
                       }`}
                     >
-                      Article {index + 1}
+                      Question {index + 1}
                     </h3>
                     <button
                       type="button"
@@ -287,7 +218,7 @@ const AddBlogScreen = () => {
                           isDark ? "text-gray-300" : "text-gray-700"
                         }`}
                       >
-                        Titre de l'article
+                        Question
                       </label>
                       <input
                         type="text"
@@ -306,17 +237,17 @@ const AddBlogScreen = () => {
 
                     {/* Caption */}
                     <div>
-                      <label
+                      {/* <label
                         className={`block text-sm font-medium mb-2 ${
                           isDark ? "text-gray-300" : "text-gray-700"
                         }`}
                       >
-                        Légende
+                        Description
                       </label>
                       <textarea
-                        value={article.caption || ""}
+                        value={article.description || ""}
                         onChange={(e) =>
-                          handleArticleChange(index, "caption", e.target.value)
+                          handleArticleChange(index, "description", e.target.value)
                         }
                         rows={3}
                         className={`w-full px-4 py-2 rounded-lg border focus:outline-none focus:ring-2 focus:ring-indigo-500 ${
@@ -325,25 +256,31 @@ const AddBlogScreen = () => {
                             : "bg-white border-gray-300 text-gray-900"
                         }`}
                         placeholder="Contenu de l'article"
+                      /> */}
+                      <ArticleEditor
+                        article={article}
+                        index={index}
+                        isDark={isDark}
+                        handleArticleChange={handleArticleChange}
                       />
                     </div>
 
                     {/* Image Description */}
-                    <div>
+                    {/* <div>
                       <label
                         className={`block text-sm font-medium mb-2 ${
                           isDark ? "text-gray-300" : "text-gray-700"
                         }`}
                       >
-                        Description de l'image
+                        Legende
                       </label>
                       <input
                         type="text"
-                        value={article.imageDescription || ""}
+                        value={article.caption || ""}
                         onChange={(e) =>
                           handleArticleChange(
                             index,
-                            "imageDescription",
+                            "caption",
                             e.target.value
                           )
                         }
@@ -352,18 +289,18 @@ const AddBlogScreen = () => {
                             ? "bg-gray-600 border-gray-500 text-white"
                             : "bg-white border-gray-300 text-gray-900"
                         }`}
-                        placeholder="Description de l'image"
+                        placeholder="Caption de l'image"
                       />
-                    </div>
+                    </div> */}
 
                     {/* Article Image Upload */}
-                    <div>
+                    {/* <div>
                       <label
                         className={`block text-sm font-medium mb-2 ${
                           isDark ? "text-gray-300" : "text-gray-700"
                         }`}
                       >
-                        Image de l'article
+                        Capture d'ecran ou image
                       </label>
                       <div className="flex items-center gap-4">
                         <label
@@ -398,7 +335,7 @@ const AddBlogScreen = () => {
                           </div>
                         )}
                       </div>
-                    </div>
+                    </div> */}
                   </div>
                 </div>
               ))}

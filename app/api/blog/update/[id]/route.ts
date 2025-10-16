@@ -24,9 +24,6 @@ export async function PUT(
       where: { id },
       data: {
         title,
-        subtitle,
-        description,
-        author,
         image,
         articles: {
           deleteMany: { blogId: id },
@@ -34,7 +31,7 @@ export async function PUT(
             title: it.title,
             image: it.image,
             caption: it.caption,
-            imageDescription: it.imageDescription,
+            description: it.description,
           })),
         },
       },

@@ -109,16 +109,18 @@ const BlogDetailScreen = () => {
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center gap-4">
             <button
-            onClick={() => router.push("/admin/blog")}
-            className={`p-2 rounded-lg transition-colors ${
-              isDark
-                ? "bg-gray-800 text-gray-300 hover:bg-gray-700"
-                : "bg-white text-gray-700 hover:bg-gray-100"
-            }`}
-          >
-            <ArrowLeft className="w-5 h-5" />
-          </button>
-          <div className="text-xl lg:text-4xl font-bold mb-2">Detail du blog</div>
+              onClick={() => router.push("/admin/blog")}
+              className={`p-2 rounded-lg transition-colors ${
+                isDark
+                  ? "bg-gray-800 text-gray-300 hover:bg-gray-700"
+                  : "bg-white text-gray-700 hover:bg-gray-100"
+              }`}
+            >
+              <ArrowLeft className="w-5 h-5" />
+            </button>
+            <div className="text-xl lg:text-4xl font-bold mb-2">
+              Detail du blog
+            </div>
           </div>
 
           <div className="flex gap-2">
@@ -264,48 +266,8 @@ const BlogDetailScreen = () => {
                     isDark ? "bg-gray-800" : "bg-white"
                   }`}
                 >
-                  <div className="grid md:grid-cols-2 gap-6">
-                    {/* Article Image */}
-                    <div
-                      className={`relative h-64 md:h-auto ${
-                        index % 2 === 0 ? "md:order-1" : "md:order-2"
-                      }`}
-                    >
-                      {article.image ? (
-                        <img
-                          src={article.image}
-                          alt={article.title || `Article ${index + 1}`}
-                          className="w-full h-full object-cover"
-                        />
-                      ) : (
-                        <div
-                          className={`w-full h-full flex items-center justify-center ${
-                            isDark
-                              ? "bg-gray-700"
-                              : "bg-gradient-to-br from-indigo-100 to-purple-100"
-                          }`}
-                        >
-                          <ImageIcon
-                            className={`w-16 h-16 ${
-                              isDark ? "text-gray-600" : "text-gray-400"
-                            }`}
-                          />
-                        </div>
-                      )}
-                      {article.imageDescription && (
-                        <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-60 text-white p-3">
-                          <p className="text-sm">{article.imageDescription}</p>
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Article Content */}
-                    <div
-                      className={`p-6 flex flex-col justify-center ${
-                        index % 2 === 0 ? "md:order-2" : "md:order-1"
-                      }`}
-                    >
-                      {/* Article Number Badge */}
+                  <div className="grid p-6 gap-6">
+                    {/* Article Number Badge */}
                       <div className="mb-4">
                         <span
                           className={`inline-block px-3 py-1 rounded-full text-sm font-semibold ${
@@ -314,12 +276,10 @@ const BlogDetailScreen = () => {
                               : "bg-indigo-100 text-indigo-700"
                           }`}
                         >
-                          Article {index + 1}
+                          Question {index + 1}
                         </span>
                       </div>
-
-                      {/* Article Title */}
-                      {article.title && (
+                    {article.title && (
                         <h3
                           className={`text-2xl font-bold mb-4 ${
                             isDark ? "text-white" : "text-gray-900"
@@ -328,18 +288,24 @@ const BlogDetailScreen = () => {
                           {article.title}
                         </h3>
                       )}
-
-                      {/* Article Caption */}
-                      {article.caption && (
-                        <p
-                          className={`text-lg leading-relaxed whitespace-pre-wrap ${
-                            isDark ? "text-gray-300" : "text-gray-700"
-                          }`}
-                        >
-                          {article.caption}
-                        </p>
+                    {/* Article Image */}
+                    <div
+                      className={`relative h-64 md:h-auto `}
+                    >
+                      {article.description && (
+                        <div className="relative bottom-0 left-0 right-0 rounded-lg bg-opacity-60 p-3">
+                          <div
+                            className="text-sm"
+                            dangerouslySetInnerHTML={{
+                              __html: article.description,
+                            }}
+                          />
+                        </div>
                       )}
+                      
                     </div>
+
+                    
                   </div>
                 </div>
               ))}
@@ -366,11 +332,7 @@ const BlogDetailScreen = () => {
             >
               Aucun article
             </h3>
-            <p
-              className={`mb-6 ${
-                isDark ? "text-gray-400" : "text-gray-600"
-              }`}
-            >
+            <p className={`mb-6 ${isDark ? "text-gray-400" : "text-gray-600"}`}>
               Ce blog ne contient pas encore d'articles
             </p>
             <button
@@ -401,11 +363,7 @@ const BlogDetailScreen = () => {
             >
               Confirmer la suppression
             </h3>
-            <p
-              className={`mb-6 ${
-                isDark ? "text-gray-400" : "text-gray-600"
-              }`}
-            >
+            <p className={`mb-6 ${isDark ? "text-gray-400" : "text-gray-600"}`}>
               Êtes-vous sûr de vouloir supprimer ce blog et tous ses articles ?
               Cette action est irréversible.
             </p>

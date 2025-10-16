@@ -6,9 +6,6 @@ import { IBlog, IArticle } from "@/src/domain/entities/blog";
 
 interface BlogFormData {
   title: string;
-  subtitle: string;
-  description: string;
-  author: string;
   image: string;
   articles: IArticle[];
 }
@@ -54,9 +51,6 @@ export const BlogProvider = ({
   const [blogDetail, setBlogDetail] = useState<IBlog | null>(null);
   const [formData, setFormData] = useState<BlogFormData>({
     title: "",
-    subtitle: "",
-    description: "",
-    author: "",
     image: "",
     articles: [],
   });
@@ -96,7 +90,7 @@ export const BlogProvider = ({
       title: "",
       image: "",
       caption: "",
-      imageDescription: "",
+      description: "",
       blogId: "",
     };
     setFormData((prev) => ({
@@ -185,9 +179,6 @@ export const BlogProvider = ({
 
     const blogData = {
       title: formData.title,
-      subtitle: formData.subtitle,
-      description: formData.description,
-      author: formData.author,
       image: formData.image,
       articles: filteredArticles.map(({ id, blogId, blog, ...rest }) => rest),
     };
@@ -210,9 +201,6 @@ export const BlogProvider = ({
         router.push("/admin/blog");
         setFormData({
           title: "",
-          subtitle: "",
-          description: "",
-          author: "",
           image: "",
           articles: [],
         });
@@ -241,9 +229,6 @@ export const BlogProvider = ({
 
     const blogData = {
       title: formData.title,
-      subtitle: formData.subtitle,
-      description: formData.description,
-      author: formData.author,
       image: formData.image,
       articles: filteredArticles,
     };
@@ -270,9 +255,6 @@ export const BlogProvider = ({
         await fetchBlogs();
         setFormData({
           title: "",
-          subtitle: "",
-          description: "",
-          author: "",
           image: "",
           articles: [],
         });
@@ -352,9 +334,6 @@ export const BlogProvider = ({
         setBlogDetail(data);
         setFormData({
           title: data.title || "",
-          subtitle: data.subtitle || "",
-          description: data.description || "",
-          author: data.author || "",
           image: data.image || "",
           articles:
             data.articles && data.articles.length > 0 ? data.articles : [],

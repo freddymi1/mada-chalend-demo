@@ -263,9 +263,6 @@ model User {
 model Blog {
   id          String    @id @default(cuid())
   title       String?
-  subtitle    String?
-  description String?
-  author      String?
   image       String?
   articles    Article[]
   comments    Comment[]
@@ -278,9 +275,9 @@ model Blog {
 model Article {
   id               String    @id @default(cuid())
   title            String?
+  description      String?
   image            String?
   caption          String?
-  imageDescription String?
   blogId           String
   blog             Blog      @relation(fields: [blogId], references: [id], onDelete: Cascade)
   comments         Comment[]

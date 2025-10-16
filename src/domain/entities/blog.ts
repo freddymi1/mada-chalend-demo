@@ -18,7 +18,7 @@ export interface IArticle {
   title?: string;
   image?: string;
   caption?: string;
-  imageDescription?: string;
+  description?: string;
   blogId: string;
   blog?: IBlog; // relation inverse
   comments?: IComment[]

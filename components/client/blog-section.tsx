@@ -91,31 +91,32 @@ const BlogSection = () => {
 
         {/* Blog Grid */}
         {!isLoading && addedBlogs.length > 0 && (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
             {addedBlogs.map((blog) => (
               <div
                 key={blog.id}
-                className={`rounded-xl overflow-hidden shadow-lg transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 ${
+                onClick={() => router.push(`/blog/${blog.id}`)}
+                className={`rounded-xl overflow-hidden shadow-lg transition-all relative cursor-pointer duration-300 hover:shadow-2xl hover:-translate-y-1 ${
                   isDark ? "bg-gray-800" : "bg-white"
                 }`}
               >
                 {/* Blog Image */}
-                <div className="relative h-48 bg-gradient-to-br from-indigo-500 to-purple-600 overflow-hidden">
+                <div className={`relative h-24 flex items-center justify-center  overflow-hidden ${isDark ? "bg-gray-100" : "bg-gray-500"}`}>
                   {blog.image ? (
                     <img
                       src={blog.image}
                       alt={blog.title}
-                      className="w-full h-full object-cover"
+                      className="w-18 object-cover h-auto"
                     />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center">
-                      <FileText className="w-16 h-16 text-white opacity-50" />
+                      <FileText className="w-8 h-8 text-white opacity-50" />
                     </div>
                   )}
                 </div>
 
                 {/* Blog Content */}
-                <div className="p-6">
+                <div className="p-6 relative">
                   {/* Title */}
                   <h3
                     className={`text-xl font-bold mb-2 line-clamp-2 ${
@@ -135,31 +136,10 @@ const BlogSection = () => {
                       {blog.subtitle}
                     </p>
                   )}
-
-                  {/* Description */}
-                  <p
-                    className={`text-sm mb-4 line-clamp-3 ${
-                      isDark ? "text-gray-400" : "text-gray-600"
-                    }`}
-                  >
-                    {blog.description?.slice(0, 100)}{" "}
-                    <a href="" className="underline text-primary">
-                      ...Voir plus
-                    </a>
-                  </p>
-
-                  {/* Meta Information */}
-                  <div className="space-y-2 mb-4">
-                    {blog.author && (
-                      <div
-                        className={`flex items-center gap-2 text-sm ${
-                          isDark ? "text-gray-400" : "text-gray-600"
-                        }`}
-                      >
-                        <User className="w-4 h-4" />
-                        <span>{blog.author}</span>
-                      </div>
-                    )}
+                </div>
+                {/* Meta Information */}
+                  <div className="space-y-2 absolute bottom-2 right-4">
+                    
 
                     {blog.articles && blog.articles.length > 0 && (
                       <div
@@ -169,43 +149,12 @@ const BlogSection = () => {
                       >
                         <FileText className="w-4 h-4" />
                         <span>
-                          {blog.articles.length} article
+                          {blog.articles.length} question
                           {blog.articles.length > 1 ? "s" : ""}
                         </span>
                       </div>
                     )}
-                  </div>
-
-                  {/* Action Buttons */}
-                  <div className="flex gap-2">
-                    {/* <button
-                      onClick={() =>
-                        isAuthenticated
-                          ? router.push(`/blog/${blog.id}`)
-                          : router.push(`/auth/login`)
-                      }
-                      className={`flex-1 flex items-center justify-center gap-2 px-4 py-2 rounded-lg transition-colors ${
-                        isDark
-                          ? "bg-gray-700 hover:bg-gray-600 text-gray-300"
-                          : "bg-gray-100 hover:bg-gray-200 text-gray-700"
-                      }`}
-                    >
-                      <MessageCircle className="w-4 h-4" />
-                      <span className="text-sm font-medium">Commentaire</span>
-                    </button> */}
-                    <button
-                      onClick={() => router.push(`/blog/${blog.id}`)}
-                      className={`flex-1 flex items-center justify-center gap-2 px-4 py-2 rounded-lg transition-colors ${
-                        isDark
-                          ? "bg-gray-700 hover:bg-gray-600 text-gray-300"
-                          : "bg-gray-100 hover:bg-gray-200 text-gray-700"
-                      }`}
-                    >
-                      <Eye className="w-4 h-4" />
-                      <span className="text-sm font-medium">Voir</span>
-                    </button>
-                  </div>
-                </div>
+                  </div>   
               </div>
             ))}
           </div>
