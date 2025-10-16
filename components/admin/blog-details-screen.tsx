@@ -276,7 +276,7 @@ const BlogDetailScreen = () => {
                             : "bg-indigo-100 text-indigo-700"
                         }`}
                       >
-                        Question {index + 1}
+                        Article {index + 1}
                       </span>
                     </div>
                     {article.title && (

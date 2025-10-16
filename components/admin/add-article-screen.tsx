@@ -136,7 +136,7 @@ const AddBlogScreen = () => {
                   >
                     <Upload className="w-5 h-5" />
                     <span className={isDark ? "text-gray-300" : "text-gray-700"}>
-                      Choisir une image
+                      Logo
                     </span>
                     <input
                       type="file"
@@ -171,7 +171,7 @@ const AddBlogScreen = () => {
                   isDark ? "text-white" : "text-gray-900"
                 }`}
               >
-                Questions
+                Article
               </h2>
               <button
                 type="button"
@@ -179,7 +179,7 @@ const AddBlogScreen = () => {
                 className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg transition-colors"
               >
                 <Plus className="w-5 h-5" />
-                Ajouter une question
+                Ajouter un article
               </button>
             </div>
 
@@ -199,7 +199,7 @@ const AddBlogScreen = () => {
                         isDark ? "text-white" : "text-gray-900"
                       }`}
                     >
-                      Question {index + 1}
+                      Article {index + 1}
                     </h3>
                     <button
                       type="button"
@@ -218,7 +218,7 @@ const AddBlogScreen = () => {
                           isDark ? "text-gray-300" : "text-gray-700"
                         }`}
                       >
-                        Question
+                        Titre
                       </label>
                       <input
                         type="text"

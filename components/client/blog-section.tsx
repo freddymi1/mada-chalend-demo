@@ -149,7 +149,7 @@ const BlogSection = () => {
                       >
                         <FileText className="w-4 h-4" />
                         <span>
-                          {blog.articles.length} question
+                          {blog.articles.length} article
                           {blog.articles.length > 1 ? "s" : ""}
                         </span>
                       </div>
