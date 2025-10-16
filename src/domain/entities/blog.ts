@@ -22,4 +22,8 @@ export interface IArticle {
   blogId: string;
   blog?: IBlog; // relation inverse
   comments?: IComment[]
+  likeCount: number;
+  dislikeCount: number;
+  createdAt: Date;
+  updatedAt: Date;
 }

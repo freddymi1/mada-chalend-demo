@@ -113,7 +113,16 @@
       "title":"Blog details",
        "article":"Article",
        "description":"Description",
-       "noArticle":"No article"
+       "noArticle":"No article",
+       "noArticleFound":"This blog has no articles yet.",
+       "articleDetail":{
+         "title":"Similar articles",
+         "articleIsInterseted":"Are you interested in this article?",
+         "yes":"Yes",
+         "no":"No",
+         "userInterested":"Users who found this article helpful",
+         "of":"of"
+       }
     }
   },
   "contact": {

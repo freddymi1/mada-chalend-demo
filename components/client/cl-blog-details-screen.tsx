@@ -35,7 +35,7 @@ const CiBlogDetailScreen = () => {
   const t = useTranslations("lng");
   const id = params?.id;
 
-  const { blogDetail, getBlogById, isLoading } = useCiBlog();
+  const { blogDetail, getBlogById, isLoading1 } = useCiBlog();
 
   useEffect(() => {
     if (id) {
@@ -43,7 +43,7 @@ const CiBlogDetailScreen = () => {
     }
   }, [id]);
 
-  if (isLoading) {
+  if (isLoading1) {
     return (
       <div
         className={`min-h-screen flex items-center justify-center ${
@@ -195,14 +195,14 @@ const CiBlogDetailScreen = () => {
                       }`}
                     >
                       {article.title && (
-                        <button
-                          onClick={() => router.push(`/blog/question/${article.id}`)}
+                        <a
+                          href={`/question/${article.id}`}
                           className={`text-md text-left font-semibold ${
                             isDark ? "text-white" : "text-gray-900"
                           }`}
                         >
                           {article.title}
-                        </button>
+                        </a>
                       )}
                     </div>
                   </div>
@@ -231,7 +231,7 @@ const CiBlogDetailScreen = () => {
               {t("blog.details.noArticle")}
             </h3>
             <p className={`mb-6 ${isDark ? "text-gray-400" : "text-gray-600"}`}>
-              Ce blog ne contient pas encore d'articles
+              {t("blog.details.noArticleFound")}
             </p>
           </div>
         )}

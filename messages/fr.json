@@ -113,7 +113,16 @@
       "title":"Detail du blog",
        "article":"Article",
        "description":"Description",
-       "noArticle":"Aucun article"
+       "noArticle":"Aucun article",
+       "noArticleFound":"Ce blog ne contient pas encore d'articles.",
+       "articleDetail":{
+        "title":"Article similaire(s)",
+        "articleIsInterseted":"Cet article vous intéresse ?",
+        "yes":"Oui",
+        "no":"Non",
+        "userInterested":"Utilisateurs qui ont trouvé cet article utile",
+        "of":"sur"
+       }
     }
   },
   "contact": {

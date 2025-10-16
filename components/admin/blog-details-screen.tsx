@@ -268,30 +268,28 @@ const BlogDetailScreen = () => {
                 >
                   <div className="grid p-6 gap-6">
                     {/* Article Number Badge */}
-                      <div className="mb-4">
-                        <span
-                          className={`inline-block px-3 py-1 rounded-full text-sm font-semibold ${
-                            isDark
-                              ? "bg-indigo-900 text-indigo-300"
-                              : "bg-indigo-100 text-indigo-700"
-                          }`}
-                        >
-                          Question {index + 1}
-                        </span>
-                      </div>
+                    <div className="mb-4">
+                      <span
+                        className={`inline-block px-3 py-1 rounded-full text-sm font-semibold ${
+                          isDark
+                            ? "bg-indigo-900 text-indigo-300"
+                            : "bg-indigo-100 text-indigo-700"
+                        }`}
+                      >
+                        Question {index + 1}
+                      </span>
+                    </div>
                     {article.title && (
-                        <h3
-                          className={`text-2xl font-bold mb-4 ${
-                            isDark ? "text-white" : "text-gray-900"
-                          }`}
-                        >
-                          {article.title}
-                        </h3>
-                      )}
+                      <h3
+                        className={`text-2xl font-bold mb-4 ${
+                          isDark ? "text-white" : "text-gray-900"
+                        }`}
+                      >
+                        {article.title}
+                      </h3>
+                    )}
                     {/* Article Image */}
-                    <div
-                      className={`relative h-64 md:h-auto `}
-                    >
+                    <div className={`relative h-64 md:h-auto `}>
                       {article.description && (
                         <div className="relative bottom-0 left-0 right-0 rounded-lg bg-opacity-60 p-3">
                           <div
@@ -302,10 +300,7 @@ const BlogDetailScreen = () => {
                           />
                         </div>
                       )}
-                      
                     </div>
-
-                    
                   </div>
                 </div>
               ))}

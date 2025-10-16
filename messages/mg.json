@@ -114,7 +114,16 @@
       "title":"Fampahafantarana misimisy kokoa",
       "article":"Article",
       "description":"Description",
-      "noArticle":"Tsy misy article"
+      "noArticle":"Tsy misy article",
+      "noArticleFound":"Tsy misy lahatsoratra ao amin'ity bilaogy ity.",
+      "articleDetail":{
+        "title":"Lahatsoratra mitovy",
+        "articleIsInterseted":"Mahaliana anao ve ity lahatsoratra ity ?",
+        "yes":"Eny",
+        "no":"Tsia",
+        "userInterested":"Mpampiasa izay nahita ity lahatsoratra ity ho mahasoa",
+        "of":"amin'ny"
+      }
     }
   },
   "contact": {

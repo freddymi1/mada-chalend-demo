@@ -35,7 +35,7 @@ model TripTravel {
   id           String        @id @default(cuid())
   title        String
   price        String
-  duration     String? @default("0")
+  duration     String?       @default("0")
   description  String
   highlights   Highlight[] // Tableau de points forts
   included     Included[] // Tableau inclus
@@ -49,16 +49,16 @@ model TripTravel {
   @@map("trip")
 }
 
-model TravelDates{
-  id          String   @id @default(cuid())
-  startDate   DateTime
-  duration    Int? @default(0)
-  endDate     DateTime
-  maxPeople    Int? @default(0)
-  price        Int? @default(0)
+model TravelDates {
+  id           String        @id @default(cuid())
+  startDate    DateTime
+  duration     Int?          @default(0)
+  endDate      DateTime
+  maxPeople    Int?          @default(0)
+  price        Int?          @default(0)
   tripTravelId String
-  tripTravel  TripTravel @relation(fields: [tripTravelId], references: [id], onDelete: Cascade)
-  reservations  Reservation[]
+  tripTravel   TripTravel    @relation(fields: [tripTravelId], references: [id], onDelete: Cascade)
+  reservations Reservation[]
 
   @@map("travel_dates")
 }
@@ -70,7 +70,7 @@ model Itinerary {
   description      String
   image            String
   imageDescription String
-  distance         Int? @default(0)
+  distance         Int?    @default(0)
   circuitId        String
   circuit          Circuit @relation(fields: [circuitId], references: [id], onDelete: Cascade)
 
@@ -124,8 +124,8 @@ model NotIncluded {
 }
 
 model Reservation {
-  id           String      @id @default(cuid())
-  resType      String      @default("circuit")
+  id           String       @id @default(cuid())
+  resType      String       @default("circuit")
   circuitId    String? // Nouveau champ pour la relation
   vehicleId    String?
   nom          String
@@ -134,26 +134,25 @@ model Reservation {
   telephone    String
   address      String
   personnes    Int
-  nbrChild     Int         @default(0)
-  nbrAdult     Int         @default(0)
-  nbrAge2_3    Int?        @default(0)
-  nbrAge4_7    Int?        @default(0)
-  nbrAge8_10   Int?        @default(0)
-  nbrAge11     Int?        @default(0)
+  nbrChild     Int          @default(0)
+  nbrAdult     Int          @default(0)
+  nbrAge2_3    Int?         @default(0)
+  nbrAge4_7    Int?         @default(0)
+  nbrAge8_10   Int?         @default(0)
+  nbrAge11     Int?         @default(0)
   startDate    DateTime?
   endDate      DateTime?
   duration     Int?
   preferences  String?
   status       String?
-  createdAt    DateTime    @default(now())
-  updatedAt    DateTime    @updatedAt
-  circuitRel   Circuit?    @relation(fields: [circuitId], references: [id], onDelete: Cascade) // Relation
-  vehicleRel   Vehicle?    @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+  circuitRel   Circuit?     @relation(fields: [circuitId], references: [id], onDelete: Cascade) // Relation
+  vehicleRel   Vehicle?     @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
   tripTravelId String?
-  TripTravel   TripTravel? @relation(fields: [tripTravelId], references: [id])
-  travelDateId   String?     // ✅ nouvelle clé étrangère vers TravelDates
-  travelDate     TravelDates? @relation(fields: [travelDateId], references: [id], onDelete: Cascade)
-
+  TripTravel   TripTravel?  @relation(fields: [tripTravelId], references: [id])
+  travelDateId String? // ✅ nouvelle clé étrangère vers TravelDates
+  travelDate   TravelDates? @relation(fields: [travelDateId], references: [id], onDelete: Cascade)
 
   @@map("reservations") // Changé de "reservation" à "reservations" pour plus de cohérence
 }
@@ -261,28 +260,30 @@ model User {
 }
 
 model Blog {
-  id          String    @id @default(cuid())
-  title       String?
-  image       String?
-  articles    Article[]
-  comments    Comment[]
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @default(now()) @updatedAt
+  id        String    @id @default(cuid())
+  title     String?
+  image     String?
+  articles  Article[]
+  comments  Comment[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @default(now()) @updatedAt
 
   @@map("blog")
 }
 
 model Article {
-  id               String    @id @default(cuid())
-  title            String?
-  description      String?
-  image            String?
-  caption          String?
-  blogId           String
-  blog             Blog      @relation(fields: [blogId], references: [id], onDelete: Cascade)
-  comments         Comment[]
-  createdAt        DateTime  @default(now())
-  updatedAt        DateTime  @default(now()) @updatedAt
+  id           String    @id @default(cuid())
+  title        String?
+  description  String?
+  image        String?
+  caption      String?
+  likeCount    Int?      @default(0)
+  dislikeCount Int?      @default(0)
+  blogId       String
+  blog         Blog      @relation(fields: [blogId], references: [id], onDelete: Cascade)
+  comments     Comment[]
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @default(now()) @updatedAt
 
   @@map("article")
 }
