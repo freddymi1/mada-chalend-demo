@@ -75,10 +75,10 @@
   },
   "book": {
     "title": "Mamoròna famandrihana ny dianao",
-    "titleCar":"fandriho ny fiaranao",
-    "cardDispo":"Fahafahan'ny fiara",
+    "titleCar": "fandriho ny fiaranao",
+    "cardDispo": "Fahafahan'ny fiara",
     "resPeriod": "Fe-potoana voatokana",
-    "at":"hatramin'ny",
+    "at": "hatramin'ny",
     "subtitle": "Ataovy mora ny famandrihana ny dianao miaraka amin’i Mada Chaland. Ampidiro ny daty tianao, ny isan’ny olona ary ny safidinao, dia hanolotra drafitra manokana ho anao izahay.",
     "tabs": {
       "circuit": "Lalana",
@@ -112,19 +112,19 @@
     "viewMore": "Hamaky bebe kokoa",
     "emptyBlogs": "Tsy misy bilaogy azo jerena amin'izao fotoana izao.",
     "searchPlaceholder": "Mitadiava bilaogy...",
-    "details":{
-      "title":"Fampahafantarana misimisy kokoa",
-      "article":"Article",
-      "description":"Description",
-      "noArticle":"Tsy misy article",
-      "noArticleFound":"Tsy misy lahatsoratra ao amin'ity bilaogy ity.",
-      "articleDetail":{
-        "title":"Lahatsoratra mitovy",
-        "articleIsInterseted":"Mahaliana anao ve ity lahatsoratra ity ?",
-        "yes":"Eny",
-        "no":"Tsia",
-        "userInterested":"Mpampiasa izay nahita ity lahatsoratra ity ho mahasoa",
-        "of":"amin'ny"
+    "details": {
+      "title": "Fampahafantarana misimisy kokoa",
+      "article": "Article",
+      "description": "Description",
+      "noArticle": "Tsy misy article",
+      "noArticleFound": "Tsy misy lahatsoratra ao amin'ity bilaogy ity.",
+      "articleDetail": {
+        "title": "Lahatsoratra mitovy",
+        "articleIsInterseted": "Mahaliana anao ve ity lahatsoratra ity ?",
+        "yes": "Eny",
+        "no": "Tsia",
+        "userInterested": "Mpampiasa izay nahita ity lahatsoratra ity ho mahasoa",
+        "of": "amin'ny"
       }
     }
   },
@@ -254,6 +254,13 @@
         "description": "Famariparitana ny hevitra",
         "characters": "soratra"
       },
+      "addanote": {
+        "good": "👍 Tsara",
+        "excellent": "⭐ Tena tsara!",
+        "bad": "😞 Mahadiso fanantenana",
+        "veryGood": "😊 Tena tsara!",
+        "soso": "😐 Mety hitombo"
+      },
       "loading": "Famoahana mitohy...",
       "cta": "Avoahy ny hevitro",
       "text": "Amin'ny famoahana ny hevitrao, dia manaiky ny fepetra fampiasainay ianao.",
@@ -265,5 +272,4 @@
       "pendingRedirect": "Famindrana mitohy..."
     }
   }
-  
 }

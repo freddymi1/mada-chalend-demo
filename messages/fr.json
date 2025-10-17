@@ -253,6 +253,13 @@
         "description":"Description de l'avis",
         "characters":"caractères"
       },
+      "addanote":{
+        "excellent":"⭐ Excellent !",
+        "veryGood":"😊 Très bien !",
+        "good":"👍 Bien",
+        "soso":"😐 Peut mieux faire",
+        "bad":"😞 Décevant"
+      },
       "loading":"Publication en cours...",
       "cta":"Publier mon avis",
       "text":"En publiant votre avis, vous acceptez nos conditions d'utilisation.",

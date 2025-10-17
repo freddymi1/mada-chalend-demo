@@ -220,11 +220,11 @@ const AddAvisScreen = () => {
             {renderStars()}
             {formData.note > 0 && (
               <p className="text-center mt-4 text-gray-600 font-medium">
-                {formData.note === 5 && "⭐ Excellent !"}
-                {formData.note === 4 && "😊 Très bien !"}
-                {formData.note === 3 && "👍 Bien"}
-                {formData.note === 2 && "😐 Peut mieux faire"}
-                {formData.note === 1 && "😞 Décevant"}
+                {formData.note === 5 && <span>{t("review.add.addanote.excellent")}</span>}
+                {formData.note === 4 && <span>{t("review.add.addanote.veryGood")}</span>}
+                {formData.note === 3 && <span>{t("review.add.addanote.good")}</span>}
+                {formData.note === 2 && <span>{t("review.add.addanote.soso")}</span>}
+                {formData.note === 1 && <span>{t("review.add.addanote.bad")}</span>}
               </p>
             )}
             {errors.note && (

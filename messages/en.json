@@ -75,10 +75,10 @@
   },
   "book": {
     "title": "Book your trip",
-    "titleCar":"Book Car",
-    "cardDispo":"Car disponibility",
+    "titleCar": "Book Car",
+    "cardDispo": "Car disponibility",
     "resPeriod": "Reserved periods",
-    "at":"at",
+    "at": "at",
     "subtitle": "Easily book your tour with Mada Chaland. Enter your dates, the number of people, and your preferences, and we will suggest a tailor-made itinerary.",
     "tabs": {
       "circuit": "Circuit",
@@ -111,20 +111,20 @@
     "viewMore": "Read more",
     "emptyBlogs": "No blogs available at the moment.",
     "searchPlaceholder": "Search for a blog...",
-    "details":{
-      "title":"Blog details",
-       "article":"Article",
-       "description":"Description",
-       "noArticle":"No article",
-       "noArticleFound":"This blog has no articles yet.",
-       "articleDetail":{
-         "title":"Similar articles",
-         "articleIsInterseted":"Are you interested in this article?",
-         "yes":"Yes",
-         "no":"No",
-         "userInterested":"Users who found this article helpful",
-         "of":"of"
-       }
+    "details": {
+      "title": "Blog details",
+      "article": "Article",
+      "description": "Description",
+      "noArticle": "No article",
+      "noArticleFound": "This blog has no articles yet.",
+      "articleDetail": {
+        "title": "Similar articles",
+        "articleIsInterseted": "Are you interested in this article?",
+        "yes": "Yes",
+        "no": "No",
+        "userInterested": "Users who found this article helpful",
+        "of": "of"
+      }
     }
   },
   "contact": {
@@ -252,6 +252,13 @@
         "placeholderTitle": "Summarize your experience in a few words",
         "description": "Review description",
         "characters": "characters"
+      },
+      "addanote": {
+        "good": "👍 Good",
+        "excellent": "⭐ Excellent!",
+        "bad": "😞 Disappointing",
+        "veryGood": "😊 Very good!",
+        "soso": "😐 Could be better"
       },
       "loading": "Publication in progress...",
       "cta": "Publish my review",
