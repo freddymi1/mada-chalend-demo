@@ -97,7 +97,7 @@ export function Header() {
           <div className="flex items-center gap-2">
             <LanguageSwitcher />
 
-            {/* {isAuthenticated ? (
+            {isAuthenticated && (
               <button
                 onClick={logout}
                 className="cursor-pointer flex items-center space-x-2 bg-transparent border border-indigo-400 hover:text-slate-700 rounded-md px-3 py-2.5 text-sm hover:bg-indigo-50 transition-colors duration-200 justify-between"
@@ -105,15 +105,7 @@ export function Header() {
                 <LogOut className="h-6 w-6" />
                 <span>{user?.username}</span>
               </button>
-            ) : (
-              <button
-                onClick={() => router.push("/auth/login")}
-                className="cursor-pointer flex items-center space-x-2 bg-transparent border border-indigo-400 hover:text-slate-700 rounded-md px-3 py-2.5 text-sm hover:bg-indigo-50 transition-colors duration-200 justify-between"
-              >
-                <LogIn className="h-6 w-6" />
-                <span>Log In</span>
-              </button>
-            )} */}
+            )}
 
             {/* Mobile menu button */}
             <div className="xl:hidden">

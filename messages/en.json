@@ -180,6 +180,7 @@
   "footer": {
     "text": "Your travel agency specialized in tailor-made tours in Madagascar.",
     "followOur": "Follow us",
+    "createReview": "Create a review",
     "legalInfos": {
       "title": "Legal Information",
       "legalMention": "Legal Notice",
@@ -223,6 +224,44 @@
     },
     "notIncluded": {
       "title": "Not Included"
+    }
+  },
+  "review": {
+    "title": "Customer Reviews",
+    "subtitle": "Discover what our customers think about us",
+    "cta": "Leave your review",
+    "noReviews": "No reviews yet",
+    "noReviewsFound": "No reviews found",
+    "loading": "Loading reviews...",
+    "to": "Based on",
+    "reviews": "reviews",
+    "allReviews": "All reviews",
+    "errorDisplay": "Error loading reviews:",
+    "retry": "Try again",
+    "verified": "Verified",
+    "text1": "Be the first to leave your review!",
+    "text2": "Try another filter to see more reviews",
+    "write": "Write a review",
+    "add": {
+      "title": "Share your experience",
+      "subtitle": "Your opinion matters to us and helps other customers",
+      "note": "What is your rating?",
+      "backTo": "Back to reviews",
+      "input": {
+        "title": "Review title",
+        "placeholderTitle": "Summarize your experience in a few words",
+        "description": "Review description",
+        "characters": "characters"
+      },
+      "loading": "Publication in progress...",
+      "cta": "Publish my review",
+      "text": "By publishing your review, you accept our terms of use.",
+      "text1": "Your review is being published, please wait."
+    },
+    "submited": {
+      "title": "Thank you for your review!",
+      "description": "Your review has been successfully submitted. It will be published after validation by our team.",
+      "pendingRedirect": "Redirecting..."
     }
   }
 }

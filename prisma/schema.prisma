@@ -252,11 +252,28 @@ model User {
   password String
   role     String @default("admin")
 
+  reviews  Review[]
   comments  Comment[]
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
 
   @@map("users")
+}
+
+model Review {
+  id          String   @id @default(cuid())
+  titre       String
+  description String
+  note        Int
+  status      String @default("pending")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Relations
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("reviews")
 }
 
 model Blog {

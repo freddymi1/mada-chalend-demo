@@ -181,6 +181,7 @@
   "footer": {
     "text": "Orinasa mpikarakara dia manokana amin'ny fitsangatsanganana namboarina manokana any Madagasikara.",
     "followOur": "Araho izahay",
+    "createReview": "Mametraha hevitra",
     "legalInfos": {
       "title": "Fampahalalana ara-dalàna",
       "legalMention": "Fanambarana ara-dalàna",
@@ -225,5 +226,44 @@
     "notIncluded": {
       "title": "Tsy tafiditra"
     }
+  },
+  "review": {
+    "title": "Hevitry ny mpanjifa",
+    "subtitle": "Hijery izay heverin'ny mpanjifa momba anay",
+    "cta": "Alefaso ny hevitrao",
+    "noReviews": "Tsy misy hevitra mbola alefa",
+    "noReviewsFound": "Tsy nahita hevitra",
+    "loading": "Fanitarana hevitra...",
+    "to": "Mifototra amin'ny",
+    "reviews": "hevitra",
+    "allReviews": "Hevitra rehetra",
+    "errorDisplay": "Hadisoana nandritra ny fanitarana hevitra:",
+    "retry": "Andramo indray",
+    "verified": "Voamarina",
+    "text1": "Hoa voalohany haneho ny hevitrao!",
+    "text2": "Andramo sivana hafa hahita hevitra bebe kokoa",
+    "write": "Soraty hevitra",
+    "add": {
+      "title": "Zarao ny traikefanao",
+      "subtitle": "Manan-danja amintsika ny hevitrao ary manampy ny mpanjifa hafa",
+      "note": "Inona ny naotinao?",
+      "backTo": "Hiverina amin'ny hevitra",
+      "input": {
+        "title": "Lohatenin'ny hevitra",
+        "placeholderTitle": "Famintinana ny traikefanao amin'ny teny vitsivitsy",
+        "description": "Famariparitana ny hevitra",
+        "characters": "soratra"
+      },
+      "loading": "Famoahana mitohy...",
+      "cta": "Avoahy ny hevitro",
+      "text": "Amin'ny famoahana ny hevitrao, dia manaiky ny fepetra fampiasainay ianao.",
+      "text1": "Ampamoahina ny hevitrao, andraso kely azafady."
+    },
+    "submited": {
+      "title": "Misaotra betsaka noho ny hevitrao!",
+      "description": "Nalefa soa aman-tsara ny hevitrao. Hovoaka aorian'ny fanamarinana ataon'ny ekipanay.",
+      "pendingRedirect": "Famindrana mitohy..."
+    }
   }
+  
 }

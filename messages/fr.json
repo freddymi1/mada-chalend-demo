@@ -180,6 +180,7 @@
   "footer": {
     "text": "Votre agence de voyage spécialisée dans les circuits sur mesure à Madagascar.",
     "followOur": "Suivez-nous",
+    "createReview": "Créer un avis",
     "legalInfos": {
       "title": "Informations légales",
       "legalMention": "Mentions légales",
@@ -223,6 +224,44 @@
     },
     "notIncluded": {
       "title": "Non inclus"
+    }
+  },
+  "review":{
+    "title":"Avis Clients",
+    "subtitle":"Découvrez ce que nos clients pensent de nous",
+    "cta":"Laissez votre avis",
+    "noReviews":"Aucun avis pour le moment",
+    "noReviewsFound":"Aucun avis trouvé",
+    "loading":"Chargement des avis...",
+    "to":"Basé sur",
+    "reviews": "avis",
+    "allReviews":"Tous les avis",
+    "errorDisplay":"Erreur lors du chargement des avis:",
+    "retry":"Réessayer",
+    "verified":"Vérifié",
+    "text1":"Soyez le premier à laisser votre avis !",
+    "text2":"Essayez un autre filtre pour voir plus d'avis",
+    "write":"Écrire un avis",
+    "add":{
+      "title": "Partagez votre expérience",
+      "subtitle": " Votre avis compte pour nous et aide les autres clients",
+      "note":"Quelle est votre note ?",
+      "backTo":"Retour aux avis",
+      "input":{
+        "title":"Titre de l'avis",
+        "placeholderTitle":"Résumez votre expérience en quelques mots",
+        "description":"Description de l'avis",
+        "characters":"caractères"
+      },
+      "loading":"Publication en cours...",
+      "cta":"Publier mon avis",
+      "text":"En publiant votre avis, vous acceptez nos conditions d'utilisation.",
+      "text1":"Votre avis est en cours de publication, veuillez patienter."
+    },
+    "submited":{
+      "title":"Merci pour votre avis !",
+      "description":"Votre avis a été soumis avec succès. Il sera publié après validation par notre équipe.",
+      "pendingRedirect":"Redirection en cours..."
     }
   }
 }

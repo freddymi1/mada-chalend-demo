@@ -121,7 +121,7 @@ export const useAuthClient = () => {
     });
 
     // Rediriger
-    router.push("/");
+    router.push("/avis");
   };
 
   const signup = async (signupData: SignupData, rememberMe: boolean = false) => {
