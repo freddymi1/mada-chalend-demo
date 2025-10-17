@@ -18,7 +18,7 @@ export async function GET(
         included: true,
         notIncluded: true,
         itineraries: true,
-        reservations: true
+        reservations: true,
       },
     });
 
@@ -26,36 +26,36 @@ export async function GET(
       return NextResponse.json({ error: "Circuit non trouvé" }, { status: 404 });
     }
 
+    // 🖼️ Extraire la première image principale depuis les itinéraires
+    const mainImage = circuit.itineraries?.[0]?.image || null;
+
     // Récupérer les statistiques de réservation pour ce circuit
     const reservationStats = await prisma.reservation.groupBy({
-      by: ['circuitId'],
-      where: {
-        circuitId: id,
-        // status: "confirmé"
-      },
-      _sum: {
-        personnes: true
-      },
-      _count: {
-        id: true
-      }
+      by: ["circuitId"],
+      where: { circuitId: id },
+      _sum: { personnes: true },
+      _count: { id: true },
     });
 
     const stats = reservationStats[0] || {
       _sum: { personnes: 0 },
-      _count: { id: 0 }
+      _count: { id: 0 },
     };
 
     const totalPersonnesReservees = stats._sum.personnes || 0;
     const reservationCount = stats._count.id || 0;
-    const placesDisponibles = Math.max(0, circuit.maxPeople! - totalPersonnesReservees);
+    const placesDisponibles = Math.max(
+      0,
+      circuit.maxPeople! - totalPersonnesReservees
+    );
 
-    // Fusionner les données du circuit avec les statistiques
+    // Fusionner les données du circuit avec les statistiques et l'image principale
     const circuitWithStats = {
       ...circuit,
       reservationCount,
       totalPersonnesReservees,
       placesDisponibles,
+      mainImage, // ✅ image principale ajoutée ici
     };
 
     return NextResponse.json(circuitWithStats, { status: 200 });

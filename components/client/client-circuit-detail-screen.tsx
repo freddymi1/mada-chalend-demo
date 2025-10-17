@@ -251,15 +251,7 @@ const ClientCircuitDetailScreen = () => {
                                                         : "text-blue-500"
                                                     }`}
                                                   />
-                                                  {/* <div
-                                          className={`w-2 h-2 rounded-full mr-2 ${
-                                            isCurrentItem
-                                              ? "bg-green-500"
-                                              : isNextItem
-                                              ? "bg-orange-500"
-                                              : "bg-blue-500"
-                                          }`}
-                                        /> */}
+                                                  
                                                   <span className="text-xs font-medium max-w-[120px] truncate">
                                                     {it.imageDescription}
                                                   </span>

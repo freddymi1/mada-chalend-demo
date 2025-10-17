@@ -6,6 +6,7 @@ export interface Circuit {
   duration: string;
   price: string;
   maxPeople: number;
+  mainImage: string | null;
   difficulty: string;
   description: string;
   itinereryImage: string;

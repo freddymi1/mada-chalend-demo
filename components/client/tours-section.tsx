@@ -55,7 +55,7 @@ export function ToursSection() {
                   <div className="aspect-video relative overflow-hidden">
                     <img
                       src={
-                        tour?.itineraries[0]?.image ||
+                        tour?.mainImage ||
                         "/tsiribihina-landscap.jpg"
                       }
                       alt={tour.title}

@@ -3,7 +3,7 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-// 🚨 ça force Next/Vercel à exécuter à chaque appel (pas de cache CDN)
+// 🚨 Force le rendu dynamique (pas de cache CDN)
 export const dynamic = "force-dynamic";
 
 export async function GET() {
@@ -22,39 +22,43 @@ export async function GET() {
             personnes: true,
             startDate: true,
             endDate: true,
-            status: true
-          }
-        }
+            status: true,
+          },
+        },
       },
       orderBy: { createdAt: "desc" },
     });
 
-    // Calculer les statistiques pour chaque circuit
-    const circuitsWithStats = circuits.map(circuit => {
-      // Filtrer les réservations confirmées (vous pouvez ajuster selon vos besoins)
+    // 🔄 Calculer les statistiques + image principale
+    const circuitsWithStats = circuits.map((circuit) => {
       const confirmedReservations = circuit.reservations.filter(
-        reservation => reservation.status === "confirmé" // ou "confirmed" selon votre modèle
+        (reservation) => reservation.status === "confirmé"
       );
 
-      // Total des personnes dans les réservations confirmées
-      const totalPersonnes = circuit?.reservations.reduce(
+      const totalPersonnes = confirmedReservations.reduce(
         (sum, reservation) => sum + reservation.personnes,
         0
       );
 
-      // Nombre total de réservations confirmées
-      const reservationCount = circuit?.reservations?.length;
+      const reservationCount = confirmedReservations.length;
 
-      // Places disponibles
-      const placesDisponibles = Math.max(0, circuit?.maxPeople! - totalPersonnes);
+      const placesDisponibles = Math.max(
+        0,
+        (circuit.maxPeople ?? 0) - totalPersonnes
+      );
+
+      // 🖼️ Image principale = première image non vide trouvée dans les itinéraires
+      const mainImage =
+        circuit.itineraries.find(
+          (it) => it.image && it.image.trim() !== ""
+        )?.image || null;
 
       return {
         ...circuit,
         reservationCount,
         totalPersonnesReservees: totalPersonnes,
         placesDisponibles,
-        // Optionnel: inclure toutes les réservations ou seulement les confirmées
-        reservations: circuit.reservations
+        mainImage, // ✅ ajout ici
       };
     });
 
