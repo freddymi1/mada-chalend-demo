@@ -79,7 +79,7 @@ const BlogSection = () => {
             </p>
           </div>
           {/* Input search blogs */}
-          <div className="mt-16 w-full lg:max-w-3xl">
+          <div className="mt-16 mb-8 w-full lg:max-w-3xl">
             <input
               type="text"
               value={searchQuery}
