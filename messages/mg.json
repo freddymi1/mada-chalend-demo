@@ -305,5 +305,56 @@
         }
       }
     }
+  },
+  "signup": {
+    "title": "Miaraha amin'ny fiarahamoninay",
+    "subtitle": "Amorona ny kaontinao ary hitadiava ny fahagagana fahizay eto Madagasikara miaraka aminay.",
+    "features": {
+      "access": "Fidirana any amin'ny toerana rehetra",
+      "booking": "Famandrihana mora sy haingana",
+      "offers": "Tolotra manokana ho an'ny mpikambana"
+    },
+    "form": {
+      "title": "Hamorona kaonty",
+      "subtitle": "Hisoratra anarana maimaim-poana",
+      "fields": {
+        "username": {
+          "label": "Anaran'ny mpampiasa",
+          "placeholder": "john_doe"
+        },
+        "email": {
+          "label": "Adiresy mailaka",
+          "placeholder": "ianao@example.com"
+        },
+        "password": {
+          "label": "Tenimiafina",
+          "placeholder": "••••••••",
+          "hint": "Farafahakeliny soratra 6"
+        },
+        "confirmPassword": {
+          "label": "Hamarinina ny tenimiafina",
+          "placeholder": "••••••••"
+        },
+        "rememberMe": "Tsarovy aho",
+        "terms": {
+          "label": "Manaiky ny ",
+          "terms": "fepetra fampiasaina",
+          "privacy": "politika fiainana manokana aho"
+        }
+      },
+      "submit": {
+        "loading": "Fisoratana anarana mitohy...",
+        "default": "Hamorona ny kaontiko"
+      },
+      "login": {
+        "text": "Manana kaonty efa?",
+        "button": "Hiditra"
+      }
+    },
+    "errors": {
+      "passwordMismatch": "Tsy mifanaraka ny tenimiafina",
+      "passwordLength": "Tsy maintsy misy soratra farafahakeliny 6 ny tenimiafina",
+      "generic": "Hadisoana nandritra ny fisoratana anarana"
+    }
   }
 }

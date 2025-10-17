@@ -4,8 +4,10 @@ import { useAuthClient } from "@/src/hooks/useAuthClient";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import React, { useState } from "react";
+import { useTranslations } from "next-intl";
 
 const SignUpScreen = () => {
+  const t = useTranslations("lng");
   const [formData, setFormData] = useState({
     username: "",
     email: "",
@@ -26,12 +28,12 @@ const SignUpScreen = () => {
 
     // Validation côté client
     if (formData.password !== formData.confirmPassword) {
-      setError("Les mots de passe ne correspondent pas");
+      setError(t("signup.errors.passwordMismatch"));
       return;
     }
 
     if (formData.password.length < 6) {
-      setError("Le mot de passe doit contenir au moins 6 caractères");
+      setError(t("signup.errors.passwordLength"));
       return;
     }
 
@@ -47,7 +49,7 @@ const SignUpScreen = () => {
       );
       // La fonction signup gère automatiquement la redirection
     } catch (err: any) {
-      setError(err.message || "Erreur lors de l'inscription");
+      setError(err.message || t("signup.errors.generic"));
     }
   };
 
@@ -78,11 +80,10 @@ const SignUpScreen = () => {
         <div className="relative z-10 flex flex-col justify-center p-12 text-white">
           <div className="max-w-md">
             <h1 className="text-4xl font-bold mb-6 leading-tight">
-              Rejoignez notre communauté
+              {t("signup.title")}
             </h1>
             <p className="text-xl opacity-90 mb-8 leading-relaxed">
-              Créez votre compte et découvrez les merveilles touristiques de
-              Madagascar avec nous.
+              {t("signup.subtitle")}
             </p>
             <div className="space-y-4">
               <div className="flex items-center space-x-3">
@@ -99,7 +100,7 @@ const SignUpScreen = () => {
                     />
                   </svg>
                 </div>
-                <span>Accès à toutes les destinations</span>
+                <span>{t("signup.features.access")}</span>
               </div>
               <div className="flex items-center space-x-3">
                 <div className="flex-shrink-0 w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
@@ -115,7 +116,7 @@ const SignUpScreen = () => {
                     />
                   </svg>
                 </div>
-                <span>Réservation facile et rapide</span>
+                <span>{t("signup.features.booking")}</span>
               </div>
               <div className="flex items-center space-x-3">
                 <div className="flex-shrink-0 w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
@@ -131,7 +132,7 @@ const SignUpScreen = () => {
                     />
                   </svg>
                 </div>
-                <span>Offres exclusives membres</span>
+                <span>{t("signup.features.offers")}</span>
               </div>
             </div>
           </div>
@@ -171,9 +172,9 @@ const SignUpScreen = () => {
               </svg>
             </div>
             <h2 className="text-3xl font-bold text-gray-900 mb-2">
-              Créer un compte
+              {t("signup.form.title")}
             </h2>
-            <p className="text-gray-600">Inscrivez-vous gratuitement</p>
+            <p className="text-gray-600">{t("signup.form.subtitle")}</p>
           </div>
 
           {/* Message d'erreur */}
@@ -206,7 +207,7 @@ const SignUpScreen = () => {
                 htmlFor="username"
                 className="block text-sm font-medium text-gray-700 mb-2"
               >
-                Nom d'utilisateur
+                {t("signup.form.fields.username.label")}
               </label>
               <div className="relative">
                 <input
@@ -244,7 +245,7 @@ const SignUpScreen = () => {
                 htmlFor="email"
                 className="block text-sm font-medium text-gray-700 mb-2"
               >
-                Adresse email
+                {t("signup.form.fields.email.label")}
               </label>
               <div className="relative">
                 <input
@@ -283,7 +284,7 @@ const SignUpScreen = () => {
                 htmlFor="password"
                 className="block text-sm font-medium text-gray-700 mb-2"
               >
-                Mot de passe
+                {t("signup.form.fields.password.label")}
               </label>
               <div className="relative">
                 <input
@@ -357,7 +358,7 @@ const SignUpScreen = () => {
                 </button>
               </div>
               <p className="mt-1 text-xs text-gray-500">
-                Minimum 6 caractères
+                {t("signup.form.fields.password.hint")}
               </p>
             </div>
 
@@ -367,7 +368,7 @@ const SignUpScreen = () => {
                 htmlFor="confirmPassword"
                 className="block text-sm font-medium text-gray-700 mb-2"
               >
-                Confirmer le mot de passe
+                {t("signup.form.fields.confirmPassword.label")}
               </label>
               <div className="relative">
                 <input
@@ -457,7 +458,7 @@ const SignUpScreen = () => {
                 htmlFor="rememberMe"
                 className="ml-2 block text-sm text-gray-700"
               >
-                Se souvenir de moi
+                {t("signup.form.fields.rememberMe")}
               </label>
             </div>
 
@@ -472,13 +473,13 @@ const SignUpScreen = () => {
                 disabled={isLoading}
               />
               <label htmlFor="terms" className="ml-2 block text-sm text-gray-700">
-                J'accepte les{" "}
+               {t("signup.form.fields.terms.label")}{" "}
                 <Link href="/terms" className="text-purple-600 hover:text-purple-500">
-                  conditions d'utilisation
+                  {t("signup.form.fields.terms.terms")}
                 </Link>{" "}
                 et la{" "}
                 <Link href="/privacy" className="text-purple-600 hover:text-purple-500">
-                  politique de confidentialité
+                  {t("signup.form.fields.terms.privacy")}
                 </Link>
               </label>
             </div>
@@ -511,7 +512,7 @@ const SignUpScreen = () => {
                       d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                     ></path>
                   </svg>
-                  Inscription en cours...
+                  {t("signup.form.submit.loading")}
                 </>
               ) : (
                 <>
@@ -524,7 +525,7 @@ const SignUpScreen = () => {
                       <path d="M8 9a3 3 0 100-6 3 3 0 000 6zM8 11a6 6 0 016 6H2a6 6 0 016-6zM16 7a1 1 0 10-2 0v1h-1a1 1 0 100 2h1v1a1 1 0 102 0v-1h1a1 1 0 100-2h-1V7z" />
                     </svg>
                   </span>
-                  Créer mon compte
+                  {t("signup.form.submit.default")}
                 </>
               )}
             </button>
@@ -537,7 +538,7 @@ const SignUpScreen = () => {
                 </div>
                 <div className="relative flex justify-center text-sm">
                   <span className="px-2 bg-gray-50 text-gray-500">
-                    Vous avez déjà un compte ?
+                    {t("signup.form.login.text")}
                   </span>
                 </div>
               </div>
@@ -560,7 +561,7 @@ const SignUpScreen = () => {
                       d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"
                     />
                   </svg>
-                  Se connecter
+                  {t("signup.form.login.button")}
                 </Link>
               </div>
             </div>

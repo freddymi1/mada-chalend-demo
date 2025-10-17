@@ -304,5 +304,56 @@
         }
       }
     }
+  },
+  "signup": {
+    "title": "Rejoignez notre communauté",
+    "subtitle": "Créez votre compte et découvrez les merveilles touristiques de Madagascar avec nous.",
+    "features": {
+      "access": "Accès à toutes les destinations",
+      "booking": "Réservation facile et rapide",
+      "offers": "Offres exclusives membres"
+    },
+    "form": {
+      "title": "Créer un compte",
+      "subtitle": "Inscrivez-vous gratuitement",
+      "fields": {
+        "username": {
+          "label": "Nom d'utilisateur",
+          "placeholder": "john_doe"
+        },
+        "email": {
+          "label": "Adresse email",
+          "placeholder": "vous@example.com"
+        },
+        "password": {
+          "label": "Mot de passe",
+          "placeholder": "••••••••",
+          "hint": "Minimum 6 caractères"
+        },
+        "confirmPassword": {
+          "label": "Confirmer le mot de passe",
+          "placeholder": "••••••••"
+        },
+        "rememberMe": "Se souvenir de moi",
+        "terms": {
+          "label": "J'accepte les",
+          "terms": "conditions d'utilisation",
+          "privacy": "politique de confidentialité"
+        }
+      },
+      "submit": {
+        "loading": "Inscription en cours...",
+        "default": "Créer mon compte"
+      },
+      "login": {
+        "text": "Vous avez déjà un compte ?",
+        "button": "Se connecter"
+      }
+    },
+    "errors": {
+      "passwordMismatch": "Les mots de passe ne correspondent pas",
+      "passwordLength": "Le mot de passe doit contenir au moins 6 caractères",
+      "generic": "Erreur lors de l'inscription"
+    }
   }
 }

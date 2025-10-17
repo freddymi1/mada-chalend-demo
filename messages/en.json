@@ -304,5 +304,56 @@
         }
       }
     }
+  },
+  "signup": {
+    "title": "Join our community",
+    "subtitle": "Create your account and discover the tourist wonders of Madagascar with us.",
+    "features": {
+      "access": "Access to all destinations",
+      "booking": "Easy and fast booking",
+      "offers": "Exclusive member offers"
+    },
+    "form": {
+      "title": "Create an account",
+      "subtitle": "Sign up for free",
+      "fields": {
+        "username": {
+          "label": "Username",
+          "placeholder": "john_doe"
+        },
+        "email": {
+          "label": "Email address",
+          "placeholder": "you@example.com"
+        },
+        "password": {
+          "label": "Password",
+          "placeholder": "••••••••",
+          "hint": "Minimum 6 characters"
+        },
+        "confirmPassword": {
+          "label": "Confirm password",
+          "placeholder": "••••••••"
+        },
+        "rememberMe": "Remember me",
+        "terms": {
+          "label": "I accept the",
+          "terms": "terms of use",
+          "privacy": "privacy policy"
+        }
+      },
+      "submit": {
+        "loading": "Registration in progress...",
+        "default": "Create my account"
+      },
+      "login": {
+        "text": "Already have an account?",
+        "button": "Log in"
+      }
+    },
+    "errors": {
+      "passwordMismatch": "Passwords do not match",
+      "passwordLength": "Password must contain at least 6 characters",
+      "generic": "Error during registration"
+    }
   }
 }
