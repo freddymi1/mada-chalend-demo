@@ -42,7 +42,7 @@ const BlogSection = () => {
       }`}
     >
       {/* Header avec image de fond */}
-      <div className="relative h-80 mb-8 overflow-hidden">
+      <div className="relative min-h-80 max-h-96 mb-8 overflow-hidden">
         {/* Image de fond */}
         <div
           className="absolute inset-0 bg-cover bg-center"
@@ -79,7 +79,7 @@ const BlogSection = () => {
             </p>
           </div>
           {/* Input search blogs */}
-          <div className="mt-16 mb-8 w-full lg:max-w-3xl">
+          <div className="mt-8 mb-8 w-full lg:max-w-3xl">
             <input
               type="text"
               value={searchQuery}
