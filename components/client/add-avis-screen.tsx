@@ -169,10 +169,10 @@ const AddAvisScreen = () => {
             <CheckCircle className="w-20 h-20 text-green-500 mx-auto animate-bounce" />
           </div>
           <h2 className="text-3xl font-bold text-gray-900 mb-4">
-            {t("review.add.submited.title")}
+            {t("review.submited.title")}
           </h2>
           <p className="text-gray-600 mb-6">
-            {t("review.add.submited.subtitle")}
+            {t("review.submited.subtitle")}
           </p>
           <div className="flex gap-2 justify-center">
             {[1, 2, 3, 4, 5].map((star) => (
@@ -186,7 +186,7 @@ const AddAvisScreen = () => {
               />
             ))}
           </div>
-          <p className="text-sm text-gray-500 mt-6">{t("review.add.submited.pendingRedirect")}</p>
+          <p className="text-sm text-gray-500 mt-6">{t("review.submited.pendingRedirect")}</p>
         </div>
       </div>
     );
