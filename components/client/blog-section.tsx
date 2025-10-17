@@ -20,7 +20,13 @@ const BlogSection = () => {
   const t = useTranslations("lng");
 
   const router = useRouter();
-  const { addedBlogs, fetchBlogs, isLoading } = useCiBlog();
+  const {
+    addedBlogs,
+    fetchBlogs,
+    isLoading,
+    handleSearchInputChange,
+    searchQuery,
+  } = useCiBlog();
   const { user, isAuthenticated } = useAuthClient();
 
   useEffect(() => {
@@ -35,17 +41,61 @@ const BlogSection = () => {
           : "bg-gradient-to-br from-slate-50 to-indigo-50"
       }`}
     >
-      <div className="px-6 py-8 container mx-auto">
-        {/* Header */}
-        <div className="text-center mb-16 animate-slide-up">
-          <h2 className="text-3xl sm:text-4xl font-bold mb-6 text-balance">
-            {t("blog.title")}
-          </h2>
-          <p className="text-lg text-muted-foreground max-w-3xl mx-auto text-pretty">
-            {t("blog.subtitle")}
-          </p>
+      {/* Header avec image de fond */}
+      <div className="relative h-80 mb-8 overflow-hidden">
+        {/* Image de fond */}
+        <div
+          className="absolute inset-0 bg-cover bg-center"
+          style={{
+            backgroundImage: `url('https://images.unsplash.com/photo-1499750310107-5fef28a66643?q=80&w=2070')`,
+          }}
+        >
+          {/* Overlay gradient */}
+          <div
+            className={`absolute inset-0 ${
+              isDark
+                ? "bg-gradient-to-b from-gray-900/70 via-gray-900/50 to-gray-900/90"
+                : "bg-gradient-to-b from-black/40 via-black/20 to-white/80"
+            }`}
+          ></div>
         </div>
 
+        {/* Contenu du header */}
+        <div className="relative h-full w-full flex flex-col items-center justify-center px-6">
+          <div className="text-center animate-slide-up">
+            <h2
+              className={`text-4xl sm:text-5xl font-bold mb-6 text-balance ${
+                isDark ? "text-white" : "text-white"
+              }`}
+            >
+              {t("blog.title")}
+            </h2>
+            <p
+              className={`text-lg max-w-3xl mx-auto text-pretty ${
+                isDark ? "text-gray-200" : "text-white/90"
+              }`}
+            >
+              {t("blog.subtitle")}
+            </p>
+          </div>
+          {/* Input search blogs */}
+          <div className="mt-16 w-full lg:max-w-3xl">
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={handleSearchInputChange}
+              placeholder={t("blog.searchPlaceholder")}
+              className={`w-full p-4 border rounded-lg transition-all focus:ring-2 focus:ring-indigo-500 focus:outline-none ${
+                isDark
+                  ? "bg-gray-800 text-white border-gray-700"
+                  : "bg-white text-gray-900 border-gray-300"
+              }`}
+            />
+          </div>
+        </div>
+      </div>
+
+      <div className="px-6 py-8 container mx-auto">
         {/* Loading State */}
         {isLoading && (
           <div className="flex justify-center items-center py-20">
@@ -74,18 +124,8 @@ const BlogSection = () => {
                 isDark ? "text-white" : "text-gray-900"
               }`}
             >
-              Aucun blog pour le moment
+              {t("blog.emptyBlogs")}
             </h3>
-            <p className={`mb-6 ${isDark ? "text-gray-400" : "text-gray-600"}`}>
-              Commencez par créer votre premier blog
-            </p>
-            <button
-              onClick={() => router.push("/admin/blog/add?edit=false")}
-              className="inline-flex items-center gap-2 px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-medium transition-colors"
-            >
-              <Plus className="w-5 h-5" />
-              Créer un blog
-            </button>
           </div>
         )}
 
@@ -101,7 +141,11 @@ const BlogSection = () => {
                 }`}
               >
                 {/* Blog Image */}
-                <div className={`relative h-24 flex items-center justify-center  overflow-hidden ${isDark ? "bg-gray-100" : "bg-gray-500"}`}>
+                <div
+                  className={`relative h-24 flex items-center justify-center overflow-hidden ${
+                    isDark ? "bg-gray-100" : "bg-gray-500"
+                  }`}
+                >
                   {blog.image ? (
                     <img
                       src={blog.image}
@@ -138,23 +182,21 @@ const BlogSection = () => {
                   )}
                 </div>
                 {/* Meta Information */}
-                  <div className="space-y-2 absolute bottom-2 right-4">
-                    
-
-                    {blog.articles && blog.articles.length > 0 && (
-                      <div
-                        className={`flex items-center gap-2 text-sm ${
-                          isDark ? "text-gray-400" : "text-gray-600"
-                        }`}
-                      >
-                        <FileText className="w-4 h-4" />
-                        <span>
-                          {blog.articles.length} article
-                          {blog.articles.length > 1 ? "s" : ""}
-                        </span>
-                      </div>
-                    )}
-                  </div>   
+                <div className="space-y-2 absolute bottom-2 right-4">
+                  {blog.articles && blog.articles.length > 0 && (
+                    <div
+                      className={`flex items-center gap-2 text-sm ${
+                        isDark ? "text-gray-400" : "text-gray-600"
+                      }`}
+                    >
+                      <FileText className="w-4 h-4" />
+                      <span>
+                        {blog.articles.length} article
+                        {blog.articles.length > 1 ? "s" : ""}
+                      </span>
+                    </div>
+                  )}
+                </div>
               </div>
             ))}
           </div>

@@ -109,6 +109,8 @@
     "title": "Our travel tips and stories",
     "subtitle": "Discover our articles to better prepare your trip and dive into Madagascar's fascinating legends.",
     "viewMore": "Read more",
+    "emptyBlogs": "No blogs available at the moment.",
+    "searchPlaceholder": "Search for a blog...",
     "details":{
       "title":"Blog details",
        "article":"Article",

@@ -308,7 +308,8 @@ export const BlogProvider = ({
       const res = await fetch("/api/blog/get", { cache: "no-store" });
       if (res.ok) {
         const data = await res.json();
-        setAddedBlogs(data);
+        console.log("DATA", data);
+        setAddedBlogs(data.blogs);
         setIsLoading(false);
       } else {
         toast({

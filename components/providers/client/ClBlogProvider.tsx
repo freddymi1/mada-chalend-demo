@@ -24,6 +24,8 @@ interface ClBlogContextType {
   getArticleById: (id: string) => void;
   isLoading1: boolean;
   updateArticle: (id: string, data: any) => Promise<IArticle | null>;
+  handleSearchInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  searchQuery: string;
 }
 
 const CiBlogContext = createContext<ClBlogContextType | undefined>(undefined);
@@ -36,6 +38,7 @@ export const CiBlogProvider = ({ children }: { children: React.ReactNode }) => {
   const [isLoading1, setIsLoading1] = useState(false);
   const [blogDetail, setBlogDetail] = useState<IBlog | null>(null);
   const [article, setArticle] = useState<IArticle | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
 
   const params = useSearchParams();
   const id = params.get("id");
@@ -47,13 +50,22 @@ export const CiBlogProvider = ({ children }: { children: React.ReactNode }) => {
     }
   }, [id]);
 
+  // useEffect pour déclencher fetchBlogs quand searchQuery change
+  useEffect(() => {
+    fetchBlogs();
+  }, [searchQuery]);
+
+  const handleSearchInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value);
+  };
+
   const fetchBlogs = async () => {
     setIsLoading(true);
     try {
-      const res = await fetch("/api/blog/get", { cache: "no-store" });
+      const res = await fetch(`/api/blog/get?q=${searchQuery}`, { cache: "no-store" });
       if (res.ok) {
         const data = await res.json();
-        setAddedBlogs(data);
+        setAddedBlogs(data.blogs);
         setIsLoading(false);
       } else {
         toast({
@@ -176,7 +188,9 @@ export const CiBlogProvider = ({ children }: { children: React.ReactNode }) => {
         article,
         getArticleById,
         isLoading1,
-        updateArticle
+        updateArticle,
+        handleSearchInputChange,
+        searchQuery
       }}
     >
       {children}

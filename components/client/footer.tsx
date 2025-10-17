@@ -1,66 +1,85 @@
-"use client"
-import { Facebook, Instagram } from "lucide-react"
+"use client";
+import { Facebook, Instagram } from "lucide-react";
 import { useTranslations } from "use-intl";
+import TrustpilotWidget from "./TrustpilotWidget";
 
 export function Footer() {
   const t = useTranslations("lng");
   return (
     <footer className="bg-background border-t dark:bg-gray-900 py-12">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid md:grid-cols-3 gap-8">
-          <div className="animate-fade-in" style={{ animationDelay: "0.1s", animationFillMode: "both" }}>
-            <h3 className="text-2xl font-bold mb-4 text-foreground">Mada Chaland</h3>
-            <p className="text-muted-foreground text-pretty">
-              {t('footer.text')}
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid md:grid-cols-3 gap-8">
+            <div
+              className="animate-fade-in"
+              style={{ animationDelay: "0.1s", animationFillMode: "both" }}
+            >
+              <h3 className="text-2xl font-bold mb-4 text-foreground">
+                Mada Chaland
+              </h3>
+              <p className="text-muted-foreground text-pretty">
+                {t("footer.text")}
+              </p>
+            </div>
+
+            <div
+              className="animate-fade-in"
+              style={{ animationDelay: "0.2s", animationFillMode: "both" }}
+            >
+              <h4 className="text-lg font-semibold mb-4 text-foreground">
+                {t("footer.followOur")}
+              </h4>
+              <div className="flex gap-4">
+                <a
+                  href="#"
+                  className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-all duration-300 hover:scale-110"
+                >
+                  <Facebook className="h-5 w-5" />
+                  Facebook
+                </a>
+                <a
+                  href="#"
+                  className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-all duration-300 hover:scale-110"
+                >
+                  <Instagram className="h-5 w-5" />
+                  Instagram
+                </a>
+              </div>
+            </div>
+
+            <div
+              className="animate-fade-in"
+              style={{ animationDelay: "0.3s", animationFillMode: "both" }}
+            >
+              <h4 className="text-lg font-semibold mb-4 text-foreground">
+                {t("footer.legalInfos.title")}
+              </h4>
+              <div className="space-y-2">
+                <a
+                  href="#"
+                  className="block text-muted-foreground hover:text-foreground transition-all duration-300 hover:translate-x-2"
+                >
+                  {t("footer.legalInfos.legalMention")}
+                </a>
+                <a
+                  href="#"
+                  className="block text-muted-foreground hover:text-foreground transition-all duration-300 hover:translate-x-2"
+                >
+                  {t("footer.legalInfos.politic")}
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <div
+            className="border-t border-border mt-8 pt-8 text-center animate-fade-in"
+            style={{ animationDelay: "0.4s", animationFillMode: "both" }}
+          >
+            <p className="text-muted-foreground">
+              {t("footer.legalInfos.copyright")}
             </p>
           </div>
-          
-          <div className="animate-fade-in" style={{ animationDelay: "0.2s", animationFillMode: "both" }}>
-            <h4 className="text-lg font-semibold mb-4 text-foreground">{t('footer.followOur')}</h4>
-            <div className="flex gap-4">
-              <a
-                href="#"
-                className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-all duration-300 hover:scale-110"
-              >
-                <Facebook className="h-5 w-5" />
-                Facebook
-              </a>
-              <a
-                href="#"
-                className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-all duration-300 hover:scale-110"
-              >
-                <Instagram className="h-5 w-5" />
-                Instagram
-              </a>
-            </div>
-          </div>
-          
-          <div className="animate-fade-in" style={{ animationDelay: "0.3s", animationFillMode: "both" }}>
-            <h4 className="text-lg font-semibold mb-4 text-foreground">{t('footer.legalInfos.title')}</h4>
-            <div className="space-y-2">
-              <a
-                href="#"
-                className="block text-muted-foreground hover:text-foreground transition-all duration-300 hover:translate-x-2"
-              >
-                {t('footer.legalInfos.legalMention')}
-              </a>
-              <a
-                href="#"
-                className="block text-muted-foreground hover:text-foreground transition-all duration-300 hover:translate-x-2"
-              >
-                {t('footer.legalInfos.politic')}
-              </a>
-            </div>
-          </div>
         </div>
-        
-        <div
-          className="border-t border-border mt-8 pt-8 text-center animate-fade-in"
-          style={{ animationDelay: "0.4s", animationFillMode: "both" }}
-        >
-          <p className="text-muted-foreground">{t('footer.legalInfos.copyright')}</p>
-        </div>
-      </div>
-    </footer>
-  )
+      {/* <TrustpilotWidget /> */}
+      </footer>
+  );
 }
