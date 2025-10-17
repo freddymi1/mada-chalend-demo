@@ -61,7 +61,7 @@ const BlogSection = () => {
         </div>
 
         {/* Contenu du header */}
-        <div className="relative h-full w-full flex flex-col items-center justify-center px-6">
+        <div className="relative h-full w-full mt-8 flex flex-col items-center justify-center px-6">
           <div className="text-center animate-slide-up">
             <h2
               className={`text-4xl sm:text-5xl font-bold mb-6 text-balance ${
