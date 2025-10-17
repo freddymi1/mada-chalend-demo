@@ -270,5 +270,39 @@
       "description": "Your review has been successfully submitted. It will be published after validation by our team.",
       "pendingRedirect": "Redirecting..."
     }
+  },
+  "login": {
+    "title": "Welcome to our platform",
+    "subtitle": "Log in to easily discover and book our tourist services in Madagascar.",
+    "form": {
+      "title": "Customer Login",
+      "subtitle": "Access your customer area",
+      "input": {
+        "email": {
+          "label": "Email address",
+          "placeholder": "Enter your email address"
+        },
+        "password": {
+          "label": "Password",
+          "placeholder": "Enter your password"
+        },
+        "rememberMe": {
+          "label": "Remember me"
+        },
+        "forgotPassword": {
+          "label": "Forgot password?"
+        },
+        "loading": {
+          "label": "Logging in..."
+        },
+        "ctaLogin": {
+          "label": "Log in"
+        },
+        "newOnPlateform": {
+          "label": "New to the platform?",
+          "link": "Create an account"
+        }
+      }
+    }
   }
 }

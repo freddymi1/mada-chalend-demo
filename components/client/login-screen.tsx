@@ -5,8 +5,10 @@ import { useAuthClient } from "@/src/hooks/useAuthClient";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import React, { useState } from "react";
+import { useTranslations } from "next-intl";
 
 const LoginScreen = () => {
+  const t = useTranslations("lng");
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -75,11 +77,10 @@ const LoginScreen = () => {
         <div className="relative z-10 flex flex-col justify-center p-12 text-white">
           <div className="max-w-md">
             <h1 className="text-4xl font-bold mb-6 leading-tight">
-              Bienvenue sur notre plateforme
+              {t("login.title")}
             </h1>
             <p className="text-xl opacity-90 mb-8 leading-relaxed">
-              Connectez-vous pour découvrir et réserver facilement nos services
-              touristiques à Madagascar.
+              {t("login.subtitle")}
             </p>
           </div>
         </div>
@@ -118,9 +119,9 @@ const LoginScreen = () => {
               </svg>
             </div>
             <h2 className="text-3xl font-bold text-gray-900 mb-2">
-              Connexion Client
+              {t("login.form.title")}
             </h2>
-            <p className="text-gray-600">Accédez à votre espace client</p>
+            <p className="text-gray-600">{t("login.form.subtitle")}</p>
           </div>
 
           {/* Message d'erreur */}
@@ -153,7 +154,7 @@ const LoginScreen = () => {
                 htmlFor="email"
                 className="block text-sm font-medium text-gray-700 mb-2"
               >
-                Adresse email
+                {t("login.form.input.email.label")}
               </label>
               <div className="relative">
                 <input
@@ -192,7 +193,7 @@ const LoginScreen = () => {
                 htmlFor="password"
                 className="block text-sm font-medium text-gray-700 mb-2"
               >
-                Mot de passe
+                {t("login.form.input.password.label")}
               </label>
               <div className="relative">
                 <input
@@ -283,7 +284,7 @@ const LoginScreen = () => {
                   htmlFor="rememberMe"
                   className="ml-2 block text-sm text-gray-700"
                 >
-                  Se souvenir de moi
+                  {t("login.form.input.rememberMe.label")}
                 </label>
               </div>
 
@@ -293,7 +294,7 @@ const LoginScreen = () => {
                   className="font-medium text-blue-600 hover:text-blue-500 transition-colors duration-200"
                   disabled={isLoading}
                 >
-                  Mot de passe oublié ?
+                  {t("login.form.input.forgotPassword.label")}
                 </button>
               </div>
             </div>
@@ -326,7 +327,7 @@ const LoginScreen = () => {
                       d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                     ></path>
                   </svg>
-                  Connexion en cours...
+                  {t("login.form.input.loading.label")}
                 </>
               ) : (
                 <>
@@ -343,7 +344,7 @@ const LoginScreen = () => {
                       />
                     </svg>
                   </span>
-                  Se connecter
+                  {t("login.form.input.ctaLogin.label")}
                 </>
               )}
             </button>
@@ -356,7 +357,7 @@ const LoginScreen = () => {
                 </div>
                 <div className="relative flex justify-center text-sm">
                   <span className="px-2 bg-gray-50 text-gray-500">
-                    Nouveau sur la plateforme ?
+                    {t("login.form.input.newOnPlateform.label")}
                   </span>
                 </div>
               </div>
@@ -379,7 +380,7 @@ const LoginScreen = () => {
                       d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"
                     />
                   </svg>
-                  Créer un compte
+                  {t("login.form.input.newOnPlateform.link")}
                 </Link>
               </div>
             </div>

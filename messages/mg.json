@@ -271,5 +271,39 @@
       "description": "Nalefa soa aman-tsara ny hevitrao. Hovoaka aorian'ny fanamarinana ataon'ny ekipanay.",
       "pendingRedirect": "Famindrana mitohy..."
     }
+  },
+  "login": {
+    "title": "Tongasoa eto amin'ny sehatray",
+    "subtitle": "Hidira mba ahitana sy handamina moramora ny tolotra fahizay eto Madagasikara.",
+    "form": {
+      "title": "Fidirana mpanjifa",
+      "subtitle": "Ampidiro ny efitranona mpanjifa",
+      "input": {
+        "email": {
+          "label": "Adiresy mailaka",
+          "placeholder": "Ampidiro ny adiresy mailakao"
+        },
+        "password": {
+          "label": "Tenimiafina",
+          "placeholder": "Ampidiro ny tenimiafinao"
+        },
+        "rememberMe": {
+          "label": "Tsarovy aho"
+        },
+        "forgotPassword": {
+          "label": "Hadino ny tenimiafina?"
+        },
+        "loading": {
+          "label": "Fidirana mitohy..."
+        },
+        "ctaLogin": {
+          "label": "Hiditra"
+        },
+        "newOnPlateform": {
+          "label": "Vaovao eto amin'ny sehatra?",
+          "link": "Hamorona kaonty"
+        }
+      }
+    }
   }
 }

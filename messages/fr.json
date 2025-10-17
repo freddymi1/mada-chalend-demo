@@ -109,22 +109,22 @@
     "title": "Nos conseils et récits de voyage",
     "subtitle": "Découvrez nos articles pour mieux préparer votre voyage et plongez dans les légendes fascinantes de Madagascar.",
     "viewMore": "Lire la suite",
-    "emptyBlogs":"Aucun blog pour le moment",
+    "emptyBlogs": "Aucun blog pour le moment",
     "searchPlaceholder": "Rechercher un blog...",
-    "details":{
-      "title":"Detail du blog",
-       "article":"Article",
-       "description":"Description",
-       "noArticle":"Aucun article",
-       "noArticleFound":"Ce blog ne contient pas encore d'articles.",
-       "articleDetail":{
-        "title":"Article similaire(s)",
-        "articleIsInterseted":"Cet article vous intéresse ?",
-        "yes":"Oui",
-        "no":"Non",
-        "userInterested":"Utilisateurs qui ont trouvé cet article utile",
-        "of":"sur"
-       }
+    "details": {
+      "title": "Detail du blog",
+      "article": "Article",
+      "description": "Description",
+      "noArticle": "Aucun article",
+      "noArticleFound": "Ce blog ne contient pas encore d'articles.",
+      "articleDetail": {
+        "title": "Article similaire(s)",
+        "articleIsInterseted": "Cet article vous intéresse ?",
+        "yes": "Oui",
+        "no": "Non",
+        "userInterested": "Utilisateurs qui ont trouvé cet article utile",
+        "of": "sur"
+      }
     }
   },
   "contact": {
@@ -226,49 +226,83 @@
       "title": "Non inclus"
     }
   },
-  "review":{
-    "title":"Avis Clients",
-    "subtitle":"Découvrez ce que nos clients pensent de nous",
-    "cta":"Laissez votre avis",
-    "noReviews":"Aucun avis pour le moment",
-    "noReviewsFound":"Aucun avis trouvé",
-    "loading":"Chargement des avis...",
-    "to":"Basé sur",
+  "review": {
+    "title": "Avis Clients",
+    "subtitle": "Découvrez ce que nos clients pensent de nous",
+    "cta": "Laissez votre avis",
+    "noReviews": "Aucun avis pour le moment",
+    "noReviewsFound": "Aucun avis trouvé",
+    "loading": "Chargement des avis...",
+    "to": "Basé sur",
     "reviews": "avis",
-    "allReviews":"Tous les avis",
-    "errorDisplay":"Erreur lors du chargement des avis:",
-    "retry":"Réessayer",
-    "verified":"Vérifié",
-    "text1":"Soyez le premier à laisser votre avis !",
-    "text2":"Essayez un autre filtre pour voir plus d'avis",
-    "write":"Écrire un avis",
-    "add":{
+    "allReviews": "Tous les avis",
+    "errorDisplay": "Erreur lors du chargement des avis:",
+    "retry": "Réessayer",
+    "verified": "Vérifié",
+    "text1": "Soyez le premier à laisser votre avis !",
+    "text2": "Essayez un autre filtre pour voir plus d'avis",
+    "write": "Écrire un avis",
+    "add": {
       "title": "Partagez votre expérience",
       "subtitle": " Votre avis compte pour nous et aide les autres clients",
-      "note":"Quelle est votre note ?",
-      "backTo":"Retour aux avis",
-      "input":{
-        "title":"Titre de l'avis",
-        "placeholderTitle":"Résumez votre expérience en quelques mots",
-        "description":"Description de l'avis",
-        "characters":"caractères"
+      "note": "Quelle est votre note ?",
+      "backTo": "Retour aux avis",
+      "input": {
+        "title": "Titre de l'avis",
+        "placeholderTitle": "Résumez votre expérience en quelques mots",
+        "description": "Description de l'avis",
+        "characters": "caractères"
       },
-      "addanote":{
-        "excellent":"⭐ Excellent !",
-        "veryGood":"😊 Très bien !",
-        "good":"👍 Bien",
-        "soso":"😐 Peut mieux faire",
-        "bad":"😞 Décevant"
+      "addanote": {
+        "excellent": "⭐ Excellent !",
+        "veryGood": "😊 Très bien !",
+        "good": "👍 Bien",
+        "soso": "😐 Peut mieux faire",
+        "bad": "😞 Décevant"
       },
-      "loading":"Publication en cours...",
-      "cta":"Publier mon avis",
-      "text":"En publiant votre avis, vous acceptez nos conditions d'utilisation.",
-      "text1":"Votre avis est en cours de publication, veuillez patienter."
+      "loading": "Publication en cours...",
+      "cta": "Publier mon avis",
+      "text": "En publiant votre avis, vous acceptez nos conditions d'utilisation.",
+      "text1": "Votre avis est en cours de publication, veuillez patienter."
     },
-    "submited":{
-      "title":"Merci pour votre avis !",
-      "description":"Votre avis a été soumis avec succès. Il sera publié après validation par notre équipe.",
-      "pendingRedirect":"Redirection en cours..."
+    "submited": {
+      "title": "Merci pour votre avis !",
+      "description": "Votre avis a été soumis avec succès. Il sera publié après validation par notre équipe.",
+      "pendingRedirect": "Redirection en cours..."
+    }
+  },
+  "login": {
+    "title": "Bienvenue sur notre plateforme",
+    "subtitle": "Connectez-vous pour découvrir et réserver facilement nos services touristiques à Madagascar.",
+    "form": { 
+      "title": "Connexion Client",
+      "subtitle": "Accédez à votre espace client",
+      "input": {
+        "email": {
+          "label": "Adresse e-mail",
+          "placeholder": "Entrez votre adresse e-mail"
+        },
+        "password": {
+          "label": "Mot de passe",
+          "placeholder": "Entrez votre mot de passe"
+        },
+        "rememberMe": {
+          "label": "Se souvenir de moi"
+        },
+        "forgotPassword": {
+          "label": "Mot de passe oublié ?"
+        },
+        "loading": {
+          "label": "Connexion en cours..."
+        },
+        "ctaLogin": {
+          "label": "Se connecter"
+        },
+        "newOnPlateform": {
+          "label": "Nouveau sur la plateforme ?",
+          "link": "Créer un compte"
+        }
+      }
     }
   }
 }
