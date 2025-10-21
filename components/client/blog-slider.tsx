@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { Star, ChevronLeft, ChevronRight } from "lucide-react";
 import { useReview } from "../providers/client/ReviewProvider";
 import { Review } from "@/src/domain/entities/review";
@@ -23,6 +23,15 @@ interface FormattedAvis {
 const BlogSlider = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [itemsPerView, setItemsPerView] = useState(1);
+  const [isDragging, setIsDragging] = useState(false);
+  const [startX, setStartX] = useState(0);
+  const [currentTranslate, setCurrentTranslate] = useState(0);
+  const [prevTranslate, setPrevTranslate] = useState(0);
+  
+  const sliderRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const autoPlayRef = useRef<NodeJS.Timeout | null>(null);
+  
   const { state, actions } = useReview();
   const t = useTranslations('lng');
 
@@ -88,20 +97,158 @@ const BlogSlider = () => {
   const avisData = formatAvisData();
   const maxIndex = Math.max(0, avisData.length - itemsPerView);
 
-  const handlePrevious = () => {
-    setCurrentIndex(prev => Math.max(0, prev - 1));
+  const goToNext = useCallback(() => {
+    setCurrentIndex(prev => 
+      prev >= maxIndex ? 0 : prev + 1
+    );
+  }, [maxIndex]);
+
+  const goToPrevious = () => {
+    setCurrentIndex(prev => 
+      prev === 0 ? maxIndex : prev - 1
+    );
   };
 
-  const handleNext = () => {
-    setCurrentIndex(prev => Math.min(maxIndex, prev + 1));
+  // Auto-play functionality
+  useEffect(() => {
+    if (avisData.length <= itemsPerView) return;
+
+    const startAutoPlay = () => {
+      if (autoPlayRef.current) {
+        clearInterval(autoPlayRef.current);
+      }
+      autoPlayRef.current = setInterval(goToNext, 5000); // Change toutes les 5 secondes
+    };
+
+    startAutoPlay();
+
+    // Pause auto-play on hover
+    const container = containerRef.current;
+    const pauseAutoPlay = () => {
+      if (autoPlayRef.current) {
+        clearInterval(autoPlayRef.current);
+      }
+    };
+
+    const resumeAutoPlay = () => {
+      startAutoPlay();
+    };
+
+    if (container) {
+      container.addEventListener('mouseenter', pauseAutoPlay);
+      container.addEventListener('mouseleave', resumeAutoPlay);
+    }
+
+    return () => {
+      if (autoPlayRef.current) {
+        clearInterval(autoPlayRef.current);
+      }
+      if (container) {
+        container.removeEventListener('mouseenter', pauseAutoPlay);
+        container.removeEventListener('mouseleave', resumeAutoPlay);
+      }
+    };
+  }, [avisData.length, itemsPerView, goToNext]);
+
+  // Fonctions pour le swipe
+  const getTranslateXValue = useCallback(() => {
+    if (!containerRef.current) return 0;
+    const containerWidth = containerRef.current.offsetWidth;
+    const cardWidth = containerWidth / itemsPerView;
+    const gap = 24; // 24px gap
+    return currentIndex * (cardWidth + gap);
+  }, [currentIndex, itemsPerView]);
+
+  const touchStart = (e: React.TouchEvent | React.MouseEvent) => {
+    setIsDragging(true);
+    const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX;
+    setStartX(clientX);
+    setPrevTranslate(getTranslateXValue());
+    setCurrentTranslate(getTranslateXValue());
+    
+    // Pause auto-play during drag
+    if (autoPlayRef.current) {
+      clearInterval(autoPlayRef.current);
+    }
+    
+    if (sliderRef.current) {
+      sliderRef.current.style.transition = 'none';
+    }
   };
 
-  // Calcul du décalage avec le gap
-  const getTranslateValue = () => {
-    const cardWidth = 100 / itemsPerView;
-    const gapInPercent = (24 / (window.innerWidth > 0 ? window.innerWidth : 1024)) * 100;
-    return currentIndex * (cardWidth + gapInPercent);
+  const touchMove = (e: React.TouchEvent | React.MouseEvent) => {
+    if (!isDragging) return;
+    
+    const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX;
+    const diffX = clientX - startX;
+    const newTranslate = prevTranslate + diffX;
+    
+    // Limiter le déplacement
+    if (!containerRef.current) return;
+    const containerWidth = containerRef.current.offsetWidth;
+    const maxTranslate = maxIndex * (containerWidth / itemsPerView + 24);
+    
+    if (newTranslate >= 0 && newTranslate <= maxTranslate) {
+      setCurrentTranslate(newTranslate);
+      if (sliderRef.current) {
+        sliderRef.current.style.transform = `translateX(-${newTranslate}px)`;
+      }
+    }
   };
+
+  const touchEnd = () => {
+    if (!isDragging || !containerRef.current) return;
+    
+    setIsDragging(false);
+    const containerWidth = containerRef.current.offsetWidth;
+    const cardWidth = containerWidth / itemsPerView;
+    const gap = 24;
+    
+    // Déterminer la nouvelle position basée sur le mouvement
+    const movedBy = currentTranslate - prevTranslate;
+    const threshold = cardWidth * 0.15; // 15% du width d'une carte comme seuil
+    
+    let newIndex = currentIndex;
+    
+    if (Math.abs(movedBy) > threshold) {
+      if (movedBy > 0) {
+        // Swipe vers la droite -> aller à la slide précédente
+        newIndex = Math.max(0, currentIndex - 1);
+      } else {
+        // Swipe vers la gauche -> aller à la slide suivante
+        newIndex = Math.min(maxIndex, currentIndex + 1);
+      }
+    }
+    
+    // Animer vers la nouvelle position
+    setCurrentIndex(newIndex);
+    setCurrentTranslate(newIndex * (cardWidth + gap));
+    
+    if (sliderRef.current) {
+      sliderRef.current.style.transition = 'transform 0.5s ease-in-out';
+      sliderRef.current.style.transform = `translateX(-${newIndex * (cardWidth + gap)}px)`;
+    }
+
+    // Restart auto-play after drag
+    if (autoPlayRef.current) {
+      clearInterval(autoPlayRef.current);
+    }
+    autoPlayRef.current = setInterval(goToNext, 5000);
+  };
+
+  // Mettre à jour la position quand currentIndex change
+  useEffect(() => {
+    if (!containerRef.current || !sliderRef.current) return;
+    
+    const containerWidth = containerRef.current.offsetWidth;
+    const cardWidth = containerWidth / itemsPerView;
+    const gap = 24;
+    const newTranslate = currentIndex * (cardWidth + gap);
+    
+    setCurrentTranslate(newTranslate);
+    sliderRef.current.style.transition = 'transform 0.5s ease-in-out';
+    sliderRef.current.style.transform = `translateX(-${newTranslate}px)`;
+  }, [currentIndex, itemsPerView]);
 
   const renderStars = (note: number, size: string = "w-5 h-5") => {
     return (
@@ -139,7 +286,10 @@ const BlogSlider = () => {
   }
 
   return (
-    <div className="relative w-full max-w-7xl mx-auto px-4 py-8">
+    <div 
+      className="relative w-full max-w-7xl mx-auto px-4 py-8"
+      ref={containerRef}
+    >
       {/* Navigation */}
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-3xl font-bold">
@@ -147,16 +297,16 @@ const BlogSlider = () => {
         </h2>
         <div className="flex gap-2">
           <button
-            onClick={handlePrevious}
-            disabled={currentIndex === 0}
+            onClick={goToPrevious}
+            disabled={avisData.length <= itemsPerView}
             className="p-2 rounded-full bg-white shadow-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
             aria-label="Avis précédent"
           >
             <ChevronLeft className="w-6 h-6 text-gray-700" />
           </button>
           <button
-            onClick={handleNext}
-            disabled={currentIndex >= maxIndex}
+            onClick={goToNext}
+            disabled={avisData.length <= itemsPerView}
             className="p-2 rounded-full bg-white shadow-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
             aria-label="Avis suivant"
           >
@@ -165,13 +315,18 @@ const BlogSlider = () => {
         </div>
       </div>
 
-      {/* Container des avis */}
-      <div className="overflow-hidden">
+      {/* Container des avis avec support swipe */}
+      <div className="overflow-hidden cursor-grab active:cursor-grabbing">
         <div 
+          ref={sliderRef}
           className="flex transition-transform duration-500 ease-in-out gap-6"
-          style={{ 
-            transform: `translateX(calc(-${currentIndex * (100 / itemsPerView)}% - ${currentIndex * 24}px))` 
-          }}
+          onTouchStart={touchStart}
+          onTouchMove={touchMove}
+          onTouchEnd={touchEnd}
+          onMouseDown={touchStart}
+          onMouseMove={touchMove}
+          onMouseUp={touchEnd}
+          onMouseLeave={touchEnd}
         >
           {avisData.map((avis) => (
             <div
