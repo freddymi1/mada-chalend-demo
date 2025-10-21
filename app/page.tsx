@@ -1,3 +1,4 @@
+import BlogSlider from "@/components/client/blog-slider";
 import { Footer } from "@/components/client/footer";
 import { Header } from "@/components/client/header";
 import { HeroSection } from "@/components/client/hero-section";
@@ -8,6 +9,7 @@ export default function Home() {
     <main className="min-h-screen">
       <Header />
       <HeroSection />
+      <BlogSlider />
       <Footer />
       <Toaster />
     </main>
