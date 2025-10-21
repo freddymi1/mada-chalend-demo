@@ -34,8 +34,6 @@ const ReviewSlider = () => {
     actions.fetchReviews();
   }, []);
 
-  console.log("STATE", state.reviews)
-
   // Gérer le nombre d'items visibles selon la taille d'écran
   useEffect(() => {
     const handleResize = () => {

@@ -15,6 +15,7 @@ import { ClVehicleProvider } from "@/components/providers/client/ClVehicleProvid
 import { CiBlogProvider } from "@/components/providers/client/ClBlogProvider";
 import { TripCltProvider } from "@/components/providers/client/TripCltProvider";
 import { ReviewProvider } from "@/components/providers/client/ReviewProvider";
+import { ProtectionProvider } from "@/components/providers/client/ProtectionProvider";
 
 export const metadata: Metadata = {
   title: "Mada Chaland - Agence de voyage à Madagascar",
@@ -40,21 +41,23 @@ export default async function RootLayout({
           disableTransitionOnChange
         >
           <NextIntlClientProvider messages={messages}>
-            <PageTransition>
-              <ClientCircuitProvider>
-                <ClientBookingProvider>
-                  <ClVehicleProvider>
-                    <CiBlogProvider>
-                      <TripCltProvider>
-                        <ReviewProvider>
-                          <Suspense fallback={null}>{children}</Suspense>
-                        </ReviewProvider>
-                      </TripCltProvider>
-                    </CiBlogProvider>
-                  </ClVehicleProvider>
-                </ClientBookingProvider>
-              </ClientCircuitProvider>
-            </PageTransition>
+            <ProtectionProvider>
+              <PageTransition>
+                <ClientCircuitProvider>
+                  <ClientBookingProvider>
+                    <ClVehicleProvider>
+                      <CiBlogProvider>
+                        <TripCltProvider>
+                          <ReviewProvider>
+                            <Suspense fallback={null}>{children}</Suspense>
+                          </ReviewProvider>
+                        </TripCltProvider>
+                      </CiBlogProvider>
+                    </ClVehicleProvider>
+                  </ClientBookingProvider>
+                </ClientCircuitProvider>
+              </PageTransition>
+            </ProtectionProvider>
           </NextIntlClientProvider>
         </ThemeProvider>
         <Analytics />
