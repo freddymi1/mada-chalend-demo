@@ -176,7 +176,7 @@ const BlogSlider = () => {
           {avisData.map((avis) => (
             <div
               key={avis.id}
-              className="flex-shrink-0 w-full md:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] bg-white rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100"
+              className="flex-shrink-0 w-full md:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-all duration-300 border border-slate-100"
             >
               {/* Header */}
               <div className="flex items-start justify-between mb-4">
@@ -186,7 +186,7 @@ const BlogSlider = () => {
                   </div>
                   <div>
                     <div className="flex items-center gap-2">
-                      <h3 className="font-semibold text-gray-900">
+                      <h3 className="font-semibold">
                         {avis.author}
                       </h3>
                       {avis.verified && (
@@ -195,12 +195,12 @@ const BlogSlider = () => {
                         </span>
                       )}
                     </div>
-                    <p className="text-sm text-gray-500">{avis.date}</p>
+                    <p className="text-sm">{avis.date}</p>
                   </div>
                 </div>
                 <div className="flex flex-col items-end">
                   {renderStars(avis.note, "w-4 h-4")}
-                  <span className="text-sm font-bold text-gray-700 mt-1">
+                  <span className="text-sm font-bold mt-1">
                     {avis.note}/5
                   </span>
                 </div>
@@ -208,11 +208,11 @@ const BlogSlider = () => {
 
               {/* Content */}
               <div className="mb-4">
-                <h4 className="font-bold text-lg text-gray-900 mb-2 line-clamp-2">
+                <h4 className="font-bold text-lg mb-2 line-clamp-2">
                   {avis.titre}
                 </h4>
                 <div
-                  className="text-sm text-gray-600 leading-relaxed line-clamp-4"
+                  className="text-sm leading-relaxed line-clamp-4"
                   dangerouslySetInnerHTML={{
                     __html: avis.description,
                   }}
