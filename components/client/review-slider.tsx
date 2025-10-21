@@ -5,6 +5,7 @@ import { Star, ChevronLeft, ChevronRight, Pause, Play, X, ThumbsUp } from "lucid
 import { useReview } from "../providers/client/ReviewProvider";
 import { Review } from "@/src/domain/entities/review";
 import { useTranslations } from "next-intl";
+import { Button } from "./ui/button";
 
 interface FormattedAvis {
   id: string;
@@ -263,7 +264,13 @@ const ReviewSlider = () => {
                   />
                 </div>
 
-                
+                {/* View more button */}
+                <div className="mt-4 w-full flex justify-center">
+                  <Button onClick={() => openModal(avis)}>
+                    {t("footer.viewMore")}
+                  </Button>
+                </div>
+
               </div>
             ))}
           </div>
@@ -294,7 +301,7 @@ const ReviewSlider = () => {
       {/* Modale */}
       {selectedReview && (
         <div 
-          className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4 animate-in fade-in duration-200"
+          className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 animate-in fade-in duration-200"
           onClick={closeModal}
         >
           <div 
