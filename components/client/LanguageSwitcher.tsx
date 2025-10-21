@@ -18,11 +18,6 @@ const languages = {
     code: "en", 
     flag: "🇺🇸",
     name: "home.language.english"
-  },
-  mg: {
-    code: "mg",
-    flag: "🇲🇬", 
-    name: "home.language.malagasy"
   }
 };
 
