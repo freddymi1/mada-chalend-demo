@@ -56,13 +56,6 @@ export const menuItems = [
     icon: "Users",
   },
   {
-    id: "analytics",
-    nom: "Analyses",
-    path: "/admin/analytics",
-    icon: "LineChart",
-  },
-
-  {
     id: "blog",
     nom: "Blogs",
     path: "/admin/blog",

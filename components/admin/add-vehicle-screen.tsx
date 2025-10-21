@@ -189,14 +189,14 @@ const AddVehicleScreen: React.FC = () => {
                 isDark ? "text-white" : "text-gray-900"
               }`}
             >
-              {isUpdate ? "Modifier le véhicule" : "Ajouter un véhicule"}
+              {isUpdate === "true" ? "Modifier le véhicule" : "Ajouter un véhicule"}
             </h1>
             <p
               className={`text-lg ${
                 isDark ? "text-gray-400" : "text-gray-600"
               }`}
             >
-              {isUpdate
+              {isUpdate === "true"
                 ? "Modifiez les informations du véhicule"
                 : "Complétez les informations du nouveau véhicule"}
             </p>
@@ -709,7 +709,7 @@ const AddVehicleScreen: React.FC = () => {
                 imageLoadingStates.mainImage ||
                 imageLoadingStates.detailImages.some((loading) => loading)
                   ? "bg-gray-400 cursor-not-allowed"
-                  : isUpdate
+                  : isUpdate === "true"
                   ? "bg-blue-600 hover:bg-blue-700"
                   : "bg-primary hover:bg-primary/90"
               } text-white`}
@@ -719,7 +719,7 @@ const AddVehicleScreen: React.FC = () => {
               imageLoadingStates.mainImage ||
               imageLoadingStates.detailImages.some((loading) => loading)
                 ? "Traitement..."
-                : isUpdate
+                : isUpdate === "true"
                 ? "Mettre à jour le véhicule"
                 : "Enregistrer le véhicule"}
             </button>
