@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { Star, ChevronLeft, ChevronRight } from "lucide-react";
+import React, { useState, useEffect, useRef } from "react";
+import { Star, ChevronLeft, ChevronRight, Pause, Play } from "lucide-react";
 import { useReview } from "../providers/client/ReviewProvider";
 import { Review } from "@/src/domain/entities/review";
 import { useTranslations } from "next-intl";
@@ -23,8 +23,10 @@ interface FormattedAvis {
 const BlogSlider = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [itemsPerView, setItemsPerView] = useState(1);
+  const [isAutoPlaying, setIsAutoPlaying] = useState(true);
   const { state, actions } = useReview();
   const t = useTranslations('lng');
+  const autoPlayRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     actions.fetchReviews();
@@ -88,12 +90,38 @@ const BlogSlider = () => {
   const avisData = formatAvisData();
   const maxIndex = Math.max(0, avisData.length - itemsPerView);
 
+  // Défilement automatique
+  useEffect(() => {
+    if (!isAutoPlaying || avisData.length === 0) return;
+
+    autoPlayRef.current = setInterval(() => {
+      setCurrentIndex(prev => {
+        if (prev >= maxIndex) {
+          return 0; // Retour au début
+        }
+        return prev + 1;
+      });
+    }, 4000); // Change toutes les 4 secondes
+
+    return () => {
+      if (autoPlayRef.current) {
+        clearInterval(autoPlayRef.current);
+      }
+    };
+  }, [isAutoPlaying, maxIndex, avisData.length]);
+
   const handlePrevious = () => {
     setCurrentIndex(prev => Math.max(0, prev - 1));
+    setIsAutoPlaying(false); // Pause l'autoplay quand l'utilisateur interagit
   };
 
   const handleNext = () => {
     setCurrentIndex(prev => Math.min(maxIndex, prev + 1));
+    setIsAutoPlaying(false);
+  };
+
+  const toggleAutoPlay = () => {
+    setIsAutoPlaying(prev => !prev);
   };
 
   // Calcul du décalage avec le gap
@@ -146,6 +174,17 @@ const BlogSlider = () => {
           {t("review.title")}
         </h2>
         <div className="flex gap-2">
+          <button
+            onClick={toggleAutoPlay}
+            className="p-2 rounded-full bg-white shadow-lg hover:bg-gray-50 transition-all"
+            aria-label={isAutoPlaying ? "Mettre en pause" : "Lecture automatique"}
+          >
+            {isAutoPlaying ? (
+              <Pause className="w-6 h-6 text-gray-700" />
+            ) : (
+              <Play className="w-6 h-6 text-gray-700" />
+            )}
+          </button>
           <button
             onClick={handlePrevious}
             disabled={currentIndex === 0}
@@ -229,7 +268,10 @@ const BlogSlider = () => {
           {Array.from({ length: maxIndex + 1 }).map((_, index) => (
             <button
               key={index}
-              onClick={() => setCurrentIndex(index)}
+              onClick={() => {
+                setCurrentIndex(index);
+                setIsAutoPlaying(false);
+              }}
               className={`h-2 rounded-full transition-all ${
                 currentIndex === index
                   ? 'bg-blue-600 w-8'
