@@ -82,7 +82,7 @@ interface ReviewProviderProps {
   children: React.ReactNode;
 }
 
-export const ReviewProvider: React.FC<ReviewProviderProps> = ({ children }) => {
+export const AdminReviewProvider: React.FC<ReviewProviderProps> = ({ children }) => {
   const [state, dispatch] = useReducer(reviewReducer, initialState);
 
   // Actions
@@ -169,9 +169,9 @@ export const ReviewProvider: React.FC<ReviewProviderProps> = ({ children }) => {
   const updateReviewStatus = async (id: string, status: ReviewStatus): Promise<void> => {
     try {
       dispatch({ type: 'SET_LOADING', payload: true });
-      
-      const response = await fetch(`/api/review/${id}/status`, {
-        method: 'PATCH',
+
+      const response = await fetch(`/api/review/update/${id}`, {
+        method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
@@ -198,7 +198,7 @@ export const ReviewProvider: React.FC<ReviewProviderProps> = ({ children }) => {
       dispatch({ type: 'SET_LOADING', payload: true });
       dispatch({ type: 'SET_ERROR', payload: null });
       
-      const response = await fetch('/api/review/client');
+      const response = await fetch('/api/review/get');
       
       if (!response.ok) {
         throw new Error('Erreur lors de la récupération des reviews');
@@ -260,10 +260,10 @@ export const ReviewProvider: React.FC<ReviewProviderProps> = ({ children }) => {
 };
 
 // Hook personnalisé pour utiliser le contexte
-export const useReview = (): ReviewContextType => {
+export const useAdminReview = (): ReviewContextType => {
   const context = useContext(ReviewContext);
   if (context === undefined) {
-    throw new Error('useReview must be used within a ReviewProvider');
+    throw new Error('useAdminReview must be used within a AdminReviewProvider');
   }
   return context;
 };

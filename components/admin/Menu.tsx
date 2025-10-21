@@ -14,6 +14,7 @@ import {
   BookOpen,
   CarIcon,
   Waypoints,
+  Users2,
 } from "lucide-react"; // ajoute ici tous les icônes nécessaires
 import { useAuth } from "@/src/hooks/useAuth";
 
@@ -68,6 +69,12 @@ export const menuItems = [
     icon: "BookOpen",
   },
   {
+    id: "reviews",
+    nom: "Avis",
+    path: "/admin/review",
+    icon: "Users2",
+  },
+  {
     id: "parametres",
     nom: "Paramètres",
     path: "/admin/parametres",
@@ -84,7 +91,9 @@ const iconMap: Record<string, React.ElementType> = {
   Settings,
   LineChart,
   BookOpen,
-  Waypoints
+  Waypoints,
+  Users2
+
   // MessageCircle
 };
 
