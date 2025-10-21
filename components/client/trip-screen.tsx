@@ -162,7 +162,7 @@ const TripScreen = () => {
                   <h3 className="text-xl sm:text-2xl font-bold text-white mb-2">
                     {trip.title}
                   </h3>
-                  <p className="text-slate-400 text-sm mb-4 line-clamp-2">
+                  <p className="text-white/80 dark:text-slate-400 text-sm mb-4 line-clamp-2">
                     {trip.description}
                   </p>
 
@@ -228,7 +228,7 @@ const TripScreen = () => {
                         {trip.highlights.slice(0, 2).map((highlight, idx) => (
                           <span
                             key={getId(highlight, idx)}
-                            className="text-xs bg-blue-500/20 text-blue-300 px-2 py-1 rounded-full border border-blue-500/30"
+                            className="text-xs bg-blue-500/20 text-white/80 dark:text-blue-300 px-2 py-1 rounded-full border border-blue-500/30"
                           >
                             {getText(highlight)}
                           </span>

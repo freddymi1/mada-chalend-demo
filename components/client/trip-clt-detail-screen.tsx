@@ -138,12 +138,12 @@ const TripCltDetailScreen = () => {
 
           <div>
             <div className="flex items-center justify-between gap-3 mb-6">
-              <div className="flex items-center gap-2 text-slate-300">
-                <Calendar className="w-6 h-6 text-emerald-400" />
+              <div className="flex items-center gap-2">
+                <Calendar className="w-6 h-6" />
                 <span className="text-xl">{tripDetail.duration}</span>
               </div>
-              <div className="flex bg-gray-200 dark:bg-gray-700 p-6 rounded-xl items-center gap-2 text-slate-300">
-                <DollarSign className="w-6 h-6 text-yellow-400" />
+              <div className="flex bg-gray-200 dark:bg-gray-700 p-6 rounded-xl items-center gap-2">
+                <DollarSign className="w-6 h-6" />
                 <span className="text-xl font-semibold">
                   ${tripDetail.price}
                 </span>

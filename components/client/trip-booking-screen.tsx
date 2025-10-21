@@ -75,34 +75,45 @@ export function TripBookingScreen() {
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    const data = {
-      resType: "trip",
-      tripTravel: formData.tripTravel,
-      travelDate: formData.travelDate,
-      nom: formData.nom,
-      prenom: formData.prenom,
-      email: formData.email,
-      telephone: formData.telephone,
-      address: formData.address,
-      personnes: formData.personnes,
-      nbrChild: formData.nbrChild,
-      nbrAdult: formData.nbrAdult,
-      nbrAge2_3: formData.nbrAge2_3 || 0,
-      nbrAge4_7: formData.nbrAge4_7 || 0,
-      nbrAge8_10: formData.nbrAge8_10 || 0,
-      nbrAge11: formData.nbrAge11 || 0,
-      preferences: formData.preferences,
-      startDate: null,
-      endDate: null,
-      duration: null,
-    };
+  // Vérifier la disponibilité avec votre structure de données
+  if (tripDetail?.travelDates) {
+    const selectedDate = tripDetail.travelDates.find(
+      (date) => date.id === formData.travelDate // ou le champ que vous utilisez pour stocker la date sélectionnée
+    );
+    
+    if (selectedDate && Number(selectedDate.placesDisponibles!) < Number(formData.personnes)) {
+      alert(`Désolé, il ne reste que ${selectedDate.placesDisponibles} place(s) disponible(s) pour cette date.`);
+      return;
+    }
+  }
 
-    // Stocker les données et afficher le popup de confirmation
-    setPendingFormData(data);
-    setShowConfirmDialog(true);
+  const data = {
+    resType: "trip",
+    tripTravel: formData.tripTravel,
+    travelDate: formData.travelDate,
+    nom: formData.nom,
+    prenom: formData.prenom,
+    email: formData.email,
+    telephone: formData.telephone,
+    address: formData.address,
+    personnes: formData.personnes,
+    nbrChild: formData.nbrChild,
+    nbrAdult: formData.nbrAdult,
+    nbrAge2_3: formData.nbrAge2_3 || 0,
+    nbrAge4_7: formData.nbrAge4_7 || 0,
+    nbrAge8_10: formData.nbrAge8_10 || 0,
+    nbrAge11: formData.nbrAge11 || 0,
+    preferences: formData.preferences,
+    startDate: null,
+    endDate: null,
+    duration: null,
   };
+
+  setPendingFormData(data);
+  setShowConfirmDialog(true);
+};
 
   console.log("DATE", formData.travelDate);
 
