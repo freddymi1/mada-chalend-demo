@@ -217,64 +217,65 @@ const ClientCircuitDetailScreen = () => {
                                     <h4 className="font-semibold mt-1 text-left text-sm sm:text-base lg:text-lg break-words">
                                       {day.imageDescription}
                                     </h4>
-                                    <div className="absolute !top-6 -right-2 !z-50 bg-white dark:bg-gray-800 text-gray-900 dark:text-white rounded-lg px-3 py-2 text-xs font-medium shadow-lg">
-                                      <div className="relative">
-                                        {/* Ligne verticale continue */}
-                                        <div className="absolute left-[6px] top-0 bottom-0 w-0.5 bg-gray-300 dark:bg-gray-600"></div>
-
-                                        {circuitDetail.itineraries
-                                          .filter(
-                                            (it: any, i: number) =>
-                                              i >= 0 && i <= index + 1
-                                          )
-                                          .map((it: any, i: number) => {
-                                            const isCurrentItem = i === index;
-                                            const isLastInList =
-                                              i ===
-                                              circuitDetail.itineraries.length -
-                                                1;
-                                            const isNextItem = i === index + 1;
-
-                                            return (
-                                              <div
-                                                className="flex flex-col items-start relative mb-3 last:mb-0"
-                                                key={it.id}
-                                              >
-                                                {/* Point et description */}
-                                                <div className="flex items-center gap-2 relative z-10">
-                                                  <MapPin
-                                                    className={`w-4 h-4 text-gray-400 ${
-                                                      isCurrentItem
-                                                        ? "text-green-500"
-                                                        : isNextItem
-                                                        ? "text-orange-500"
-                                                        : "text-blue-500"
-                                                    }`}
-                                                  />
-                                                  
-                                                  <span className="text-xs font-medium max-w-[120px] truncate">
-                                                    {it.imageDescription}
-                                                  </span>
-                                                </div>
-
-                                                {/* Distance (sauf pour le dernier élément) */}
-                                                {!isLastInList && (
-                                                  <div className="flex gap-2 items-center relative z-10 mt-2">
-                                                    <Clock className="w-4 h-4 text-blue-400" />
-                                                    <span className="text-xs text-gray-500 dark:text-gray-400">
-                                                      {it.distance} km
-                                                    </span>
-                                                  </div>
-                                                )}
-                                              </div>
-                                            );
-                                          })}
-                                      </div>
-                                    </div>
+                                    
                                   </div>
                                 )}
 
-                                <div>
+                                <div className="!w-full flex flex-col items-start justify-start gap-4 rounded-lg overflow-hidden cursor-pointer group relative">
+                                  <div className="!z-50 bg-white w-full dark:bg-gray-800 text-gray-900 dark:text-white rounded-lg px-3 py-2 text-xs font-medium shadow-lg">
+                                    <div className="relative">
+                                      {/* Ligne verticale continue */}
+                                      <div className="absolute left-[6px] top-0 bottom-0 w-0.5 bg-gray-300 dark:bg-gray-600"></div>
+
+                                      {circuitDetail.itineraries
+                                        .filter(
+                                          (it: any, i: number) =>
+                                            i >= 0 && i <= index + 1
+                                        )
+                                        .map((it: any, i: number) => {
+                                          const isCurrentItem = i === index;
+                                          const isLastInList =
+                                            i ===
+                                            circuitDetail.itineraries.length -
+                                              1;
+                                          const isNextItem = i === index + 1;
+
+                                          return (
+                                            <div
+                                              className="flex flex-col items-start relative mb-3 last:mb-0"
+                                              key={it.id}
+                                            >
+                                              {/* Point et description */}
+                                              <div className="flex items-center gap-2 relative z-10">
+                                                <MapPin
+                                                  className={`w-4 h-4 text-gray-400 ${
+                                                    isCurrentItem
+                                                      ? "text-green-500"
+                                                      : isNextItem
+                                                      ? "text-orange-500"
+                                                      : "text-blue-500"
+                                                  }`}
+                                                />
+                                                
+                                                <span className="text-xs font-medium max-w-[120px] truncate">
+                                                  {it.imageDescription}
+                                                </span>
+                                              </div>
+
+                                              {/* Distance (sauf pour le dernier élément) */}
+                                              {!isLastInList && (
+                                                <div className="flex gap-2 items-center relative z-10 mt-2">
+                                                  <Clock className="w-4 h-4 text-blue-400" />
+                                                  <span className="text-xs text-gray-500 dark:text-gray-400">
+                                                    {it.distance} km
+                                                  </span>
+                                                </div>
+                                              )}
+                                            </div>
+                                          );
+                                        })}
+                                    </div>
+                                  </div>
                                   <p className="text-muted-foreground text-xs sm:text-sm mb-2 break-words">
                                     {day.description}
                                   </p>

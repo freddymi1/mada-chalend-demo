@@ -96,6 +96,13 @@ const BlogSlider = () => {
     setCurrentIndex(prev => Math.min(maxIndex, prev + 1));
   };
 
+  // Calcul du décalage avec le gap
+  const getTranslateValue = () => {
+    const cardWidth = 100 / itemsPerView;
+    const gapInPercent = (24 / (window.innerWidth > 0 ? window.innerWidth : 1024)) * 100;
+    return currentIndex * (cardWidth + gapInPercent);
+  };
+
   const renderStars = (note: number, size: string = "w-5 h-5") => {
     return (
       <div className="flex gap-1">
@@ -163,13 +170,13 @@ const BlogSlider = () => {
         <div 
           className="flex transition-transform duration-500 ease-in-out gap-6"
           style={{ 
-            transform: `translateX(-${currentIndex * (100 / itemsPerView + (itemsPerView > 1 ? 2 : 0))}%)` 
+            transform: `translateX(calc(-${currentIndex * (100 / itemsPerView)}% - ${currentIndex * 24}px))` 
           }}
         >
           {avisData.map((avis) => (
             <div
               key={avis.id}
-              className="flex-shrink-0 w-full md:w-[calc(50%-0.75rem)] lg:w-[calc(33.333%-1rem)] bg-white rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100"
+              className="flex-shrink-0 w-full md:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] bg-white rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100"
             >
               {/* Header */}
               <div className="flex items-start justify-between mb-4">
