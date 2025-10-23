@@ -2,7 +2,7 @@
 
 import { Circuit } from "@/src/domain/entities/circuit";
 import { useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useTransition } from "react";
 import { useCircuit } from "../providers/admin/CircuitProvider";
 import {
   Armchair,
@@ -22,9 +22,12 @@ import { LoadingSpinner } from "../client/loading";
 import { TripTravel } from "@/src/domain/entities/trip";
 import { useTrip } from "../providers/admin/TripProvider";
 import { formatDate } from "../client/trip-screen";
+import { useLocale, useTranslations } from "next-intl";
 
 const TripScreen = () => {
   const router = useRouter();
+  const locale = useLocale();
+  
   const [editingTrip, setEditingTrip] = useState<TripTravel | null>(null);
   const [showFilters, setShowFilters] = useState(false);
   const { addedTrips, handleDelete, fetchTrips, isLoading } = useTrip();
@@ -348,25 +351,30 @@ const TripScreen = () => {
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                  {filteredTrips.map((trip) => (
-                    <tr
+                  {filteredTrips.map((trip) => {
+                    const title = JSON.parse(trip.title);
+                    const description = JSON.parse(trip.description);
+                    return (
+                      <tr
                       key={trip.id}
                       className="hover:bg-gray-50 transition-colors duration-200"
                     >
                       <td className="px-6 py-4">
                         <div className="max-w-xs">
                           <div className="text-sm font-medium text-gray-900 truncate">
-                            {trip.title}
+                            FR: {locale === "fr" ? title.fr : title.en}
                           </div>
+                          
                           <div className="text-sm text-gray-500 mt-1 line-clamp-2">
-                            {trip.description}
+                            {locale === "fr" ? description.fr : description.en}
                           </div>
+                          
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="flex items-center text-sm text-gray-900">
                           <Clock className="w-4 h-4 mr-2 text-gray-400" />
-                          {trip.duration}
+                          {Number(trip.duration)} jours / {Number(trip.duration) - 1} nuits
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
@@ -410,14 +418,17 @@ const TripScreen = () => {
                         <div className="flex flex-wrap gap-1 max-w-xs">
                           {trip.highlights
                             .slice(0, 3)
-                            .map((highlight: any, index: number) => (
-                              <span
+                            .map((highlight: any, index: number) => {
+                              const text = JSON.parse(highlight.text);
+                              return(
+                                <span
                                 key={highlight.id || index}
                                 className="inline-flex px-2 py-1 text-xs bg-blue-100 text-blue-800 rounded"
                               >
-                                {highlight.text}
+                                { locale === "fr" ? text.fr : text.en}
                               </span>
-                            ))}
+                              )
+                            })}
                           {trip.highlights.length > 3 && (
                             <span className="inline-flex px-2 py-1 text-xs bg-gray-100 text-gray-600 rounded">
                               +{trip.highlights.length - 3}
@@ -448,7 +459,8 @@ const TripScreen = () => {
                         </div>
                       </td>
                     </tr>
-                  ))}
+                    )
+                  })}
                 </tbody>
               </table>
             </div>

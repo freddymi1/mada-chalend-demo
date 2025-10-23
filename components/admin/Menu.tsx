@@ -17,6 +17,7 @@ import {
   Users2,
 } from "lucide-react"; // ajoute ici tous les icônes nécessaires
 import { useAuth } from "@/src/hooks/useAuth";
+import { LanguageSwitcher } from "../client/LanguageSwitcher";
 
 export const menuItems = [
   {
@@ -143,10 +144,15 @@ const SideMenu = () => {
                 </Link>
               );
             })}
+            <div className="px-4 w-full">
+              <LanguageSwitcher />
+            </div>
           </nav>
+
 
           {/* Profil utilisateur en bas */}
           <div className="p-4 border-t border-gray-200">
+            
             <button
               onClick={logout}
               className="py-2 px-4 bg-blue-300 w-full rounded-lg mb-4 cursor-pointer"

@@ -6,14 +6,6 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useCircuit } from "@/components/providers/admin/CircuitProvider";
 import { useTrip } from "@/components/providers/admin/TripProvider";
 
-interface ItineraryDay {
-  day: number;
-  title: string;
-  description: string;
-  image: string;
-  imageDescription: string;
-}
-
 const AddTripPage = () => {
   const router = useRouter();
   const params = useSearchParams();
@@ -21,6 +13,7 @@ const AddTripPage = () => {
   const {
     formData,
     handleInputChange,
+    handleLocalizedInputChange,
     handleArrayInputChange,
     addArrayItem,
     addProgramDay,
@@ -90,28 +83,48 @@ const AddTripPage = () => {
           </div>
 
           <form onSubmit={onSubmit}>
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-              <div>
-                <div className="space-y-6">
+            <div className="space-y-8">
+              {/* Section Titre - Affichage côte à côte */}
+              <div className="bg-gray-50 p-4 rounded-lg">
+                <h2 className="text-lg font-semibold text-gray-900 mb-4">Titre du Voyage</h2>
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Titre du voyage
+                      Titre (🇫🇷) *
                     </label>
                     <input
                       type="text"
-                      name="title"
-                      value={formData.title}
-                      onChange={handleInputChange}
+                      value={formData.title.fr}
+                      onChange={(e) => handleLocalizedInputChange('title', 'fr', e.target.value)}
                       className="w-full px-3 py-2 text-black border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      placeholder="Nom du voyage..."
+                      placeholder="Nom du voyage en 🇫🇷..."
                       required
                     />
                   </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Title (🇬🇧) *
+                    </label>
+                    <input
+                      type="text"
+                      value={formData.title.en}
+                      onChange={(e) => handleLocalizedInputChange('title', 'en', e.target.value)}
+                      className="w-full px-3 py-2 text-black border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      placeholder="Trip name in 🇬🇧..."
+                      required
+                    />
+                  </div>
+                </div>
+              </div>
 
+              {/* Section Informations de base */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div className="space-y-6">
+                  {/* Prix et Durée */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Prix
+                        Prix *
                       </label>
                       <input
                         type="text"
@@ -125,10 +138,10 @@ const AddTripPage = () => {
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Durée
+                        Durée (Ex: 4) *
                       </label>
                       <input
-                        type="text"
+                        type="number"
                         name="duration"
                         value={formData.duration}
                         onChange={handleInputChange}
@@ -139,29 +152,46 @@ const AddTripPage = () => {
                     </div>
                   </div>
 
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Description
-                    </label>
-                    <textarea
-                      rows={3}
-                      name="description"
-                      value={formData.description}
-                      onChange={handleInputChange}
-                      className="w-full px-3 py-2 text-black border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      placeholder="Description du voyage..."
-                      required
-                    />
+                  {/* Description - Affichage côte à côte */}
+                  <div className="bg-gray-50 p-4 rounded-lg">
+                    <h2 className="text-lg font-semibold text-gray-900 mb-4">Description</h2>
+                    <div className="space-y-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                          Description (🇫🇷) *
+                        </label>
+                        <textarea
+                          rows={3}
+                          value={formData.description.fr}
+                          onChange={(e) => handleLocalizedInputChange('description', 'fr', e.target.value)}
+                          className="w-full px-3 py-2 text-black border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          placeholder="Description du voyage en 🇫🇷..."
+                          required
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                          Description (🇬🇧) *
+                        </label>
+                        <textarea
+                          rows={3}
+                          value={formData.description.en}
+                          onChange={(e) => handleLocalizedInputChange('description', 'en', e.target.value)}
+                          className="w-full px-3 py-2 text-black border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          placeholder="Trip description in 🇬🇧..."
+                          required
+                        />
+                      </div>
+                    </div>
                   </div>
 
                   {/* Travel dates */}
-
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
                       Dates de voyage
                     </label>
                     {formData.travelDates.map((date, index) => (
-                      <div key={index} className="w-full">
+                      <div key={index} className="w-full mb-4 p-4 bg-gray-50 rounded-lg">
                         <div className="flex flex-col lg:flex-row w-full items-center mb-2">
                           <div className="w-full">
                             <label
@@ -185,7 +215,7 @@ const AddTripPage = () => {
                               required
                             />
                           </div>
-                          <span className="mx-2">à</span>
+                          <span className="mx-2 my-2 lg:my-0">à</span>
                           <div className="w-full">
                             <label
                               htmlFor={`endDate-${index}`}
@@ -212,28 +242,12 @@ const AddTripPage = () => {
                             <button
                               type="button"
                               onClick={() => removeTravelDate(index)}
-                              className="ml-2 p-2 text-red-600 hover:bg-red-100 rounded-full"
+                              className="ml-2 mt-2 lg:mt-0 p-2 text-red-600 hover:bg-red-100 rounded-full"
                             >
                               <X className="w-5 h-5" />
                             </button>
                           )}
                         </div>
-                        {/* <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-1">
-                            Durée
-                          </label>
-                          <input
-                            type="text"
-                            id={`duration-${index}`}
-                            value={formatDuration(date.duration)}
-                            readOnly
-                            className="w-full px-3 py-2 text-black border border-gray-300 rounded-lg bg-gray-100 cursor-not-allowed"
-                            placeholder="La durée sera calculée automatiquement"
-                          />
-                          <p className="text-xs text-gray-500 mt-1">
-                            Durée calculée automatiquement
-                          </p>
-                        </div> */}
                         <div className="flex w-full items-center gap-4 mb-2">
                           <div className="w-full">
                             <label
@@ -257,28 +271,6 @@ const AddTripPage = () => {
                               required
                             />
                           </div>
-                          {/* <div>
-                            <label
-                              htmlFor={`price-${index}`}
-                              className="block text-sm font-medium text-gray-700 mb-1"
-                            >
-                              Prix
-                            </label>
-                            <input
-                              type="number"
-                              id={`price-${index}`}
-                              value={date.price}
-                              onChange={(e) =>
-                                handleTravelDatesChange(
-                                  index,
-                                  "price",
-                                  e.target.value
-                                )
-                              }
-                              className="flex-1 px-3 py-2 text-black border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                              required
-                            />
-                          </div> */}
                         </div>
                       </div>
                     ))}
@@ -291,32 +283,41 @@ const AddTripPage = () => {
                       Ajouter une date de voyage
                     </button>
                   </div>
+                </div>
 
-                  {/* Points forts */}
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Points forts
-                    </label>
+                <div className="space-y-6">
+                  {/* Points forts - Affichage côte à côte */}
+                  <div className="bg-gray-50 w-full p-4 rounded-lg">
+                    <h2 className="text-lg font-semibold text-gray-900 mb-4">Points Forts / Highlights</h2>
                     {formData.highlights.map((highlight, index) => (
-                      <div key={index} className="flex items-center mb-2">
-                        <input
-                          type="text"
-                          value={highlight}
-                          onChange={(e) =>
-                            handleArrayInputChange(
-                              index,
-                              e.target.value,
-                              "highlights"
-                            )
-                          }
-                          className="flex-1 px-3 py-2 text-black border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                          placeholder="Point fort..."
-                        />
-                        {formData.highlights.length > 1 && (
+                      <div key={index} className="flex items-center w-full gap-3 mb-3 border-2 border-gray-200 p-3 rounded-lg">
+                        <div className="flex flex-col gap-2 flex-1 min-w-0">
+                          <div className="flex items-center gap-2">
+                            <span className="text-sm font-medium flex-shrink-0">🇫🇷</span>
+                            <input
+                              type="text"
+                              value={highlight.fr}
+                              onChange={(e) => handleArrayInputChange(index, 'fr', e.target.value, 'highlights')}
+                              className="flex-1 px-3 py-2 text-black border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              placeholder="Point fort en français"
+                            />
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <span className="text-sm font-medium flex-shrink-0">🇬🇧</span>
+                            <input
+                              type="text"
+                              value={highlight.en}
+                              onChange={(e) => handleArrayInputChange(index, 'en', e.target.value, 'highlights')}
+                              className="w-full px-3 py-2 text-black border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              placeholder="Highlight in English"
+                            />
+                          </div>
+                        </div>
+                        {formData.included.length > 1 && (
                           <button
                             type="button"
-                            onClick={() => removeArrayItem(index, "highlights")}
-                            className="ml-2 p-2 text-red-600 hover:bg-red-100 rounded-full"
+                            onClick={() => removeArrayItem(index, 'included')}
+                            className="p-2 text-red-600 hover:bg-red-100 rounded-full"
                           >
                             <X className="w-5 h-5" />
                           </button>
@@ -325,271 +326,261 @@ const AddTripPage = () => {
                     ))}
                     <button
                       type="button"
-                      onClick={() => addArrayItem("highlights")}
+                      onClick={() => addArrayItem('included')}
                       className="mt-2 inline-flex items-center px-3 py-1 text-sm bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg"
                     >
                       <Plus className="w-4 h-4 mr-1" />
-                      Ajouter un point fort
+                      Ajouter un élément / Add Item
                     </button>
-                  </div>
+                    
 
-                  {/* Inclus / Non inclus */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Inclus dans le prix
-                      </label>
-                      {formData.included.map((item, index) => (
-                        <div key={index} className="flex items-center mb-2">
-                          <input
-                            type="text"
-                            value={item}
-                            onChange={(e) =>
-                              handleArrayInputChange(
-                                index,
-                                e.target.value,
-                                "included"
-                              )
-                            }
-                            className="flex-1 px-3 py-2 text-black border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            placeholder="Élément inclus..."
-                          />
-                          {formData.included.length > 1 && (
-                            <button
-                              type="button"
-                              onClick={() => removeArrayItem(index, "included")}
-                              className="ml-2 p-2 text-red-600 hover:bg-red-100 rounded-full"
-                            >
-                              <X className="w-5 h-5" />
-                            </button>
-                          )}
-                        </div>
-                      ))}
-                      <button
-                        type="button"
-                        onClick={() => addArrayItem("included")}
-                        className="mt-2 inline-flex items-center px-3 py-1 text-sm bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg"
-                      >
-                        <Plus className="w-4 h-4 mr-1" />
-                        Ajouter un élément
-                      </button>
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Non inclus dans le prix
-                      </label>
+                    <div className="bg-gray-50 w-full p-4 rounded-lg">
+                      <h2 className="text-lg font-semibold text-gray-900 mb-4">Non inclus / Not Included</h2>
                       {formData.notIncluded.map((item, index) => (
-                        <div key={index} className="flex items-center mb-2">
-                          <input
-                            type="text"
-                            value={item}
-                            onChange={(e) =>
-                              handleArrayInputChange(
-                                index,
-                                e.target.value,
-                                "notIncluded"
-                              )
-                            }
-                            className="flex-1 px-3 py-2 text-black border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            placeholder="Élément non inclus..."
-                          />
+                        <div key={index} className="flex items-center w-full gap-3 mb-3 border-2 border-gray-200 p-3 rounded-lg">
+                          {/* Conteneur pour les inputs - prend toute la largeur */}
+                          <div className="flex flex-col gap-2 flex-1 min-w-0">
+                            <div className="flex items-center gap-2">
+                              <span className="text-sm font-medium flex-shrink-0">🇫🇷</span>
+                              <input
+                                type="text"
+                                value={item.fr}
+                                onChange={(e) => handleArrayInputChange(index, 'fr', e.target.value, 'notIncluded')}
+                                className="flex-1 min-w-0 px-3 py-2 text-black border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                placeholder="Élément non inclus en français"
+                              />
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <span className="text-sm font-medium flex-shrink-0">🇬🇧</span>
+                              <input
+                                type="text"
+                                value={item.en}
+                                onChange={(e) => handleArrayInputChange(index, 'en', e.target.value, 'notIncluded')}
+                                className="flex-1 min-w-0 px-3 py-2 text-black border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                placeholder="Not included item in English"
+                              />
+                            </div>
+                          </div>
+                          
+                          {/* Bouton de suppression compact */}
                           {formData.notIncluded.length > 1 && (
                             <button
                               type="button"
-                              onClick={() =>
-                                removeArrayItem(index, "notIncluded")
-                              }
-                              className="ml-2 p-2 text-red-600 hover:bg-red-100 rounded-full"
+                              onClick={() => removeArrayItem(index, 'notIncluded')}
+                              className="flex-shrink-0 p-1 bg-red-600 cursor-pointer text-white hover:bg-red-700 rounded-full transition-colors duration-200 mt-1"
                             >
-                              <X className="w-5 h-5" />
+                              <X className="w-4 h-4" />
                             </button>
                           )}
                         </div>
                       ))}
                       <button
                         type="button"
-                        onClick={() => addArrayItem("notIncluded")}
+                        onClick={() => addArrayItem('notIncluded')}
                         className="mt-2 inline-flex items-center px-3 py-1 text-sm bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg"
                       >
                         <Plus className="w-4 h-4 mr-1" />
-                        Ajouter un élément
+                        Ajouter un élément / Add Item
                       </button>
                     </div>
                   </div>
                 </div>
               </div>
-              <div>
-                {/* Itinéraire */}
-                <div>
-                  <div className="flex items-center justify-between mb-4">
-                    <label className="block text-sm font-medium text-gray-700">
-                      Programmes
-                    </label>
+
+              {/* Programme - Affichage côte à côte */}
+              <div className="bg-gray-50 p-4 rounded-lg">
+                <div className="flex items-center justify-between mb-4">
+                  <h2 className="text-lg font-semibold text-gray-900">Programme / Itinerary</h2>
+                </div>
+
+                {formData.program.length === 0 ? (
+                  <div className="text-center py-6 bg-white rounded-lg border border-dashed border-gray-300">
+                    <Calendar className="w-12 h-12 text-gray-400 mx-auto mb-2" />
+                    <p className="text-gray-600">Aucun programme ajouté / No itinerary added</p>
                   </div>
+                ) : (
+                  <div className="space-y-4">
+                    {formData.program.map((day, index) => (
+                      <div
+                        key={index}
+                        className="border rounded-lg p-4 bg-white"
+                      >
+                        <div className="flex justify-between items-center mb-4">
+                          <h4 className="font-medium text-gray-900">
+                            Jour {day.day} / Day {day.day}
+                          </h4>
+                          <button
+                            type="button"
+                            onClick={() => removeProgramDay(index)}
+                            className="text-red-600 hover:text-red-800"
+                          >
+                            <X className="w-5 h-5" />
+                          </button>
+                        </div>
 
-                  {formData.program.length === 0 ? (
-                    <div className="text-center py-6 bg-gray-50 rounded-lg border border-dashed border-gray-300">
-                      <Calendar className="w-12 h-12 text-gray-400 mx-auto mb-2" />
-                      <p className="text-gray-600">Aucun programme ajouté</p>
-                    </div>
-                  ) : (
-                    <div className="space-y-4">
-                      {formData.program.map((day, index) => (
-                        <div
-                          key={index}
-                          className="border rounded-lg p-4 bg-gray-50"
-                        >
-                          <div className="flex justify-end items-center mb-3">
-                            {/* <h4 className="font-medium text-gray-900">
-                              Jour {day.day}
-                            </h4> */}
-                            <button
-                              type="button"
-                              onClick={() => removeProgramDay(index)}
-                              className="text-red-600 hover:text-red-800"
-                            >
-                              <X className="w-5 h-5" />
-                            </button>
-                          </div>
-
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                            <div>
-                              <label className="block text-sm font-medium text-gray-700 mb-1">
-                                Titre
-                              </label>
-                              <input
-                                type="text"
-                                value={day.title}
-                                onChange={(e) =>
-                                  handleProgramChange(
-                                    index,
-                                    "title",
-                                    e.target.value
-                                  )
-                                }
-                                className="w-full px-3 py-2 text-black border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                placeholder="Titre du jour..."
-                              />
-                            </div>
-                            <div>
-                              <label className="block text-sm font-medium text-gray-700 mb-1">
-                                Description de l'image
-                              </label>
-                              <input
-                                type="text"
-                                value={day.imageDescription}
-                                onChange={(e) =>
-                                  handleProgramChange(
-                                    index,
-                                    "imageDescription",
-                                    e.target.value
-                                  )
-                                }
-                                className="w-full px-3 py-2 text-black border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                placeholder="Description de l'image..."
-                              />
-                            </div>
-                          </div>
-
-                          <div className="mb-4">
+                        {/* Titre du jour - Affichage côte à côte */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                          <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">
-                              Description
+                              Titre (🇫🇷) *
+                            </label>
+                            <input
+                              type="text"
+                              value={day.title.fr}
+                              onChange={(e) => handleProgramChange(index, 'title', 'fr', e.target.value)}
+                              className="w-full px-3 py-2 text-black border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              placeholder="Titre du jour en français..."
+                              required
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                              Title (🇬🇧) *
+                            </label>
+                            <input
+                              type="text"
+                              value={day.title.en}
+                              onChange={(e) => handleProgramChange(index, 'title', 'en', e.target.value)}
+                              className="w-full px-3 py-2 text-black border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              placeholder="Day title in English..."
+                              required
+                            />
+                          </div>
+                        </div>
+
+                        {/* Description du jour - Affichage côte à côte */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                              Description (🇫🇷) *
                             </label>
                             <textarea
                               rows={3}
-                              value={day.description}
-                              onChange={(e) =>
-                                handleProgramChange(
-                                  index,
-                                  "description",
-                                  e.target.value
-                                )
-                              }
+                              value={day.description.fr}
+                              onChange={(e) => handleProgramChange(index, 'description', 'fr', e.target.value)}
                               className="w-full px-3 py-2 text-black border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                              placeholder="Description des activités..."
+                              placeholder="Description des activités en français..."
+                              required
                             />
                           </div>
-
                           <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">
-                              Image
+                              Description (🇬🇧) *
                             </label>
-                            <div className="flex items-center space-x-4">
-                              {day.image ? (
-                                <div className="relative">
-                                  <img
-                                    src={day.image}
-                                    alt="Preview"
-                                    className="h-16 w-16 object-cover rounded-lg border"
-                                  />
-                                  <button
-                                    type="button"
-                                    onClick={() =>
-                                      handleProgramChange(index, "image", "")
-                                    }
-                                    className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1"
-                                  >
-                                    <X className="w-3 h-3" />
-                                  </button>
-                                </div>
-                              ) : (
-                                <label className="flex flex-col items-center justify-center w-16 h-16 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-blue-500">
-                                  <Upload className="w-5 h-5 text-gray-400" />
-                                  <span className="text-xs text-gray-500 mt-1">
-                                    Upload
-                                  </span>
-                                  <input
-                                    type="file"
-                                    className="hidden"
-                                    accept="image/*"
-                                    onChange={(e) =>
-                                      handleImageUpload(index, e)
-                                    }
-                                  />
-                                </label>
-                              )}
-                              <span className="text-sm text-gray-500">
-                                JPEG, PNG ou GIF
-                              </span>
-                            </div>
+                            <textarea
+                              rows={3}
+                              value={day.description.en}
+                              onChange={(e) => handleProgramChange(index, 'description', 'en', e.target.value)}
+                              className="w-full px-3 py-2 text-black border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              placeholder="Activities description in English..."
+                              required
+                            />
                           </div>
                         </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-                <div className="flex justify-end my-6">
+
+                        {/* Description de l'image - Affichage côte à côte */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                              Description de l'image (🇫🇷)
+                            </label>
+                            <input
+                              type="text"
+                              value={day.imageDescription.fr}
+                              onChange={(e) => handleProgramChange(index, 'imageDescription', 'fr', e.target.value)}
+                              className="w-full px-3 py-2 text-black border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              placeholder="Description de l'image en français..."
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                              Image Description (🇬🇧)
+                            </label>
+                            <input
+                              type="text"
+                              value={day.imageDescription.en}
+                              onChange={(e) => handleProgramChange(index, 'imageDescription', 'en', e.target.value)}
+                              className="w-full px-3 py-2 text-black border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              placeholder="Image description in English..."
+                            />
+                          </div>
+                        </div>
+
+                        {/* Upload d'image */}
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-1">
+                            Image
+                          </label>
+                          <div className="flex items-center space-x-4">
+                            {day.image ? (
+                              <div className="relative">
+                                <img
+                                  src={day.image}
+                                  alt="Preview"
+                                  className="h-16 w-16 object-cover rounded-lg border"
+                                />
+                                <button
+                                  type="button"
+                                  onClick={() => handleProgramChange(index, 'image', 'fr', '')}
+                                  className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1"
+                                >
+                                  <X className="w-3 h-3" />
+                                </button>
+                              </div>
+                            ) : (
+                              <label className="flex flex-col items-center justify-center w-16 h-16 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-blue-500">
+                                <Upload className="w-5 h-5 text-gray-400" />
+                                <span className="text-xs text-gray-500 mt-1">
+                                  Upload
+                                </span>
+                                <input
+                                  type="file"
+                                  className="hidden"
+                                  accept="image/*"
+                                  onChange={(e) => handleImageUpload(index, e)}
+                                />
+                              </label>
+                            )}
+                            <span className="text-sm text-gray-500">
+                              JPEG, PNG ou GIF
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+                <div className="flex justify-end mt-4">
                   <button
                     type="button"
                     onClick={addProgramDay}
-                    className="inline-flex items-center px-3 py-1 text-sm bg-blue-100 hover:bg-blue-200 text-blue-700 rounded-lg"
+                    className="inline-flex items-center px-4 py-2 text-sm bg-blue-100 hover:bg-blue-200 text-blue-700 rounded-lg"
                   >
                     <Plus className="w-4 h-4 mr-1" />
-                    Ajouter un jour
+                    Ajouter un jour / Add Day
                   </button>
                 </div>
               </div>
             </div>
-            <div className="flex space-x-3 pt-4 border-t border-gray-200">
+
+            <div className="flex space-x-3 pt-6 border-t border-gray-200">
               <button
                 type="button"
                 onClick={() => router.back()}
                 className="flex-1 px-4 py-2 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors duration-200"
               >
-                Annuler
+                Annuler / Cancel
               </button>
               <button
                 type="submit"
                 disabled={isLoading}
                 className="flex-1 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors duration-200"
               >
-                {/* {isLoading ? "Loading..." : "Ajouter le Circuit"} */}
                 {isLoading
                   ? "Loading..."
                   : isUpdate === "true"
-                  ? "Mettre à jour le voyage"
-                  : "Ajouter le voyage"}
+                  ? "Mettre à jour le voyage / Update Trip"
+                  : "Ajouter le voyage / Add Trip"}
               </button>
             </div>
           </form>

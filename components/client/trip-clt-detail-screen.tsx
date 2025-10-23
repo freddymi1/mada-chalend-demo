@@ -23,7 +23,7 @@ import {
 } from "lucide-react";
 import { useTrip } from "../providers/admin/TripProvider";
 import { useCltTrip } from "../providers/client/TripCltProvider";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { formatDate } from "./trip-screen";
 
 const TripCltDetailScreen = () => {
@@ -32,6 +32,7 @@ const TripCltDetailScreen = () => {
   const router = useRouter();
   const { tripDetail, getTripById } = useCltTrip();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const locale = useLocale();
 
   useEffect(() => {
     if (id) {
@@ -68,6 +69,9 @@ const TripCltDetailScreen = () => {
     setCurrentImageIndex(index);
   };
 
+  const title = JSON.parse(tripDetail.title);
+  const description = JSON.parse(tripDetail.description);
+
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <div className="container mx-auto p-6">
@@ -78,7 +82,7 @@ const TripCltDetailScreen = () => {
               <div className="aspect-video bg-gray-100 dark:bg-gray-700 rounded-lg overflow-hidden">
                 <img
                   src={images[currentImageIndex]}
-                  alt={`Circuit ${tripDetail.title}`}
+                  alt={`Circuit ${title.fr}`}
                   className="w-full h-full object-cover"
                 />
               </div>
@@ -123,10 +127,10 @@ const TripCltDetailScreen = () => {
           <div className="flex items-start justify-between mb-6">
             <div className="flex-1">
               <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
-                {tripDetail.title}
+                {locale === "fr" ? title.fr : title.en}
               </h2>
               <p className="text-gray-600 dark:text-gray-300 text-base leading-relaxed">
-                {tripDetail.description}
+                {locale === "fr" ? description.fr : description.en}
               </p>
             </div>
             <div className="ml-6">
@@ -205,17 +209,23 @@ const TripCltDetailScreen = () => {
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border dark:border-gray-700 p-6">
               <h3 className="font-semibold text-lg mb-4 text-blue-600 dark:text-blue-400 flex items-center">
                 <Star className="w-5 h-5 mr-2" />
-                Points forts
+                {t("ourTrip.highlights")}
               </h3>
               <ul className="lg:flex flex-wrap items-center gap-4">
-                {tripDetail.highlights.map((highlight: any) => (
-                  <li key={highlight.id} className="flex items-start space-x-3">
-                    <Star className="w-4 h-4 text-yellow-500 dark:text-yellow-400 mt-0.5 flex-shrink-0" />
-                    <span className="text-sm text-gray-700 dark:text-gray-300">
-                      {highlight.text}
-                    </span>
-                  </li>
-                ))}
+                {tripDetail.highlights.map((highlight: any) => {
+                  const text = JSON.parse(highlight.text);
+                  return (
+                    <li
+                      key={highlight.id}
+                      className="flex items-start space-x-3"
+                    >
+                      <Star className="w-4 h-4 text-yellow-500 dark:text-yellow-400 mt-0.5 flex-shrink-0" />
+                      <span className="text-sm text-gray-700 dark:text-gray-300">
+                        {locale === "fr" ? text.fr : text.en}
+                      </span>
+                    </li>
+                  );
+                })}
               </ul>
             </div>
           )}
@@ -227,17 +237,20 @@ const TripCltDetailScreen = () => {
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border dark:border-gray-700 p-6">
               <h3 className="font-semibold text-lg mb-4 text-green-600 dark:text-green-400 flex items-center">
                 <CheckCircle className="w-5 h-5 mr-2" />
-                Inclus
+                {t("ourTrip.included")}
               </h3>
               <ul className="space-y-3">
-                {tripDetail.included.map((item: any) => (
-                  <li key={item.id} className="flex items-start space-x-3">
-                    <CheckCircle className="w-4 h-4 text-green-500 dark:text-green-400 mt-0.5 flex-shrink-0" />
-                    <span className="text-sm text-gray-700 dark:text-gray-300">
-                      {item.text}
-                    </span>
-                  </li>
-                ))}
+                {tripDetail.included.map((item: any) => {
+                  const text = JSON.parse(item.text);
+                  return (
+                    <li key={item.id} className="flex items-start space-x-3">
+                      <CheckCircle className="w-4 h-4 text-green-500 dark:text-green-400 mt-0.5 flex-shrink-0" />
+                      <span className="text-sm text-gray-700 dark:text-gray-300">
+                        {locale === "fr" ? text.fr : text.en}
+                      </span>
+                    </li>
+                  );
+                })}
               </ul>
             </div>
           )}
@@ -247,17 +260,20 @@ const TripCltDetailScreen = () => {
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border dark:border-gray-700 p-6">
               <h3 className="font-semibold text-lg mb-4 text-red-600 dark:text-red-400 flex items-center">
                 <XCircle className="w-5 h-5 mr-2" />
-                Non inclus
+                {t("ourTrip.notIncluded")}
               </h3>
               <ul className="space-y-3">
-                {tripDetail.notIncluded.map((item: any) => (
-                  <li key={item.id} className="flex items-start space-x-3">
-                    <XCircle className="w-4 h-4 text-red-500 dark:text-red-400 mt-0.5 flex-shrink-0" />
-                    <span className="text-sm text-gray-700 dark:text-gray-300">
-                      {item.text}
-                    </span>
-                  </li>
-                ))}
+                {tripDetail.notIncluded.map((item: any) => {
+                  const text = JSON.parse(item.text);
+                  return (
+                    <li key={item.id} className="flex items-start space-x-3">
+                      <XCircle className="w-4 h-4 text-red-500 dark:text-red-400 mt-0.5 flex-shrink-0" />
+                      <span className="text-sm text-gray-700 dark:text-gray-300">
+                        {locale === "fr" ? text.fr : text.en}
+                      </span>
+                    </li>
+                  );
+                })}
               </ul>
             </div>
           )}
@@ -280,67 +296,88 @@ const TripCltDetailScreen = () => {
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border dark:border-gray-700 p-6">
             <h3 className="font-semibold text-lg mb-6 text-gray-900 dark:text-white flex items-center">
               <Calendar className="w-5 h-5 mr-2" />
-              Programmes par jour ({tripDetail.program.length} jours)
+              {t("ourTrip.programDay")} ({tripDetail.program.length} {t("ourTrip.day")})
             </h3>
             <div className="space-y-6">
-              {tripDetail.program.map((itinerary: any, index: number) => (
-                <div
-                  key={itinerary.id}
-                  className="border dark:border-gray-700 rounded-lg overflow-hidden"
-                >
-                  <div className="lg:flex">
-                    {/* Image */}
-                    {itinerary.image && (
-                      <div className="lg:w-1/3">
-                        <img
-                          src={itinerary.image}
-                          alt={
-                            itinerary.imageDescription ||
-                            `Jour ${itinerary.day}`
-                          }
-                          className="w-full h-48 lg:h-full object-cover"
-                        />
-                      </div>
-                    )}
-
-                    {/* Content */}
-                    <div
-                      className={`p-6 ${
-                        itinerary.image ? "lg:w-2/3" : "w-full"
-                      } bg-gray-50 dark:bg-gray-700`}
-                    >
-                      <div className="flex items-center mb-4">
-                        <div className="bg-blue-600 text-white rounded-full w-8 h-8 flex items-center justify-center font-semibold text-sm mr-4">
-                          {itinerary.day}
+              {tripDetail.program.map((itinerary: any, index: number) => {
+                const title = JSON.parse(itinerary.title);
+                const description = JSON.parse(itinerary.description);
+                const imgDescription = JSON.parse(itinerary.imageDescription);
+                return (
+                  <div
+                    key={itinerary.id}
+                    className="border dark:border-gray-700 rounded-lg overflow-hidden"
+                  >
+                    <div className="lg:flex">
+                      {/* Image */}
+                      {itinerary.image && (
+                        <div className="lg:w-1/3">
+                          <img
+                            src={itinerary.image}
+                            alt={imgDescription.fr || `Jour ${itinerary.day}`}
+                            className="w-full h-48 lg:h-full object-cover"
+                          />
                         </div>
-                        <div>
-                          <h4 className="text-lg font-semibold text-gray-900 dark:text-white">
-                            {itinerary.title}
-                          </h4>
-                          {itinerary.imageDescription && (
-                            <p className="text-sm text-gray-500 dark:text-gray-400">
-                              {itinerary.imageDescription}
-                            </p>
+                      )}
+
+                      {/* Content */}
+                      <div
+                        className={`p-6 ${
+                          itinerary.image ? "lg:w-2/3" : "w-full"
+                        } bg-gray-50 dark:bg-gray-700`}
+                      >
+                        <div className="flex items-center mb-4">
+                          <div className="bg-blue-600 text-white rounded-full w-8 h-8 flex items-center justify-center font-semibold text-sm mr-4">
+                            {itinerary.day}
+                          </div>
+                          <div>
+                            <h4 className="text-lg font-semibold text-gray-900 dark:text-white">
+                              {locale === "fr" ? title.fr : title.en}
+                            </h4>
+                            {imgDescription && (
+                              <p className="text-sm text-gray-500 dark:text-gray-400">
+                                {locale === "fr"
+                                  ? imgDescription.fr
+                                  : imgDescription.en}
+                              </p>
+                            )}
+                          </div>
+                        </div>
+
+                        <div className="prose max-w-none">
+                          {locale === "fr" ? (
+                            <>
+                              {description.fr
+                                .split("\n\n")
+                                .map((paragraph: any, pIndex: any) => (
+                                  <p
+                                    key={pIndex}
+                                    className="mb-3 text-gray-700 dark:text-gray-300 leading-relaxed text-sm"
+                                  >
+                                    {paragraph}
+                                  </p>
+                                ))}
+                            </>
+                          ) : (
+                            <>
+                              {description.en
+                                .split("\n\n")
+                                .map((paragraph: any, pIndex: any) => (
+                                  <p
+                                    key={pIndex}
+                                    className="mb-3 text-gray-700 dark:text-gray-300 leading-relaxed text-sm"
+                                  >
+                                    {paragraph}
+                                  </p>
+                                ))}
+                            </>
                           )}
                         </div>
                       </div>
-
-                      <div className="prose max-w-none">
-                        {itinerary.description
-                          .split("\n\n")
-                          .map((paragraph: any, pIndex: any) => (
-                            <p
-                              key={pIndex}
-                              className="mb-3 text-gray-700 dark:text-gray-300 leading-relaxed text-sm"
-                            >
-                              {paragraph}
-                            </p>
-                          ))}
-                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
         )}

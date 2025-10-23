@@ -60,7 +60,7 @@ export const LanguageSwitcher: React.FC = () => {
       <button
         onClick={() => setIsOpen(!isOpen)}
         disabled={isPending}
-        className="flex items-center space-x-2 bg-transparent border hover:text-slate-700 border-indigo-400 rounded-md px-3 py-2 text-sm hover:bg-indigo-50 transition-colors duration-200 min-w-[120px] justify-between"
+        className="flex items-center space-x-2 bg-transparent border text-slate-600 hover:text-slate-700 border-indigo-400 rounded-md px-3 py-2 text-sm hover:bg-indigo-50 transition-colors duration-200 min-w-[120px] justify-between"
       >
         <div className="flex items-center space-x-2">
           <span className="text-lg">{currentLanguage?.flag}</span>
@@ -86,7 +86,7 @@ export const LanguageSwitcher: React.FC = () => {
               } ${isPending ? "opacity-50 cursor-not-allowed" : ""}`}
             >
               <span className="text-lg">{language.flag}</span>
-              <span>{t(language.name)}</span>
+              <span className="text-lg text-slate-800">{t(language.name)}</span>
               {lang === language.code && (
                 <span className="ml-auto text-indigo-600">✓</span>
               )}

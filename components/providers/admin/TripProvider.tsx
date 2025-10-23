@@ -4,32 +4,44 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useToast } from "@/hooks/shared/use-toast";
 import { TravelDates, TripTravel } from "@/src/domain/entities/trip";
 
+// Interfaces pour les données multilingues
+interface LocalizedText {
+  fr: string;
+  en: string;
+}
+
 export interface Program {
   day: number;
-  title: string;
-  description: string;
+  title: LocalizedText;
+  description: LocalizedText;
   image: string;
-  imageDescription: string;
+  imageDescription: LocalizedText;
 }
 
 interface TripFormData {
-  title: string;
+  title: LocalizedText;
   price: string;
   duration: string;
   travelDates: TravelDates[];
-  description: string;
-  highlights: string[];
+  description: LocalizedText;
+  highlights: LocalizedText[];
   program: Program[];
-  included: string[];
-  notIncluded: string[];
+  included: LocalizedText[];
+  notIncluded: LocalizedText[];
 }
 
 interface TripContextType {
   formData: TripFormData;
   setFormData: React.Dispatch<React.SetStateAction<TripFormData>>;
   handleInputChange: (e: React.ChangeEvent<any>) => void;
+  handleLocalizedInputChange: (
+    field: keyof TripFormData,
+    language: 'fr' | 'en',
+    value: string
+  ) => void;
   handleArrayInputChange: (
     index: number,
+    language: 'fr' | 'en',
     value: string,
     arrayName: "highlights" | "included" | "notIncluded"
   ) => void;
@@ -41,6 +53,7 @@ interface TripContextType {
   handleProgramChange: (
     index: number,
     field: keyof Program,
+    language: 'fr' | 'en',
     value: string
   ) => void;
   addProgramDay: () => void;
@@ -67,9 +80,22 @@ interface TripContextType {
   removeTravelDate: (index: number) => void;
   formatDateForInput: (date: Date | string) => string;
   formatDuration: (days: number) => string;
+  createLocalizedText: (fr?: string, en?: string) => LocalizedText;
 }
 
 const TripContext = createContext<TripContextType | undefined>(undefined);
+
+// Fonction utilitaire pour créer un objet LocalizedText
+const createLocalizedText = (fr: string = "", en: string = ""): LocalizedText => ({
+  fr,
+  en
+});
+
+// Fonction utilitaire pour convertir un string en LocalizedText
+const stringToLocalizedText = (text: string): LocalizedText => ({
+  fr: text,
+  en: ""
+});
 
 export const TripProvider = ({
   children,
@@ -82,15 +108,15 @@ export const TripProvider = ({
   const [isLoading, setIsLoading] = useState(false);
   const [tripDetail, setTripDetail] = useState<any>(null);
   const [formData, setFormData] = useState<TripFormData>({
-    title: "",
+    title: createLocalizedText(),
     price: "",
     duration: "",
     travelDates: [],
-    description: "",
-    highlights: [""],
+    description: createLocalizedText(),
+    highlights: [createLocalizedText()],
     program: [],
-    included: [""],
-    notIncluded: [""],
+    included: [createLocalizedText()],
+    notIncluded: [createLocalizedText()],
   });
 
   const params = useSearchParams();
@@ -135,62 +161,130 @@ export const TripProvider = ({
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+  // Gestion des champs localisés (title, description) - CORRIGÉ
+  const handleLocalizedInputChange = (
+    field: keyof TripFormData,
+    language: 'fr' | 'en',
+    value: string
+  ) => {
+    setFormData((prev) => {
+      const currentField = prev[field];
+      // Vérifier que c'est bien un LocalizedText
+      if (typeof currentField === 'object' && 'fr' in currentField && 'en' in currentField) {
+        return {
+          ...prev,
+          [field]: {
+            ...currentField,
+            [language]: value
+          }
+        };
+      }
+      return prev;
+    });
+  };
+
+  // Gestion des tableaux localisés (highlights, included, notIncluded)
   const handleArrayInputChange = (
     index: number,
+    language: 'fr' | 'en',
     value: string,
     arrayName: "highlights" | "included" | "notIncluded"
   ) => {
-    const newArray = [...formData[arrayName]];
-    newArray[index] = value;
-    setFormData((prev) => ({ ...prev, [arrayName]: newArray }));
+    setFormData((prev) => {
+      const newArray = [...prev[arrayName]];
+      if (index < newArray.length) {
+        newArray[index] = {
+          ...newArray[index],
+          [language]: value
+        };
+      }
+      return {
+        ...prev,
+        [arrayName]: newArray
+      };
+    });
   };
 
   const addArrayItem = (
     arrayName: "highlights" | "included" | "notIncluded"
   ) => {
-    setFormData((prev) => ({ ...prev, [arrayName]: [...prev[arrayName], ""] }));
+    setFormData((prev) => ({ 
+      ...prev, 
+      [arrayName]: [...prev[arrayName], createLocalizedText()] 
+    }));
   };
 
   const removeArrayItem = (
     index: number,
     arrayName: "highlights" | "included" | "notIncluded"
   ) => {
-    const newArray = formData[arrayName].filter((_, i) => i !== index);
-    setFormData((prev) => ({ ...prev, [arrayName]: newArray }));
+    setFormData((prev) => {
+      const newArray = prev[arrayName].filter((_, i) => i !== index);
+      return { ...prev, [arrayName]: newArray };
+    });
   };
 
+  // Gestion du programme localisé - CORRIGÉ
   const handleProgramChange = (
     index: number,
     field: keyof Program,
+    language: 'fr' | 'en',
     value: string
   ) => {
-    const newProgram = [...formData.program];
-    newProgram[index] = { ...newProgram[index], [field]: value };
-    setFormData((prev) => ({ ...prev, program: newProgram }));
+    setFormData((prev) => {
+      const newProgram = [...prev.program];
+      
+      if (index >= newProgram.length) return prev;
+
+      const currentDay = newProgram[index];
+      
+      if (field === 'image') {
+        // Pour l'image, c'est un string simple
+        newProgram[index] = { ...currentDay, [field]: value };
+      } else {
+        // Pour les champs localisés (title, description, imageDescription)
+        const currentField = currentDay[field];
+        if (typeof currentField === 'object' && 'fr' in currentField && 'en' in currentField) {
+          newProgram[index] = {
+            ...currentDay,
+            [field]: {
+              ...currentField,
+              [language]: value
+            }
+          };
+        }
+      }
+      
+      return { ...prev, program: newProgram };
+    });
   };
 
   const addProgramDay = () => {
-    const newDay: Program = {
-      day: formData.program.length + 1,
-      title: "",
-      description: "",
-      image: "",
-      imageDescription: "",
-    };
-    setFormData((prev) => ({
-      ...prev,
-      program: [...prev.program, newDay],
-    }));
+    setFormData((prev) => {
+      const newDay: Program = {
+        day: prev.program.length + 1,
+        title: createLocalizedText(),
+        description: createLocalizedText(),
+        image: "",
+        imageDescription: createLocalizedText(),
+      };
+      return {
+        ...prev,
+        program: [...prev.program, newDay],
+      };
+    });
   };
 
   const removeProgramDay = (index: number) => {
-    const newProgram = formData.program.filter((_, i) => i !== index);
-    // Reassign days in order
-    const reorderedProgram = newProgram.map((day, idx) => ({
-      ...day,
-      day: idx + 1,
-    }));
-    setFormData((prev) => ({ ...prev, program: reorderedProgram }));
+    setFormData((prev) => {
+      const newProgram = prev.program.filter((_, i) => i !== index);
+      // Reassign days in order
+      const reorderedProgram = newProgram.map((day, idx) => ({
+        ...day,
+        day: idx + 1,
+      }));
+      return { ...prev, program: reorderedProgram };
+    });
   };
 
   const handleTravelDatesChange = (
@@ -198,62 +292,70 @@ export const TripProvider = ({
     field: keyof TravelDates,
     value: string | Date
   ) => {
-    const newTravelDates = [...formData.travelDates];
-    
-    // Mettre à jour la valeur du champ
-    newTravelDates[index] = { ...newTravelDates[index], [field]: value };
-    
-    // Si startDate ou endDate change, recalculer la durée automatiquement
-    if (field === 'startDate' || field === 'endDate') {
-      const startDate = field === 'startDate' ? value : newTravelDates[index].startDate;
-      const endDate = field === 'endDate' ? value : newTravelDates[index].endDate;
+    setFormData((prev) => {
+      const newTravelDates = [...prev.travelDates];
       
-      if (startDate && endDate) {
-        const start = new Date(startDate);
-        const end = new Date(endDate);
+      if (index >= newTravelDates.length) return prev;
+
+      // Mettre à jour la valeur du champ
+      newTravelDates[index] = { ...newTravelDates[index], [field]: value };
+      
+      // Si startDate ou endDate change, recalculer la durée automatiquement
+      if (field === 'startDate' || field === 'endDate') {
+        const startDate = field === 'startDate' ? value : newTravelDates[index].startDate;
+        const endDate = field === 'endDate' ? value : newTravelDates[index].endDate;
         
-        // Validation : endDate ne peut pas être avant startDate
-        if (end < start) {
-          toast({
-            title: "Erreur de date",
-            description: "La date de fin ne peut pas être avant la date de début",
-            variant: "destructive"
-          });
-          return; // Ne pas mettre à jour si les dates sont invalides
+        if (startDate && endDate) {
+          const start = new Date(startDate);
+          const end = new Date(endDate);
+          
+          // Validation : endDate ne peut pas être avant startDate
+          if (end < start) {
+            toast({
+              title: "Erreur de date",
+              description: "La date de fin ne peut pas être avant la date de début",
+              variant: "destructive"
+            });
+            return prev; // Ne pas mettre à jour si les dates sont invalides
+          }
+          
+          const days = calculateDuration(start, end);
+          newTravelDates[index].duration = days;
         }
-        
-        const days = calculateDuration(start, end);
-        newTravelDates[index].duration = days;
       }
-    }
-    
-    setFormData((prev) => ({ ...prev, travelDates: newTravelDates }));
+      
+      return { ...prev, travelDates: newTravelDates };
+    });
   };
 
   const addTravelDate = () => {
-    const today = new Date();
-    const endDate = new Date();
-    endDate.setDate(today.getDate() + 7); // 7 jours par défaut
-    
-    const newDate: TravelDates = {
-      id: "",
-      tripTravelId: "",
-      startDate: today,
-      endDate: endDate,
-      maxPeople: "",
-      price: "",
-      duration: calculateDuration(today, endDate)
-    };
-    
-    setFormData((prev) => ({
-      ...prev,
-      travelDates: [...prev.travelDates, newDate],
-    }));
+    setFormData((prev) => {
+      const today = new Date();
+      const endDate = new Date();
+      endDate.setDate(today.getDate() + 7); // 7 jours par défaut
+      
+      const newDate: TravelDates = {
+        id: "",
+        tripTravelId: "",
+        startDate: today,
+        endDate: endDate,
+        maxPeople: "",
+        price: "",
+        duration: calculateDuration(today, endDate)
+      };
+      
+      return {
+        ...prev,
+        travelDates: [...prev.travelDates, newDate],
+      };
+    });
   };
 
   const removeTravelDate = (index: number) => {
-    const newTravelDates = formData.travelDates.filter((_, i) => i !== index);
-    setFormData((prev) => ({ ...prev, travelDates: newTravelDates }));
+    setFormData((prev) => {
+      const newTravelDates = prev.travelDates.filter((_, i) => i !== index);
+      return { ...prev, travelDates: newTravelDates };
+    });
   };
 
   const handleImageUpload = async (
@@ -265,17 +367,24 @@ export const TripProvider = ({
       const formDataUpload = new FormData();
       formDataUpload.append("file", file);
 
-      // Appel API upload
-      const res = await fetch("/api/upload", {
-        method: "POST",
-        body: formDataUpload,
-      });
+      try {
+        // Appel API upload
+        const res = await fetch("/api/upload", {
+          method: "POST",
+          body: formDataUpload,
+        });
 
-      if (res.ok) {
-        const data = await res.json();
-        // data.url = "/uploads/nomfichier.jpg"
-        handleProgramChange(index, "image", data.url);
-      } else {
+        if (res.ok) {
+          const data = await res.json();
+          // data.url = "/uploads/nomfichier.jpg"
+          handleProgramChange(index, "image", 'fr', data.url);
+        } else {
+          toast({
+            title: "Error !",
+            description: "Erreur lors de l'upload de l'image",
+          });
+        }
+      } catch (error) {
         toast({
           title: "Error !",
           description: "Erreur lors de l'upload de l'image",
@@ -291,28 +400,35 @@ export const TripProvider = ({
 
     // Filtrer les tableaux pour enlever les éléments vides
     const filteredHighlights = formData.highlights.filter(
-      (item) => item.trim() !== ""
+      (item) => item.fr.trim() !== "" || item.en.trim() !== ""
     );
     const filteredIncluded = formData.included.filter(
-      (item) => item.trim() !== ""
+      (item) => item.fr.trim() !== "" || item.en.trim() !== ""
     );
     const filteredNotIncluded = formData.notIncluded.filter(
-      (item) => item.trim() !== ""
+      (item) => item.fr.trim() !== "" || item.en.trim() !== ""
     );
     const filteredProgram = formData.program.filter(
-      (day) => day.title.trim() !== "" || day.description.trim() !== ""
+      (day) => day.title.fr.trim() !== "" || day.title.en.trim() !== "" || 
+               day.description.fr.trim() !== "" || day.description.en.trim() !== ""
     );
 
+    // Stringifier les données localisées
     const circuitData = {
-      title: formData.title,
+      title: JSON.stringify(formData.title),
       price: formData.price,
       duration: formData.duration,
       travelDates: formData.travelDates,
-      description: formData.description,
-      highlights: filteredHighlights,
-      included: filteredIncluded,
-      notIncluded: filteredNotIncluded,
-      program: filteredProgram,
+      description: JSON.stringify(formData.description),
+      highlights: filteredHighlights.map(item => JSON.stringify(item)),
+      included: filteredIncluded.map(item => JSON.stringify(item)),
+      notIncluded: filteredNotIncluded.map(item => JSON.stringify(item)),
+      program: filteredProgram.map(day => ({
+        ...day,
+        title: JSON.stringify(day.title),
+        description: JSON.stringify(day.description),
+        imageDescription: JSON.stringify(day.imageDescription)
+      })),
     };
 
     try {
@@ -330,15 +446,15 @@ export const TripProvider = ({
           description: "Voyage ajouté avec succès !",
         });
         setFormData({
-          title: "",
+          title: createLocalizedText(),
           price: "",
           duration: "",
           travelDates: [],
-          description: "",
-          highlights: [""],
+          description: createLocalizedText(),
+          highlights: [createLocalizedText()],
           program: [],
-          included: [""],
-          notIncluded: [""],
+          included: [createLocalizedText()],
+          notIncluded: [createLocalizedText()],
         });
         setIsLoading(false);
         router.push("/admin/trip");
@@ -361,11 +477,44 @@ export const TripProvider = ({
 
   const handleUpdate = async (id: string) => {
     setIsLoading(true);
+    
+    // Préparer les données pour l'update (identique au submit)
+    const filteredHighlights = formData.highlights.filter(
+      (item) => item.fr.trim() !== "" || item.en.trim() !== ""
+    );
+    const filteredIncluded = formData.included.filter(
+      (item) => item.fr.trim() !== "" || item.en.trim() !== ""
+    );
+    const filteredNotIncluded = formData.notIncluded.filter(
+      (item) => item.fr.trim() !== "" || item.en.trim() !== ""
+    );
+    const filteredProgram = formData.program.filter(
+      (day) => day.title.fr.trim() !== "" || day.title.en.trim() !== "" || 
+               day.description.fr.trim() !== "" || day.description.en.trim() !== ""
+    );
+
+    const circuitData = {
+      title: JSON.stringify(formData.title),
+      price: formData.price,
+      duration: formData.duration,
+      travelDates: formData.travelDates,
+      description: JSON.stringify(formData.description),
+      highlights: filteredHighlights.map(item => JSON.stringify(item)),
+      included: filteredIncluded.map(item => JSON.stringify(item)),
+      notIncluded: filteredNotIncluded.map(item => JSON.stringify(item)),
+      program: filteredProgram.map(day => ({
+        ...day,
+        title: JSON.stringify(day.title),
+        description: JSON.stringify(day.description),
+        imageDescription: JSON.stringify(day.imageDescription)
+      })),
+    };
+
     try {
       const res = await fetch(`/api/trip/update/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(circuitData),
       });
       if (res.ok) {
         const updatedTrip = await res.json();
@@ -381,15 +530,15 @@ export const TripProvider = ({
         await getTripById(id);
         await fetchTrips();
         setFormData({
-          title: "",
+          title: createLocalizedText(),
           price: "",
           duration: "",
           travelDates: [],
-          description: "",
-          highlights: [""],
+          description: createLocalizedText(),
+          highlights: [createLocalizedText()],
           program: [],
-          included: [""],
-          notIncluded: [""],
+          included: [createLocalizedText()],
+          notIncluded: [createLocalizedText()],
         });
       } else {
         toast({
@@ -408,8 +557,6 @@ export const TripProvider = ({
   };
 
   const handleDelete = async (id: string) => {
-    console.log("IDDDDD", id);
-    // setIsLoading(true)
     try {
       const res = await fetch(`/api/trip/delete/${id}`, {
         method: "DELETE",
@@ -461,34 +608,60 @@ export const TripProvider = ({
     }
   };
 
+  // Fonction pour parser les données localisées depuis l'API
+  const parseLocalizedData = (data: any): LocalizedText => {
+    if (!data) return createLocalizedText();
+    
+    if (typeof data === 'string') {
+      try {
+        return JSON.parse(data);
+      } catch {
+        return stringToLocalizedText(data);
+      }
+    }
+    
+    if (typeof data === 'object') {
+      return {
+        fr: data.fr || "",
+        en: data.en || ""
+      };
+    }
+    
+    return createLocalizedText();
+  };
+
   const getTripById = async (id: string) => {
     try {
       const res = await fetch(`/api/trip/${id}`, { cache: "no-store" });
       if (res.ok) {
         const data = await res.json();
-        console.log("RESS", data);
         setTripDetail(data);
+        
+        // Convertir les données de l'API en format formulaire
         setFormData({
-          title: data.title || "",
+          title: parseLocalizedData(data.title),
           price: data.price || "",
           duration: data.duration || "",
           travelDates: data.travelDates || [],
-          description: data.description || "",
-          highlights:
-            data.highlights && data.highlights.length > 0
-              ? data.highlights.map((item: any) => item.text)
-              : [],
-          program:
-            data.program && data.program.length > 0
-              ? data.program
-              : [],
-         
+          description: parseLocalizedData(data.description),
+          highlights: data.highlights && data.highlights.length > 0
+            ? data.highlights.map((item: any) => parseLocalizedData(item.text || item))
+            : [createLocalizedText()],
+          program: data.program && data.program.length > 0
+            ? data.program.map((item: any) => ({
+                day: item.day || 0,
+                title: parseLocalizedData(item.title),
+                description: parseLocalizedData(item.description),
+                image: item.image || "",
+                imageDescription: parseLocalizedData(item.imageDescription)
+              }))
+            : [],
           included: data.included?.length
-            ? data.included.map((item: any) => item.text)
-            : [],
+            ? data.included.map((item: any) => parseLocalizedData(item.text || item))
+            : [createLocalizedText()],
           notIncluded: data.notIncluded?.length
-            ? data.notIncluded.map((item: any) => item.text)
-            : [],
+            ? data.notIncluded.map((item: any) => parseLocalizedData(item.text || item))
+            : [createLocalizedText()],
         });
         return data;
       } else {
@@ -513,6 +686,7 @@ export const TripProvider = ({
         formData,
         setFormData,
         handleInputChange,
+        handleLocalizedInputChange,
         handleArrayInputChange,
         addArrayItem,
         removeArrayItem,
@@ -533,7 +707,8 @@ export const TripProvider = ({
         addTravelDate,
         removeTravelDate,
         formatDateForInput,
-        formatDuration
+        formatDuration,
+        createLocalizedText
       }}
     >
       {children}

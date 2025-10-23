@@ -1,6 +1,6 @@
 import React from "react";
 import { Button } from "./ui/button";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { Label } from "./ui/label";
 import {
   Select,
@@ -66,6 +66,7 @@ const TripBooking = ({
   handleTravelDatesChange,
 }: PropsData) => {
   const t = useTranslations("lng");
+  const locale = useLocale();
   console.log("DATES", tripDetail?.travelDates);
   return (
     <div>
@@ -92,19 +93,22 @@ const TripBooking = ({
               />
             </SelectTrigger>
             <SelectContent>
-              {addedTrips?.map((tripItem) => (
-                <SelectItem
-                  key={tripItem.id || tripItem._id}
-                  value={tripItem.id || tripItem._id}
-                >
-                  {tripItem.title || tripItem.nom || `Trip ${tripItem.id}`}
-                </SelectItem>
-              ))}
+              {addedTrips?.map((tripItem) => {
+                const title = JSON.parse(tripItem.title);
+                return (
+                  <SelectItem
+                    key={tripItem.id || tripItem._id}
+                    value={tripItem.id || tripItem._id}
+                  >
+                    {locale === "fr" ? title.fr : title.en}
+                  </SelectItem>
+                );
+              })}
             </SelectContent>
           </Select>
           {trip && tripDetail && (
             <p className="text-sm text-muted-foreground">
-              Trip sélectionné : {tripDetail.title || ""}
+              {t("book.form.selectedTrip")} : {tripDetail.title || ""}
             </p>
           )}
         </div>
@@ -128,10 +132,13 @@ const TripBooking = ({
             </SelectTrigger>
             <SelectContent>
               {tripDetail?.travelDates.map((date) => (
-                  <SelectItem key={date.id} value={date.id}>
-                    {formatDate(date.startDate)} → {formatDate(date.endDate)} : <span className="font-semibold">{date.placesDisponibles}/{date.maxPeople} places disponibles</span>
-                  </SelectItem>
-                ))}
+                <SelectItem key={date.id} value={date.id}>
+                  {formatDate(date.startDate)} → {formatDate(date.endDate)} :{" "}
+                  <span className="font-semibold">
+                    {date.placesDisponibles}/{date.maxPeople} places disponibles
+                  </span>
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
         </div>
@@ -256,7 +263,7 @@ const TripBooking = ({
                 animationFillMode: "both",
               }}
             >
-              <Label htmlFor="nbrAdult">Nombre d'adultes *</Label>
+              <Label htmlFor="nbrAdult">{t("book.form.nbrAdult")} *</Label>
               <Input
                 id="nbrAdult"
                 name="nbrAdult"
@@ -276,7 +283,7 @@ const TripBooking = ({
                 animationFillMode: "both",
               }}
             >
-              <Label htmlFor="nbrChild">Nombre d'enfants</Label>
+              <Label htmlFor="nbrChild">{t("book.form.nbrChildren")} *</Label>
               <Input
                 id="nbrChild"
                 name="nbrChild"
@@ -304,7 +311,7 @@ const TripBooking = ({
                 animationFillMode: "both",
               }}
             >
-              <Label htmlFor="nbrAge2_3">2 à 3 ans *</Label>
+              <Label htmlFor="nbrAge2_3">2 {t("book.form.to")} 3 {t("book.form.yearsOld")} *</Label>
               <Input
                 id="nbrAge2_3"
                 name="nbrAge2_3"
@@ -324,7 +331,7 @@ const TripBooking = ({
                 animationFillMode: "both",
               }}
             >
-              <Label htmlFor="nbrAge4_7">4 à 7 ans *</Label>
+              <Label htmlFor="nbrAge4_7">4 {t("book.form.to")} 7 {t("book.form.yearsOld")} *</Label>
               <Input
                 id="nbrAge4_7"
                 name="nbrAge4_7"
@@ -344,7 +351,7 @@ const TripBooking = ({
                 animationFillMode: "both",
               }}
             >
-              <Label htmlFor="nbrAge8_10">2 à 3 ans *</Label>
+              <Label htmlFor="nbrAge8_10">8 {t("book.form.to")} 10 {t("book.form.yearsOld")} *</Label>
               <Input
                 id="nbrAge8_10"
                 name="nbrAge8_10"
@@ -364,7 +371,7 @@ const TripBooking = ({
                 animationFillMode: "both",
               }}
             >
-              <Label htmlFor="nbrAge11">11 ans et plus *</Label>
+              <Label htmlFor="nbrAge11">11 {t("book.form.toPlus")} *</Label>
               <Input
                 id="nbrAge11"
                 name="nbrAge11"

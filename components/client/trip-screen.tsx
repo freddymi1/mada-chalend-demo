@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, ReactNode, useEffect } from "react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import {
   MapPin,
   Users,
@@ -31,6 +31,7 @@ const TripScreen = () => {
   const [selectedTrip, setSelectedTrip] = useState<TripTravel | null>(null);
   const [hoveredCard, setHoveredCard] = useState<string | null>(null);
   const router = useRouter();
+  const locale = useLocale();
 
   const { addedTrips: trips, fetchTrips, isLoading } = useCltTrip();
 
@@ -125,148 +126,155 @@ const TripScreen = () => {
 
         {/* Trips Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto mb-12">
-          {trips.map((trip, idx) => (
-            <div
-              key={trip.id}
-              onMouseEnter={() => setHoveredCard(trip.id)}
-              onMouseLeave={() => setHoveredCard(null)}
-              className="group cursor-pointer animate-slide-up"
-              style={{ animationDelay: `${idx * 100}ms` }}
-            >
-              <div className="relative h-full bg-gradient-to-br from-slate-800/50 to-slate-700/50 backdrop-blur-sm border border-slate-700/50 rounded-2xl overflow-hidden transition-all duration-500 hover:border-purple-500/50 hover:shadow-2xl hover:shadow-purple-500/10">
-                {/* Image Container */}
-                <div className="relative h-48 sm:h-56 overflow-hidden bg-gradient-to-br from-blue-500/10 to-purple-500/10">
-                  {trip.program[0]?.image ? (
-                    <img
-                      src={trip.program[0].image}
-                      alt={trip.program[0].imageDescription}
-                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                    />
-                  ) : (
-                    <div className="w-full h-full bg-gradient-to-br from-blue-500/20 to-purple-500/20 flex items-center justify-center">
-                      <MapPin className="w-12 h-12 text-slate-600" />
-                    </div>
-                  )}
+          {trips.map((trip, idx) => {
+            const title = JSON.parse(trip.title);
+            const description = JSON.parse(trip.description);
+            return (
+              <div
+                key={trip.id}
+                onMouseEnter={() => setHoveredCard(trip.id)}
+                onMouseLeave={() => setHoveredCard(null)}
+                className="group cursor-pointer animate-slide-up"
+                style={{ animationDelay: `${idx * 100}ms` }}
+              >
+                <div className="relative h-full bg-gradient-to-br from-slate-800/50 to-slate-700/50 backdrop-blur-sm border border-slate-700/50 rounded-2xl overflow-hidden transition-all duration-500 hover:border-purple-500/50 hover:shadow-2xl hover:shadow-purple-500/10">
+                  {/* Image Container */}
+                  <div className="relative h-48 sm:h-56 overflow-hidden bg-gradient-to-br from-blue-500/10 to-purple-500/10">
+                    {trip.program[0]?.image ? (
+                      <img
+                        src={trip.program[0].image}
+                        alt={trip.program[0].imageDescription}
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-gradient-to-br from-blue-500/20 to-purple-500/20 flex items-center justify-center">
+                        <MapPin className="w-12 h-12 text-slate-600" />
+                      </div>
+                    )}
 
-                  {/* Overlay Badge */}
-                  <div className="absolute top-4 right-4">
-                    <div className="bg-gradient-to-r from-pink-500 to-rose-500 text-white px-3 py-1 rounded-full text-sm font-bold backdrop-blur-sm">
-                      {calculateOccupancyRate(trip)}%{" "}
-                      {t("ourTrip.booked") || "Booked"}
-                    </div>
-                  </div>
-                </div>
-
-                {/* Content */}
-                <div className="p-6 sm:p-8">
-                  <h3 className="text-xl sm:text-2xl font-bold text-white mb-2">
-                    {trip.title}
-                  </h3>
-                  <p className="text-white/80 dark:text-slate-400 text-sm mb-4 line-clamp-2">
-                    {trip.description}
-                  </p>
-
-                  {/* Quick Stats */}
-                  <div className="grid grid-cols-2 gap-3 mb-6">
-                    <div className="flex items-center gap-2 text-slate-300">
-                      <Calendar className="w-4 h-4 text-emerald-400" />
-                      <span className="text-sm">
-                        {trip.duration}
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-2 text-slate-300">
-                      <DollarSign className="w-4 h-4 text-yellow-400" />
-                      <span className="text-sm font-semibold">
-                        ${trip.price}
-                      </span>
+                    {/* Overlay Badge */}
+                    <div className="absolute top-4 right-4">
+                      <div className="bg-gradient-to-r from-pink-500 to-rose-500 text-white px-3 py-1 rounded-full text-sm font-bold backdrop-blur-sm">
+                        {calculateOccupancyRate(trip)}%{" "}
+                        {t("ourTrip.booked") || "Booked"}
+                      </div>
                     </div>
                   </div>
 
-                  {/* Dates */}
-                  <div className="w-full mb-6">
-                    <p className="text-xl text-white mb-1">
-                      {t("ourTrip.travelDates") || "Travel Dates"}
+                  {/* Content */}
+                  <div className="p-6 sm:p-8">
+                    <h3 className="text-xl sm:text-2xl font-bold text-white mb-2">
+                      {locale === "fr" ? title.fr : title.en}
+                    </h3>
+                    <p className="text-white/80 dark:text-slate-400 text-sm mb-4 line-clamp-2">
+                      {locale === "fr" ? description.fr : description.en}
                     </p>
-                    {trip.travelDates.map((date) => (
-                      <div
-                        key={date.id}
-                        className="bg-slate-700/30 rounded-lg p-3 border border-slate-600/30 flex flex-col items-start  mb-4"
-                      >
-                        <div className="flex items-center gap-2">
-                          <Calendar className="w-4 h-4 text-blue-400" />
-                          <p className="text-sm font-semibold text-white">
-                            {formatDate(date.startDate)} →{" "}
-                            {formatDate(date.endDate)}
-                          </p>
-                        </div>
-                        <div className="flex items-center gap-4">
+
+                    {/* Quick Stats */}
+                    <div className="grid grid-cols-2 gap-3 mb-6">
+                      <div className="flex items-center gap-2 text-slate-300">
+                        <Calendar className="w-4 h-4 text-emerald-400" />
+                        <span className="text-sm">{Number(trip.duration)} {t("ourTrip.day")} / {Number(trip.duration) - 1} {t("ourTrip.night")}</span>
+                      </div>
+                      <div className="flex items-center gap-2 text-slate-300">
+                        <DollarSign className="w-4 h-4 text-yellow-400" />
+                        <span className="text-sm font-semibold">
+                          ${trip.price}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Dates */}
+                    <div className="w-full mb-6">
+                      <p className="text-xl text-white mb-1">
+                        {t("ourTrip.travelDates") || "Travel Dates"}
+                      </p>
+                      {trip.travelDates.map((date) => (
+                        <div
+                          key={date.id}
+                          className="bg-slate-700/30 rounded-lg p-3 border border-slate-600/30 flex flex-col items-start  mb-4"
+                        >
                           <div className="flex items-center gap-2">
-                            <Users className="w-4 h-4 text-blue-400" />
+                            <Calendar className="w-4 h-4 text-blue-400" />
                             <p className="text-sm font-semibold text-white">
-                              {date.placesDisponibles} / {date.maxPeople}
+                              {formatDate(date.startDate)} →{" "}
+                              {formatDate(date.endDate)}
                             </p>
                           </div>
-                          
-                          {/* <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-4">
+                            <div className="flex items-center gap-2">
+                              <Users className="w-4 h-4 text-blue-400" />
+                              <p className="text-sm font-semibold text-white">
+                                {date.placesDisponibles} / {date.maxPeople}
+                              </p>
+                            </div>
+
+                            {/* <div className="flex items-center gap-2">
                             <EuroIcon className="w-4 h-4 text-blue-400" />
                             <p className="text-sm font-semibold text-white">
                               {date.price}€
                             </p>
                           </div> */}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Highlights */}
+                    {trip.highlights && trip.highlights.length > 0 && (
+                      <div className="mb-6">
+                        <p className="text-xs font-semibold text-slate-300 mb-2 uppercase tracking-wider">
+                          {t("ourTrip.highlights") || "Highlights"}
+                        </p>
+                        <div className="flex flex-wrap gap-2">
+                          {trip.highlights.slice(0, 2).map((highlight, idx) => {
+                            const item = JSON.parse(getText(highlight));
+                            return (
+                              <span
+                                key={getId(highlight, idx)}
+                                className="text-xs bg-blue-500/20 text-white/80 dark:text-blue-300 px-2 py-1 rounded-full border border-blue-500/30"
+                              >
+                                {locale === "fr" ? item.fr : item.en}
+                              </span>
+                            );
+                          })}
                         </div>
                       </div>
-                    ))}
-                  </div>
+                    )}
 
-                  {/* Highlights */}
-                  {trip.highlights && trip.highlights.length > 0 && (
-                    <div className="mb-6">
-                      <p className="text-xs font-semibold text-slate-300 mb-2 uppercase tracking-wider">
-                        {t("ourTrip.highlights") || "Highlights"}
-                      </p>
-                      <div className="flex flex-wrap gap-2">
-                        {trip.highlights.slice(0, 2).map((highlight, idx) => (
-                          <span
-                            key={getId(highlight, idx)}
-                            className="text-xs bg-blue-500/20 text-white/80 dark:text-blue-300 px-2 py-1 rounded-full border border-blue-500/30"
-                          >
-                            {getText(highlight)}
-                          </span>
-                        ))}
-                      </div>
+                    <div className="mt-4 flex flex-col gap-6">
+                      {/* Book Button */}
+                      <button
+                        onClick={() =>
+                          router.push(`/reservation/trip?trip=${trip?.id}`)
+                        }
+                        className="w-full group/btn relative px-6 py-3 bg-primary text-white font-semibold rounded-lg transition-all duration-300 hover:shadow-lg hover:shadow-purple-500/30 active:scale-95 flex items-center justify-center gap-2"
+                      >
+                        <span>{t("ourTrip.booking")}</span>
+                        <ChevronRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
+                      </button>
+
+                      {/* CTA Button */}
+                      <button
+                        onClick={() => handleTripSelect(trip)}
+                        className="w-full group/btn relative px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-semibold rounded-lg transition-all duration-300 hover:shadow-lg hover:shadow-purple-500/30 active:scale-95 flex items-center justify-center gap-2"
+                      >
+                        <span>
+                          {t("ourTrip.viewDetails") || "View Details"}
+                        </span>
+                        <ChevronRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
+                      </button>
                     </div>
-                  )}
-
-                  <div className="mt-4 flex flex-col gap-6">
-                    {/* Book Button */}
-                    <button
-                      onClick={() =>
-                        router.push(`/reservation/trip?trip=${trip?.id}`)
-                      }
-                      className="w-full group/btn relative px-6 py-3 bg-primary text-white font-semibold rounded-lg transition-all duration-300 hover:shadow-lg hover:shadow-purple-500/30 active:scale-95 flex items-center justify-center gap-2"
-                    >
-                      <span>{t("ourTrip.booking")}</span>
-                      <ChevronRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
-                    </button>
-
-                    {/* CTA Button */}
-                    <button
-                      onClick={() => handleTripSelect(trip)}
-                      className="w-full group/btn relative px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-semibold rounded-lg transition-all duration-300 hover:shadow-lg hover:shadow-purple-500/30 active:scale-95 flex items-center justify-center gap-2"
-                    >
-                      <span>{t("ourTrip.viewDetails") || "View Details"}</span>
-                      <ChevronRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
-                    </button>
                   </div>
-                </div>
 
-                {/* Hover Glow */}
-                {hoveredCard === trip.id && (
-                  <div className="absolute inset-0 bg-gradient-to-r from-purple-500/0 via-purple-500/10 to-pink-500/0 pointer-events-none animate-pulse" />
-                )}
+                  {/* Hover Glow */}
+                  {hoveredCard === trip.id && (
+                    <div className="absolute inset-0 bg-gradient-to-r from-purple-500/0 via-purple-500/10 to-pink-500/0 pointer-events-none animate-pulse" />
+                  )}
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
 
         {/* Empty State */}
