@@ -36,8 +36,8 @@
     "included": "Inclus",
     "notIncluded": "Non inclus",
     "itinerary": "Itinéraire",
-    "day": "Jour",
-    "night": "Nuit",
+    "day": "Jour(s)",
+    "night": "Nuit(s)",
     "close": "Fermer",
     "travelDates": "Dates de voyage",
     "booking": "Réservation"
