@@ -16,6 +16,12 @@ export async function GET() {
         program: true,
         travelDates: true,
         reservations: {
+          where: {
+            status: "confirmed",
+            startDate: {
+              gte: new Date() // Seulement les réservations avec dates futures
+            }
+          },
           select: {
             id: true,
             nom: true,
@@ -24,7 +30,7 @@ export async function GET() {
             startDate: true,
             endDate: true,
             status: true,
-            travelDateId: true, // ✅ nécessaire pour relier à TravelDates
+            travelDateId: true,
           },
         },
       },

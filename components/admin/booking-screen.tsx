@@ -55,11 +55,11 @@ const BookingScreen = () => {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case "en_attente":
+      case "pending":
         return "bg-yellow-100 text-yellow-800 border-yellow-200";
-      case "confirmee":
+      case "confirmed":
         return "bg-green-100 text-green-800 border-green-200";
-      case "annulee":
+      case "cancelled":
         return "bg-red-100 text-red-800 border-red-200";
       default:
         return "bg-gray-100 text-gray-800 border-gray-200";
@@ -68,11 +68,11 @@ const BookingScreen = () => {
 
   const getStatusLabel = (status: string) => {
     switch (status) {
-      case "en_attente":
+      case "pending":
         return "En attente";
-      case "confirmee":
+      case "confirmed":
         return "Confirmée";
-      case "annulee":
+      case "cancelled":
         return "Annulée";
       default:
         return status;
@@ -81,7 +81,7 @@ const BookingScreen = () => {
 
   const filteredReservations = bookingData?.reservations?.filter(
     (reservation: Reservation) => {
-      const voyageTitle = JSON.parse(reservation?.circuitRel?.title as any);
+      const voyageTitle = reservation?.circuitRel && JSON?.parse(reservation?.circuitRel?.title as any);
       const matchesSearch =
         searchTerm === "" ||
         reservation.nom.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -108,7 +108,7 @@ const BookingScreen = () => {
   const handleValidateBooking = async (id: string) => {
   try {
     const dataRes: Partial<Reservation> = {
-      status: "confirmee" as any // Make sure this matches your actual status values
+      status: "confirmed" as any // Make sure this matches your actual status values
     };
     await updateReservation(id, dataRes as any);
   } catch (error) {
@@ -167,9 +167,9 @@ const BookingScreen = () => {
                     className="px-4 py-3 border text-black border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white min-w-32"
                   >
                     <option value="tous">Tous les statuts</option>
-                    <option value="en_attente">En attente</option>
-                    <option value="confirmee">Confirmée</option>
-                    <option value="annulee">Annulée</option>
+                    <option value="pending">En attente</option>
+                    <option value="confirmed">Confirmée</option>
+                    <option value="cancelled">Annulée</option>
                   </select>
 
                   <button
@@ -220,7 +220,9 @@ const BookingScreen = () => {
             {/* Liste des réservations */}
             <div className="space-y-4">
               {filteredReservations?.map((reservation: any) => {
-                const voyageTitle = JSON.parse(reservation?.circuitRel?.title as any);
+                const voyageTitle = reservation?.circuitRel && JSON.parse(reservation?.circuitRel?.title as any);
+                const tripname = reservation?.TripTravel && JSON.parse(reservation?.TripTravel?.title as any);
+                const vehicleName = reservation?.vehicleRel && JSON.parse(reservation?.vehicleRel?.name as any);
                 return(
                   <div
                   key={reservation?.id}
@@ -253,7 +255,7 @@ const BookingScreen = () => {
                         </span>
 
                         <div className="flex gap-2">
-                          {reservation.status === "en_attente" && (
+                          {reservation.status === "pending" && (
                             <button
                               onClick={() =>
                                 handleValidateBooking(reservation?.id)
@@ -406,13 +408,51 @@ const BookingScreen = () => {
                               </div>
                             </div>
                           </div>
+                        ) : reservation.resType ==="trip" ? (
+                          <>
+                            <div className="bg-gradient-to-r from-indigo-50 to-blue-50 rounded-xl p-4">
+                              <a
+                                href={`/admin/trips/${reservation?.TripTravel?.id}`}
+                                className="font-bold text-xl text-indigo-900 mb-2"
+                              >
+                                {locale === "fr" ? tripname.fr : tripname.en}
+                              </a>
+                              <div className="space-y-2 text-sm">
+                                <div className="flex justify-between">
+                                  <span className="text-gray-600">Prix:</span>
+                                  <span className="font-medium text-green-600">
+                                    {reservation?.TripTravel?.price}€
+                                  </span>
+                                </div>
+                                <div className="flex justify-between">
+                                  <span className="text-gray-600">Difficulté:</span>
+                                  <span className="font-medium text-black/80">
+                                    {reservation?.TripTravel?.difficulty}
+                                  </span>
+                                </div>
+                                <div className="flex justify-between">
+                                  <span className="text-gray-600">Dates:</span>
+                                  <span className="font-medium text-primary">
+                                    {formatDate(reservation?.startDate)} -{" "}
+                                    {formatDate(reservation?.endDate)}
+                                  </span>
+                                </div>
+                                <div className="flex justify-between">
+                                  <span className="text-gray-600">Durée:</span>
+                                  <span className="font-medium text-black/80">
+                                    {reservation?.TripTravel?.duration}
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+                          </>
                         ) : (
                           <div className="bg-gradient-to-r from-indigo-50 to-blue-50 rounded-xl p-4">
                             <a
                               href={`/admin/circuits/${reservation?.vehicleRel?.id}`}
                               className="font-bold text-xl text-indigo-900 mb-2"
                             >
-                              {reservation?.vehicleRel?.name}
+                              {locale === "fr" ? vehicleName?.fr : vehicleName?.en}
                             </a>
                             <div className="space-y-2 text-sm">
                               <div className="flex justify-between">

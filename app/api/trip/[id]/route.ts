@@ -18,8 +18,21 @@ export async function GET(
         included: true,
         notIncluded: true,
         program: true,
-        reservations: true,
-        travelDates: true,
+        reservations: {
+          where: {
+            status: "confirmed",
+            startDate: {
+              gte: new Date() // Seulement les réservations avec dates futures
+            }
+          }
+        },
+        travelDates: {
+          where: {
+            startDate: {
+              gte: new Date() // Seulement les dates de voyage futures
+            }
+          }
+        },
       },
     });
 
@@ -27,10 +40,16 @@ export async function GET(
       return NextResponse.json({ error: "Trip non trouvé" }, { status: 404 });
     }
 
-    // 2️⃣ Récupérer les statistiques de réservation par date de voyage
+    // 2️⃣ Récupérer les statistiques de réservation par date de voyage (uniquement confirmées et futures)
     const reservationStats = await prisma.reservation.groupBy({
       by: ["travelDateId"],
-      where: { tripTravelId: id },
+      where: { 
+        tripTravelId: id, 
+        status: "confirmed",
+        startDate: {
+          gte: new Date() // Seulement les réservations avec dates futures
+        }
+      },
       _sum: { personnes: true },
       _count: { id: true },
     });

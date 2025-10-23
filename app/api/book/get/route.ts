@@ -56,7 +56,8 @@ export async function GET(req: Request) {
         orderBy: { createdAt: 'desc' },
         include: {
           circuitRel: true,
-          vehicleRel: true
+          vehicleRel: true,
+          TripTravel: true
         }
       }),
       prisma.reservation.count({ where })

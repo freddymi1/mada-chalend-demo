@@ -49,8 +49,8 @@ export async function GET() {
       
       // Récupérer les réservations actives (en cours)
       const activeReservations = vehicle.reservations.filter(res => {
-        const startDate = new Date(res.startDate);
-        const endDate = new Date(res.endDate);
+        const startDate = new Date(res.startDate as any);
+        const endDate = new Date(res.endDate as any);
         // Actif seulement si now >= startDate ET now < endDate
         return now >= startDate && now < endDate;
       });

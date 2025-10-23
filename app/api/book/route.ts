@@ -182,7 +182,7 @@ export async function POST(req: NextRequest) {
       endDate: new Date(endDate),
       duration: durationNumber,
       preferences,
-      status: "en_attente",
+      status: "pending",
       travelDateId: travelDate
     };
 

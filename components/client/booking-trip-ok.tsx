@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import {
   Dialog,
@@ -8,6 +10,7 @@ import {
   DialogTitle,
 } from "./ui/dialog";
 import { Button } from "./ui/button";
+import { useLocale } from "next-intl";
 interface BookingOkProps {
   resType: "trip";
   showConfirmDialog: boolean;
@@ -31,6 +34,8 @@ const BookingTripOk = ({
   getTripName,
   formatDate,
 }: BookingOkProps) => {
+  const locale = useLocale();
+  // const tripname = JSON.parse(pendingFormData?.tripTravel as any);
   return (
     <Dialog open={showConfirmDialog} onOpenChange={setShowConfirmDialog}>
       <DialogContent className="max-w-lg">

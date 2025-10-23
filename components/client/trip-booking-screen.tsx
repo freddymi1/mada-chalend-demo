@@ -9,7 +9,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/client/ui/card";
-import { useTranslations } from "use-intl";
+import { useLocale, useTranslations } from "use-intl";
 import { useSearchParams } from "next/navigation";
 import { useClientCircuit } from "../providers/client/ClientCircuitProvider";
 
@@ -25,6 +25,7 @@ import BookingTripOk from "./booking-trip-ok";
 
 export function TripBookingScreen() {
   const t = useTranslations("lng");
+  const locale = useLocale();
 
   const params = useSearchParams();
   const tripTravel = params.get("trip");
@@ -182,6 +183,7 @@ export function TripBookingScreen() {
     const newNbrAdult = e.target.value;
     const adultsNum = parseInt(newNbrAdult) || 0;
     const personnesNum = parseInt(formData.personnes) || 0;
+    
 
     // Limiter le nombre d'adultes au nombre total de personnes
     const maxAdults = Math.min(adultsNum, personnesNum);
@@ -258,7 +260,8 @@ export function TripBookingScreen() {
   // Trouver le nom du circuit sélectionné
   const getTripName = (tripId: string) => {
     const selectedTrip = addedTrips?.find((c) => (c.id || c.id) === tripId);
-    return selectedTrip?.title || "Trip sélectionné";
+    const tripname = JSON.parse(selectedTrip?.title || "{}");
+    return locale === "fr" ? tripname.fr : tripname.en || "Trip sélectionné";
   };
 
   const handleTravelDatesChange = (date: string) => {
