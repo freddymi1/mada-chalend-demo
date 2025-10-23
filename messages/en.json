@@ -90,6 +90,7 @@
       "title": "Booking Form",
       "selectedTrip": "Selected Trip",
       "selectedCircuit": "Selected Circuit",
+      "selectedCar": "Selected Vehicle",
       "name": "Last Name",
       "firstname": "First Name",
       "email": "Email Address",

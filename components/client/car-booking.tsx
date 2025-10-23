@@ -1,6 +1,6 @@
 import React from "react";
 import { Button } from "./ui/button";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { Label } from "./ui/label";
 import {
   Select,
@@ -72,6 +72,7 @@ const CarBooking = ({
   getTodayString,
 }: CarBookingProps) => {
   const t = useTranslations("lng");
+  const locale = useLocale()
 
   // Fonction pour obtenir la date minimale pour endDate
   const getMinEndDate = () => {
@@ -173,6 +174,8 @@ const CarBooking = ({
     return baseClass;
   };
 
+  const vehicleName = JSON.parse(vehicleDetail?.name || '{"fr": "","en": ""}');
+
   return (
     <div>
       <form onSubmit={handleSubmit} className="space-y-6">
@@ -194,25 +197,28 @@ const CarBooking = ({
               <SelectValue
                 placeholder={
                   isLoading
-                    ? "Chargement des véhicules..."
-                    : "Sélectionnez un véhicule"
+                    ? `${locale === "fr" ? "Chargement des véhicules..." : "Loading vehicles..."}`
+                    : `${locale === "fr" ? "Sélectionnez un véhicule" : "Select a vehicle"}`
                 }
               />
             </SelectTrigger>
             <SelectContent>
-              {vehicles?.map((vehicle) => (
-                <SelectItem
+              {vehicles?.map((vehicle) => {
+                const carName = JSON.parse(vehicle.name);
+                return(
+                  <SelectItem
                   key={vehicle.id || vehicle.id}
                   value={vehicle.id || vehicle.id}
                 >
-                  {vehicle.name || vehicle.name || vehicle.id}
+                  {locale === "fr" ? carName.fr : carName.en}
                 </SelectItem>
-              ))}
+                )
+              })}
             </SelectContent>
           </Select>
           {vehicle && vehicleDetail && (
             <p className="text-sm text-muted-foreground">
-              Véhicule sélectionné : {vehicleDetail.name}
+              {t("book.form.selectedCar")} : {locale === "fr" ? vehicleName.fr : vehicleName.en}
             </p>
           )}
         </div>
@@ -378,7 +384,7 @@ const CarBooking = ({
                 animationFillMode: "both",
               }}
             >
-              <Label htmlFor="nbrAdult">Nombre d'adultes *</Label>
+              <Label htmlFor="nbrAdult">{t("book.form.nbrAdult")} *</Label>
               <Input
                 id="nbrAdult"
                 name="nbrAdult"
@@ -398,7 +404,7 @@ const CarBooking = ({
                 animationFillMode: "both",
               }}
             >
-              <Label htmlFor="nbrChild">Nombre d'enfants</Label>
+              <Label htmlFor="nbrChild">{t("book.form.nbrChildren")}</Label>
               <Input
                 id="nbrChild"
                 name="nbrChild"
@@ -437,7 +443,7 @@ const CarBooking = ({
             />
             {formData.startDate && !isDateAvailable(formData.startDate) && (
               <p className="text-red-500 text-sm">
-                ⚠️ Cette date n'est pas disponible
+                {locale === "fr" ? "⚠️ Cette date n'est pas disponible" : "⚠️ This date is not available"}
               </p>
             )}
           </div>
@@ -462,7 +468,7 @@ const CarBooking = ({
               formData.endDate &&
               !isPeriodAvailable(formData.startDate, formData.endDate) && (
                 <p className="text-red-500 text-sm">
-                  ⚠️ La période sélectionnée n'est pas disponible
+                  {locale === "fr" ? "⚠️ La période sélectionnée n'est pas disponible" : "⚠️ The selected period is not available"}
                 </p>
               )}
           </div>
@@ -523,7 +529,7 @@ const CarBooking = ({
             size="lg"
           >
             {loading ? (
-              <span>Chargement...</span>
+              <span>{locale === "fr" ? "Chargement..." : "Loading..."}</span>
             ) : (
               <span>{t("book.form.cta")}</span>
             )}
@@ -535,7 +541,9 @@ const CarBooking = ({
             formData.endDate &&
             !isPeriodAvailable(formData.startDate, formData.endDate)) ? (
             <p className="text-red-500 text-sm mt-2 text-center">
-              Veuillez corriger les dates avant de réserver
+              {locale === "fr"
+                ? "Veuillez corriger les dates avant de réserver"
+                : "Please correct the dates before booking"}
             </p>
           ) : null}
         </div>
