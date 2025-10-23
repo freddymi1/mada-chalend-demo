@@ -265,7 +265,7 @@ const BookingScreen = () => {
                               <CheckCircle className="w-4 h-4" />
                             </button>
                           )}
-                          <button className="p-2 text-gray-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors">
+                          {/* <button className="p-2 text-gray-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors">
                             <Eye className="w-4 h-4" />
                           </button>
                           <button className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">
@@ -273,7 +273,7 @@ const BookingScreen = () => {
                           </button>
                           <button className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors">
                             <Trash2 className="w-4 h-4" />
-                          </button>
+                          </button> */}
                         </div>
                       </div>
                     </div>
