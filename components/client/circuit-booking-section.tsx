@@ -223,7 +223,7 @@ export function CircuitBookingSection() {
   // Mettre à jour la durée quand le détail du circuit change
   useEffect(() => {
     if (circuitDetail?.duration) {
-      const jours = extraireJours(circuitDetail.duration);
+      const jours = circuitDetail.duration;
       setFormData((prev) => ({
         ...prev,
         duration: jours !== null ? jours.toString() : "",

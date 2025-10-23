@@ -1,52 +1,200 @@
 "use client"
 
 import { useAuth } from '@/src/hooks/useAuth';
-import React, { useState } from 'react';
+import React from 'react';
+import { useStats } from '../providers/admin/StatsProvider';
+import { StatsResponse } from '@/src/domain/entities/stats';
+import { useLocale } from 'next-intl';
+import { useRouter } from 'next/navigation';
 
-const DashboardScreen = () => {
+// Composants locaux pour éviter les erreurs d'import
+const StatsFilters = () => {
+  const { filters, updateFilters, availableMonths, availableYears } = useStats();
 
-  const { user } = useAuth();
-  
-  // Données simulées
-  const stats = {
-    circuits: 45,
-    visiteurs: 1247,
-    reservations: 89,
-    revenus: 45680
+  const handleFilterTypeChange = (filterType: 'month' | 'year') => {
+    const newFilters = { filterType };
+    
+    // if (filterType === 'year' && availableYears.length > 0 && !filters.year) {
+    //   newFilters.year = availableYears[0];
+    // }
+    
+    // if (filterType === 'month' && availableMonths.length > 0 && !filters.month) {
+    //   newFilters.month = availableMonths[0];
+    // }
+    
+    updateFilters(newFilters);
   };
 
-  const recentReservations = [
-    { id: 1, client: 'Jean Dupont', circuit: 'Avenue des Baobabs', date: '2024-09-18', statut: 'confirmé' },
-    { id: 2, client: 'Marie Martin', circuit: 'Parc National Andasibe', date: '2024-09-19', statut: 'en attente' },
-    { id: 3, client: 'Pierre Durand', circuit: 'Tsingy de Bemaraha', date: '2024-09-20', statut: 'confirmé' },
-    { id: 4, client: 'Sophie Laurent', circuit: 'Nosy Be Paradise', date: '2024-09-21', statut: 'annulé' }
-  ];
+  const handleMonthChange = (month: string) => {
+    updateFilters({ ...filters, month });
+  };
 
-  const topCircuits = [
-    { nom: 'Avenue des Baobabs', reservations: 28, pourcentage: 85 },
-    { nom: 'Parc National Andasibe', reservations: 22, pourcentage: 67 },
-    { nom: 'Tsingy de Bemaraha', reservations: 18, pourcentage: 55 },
-    { nom: 'Nosy Be Paradise', reservations: 15, pourcentage: 45 }
-  ];
+  const handleYearChange = (year: string) => {
+    updateFilters({ ...filters, year });
+  };
 
-  
+  return (
+    <div className="flex flex-wrap gap-4 items-center p-4 bg-gray-50 rounded-lg">
+      <div className="flex items-center gap-2">
+        <label className="font-medium">Période:</label>
+        <select 
+          value={filters.filterType}
+          onChange={(e) => handleFilterTypeChange(e.target.value as 'month' | 'year')}
+          className="border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        >
+          <option value="month">Mensuel</option>
+          <option value="year">Annuel</option>
+        </select>
+      </div>
+
+      {filters.filterType === 'month' && (
+        <div className="flex items-center gap-2">
+          <label className="font-medium">Mois:</label>
+          <select 
+            value={filters.month || availableMonths[0] || ''}
+            onChange={(e) => handleMonthChange(e.target.value)}
+            className="border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+            {availableMonths.map(month => (
+              <option key={month} value={month}>
+                {new Date(`${month}-01`).toLocaleDateString('fr-FR', { 
+                  year: 'numeric', 
+                  month: 'long' 
+                })}
+              </option>
+            ))}
+          </select>
+        </div>
+      )}
+
+      {filters.filterType === 'year' && (
+        <div className="flex items-center gap-2">
+          <label className="font-medium">Année:</label>
+          <select 
+            value={filters.year || availableYears[0] || ''}
+            onChange={(e) => handleYearChange(e.target.value)}
+            className="border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+            {availableYears.map(year => (
+              <option key={year} value={year}>{year}</option>
+            ))}
+          </select>
+        </div>
+      )}
+    </div>
+  );
+};
+
+const StatsLoading = () => (
+  <div className="flex flex-col items-center justify-center p-8 space-y-4">
+    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+    <p className="text-gray-600">Chargement des statistiques...</p>
+  </div>
+);
+
+const StatsError = () => {
+  const { error, refreshStats } = useStats();
+
+  if (!error) return null;
+
+  return (
+    <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-4">
+      <div className="flex items-center justify-between">
+        <div>
+          <h3 className="text-red-800 font-medium">Erreur de chargement</h3>
+          <p className="text-red-600 text-sm mt-1">{error}</p>
+        </div>
+        <button
+          onClick={refreshStats}
+          className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition-colors"
+        >
+          Réessayer
+        </button>
+      </div>
+    </div>
+  );
+};
+
+const DashboardScreen = () => {
+  const { user } = useAuth();
+  const { stats, isLoading, error, refreshStats } = useStats();
+  const locale = useLocale();
+  const router = useRouter();
+
+  // Données de secours avec la structure complète de StatsResponse
+  const fallbackStats: StatsResponse = {
+    filtre: {
+      type: 'month',
+      periode: {
+        debut: new Date().toISOString(),
+        fin: new Date().toISOString()
+      },
+      moisDisponibles: [],
+      anneesDisponibles: []
+    },
+    totalCircuitsActif: 0,
+    totalVehiclesActif: 0,
+    totalParticipants: 0,
+    totalReservations: 0,
+    circuitsPlusReserve: [],
+    tripsPlusReserve: [],
+    reservationsDeLaPeriode: [],
+    circuitsPopulaires: [],
+    tripsPopulaires: [],
+    statsMensuelles: [],
+    totalRevenus: 0,
+    detailParticipants: {
+      total: 0,
+      adultes: 0,
+      enfants: 0
+    }
+  };
+
+  const currentStats: StatsResponse = stats || fallbackStats;
+
   const getStatusColor = (statut: string) => {
     switch(statut) {
-      case 'confirmé': return 'bg-green-100 text-green-800';
-      case 'en attente': return 'bg-yellow-100 text-yellow-800';
-      case 'annulé': return 'bg-red-100 text-red-800';
+      case 'confirmed': return 'bg-green-100 text-green-800';
+      case 'pending': return 'bg-yellow-100 text-yellow-800';
+      case 'cancelled': return 'bg-red-100 text-red-800';
       default: return 'bg-gray-100 text-gray-800';
     }
   };
 
+  const getStatusText = (statut: string) => {
+    switch(statut) {
+      case 'confirmed': return 'Confirmé';
+      case 'pending': return 'En attente';
+      case 'cancelled': return 'Annulé';
+      default: return statut;
+    }
+  };
+
+  // Calculer le pourcentage pour les barres de progression
+  const calculatePercentage = (current: number, max: number) => {
+    if (max === 0) return 0;
+    return Math.min((current / max) * 100, 100);
+  };
+
+  // Trouver le nombre maximum de réservations pour les pourcentages
+  const maxReservations = currentStats.circuitsPopulaires.length > 0 
+    ? Math.max(...currentStats.circuitsPopulaires.map(c => c.nombreReservations))
+    : 1;
+
+  if (isLoading) {
+    return <StatsLoading />;
+  }
+
+  if (error) {
+    return <StatsError />;
+  }
+
+  
+
   return (
     <div className="flex h-screen bg-gray-100">
-      
-
       {/* Main Content */}
       <div className="flex-1 flex flex-col overflow-hidden">
-        
-
         {/* Dashboard Content */}
         <main className="flex-1 overflow-y-auto p-6">
           {/* Welcome Message */}
@@ -55,8 +203,14 @@ const DashboardScreen = () => {
             <p className="text-gray-600 mt-1">Voici un aperçu de votre activité aujourd'hui.</p>
           </div>
 
+          {/* Filtres */}
+          {/* <div className="mb-6">
+            <StatsFilters />
+          </div> */}
+
           {/* Stats Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            {/* Circuits Actifs */}
             <div className="bg-white overflow-hidden shadow-sm rounded-2xl p-6 border border-gray-200 hover:shadow-md transition-shadow duration-200">
               <div className="flex items-center">
                 <div className="flex-shrink-0">
@@ -67,13 +221,16 @@ const DashboardScreen = () => {
                   </div>
                 </div>
                 <div className="ml-4">
-                  <p className="text-sm font-medium text-gray-600">Circuits Total</p>
-                  <p className="text-3xl font-bold text-gray-900">{stats.circuits}</p>
-                  <p className="text-sm text-green-600">+3 ce mois</p>
+                  <p className="text-sm font-medium text-gray-600">Circuits Actifs</p>
+                  <p className="text-3xl font-bold text-gray-900">{currentStats.totalCircuitsActif}</p>
+                  <p className="text-sm text-green-600">
+                    {currentStats.circuitsPopulaires.length} populaires
+                  </p>
                 </div>
               </div>
             </div>
 
+            {/* Participants */}
             <div className="bg-white overflow-hidden shadow-sm rounded-2xl p-6 border border-gray-200 hover:shadow-md transition-shadow duration-200">
               <div className="flex items-center">
                 <div className="flex-shrink-0">
@@ -84,13 +241,16 @@ const DashboardScreen = () => {
                   </div>
                 </div>
                 <div className="ml-4">
-                  <p className="text-sm font-medium text-gray-600">Visiteurs</p>
-                  <p className="text-3xl font-bold text-gray-900">{stats.visiteurs.toLocaleString()}</p>
-                  <p className="text-sm text-green-600">+12% ce mois</p>
+                  <p className="text-sm font-medium text-gray-600">Participants Total</p>
+                  <p className="text-3xl font-bold text-gray-900">{currentStats.totalParticipants.toLocaleString()}</p>
+                  <p className="text-sm text-green-600">
+                    {currentStats.detailParticipants.adultes} adultes, {currentStats.detailParticipants.enfants} enfants
+                  </p>
                 </div>
               </div>
             </div>
 
+            {/* Réservations */}
             <div className="bg-white overflow-hidden shadow-sm rounded-2xl p-6 border border-gray-200 hover:shadow-md transition-shadow duration-200">
               <div className="flex items-center">
                 <div className="flex-shrink-0">
@@ -102,12 +262,15 @@ const DashboardScreen = () => {
                 </div>
                 <div className="ml-4">
                   <p className="text-sm font-medium text-gray-600">Réservations</p>
-                  <p className="text-3xl font-bold text-gray-900">{stats.reservations}</p>
-                  <p className="text-sm text-green-600">+8 cette semaine</p>
+                  <p className="text-3xl font-bold text-gray-900">{currentStats.totalReservations}</p>
+                  <p className="text-sm text-green-600">
+                    {currentStats.statsMensuelles[0]?.reservations || 0} ce mois
+                  </p>
                 </div>
               </div>
             </div>
 
+            {/* Revenus */}
             <div className="bg-white overflow-hidden shadow-sm rounded-2xl p-6 border border-gray-200 hover:shadow-md transition-shadow duration-200">
               <div className="flex items-center">
                 <div className="flex-shrink-0">
@@ -119,8 +282,10 @@ const DashboardScreen = () => {
                 </div>
                 <div className="ml-4">
                   <p className="text-sm font-medium text-gray-600">Revenus (€)</p>
-                  <p className="text-3xl font-bold text-gray-900">{stats.revenus.toLocaleString()}</p>
-                  <p className="text-sm text-green-600">+18% ce mois</p>
+                  <p className="text-3xl font-bold text-gray-900">{currentStats.totalRevenus.toLocaleString()}</p>
+                  <p className="text-sm text-green-600">
+                    {currentStats.statsMensuelles[0]?.participants || 0} participants ce mois
+                  </p>
                 </div>
               </div>
             </div>
@@ -128,7 +293,7 @@ const DashboardScreen = () => {
 
           {/* Charts and Tables */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-            {/* Recent Reservations */}
+            {/* Réservations Récentes */}
             <div className="bg-white shadow-sm rounded-2xl p-6 border border-gray-200">
               <div className="flex items-center justify-between mb-6">
                 <h3 className="text-lg font-semibold text-gray-900">Réservations Récentes</h3>
@@ -141,28 +306,46 @@ const DashboardScreen = () => {
                   <thead>
                     <tr className="border-b border-gray-200">
                       <th className="text-left text-xs font-medium text-gray-500 uppercase tracking-wider pb-3">Client</th>
-                      <th className="text-left text-xs font-medium text-gray-500 uppercase tracking-wider pb-3">Circuit</th>
+                      <th className="text-left text-xs font-medium text-gray-500 uppercase tracking-wider pb-3">Service</th>
                       <th className="text-left text-xs font-medium text-gray-500 uppercase tracking-wider pb-3">Statut</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-200">
-                    {recentReservations.map((reservation) => (
-                      <tr key={reservation.id} className="hover:bg-gray-50">
-                        <td className="py-3 text-sm font-medium text-gray-900">{reservation.client}</td>
-                        <td className="py-3 text-sm text-gray-600">{reservation.circuit}</td>
+                    {currentStats.reservationsDeLaPeriode.slice(0, 5).map((reservation) => {
+                      const circuitTitle = reservation.circuit ? JSON.parse(reservation.circuit as any) : null;
+                      const tripTitle = reservation.trip ? JSON.parse(reservation.trip as any) : null;
+                      const vehicleTitle = reservation.vehicle ? JSON.parse(reservation.vehicle as any) : null;
+                      return(
+                        <tr key={reservation.id} className="hover:bg-gray-50">
+                        <td className="py-3 text-sm font-medium text-gray-900">
+                          {reservation.prenom} {reservation.nom}
+                        </td>
+                        <td className="py-3 text-sm text-gray-600">
+                          {locale === "fr" ? circuitTitle?.fr : circuitTitle?.en}
+                          {locale === "fr" ? tripTitle?.fr : tripTitle?.en}
+                          {locale === "fr" ? vehicleTitle?.fr : vehicleTitle?.en}
+                        </td>
                         <td className="py-3">
-                          <span className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${getStatusColor(reservation.statut)}`}>
-                            {reservation.statut}
+                          <span className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${getStatusColor(reservation.status)}`}>
+                            {getStatusText(reservation.status)}
                           </span>
                         </td>
                       </tr>
-                    ))}
+                      )
+                    })}
+                    {currentStats.reservationsDeLaPeriode.length === 0 && (
+                      <tr>
+                        <td colSpan={3} className="py-4 text-center text-gray-500">
+                          Aucune réservation pour cette période
+                        </td>
+                      </tr>
+                    )}
                   </tbody>
                 </table>
               </div>
             </div>
 
-            {/* Top Circuits */}
+            {/* Circuits Populaires */}
             <div className="bg-white shadow-sm rounded-2xl p-6 border border-gray-200">
               <div className="flex items-center justify-between mb-6">
                 <h3 className="text-lg font-semibold text-gray-900">Circuits Populaires</h3>
@@ -171,22 +354,37 @@ const DashboardScreen = () => {
                 </button>
               </div>
               <div className="space-y-4">
-                {topCircuits.map((circuit, index) => (
-                  <div key={index} className="flex items-center justify-between">
+                {currentStats.circuitsPopulaires.map((circuit, index) => {
+                  const title = JSON.parse(circuit.title as any);
+                  return(
+                    <div key={circuit.id} className="flex items-center justify-between">
                     <div className="flex-1">
                       <div className="flex items-center justify-between mb-1">
-                        <p className="text-sm font-medium text-gray-900">{circuit.nom}</p>
-                        <span className="text-sm text-gray-600">{circuit.reservations}</span>
+                        <p className="text-sm font-medium text-gray-900">
+                          {locale === "fr" ? title?.fr : title?.en}
+                        </p>
+                        <span className="text-sm text-gray-600">
+                          {circuit.nombreReservations} réservations
+                        </span>
                       </div>
                       <div className="w-full bg-gray-200 rounded-full h-2">
                         <div 
                           className="bg-gradient-to-r from-blue-500 to-purple-500 h-2 rounded-full transition-all duration-300" 
-                          style={{ width: `${circuit.pourcentage}%` }}
+                          style={{ width: `${calculatePercentage(circuit.nombreReservations, maxReservations)}%` }}
                         ></div>
                       </div>
+                      <p className="text-xs text-gray-500 mt-1">
+                        {circuit.nombreParticipants} participants
+                      </p>
                     </div>
                   </div>
-                ))}
+                  )
+                })}
+                {currentStats.circuitsPopulaires.length === 0 && (
+                  <div className="text-center text-gray-500 py-4">
+                    Aucun circuit populaire pour cette période
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -195,42 +393,37 @@ const DashboardScreen = () => {
           <div className="bg-white shadow-sm rounded-2xl p-6 border border-gray-200">
             <h3 className="text-lg font-semibold text-gray-900 mb-6">Actions Rapides</h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              <button className="flex items-center justify-center p-4 border border-gray-300 rounded-xl hover:bg-gray-50 transition-colors duration-200">
+              <button onClick={()=>router.push('/admin/circuits/add?update=false')} className="flex items-center justify-center p-4 border border-gray-300 rounded-xl hover:bg-gray-50 transition-colors duration-200">
                 <svg className="w-6 h-6 text-blue-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                 </svg>
                 <span className="text-sm font-medium text-gray-700">Nouveau Circuit</span>
               </button>
-              <button className="flex items-center justify-center p-4 border border-gray-300 rounded-xl hover:bg-gray-50 transition-colors duration-200">
+              <button onClick={()=>router.push('/admin/vehicles/add?edit=false')} className="flex items-center justify-center p-4 border border-gray-300 rounded-xl hover:bg-gray-50 transition-colors duration-200">
                 <svg className="w-6 h-6 text-green-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                 </svg>
-                <span className="text-sm font-medium text-gray-700">Rapport Mensuel</span>
+                <span className="text-sm font-medium text-gray-700">Ajouter une voiture</span>
               </button>
-              <button className="flex items-center justify-center p-4 border border-gray-300 rounded-xl hover:bg-gray-50 transition-colors duration-200">
+              <button onClick={()=>router.push('/admin/trip/add?edit=false')} className="flex items-center justify-center p-4 border border-gray-300 rounded-xl hover:bg-gray-50 transition-colors duration-200">
                 <svg className="w-6 h-6 text-yellow-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                 </svg>
-                <span className="text-sm font-medium text-gray-700">Gérer Clients</span>
+                <span className="text-sm font-medium text-gray-700">Gérer une voyage organisée</span>
               </button>
-              <button className="flex items-center justify-center p-4 border border-gray-300 rounded-xl hover:bg-gray-50 transition-colors duration-200">
+              <button 
+                onClick={refreshStats}
+                className="flex items-center justify-center p-4 border border-gray-300 rounded-xl hover:bg-gray-50 transition-colors duration-200"
+              >
                 <svg className="w-6 h-6 text-purple-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                 </svg>
-                <span className="text-sm font-medium text-gray-700">Paramètres</span>
+                <span className="text-sm font-medium text-gray-700">Actualiser</span>
               </button>
             </div>
           </div>
         </main>
       </div>
-
-      {/* Mobile sidebar overlay */}
-      {/* {sidebarOpen && (
-        <div 
-          className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
-          onClick={() => setSidebarOpen(false)}
-        ></div>
-      )} */}
     </div>
   );
 };
