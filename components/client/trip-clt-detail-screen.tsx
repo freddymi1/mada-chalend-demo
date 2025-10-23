@@ -144,7 +144,7 @@ const TripCltDetailScreen = () => {
             <div className="flex items-center justify-between gap-3 mb-6">
               <div className="flex items-center gap-2">
                 <Calendar className="w-6 h-6" />
-                <span className="text-xl">{tripDetail.duration}</span>
+                <span className="text-xl">{Number(tripDetail.duration)} {t("ourTrip.day")} / {Number(tripDetail.duration) - 1} {t("ourTrip.night")}</span>
               </div>
               <div className="flex bg-gray-200 dark:bg-gray-700 p-6 rounded-xl items-center gap-2">
                 <DollarSign className="w-6 h-6" />
@@ -157,7 +157,7 @@ const TripCltDetailScreen = () => {
 
           {/* Stats Grid */}
           <div className="flex flex-col items-start">
-            <p className="text-xl font-bold  text-gray-100 dark:text-white">
+            <p className="text-xl font-bold  text-slate-700 dark:text-white">
               Dates
             </p>
 
