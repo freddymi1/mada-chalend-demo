@@ -11,7 +11,7 @@ import {
   Play,
   Pause,
 } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { useEffect, useState, useRef, useCallback } from "react";
 
@@ -43,6 +43,7 @@ export const ImageModal: React.FC<{
   const router = useRouter();
 
   const t = useTranslations("lng");
+  const locale = useLocale()
 
   // Fonction pour aller à l'image suivante avec transition
   const goToNext = useCallback(() => {
@@ -180,6 +181,9 @@ export const ImageModal: React.FC<{
 
   if (!isOpen) return null;
 
+  const carName = JSON.parse(vehicle.name);
+  const carDescription = JSON.parse(vehicle.description);
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       {/* Backdrop */}
@@ -232,7 +236,7 @@ export const ImageModal: React.FC<{
           <div className="relative w-full h-full overflow-hidden">
             <img
               src={images[currentImageIndex]}
-              alt={`${vehicle.name} - Image ${currentImageIndex + 1}`}
+              alt={`${locale === "fr" ? carName.fr : carName.en} - Image ${currentImageIndex + 1}`}
               className={`w-full h-full object-cover transition-all duration-${slideDuration} ${
                 isTransitioning
                   ? "opacity-75 scale-105"
@@ -410,7 +414,7 @@ export const ImageModal: React.FC<{
                   isDark ? "text-gray-300" : "text-gray-700"
                 }`}
               >
-                {vehicle.description}
+                {locale === "fr" ? carDescription.fr : carDescription.en}
               </p>
             </div>
 
@@ -424,8 +428,10 @@ export const ImageModal: React.FC<{
                 {t("car.details.equipment")}
               </h4>
               <div className="flex flex-wrap gap-2">
-                {vehicle.features.map((feature, index) => (
-                  <span
+                {vehicle.features.map((feature, index) => {
+                  const text = JSON.parse(feature);
+                  return(
+                 <span
                     key={index}
                     className={`px-3 py-1 text-sm rounded-full ${
                       isDark
@@ -433,9 +439,10 @@ export const ImageModal: React.FC<{
                         : "bg-gray-200 text-gray-700"
                     }`}
                   >
-                    {feature}
-                  </span>
-                ))}
+                    {locale === "fr" ? text.fr : text.en}
+                  </span>   
+                  )
+                })}
               </div>
             </div>
 

@@ -3,7 +3,7 @@
 import { Vehicle } from "@/src/domain/entities/car";
 import { VehicleDTO } from "@/src/domain/entities/vehicle";
 import { Eye, Heart, Star, Users } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -14,8 +14,12 @@ export const VehicleCard: React.FC<{
 }> = ({ vehicle, isDark, onShowDetails }) => {
   const [isFavorite, setIsFavorite] = useState(false);
   const t = useTranslations('lng');
+  const locale = useLocale()
 
   const router = useRouter();
+
+  const carName = JSON.parse(vehicle.name);
+  const carDescription = JSON.parse(vehicle.description);
 
   return (
     <div
@@ -28,7 +32,7 @@ export const VehicleCard: React.FC<{
       <div className="relative">
         <img
           src={vehicle.mainImage}
-          alt={vehicle.name}
+          alt={locale === "fr" ? carName.fr : carName.en}
           className="w-full h-48 object-cover"
         />
         <div className="absolute top-4 right-4">
@@ -63,7 +67,7 @@ export const VehicleCard: React.FC<{
               isDark ? "text-white" : "text-gray-900"
             }`}
           >
-            {vehicle.name}
+            {locale === "fr" ? carName.fr : carName.en}
           </h3>
           <div className="flex items-center gap-1">
             <Star className="w-4 h-4 text-yellow-400 fill-current" />
@@ -82,7 +86,7 @@ export const VehicleCard: React.FC<{
             isDark ? "text-gray-400" : "text-gray-600"
           }`}
         >
-          {vehicle.description}
+          {locale === "fr" ? carDescription.fr : carDescription.en}
         </p>
 
         <div className="flex items-center gap-4 mb-4">
@@ -103,8 +107,10 @@ export const VehicleCard: React.FC<{
         </div>
 
         <div className="flex flex-wrap gap-2 mb-4">
-          {vehicle.features.slice(0, 3).map((feature, index) => (
-            <span
+          {vehicle.features.slice(0, 3).map((feature, index) => {
+            const text = JSON.parse(feature);
+            return(
+              <span
               key={index}
               className={`px-2 py-1 text-xs rounded-full ${
                 isDark
@@ -112,9 +118,10 @@ export const VehicleCard: React.FC<{
                   : "bg-gray-100 text-gray-700"
               }`}
             >
-              {feature}
+              {locale === "fr" ? text.fr : text.en}
             </span>
-          ))}
+            )
+          })}
           {vehicle.features.length > 3 && (
             <span
               className={`px-2 py-1 text-xs rounded-full ${

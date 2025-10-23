@@ -19,18 +19,22 @@ import { useVehicle } from "../providers/admin/VehicleProvider";
 import { useRouter } from "next/navigation";
 import { LoadingSpinner } from "../client/loading";
 import { useTheme } from "@/src/hooks/useTheme";
-
-// Theme hook
-
+import { useLocale } from "next-intl";
+import VehicleDetailModal from "./vehicle-detail-modal";
 
 // Vehicle Card Component
 const VehicleCard: React.FC<{
   vehicle: Vehicle;
   isDark: boolean;
   deleteVehicle: (id: string) => void;
-}> = ({ vehicle, isDark, deleteVehicle }) => {
+  onViewDetails: (vehicle: Vehicle) => void;
+}> = ({ vehicle, isDark, deleteVehicle, onViewDetails }) => {
   const [isFavorite, setIsFavorite] = useState(false);
   const router = useRouter();
+  const locale = useLocale();
+
+  const carName = JSON.parse(vehicle.name);
+  const carDescription = JSON.parse(vehicle.description);
 
   return (
     <div
@@ -43,7 +47,7 @@ const VehicleCard: React.FC<{
       <div className="relative">
         <img
           src={vehicle.mainImage}
-          alt={vehicle.name}
+          alt={locale === "fr" ? carName.fr : carName.en}
           className="w-full h-48 object-cover"
         />
         <div className="absolute top-4 right-4">
@@ -78,7 +82,7 @@ const VehicleCard: React.FC<{
               isDark ? "text-white" : "text-gray-900"
             }`}
           >
-            {vehicle.name}
+            {locale === "fr" ? carName.fr : carName.en}
           </h3>
           <div className="flex items-center gap-1">
             <Star className="w-4 h-4 text-yellow-400 fill-current" />
@@ -97,7 +101,7 @@ const VehicleCard: React.FC<{
             isDark ? "text-gray-400" : "text-gray-600"
           }`}
         >
-          {vehicle.description}
+          {locale === "fr" ? carDescription.fr : carDescription.en}
         </p>
 
         <div className="flex items-center gap-4 mb-4">
@@ -118,8 +122,10 @@ const VehicleCard: React.FC<{
         </div>
 
         <div className="flex flex-wrap gap-2 mb-4">
-          {vehicle.features.slice(0, 3).map((feature, index) => (
-            <span
+          {vehicle.features.slice(0, 3).map((feature, index) => {
+            const text = JSON.parse(feature);
+            return(
+              <span
               key={index}
               className={`px-2 py-1 text-xs rounded-full ${
                 isDark
@@ -127,9 +133,10 @@ const VehicleCard: React.FC<{
                   : "bg-gray-100 text-gray-700"
               }`}
             >
-              {feature}
+              {locale === "fr" ? text.fr : text.en}
             </span>
-          ))}
+            )
+          })}
           {vehicle.features.length > 3 && (
             <span
               className={`px-2 py-1 text-xs rounded-full ${
@@ -171,6 +178,7 @@ const VehicleCard: React.FC<{
         {/* Action Buttons */}
         <div className="flex items-center justify-center gap-2 pt-4 border-t border-gray-200 dark:border-gray-700">
           <button
+            onClick={() => onViewDetails(vehicle)}
             className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-colors ${
               isDark
                 ? "bg-gray-700 text-gray-300 hover:bg-blue-600 hover:text-white"
@@ -214,6 +222,9 @@ const VehicleScreen: React.FC = () => {
   const { isDark } = useTheme();
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
+  const [selectedVehicle, setSelectedVehicle] = useState<Vehicle | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const locale = useLocale()
 
   const {
     vehicles,
@@ -241,6 +252,16 @@ const VehicleScreen: React.FC = () => {
     selectedCategory === "all"
       ? vehicles
       : vehicles.filter((vehicle) => vehicle.categoryId === selectedCategory);
+
+  const handleViewDetails = (vehicle: Vehicle) => {
+    setSelectedVehicle(vehicle);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedVehicle(null);
+  };
 
   return (
     <div
@@ -345,6 +366,7 @@ const VehicleScreen: React.FC = () => {
                 vehicle={vehicle}
                 isDark={isDark}
                 deleteVehicle={deleteVehicle}
+                onViewDetails={handleViewDetails}
               />
             ))}
           </div>
@@ -360,6 +382,16 @@ const VehicleScreen: React.FC = () => {
               Aucun véhicule trouvé pour cette catégorie.
             </p>
           </div>
+        )}
+
+        {/* Modal de détail */}
+        {selectedVehicle && (
+          <VehicleDetailModal
+            vehicle={selectedVehicle}
+            isOpen={isModalOpen}
+            onClose={handleCloseModal}
+            isDark={isDark}
+          />
         )}
       </div>
     </div>

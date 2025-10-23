@@ -5,8 +5,13 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { Vehicle } from '@/src/domain/entities/car';
 import { useToast } from '@/hooks/shared/use-toast';
 
+export interface Lng {
+  en: string;
+  fr: string;
+}
+
 interface VehicleFormData {
-  name: string;
+  name: Lng;
   categoryId: string;
   type: string;
   passengers: number;
@@ -14,8 +19,8 @@ interface VehicleFormData {
   rating: number;
   mainImage: string;
   detailImages: string[];
-  features: string[];
-  description: string;
+  features: Lng[];
+  description: Lng;
 }
 
 interface VehicleContextType {
@@ -25,7 +30,17 @@ interface VehicleContextType {
   
   // Form handlers
   handleInputChange: (e: React.ChangeEvent<any>) => void;
-  handleArrayInputChange: (index: number, value: string, arrayName: "features") => void;
+  handleMultilingualChange: (
+    field: "name" | "description",
+    lang: "en" | "fr",
+    value: string
+  ) => void;
+  handleArrayMultilingualChange: (
+    index: number,
+    lang: "en" | "fr",
+    value: string,
+    arrayName: "features"
+  ) => void;
   addArrayItem: (arrayName: "features") => void;
   removeArrayItem: (index: number, arrayName: "features") => void;
   handleImageUpload: (index: number, e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -57,7 +72,7 @@ export const VehicleProvider = ({ children }: { children: ReactNode }) => {
   const [vehicleDetail, setVehicleDetail] = useState<Vehicle | null>(null);
   
   const [formData, setFormData] = useState<VehicleFormData>({
-    name: '',
+    name: { en: '', fr: '' },
     categoryId: '4x4',
     type: '',
     passengers: 5,
@@ -65,8 +80,8 @@ export const VehicleProvider = ({ children }: { children: ReactNode }) => {
     rating: 4.0,
     mainImage: '',
     detailImages: ['', '', '', ''],
-    features: [''],
-    description: ''
+    features: [{ en: '', fr: '' }],
+    description: { en: '', fr: '' }
   });
 
   const params = useSearchParams();
@@ -95,18 +110,39 @@ export const VehicleProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const handleArrayInputChange = (
+  const handleMultilingualChange = (
+    field: "name" | "description",
+    lang: "en" | "fr",
+    value: string
+  ) => {
+    setFormData((prev) => ({
+      ...prev,
+      [field]: {
+        ...prev[field],
+        [lang]: value,
+      },
+    }));
+  };
+
+  const handleArrayMultilingualChange = (
     index: number,
+    lang: "en" | "fr",
     value: string,
     arrayName: "features"
   ) => {
     const newArray = [...formData[arrayName]];
-    newArray[index] = value;
+    newArray[index] = {
+      ...newArray[index],
+      [lang]: value,
+    };
     setFormData((prev) => ({ ...prev, [arrayName]: newArray }));
   };
 
   const addArrayItem = (arrayName: "features") => {
-    setFormData((prev) => ({ ...prev, [arrayName]: [...prev[arrayName], ""] }));
+    setFormData((prev) => ({ 
+      ...prev, 
+      [arrayName]: [...prev[arrayName], { en: '', fr: '' }] 
+    }));
   };
 
   const removeArrayItem = (index: number, arrayName: "features") => {
@@ -221,13 +257,13 @@ export const VehicleProvider = ({ children }: { children: ReactNode }) => {
 
     setIsLoading(true);
 
-    // Filtrer les features pour enlever les éléments vides
-    const filteredFeatures = formData.features.filter(
-      (item) => item.trim() !== ""
-    );
+    // Filtrer et stringify les features multilingues
+    const filteredFeatures = formData.features
+      .filter((item) => item.en.trim() !== "" || item.fr.trim() !== "")
+      .map((item) => JSON.stringify(item));
 
     const vehicleData = {
-      name: formData.name,
+      name: JSON.stringify(formData.name),
       categoryId: formData.categoryId,
       type: formData.type,
       passengers: formData.passengers,
@@ -236,7 +272,7 @@ export const VehicleProvider = ({ children }: { children: ReactNode }) => {
       mainImage: formData.mainImage,
       detailImages: formData.detailImages.filter(img => img.trim() !== ""),
       features: filteredFeatures,
-      description: formData.description,
+      description: JSON.stringify(formData.description),
     };
 
     try {
@@ -277,12 +313,15 @@ export const VehicleProvider = ({ children }: { children: ReactNode }) => {
   const handleUpdate = async (id: string) => {
     setIsLoading(true);
     
-    const filteredFeatures = formData.features.filter(
-      (item) => item.trim() !== ""
-    );
+    // Préparer les données pour la mise à jour
+    const filteredFeatures = formData.features
+      .filter((item) => item.en.trim() !== "" || item.fr.trim() !== "")
+      .map((item) => JSON.stringify(item));
 
     const vehicleData = {
       ...formData,
+      name: JSON.stringify(formData.name),
+      description: JSON.stringify(formData.description),
       features: filteredFeatures,
       detailImages: formData.detailImages.filter(img => img.trim() !== ""),
     };
@@ -386,6 +425,20 @@ export const VehicleProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  const parseMultilingualField = (field: any): Lng => {
+    if (!field) return { en: "", fr: "" };
+    
+    if (typeof field === 'string') {
+      try {
+        return JSON.parse(field);
+      } catch (e) {
+        return { en: field, fr: "" };
+      }
+    }
+    
+    return field;
+  };
+
   const getVehicleById = async (id: string) => {
     try {
       const res = await fetch(`/api/car/${id}`, { cache: "no-store" });
@@ -394,8 +447,17 @@ export const VehicleProvider = ({ children }: { children: ReactNode }) => {
         console.log("Vehicle details:", data);
         setVehicleDetail(data);
         
+        const parsedName = parseMultilingualField(data.name);
+        const parsedDescription = parseMultilingualField(data.description);
+        
+        const parsedFeatures = data.features && data.features.length > 0
+          ? data.features.map((item: any) => 
+              parseMultilingualField(item.text || item)
+            )
+          : [{ en: '', fr: '' }];
+        
         setFormData({
-          name: data.name || "",
+          name: parsedName,
           categoryId: data.categoryId || "4x4",
           type: data.type || "",
           passengers: data.passengers || 5,
@@ -403,8 +465,8 @@ export const VehicleProvider = ({ children }: { children: ReactNode }) => {
           rating: data.rating || 4.0,
           mainImage: data.mainImage || "",
           detailImages: data.detailImages?.length ? data.detailImages : ['', '', '', ''],
-          features: data.features?.length ? data.features : [''],
-          description: data.description || "",
+          features: parsedFeatures,
+          description: parsedDescription,
         });
         
         return data;
@@ -429,7 +491,7 @@ export const VehicleProvider = ({ children }: { children: ReactNode }) => {
   // Utility function
   const resetFormData = () => {
     setFormData({
-      name: '',
+      name: { en: '', fr: '' },
       categoryId: '4x4',
       type: '',
       passengers: 5,
@@ -437,8 +499,8 @@ export const VehicleProvider = ({ children }: { children: ReactNode }) => {
       rating: 4.0,
       mainImage: '',
       detailImages: ['', '', '', ''],
-      features: [''],
-      description: ''
+      features: [{ en: '', fr: '' }],
+      description: { en: '', fr: '' }
     });
   };
 
@@ -451,7 +513,8 @@ export const VehicleProvider = ({ children }: { children: ReactNode }) => {
         
         // Form handlers
         handleInputChange,
-        handleArrayInputChange,
+        handleMultilingualChange,
+        handleArrayMultilingualChange,
         addArrayItem,
         removeArrayItem,
         handleImageUpload,

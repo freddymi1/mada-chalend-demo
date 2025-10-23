@@ -43,12 +43,13 @@ const AddVehicleScreen: React.FC = () => {
   const { isDark } = useTheme();
   const params = useSearchParams();
   const router = useRouter()
-    const id = params.get("id");
+  const id = params.get("id");
   const {
     formData,
     setFormData,
     handleInputChange,
-    handleArrayInputChange,
+    handleMultilingualChange,
+    handleArrayMultilingualChange,
     addArrayItem,
     removeArrayItem,
     handleImageUpload,
@@ -58,7 +59,7 @@ const AddVehicleScreen: React.FC = () => {
     isUpdate,
   } = useVehicle();
 
-  const [newFeature, setNewFeature] = useState("");
+  const [newFeature, setNewFeature] = useState({ en: "", fr: "" });
   const [imageLoadingStates, setImageLoadingStates] = useState<{
     mainImage: boolean;
     detailImages: boolean[];
@@ -76,16 +77,20 @@ const AddVehicleScreen: React.FC = () => {
   ];
 
   const addFeature = () => {
-    if (newFeature.trim()) {
-      addArrayItem("features");
-      handleArrayInputChange(
-        formData.features.length,
-        newFeature.trim(),
-        "features"
-      );
-      setNewFeature("");
-    }
-  };
+  if (newFeature.en.trim() || newFeature.fr.trim()) {
+    // Créer une nouvelle caractéristique avec les deux langues
+    const newFeatureItem = { en: newFeature.en.trim(), fr: newFeature.fr.trim() };
+    
+    // Ajouter directement au tableau features
+    setFormData(prev => ({
+      ...prev,
+      features: [...prev.features, newFeatureItem]
+    }));
+    
+    // Réinitialiser le formulaire
+    setNewFeature({ en: "", fr: "" });
+  }
+};
 
   const handleImageClick = async (index: number) => {
     // Créer un input file invisible
@@ -138,7 +143,7 @@ const AddVehicleScreen: React.FC = () => {
     e.preventDefault();
 
     // Validation
-    if (!formData.name.trim()) {
+    if (!formData.name.fr.trim() || !formData.name.en.trim()) {
       return;
     }
 
@@ -146,7 +151,7 @@ const AddVehicleScreen: React.FC = () => {
       return;
     }
 
-    if (!formData.description.trim()) {
+    if (!formData.description.fr.trim() || !formData.description.en.trim()) {
       return;
     }
 
@@ -223,167 +228,195 @@ const AddVehicleScreen: React.FC = () => {
                   Informations générales
                 </h2>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div>
-                    <label
-                      className={`block text-sm font-medium mb-2 ${
-                        isDark ? "text-gray-300" : "text-gray-700"
-                      }`}
-                    >
-                      Nom du véhicule *
-                    </label>
-                    <input
-                      type="text"
-                      name="name"
-                      value={formData.name}
-                      onChange={handleInputChange}
-                      className={`w-full px-4 py-3 rounded-lg border transition-colors ${
-                        isDark
-                          ? "bg-gray-700 border-gray-600 text-white focus:border-blue-500"
-                          : "bg-white border-gray-300 text-gray-900 focus:border-blue-500"
-                      } focus:outline-none focus:ring-2 focus:ring-blue-500/20`}
-                      placeholder="Ex: Toyota Land Cruiser Prado"
-                      required
-                    />
-                  </div>
-
-                  <div>
-                    <label
-                      className={`block text-sm font-medium mb-2 ${
-                        isDark ? "text-gray-300" : "text-gray-700"
-                      }`}
-                    >
-                      Catégorie
-                    </label>
-                    <select
-                      name="categoryId"
-                      value={formData.categoryId}
-                      onChange={handleInputChange}
-                      className={`w-full px-4 py-3 rounded-lg border transition-colors ${
-                        isDark
-                          ? "bg-gray-700 border-gray-600 text-white focus:border-blue-500"
-                          : "bg-white border-gray-300 text-gray-900 focus:border-blue-500"
-                      } focus:outline-none focus:ring-2 focus:ring-blue-500/20`}
-                    >
-                      {categories.map((cat) => (
-                        <option key={cat.id} value={cat.id}>
-                          {cat.name}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-
-                  <div>
-                    <label
-                      className={`block text-sm font-medium mb-2 ${
-                        isDark ? "text-gray-300" : "text-gray-700"
-                      }`}
-                    >
-                      Type *
-                    </label>
-                    <input
-                      type="text"
-                      name="type"
-                      value={formData.type}
-                      onChange={handleInputChange}
-                      className={`w-full px-4 py-3 rounded-lg border transition-colors ${
-                        isDark
-                          ? "bg-gray-700 border-gray-600 text-white focus:border-blue-500"
-                          : "bg-white border-gray-300 text-gray-900 focus:border-blue-500"
-                      } focus:outline-none focus:ring-2 focus:ring-blue-500/20`}
-                      placeholder="Ex: 4x4 Premium"
-                      required
-                    />
-                  </div>
-
-                  <div>
-                    <label
-                      className={`block text-sm font-medium mb-2 ${
-                        isDark ? "text-gray-300" : "text-gray-700"
-                      }`}
-                    >
-                      Nombre de passagers
-                    </label>
-                    <div className="flex items-center gap-2">
-                      <Users
-                        className={`w-5 h-5 ${
-                          isDark ? "text-gray-400" : "text-gray-500"
-                        }`}
-                      />
-                      <input
-                        type="number"
-                        name="passengers"
-                        min="1"
-                        max="20"
-                        value={formData.passengers}
-                        onChange={handleInputChange}
-                        className={`w-full px-4 py-3 rounded-lg border transition-colors ${
-                          isDark
-                            ? "bg-gray-700 border-gray-600 text-white focus:border-blue-500"
-                            : "bg-white border-gray-300 text-gray-900 focus:border-blue-500"
-                        } focus:outline-none focus:ring-2 focus:ring-blue-500/20`}
-                      />
+                <div className="space-y-6">
+                  {/* Nom du véhicule - FR/EN */}
+                  <div className="bg-white/5 p-4 rounded-lg">
+                    <h3 className="text-lg font-semibold mb-4">Nom du véhicule</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <label
+                          className={`block text-sm font-medium mb-2 ${
+                            isDark ? "text-gray-300" : "text-gray-700"
+                          }`}
+                        >
+                          Nom (🇫🇷) *
+                        </label>
+                        <input
+                          type="text"
+                          value={formData.name.fr}
+                          onChange={(e) => handleMultilingualChange("name", "fr", e.target.value)}
+                          className={`w-full px-4 py-3 rounded-lg border transition-colors ${
+                            isDark
+                              ? "bg-gray-700 border-gray-600 text-white focus:border-blue-500"
+                              : "bg-white border-gray-300 text-gray-900 focus:border-blue-500"
+                          } focus:outline-none focus:ring-2 focus:ring-blue-500/20`}
+                          placeholder="Ex: Toyota Land Cruiser Prado"
+                          required
+                        />
+                      </div>
+                      <div>
+                        <label
+                          className={`block text-sm font-medium mb-2 ${
+                            isDark ? "text-gray-300" : "text-gray-700"
+                          }`}
+                        >
+                          Name (🇬🇧) *
+                        </label>
+                        <input
+                          type="text"
+                          value={formData.name.en}
+                          onChange={(e) => handleMultilingualChange("name", "en", e.target.value)}
+                          className={`w-full px-4 py-3 rounded-lg border transition-colors ${
+                            isDark
+                              ? "bg-gray-700 border-gray-600 text-white focus:border-blue-500"
+                              : "bg-white border-gray-300 text-gray-900 focus:border-blue-500"
+                          } focus:outline-none focus:ring-2 focus:ring-blue-500/20`}
+                          placeholder="Ex: Toyota Land Cruiser Prado"
+                          required
+                        />
+                      </div>
                     </div>
                   </div>
 
-                  <div>
-                    <label
-                      className={`block text-sm font-medium mb-2 ${
-                        isDark ? "text-gray-300" : "text-gray-700"
-                      }`}
-                    >
-                      Prix par jour (€)
-                    </label>
-                    <div className="flex items-center gap-2">
-                      <Euro
-                        className={`w-5 h-5 ${
-                          isDark ? "text-gray-400" : "text-gray-500"
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <label
+                        className={`block text-sm font-medium mb-2 ${
+                          isDark ? "text-gray-300" : "text-gray-700"
                         }`}
-                      />
-                      <input
-                        type="number"
-                        name="pricePerDay"
-                        min="0"
-                        step="0.01"
-                        value={formData.pricePerDay}
+                      >
+                        Catégorie
+                      </label>
+                      <select
+                        name="categoryId"
+                        value={formData.categoryId}
                         onChange={handleInputChange}
                         className={`w-full px-4 py-3 rounded-lg border transition-colors ${
                           isDark
                             ? "bg-gray-700 border-gray-600 text-white focus:border-blue-500"
                             : "bg-white border-gray-300 text-gray-900 focus:border-blue-500"
                         } focus:outline-none focus:ring-2 focus:ring-blue-500/20`}
+                      >
+                        {categories.map((cat) => (
+                          <option key={cat.id} value={cat.id}>
+                            {cat.name}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <div>
+                      <label
+                        className={`block text-sm font-medium mb-2 ${
+                          isDark ? "text-gray-300" : "text-gray-700"
+                        }`}
+                      >
+                        Type *
+                      </label>
+                      <input
+                        type="text"
+                        name="type"
+                        value={formData.type}
+                        onChange={handleInputChange}
+                        className={`w-full px-4 py-3 rounded-lg border transition-colors ${
+                          isDark
+                            ? "bg-gray-700 border-gray-600 text-white focus:border-blue-500"
+                            : "bg-white border-gray-300 text-gray-900 focus:border-blue-500"
+                        } focus:outline-none focus:ring-2 focus:ring-blue-500/20`}
+                        placeholder="Ex: 4x4 Premium"
+                        required
                       />
                     </div>
-                  </div>
 
-                  <div>
-                    <label
-                      className={`block text-sm font-medium mb-2 ${
-                        isDark ? "text-gray-300" : "text-gray-700"
-                      }`}
-                    >
-                      Note (1-5)
-                    </label>
-                    <div className="flex items-center gap-2">
-                      <Star
-                        className={`w-5 h-5 ${
-                          isDark ? "text-gray-400" : "text-gray-500"
+                    <div>
+                      <label
+                        className={`block text-sm font-medium mb-2 ${
+                          isDark ? "text-gray-300" : "text-gray-700"
                         }`}
-                      />
-                      <input
-                        type="number"
-                        name="rating"
-                        min="1"
-                        max="5"
-                        step="0.1"
-                        value={formData.rating}
-                        onChange={handleInputChange}
-                        className={`w-full px-4 py-3 rounded-lg border transition-colors ${
-                          isDark
-                            ? "bg-gray-700 border-gray-600 text-white focus:border-blue-500"
-                            : "bg-white border-gray-300 text-gray-900 focus:border-blue-500"
-                        } focus:outline-none focus:ring-2 focus:ring-blue-500/20`}
-                      />
+                      >
+                        Nombre de passagers
+                      </label>
+                      <div className="flex items-center gap-2">
+                        <Users
+                          className={`w-5 h-5 ${
+                            isDark ? "text-gray-400" : "text-gray-500"
+                          }`}
+                        />
+                        <input
+                          type="number"
+                          name="passengers"
+                          min="1"
+                          max="20"
+                          value={formData.passengers}
+                          onChange={handleInputChange}
+                          className={`w-full px-4 py-3 rounded-lg border transition-colors ${
+                            isDark
+                              ? "bg-gray-700 border-gray-600 text-white focus:border-blue-500"
+                              : "bg-white border-gray-300 text-gray-900 focus:border-blue-500"
+                          } focus:outline-none focus:ring-2 focus:ring-blue-500/20`}
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <label
+                        className={`block text-sm font-medium mb-2 ${
+                          isDark ? "text-gray-300" : "text-gray-700"
+                        }`}
+                      >
+                        Prix par jour (€)
+                      </label>
+                      <div className="flex items-center gap-2">
+                        <Euro
+                          className={`w-5 h-5 ${
+                            isDark ? "text-gray-400" : "text-gray-500"
+                          }`}
+                        />
+                        <input
+                          type="number"
+                          name="pricePerDay"
+                          min="0"
+                          step="0.01"
+                          value={formData.pricePerDay}
+                          onChange={handleInputChange}
+                          className={`w-full px-4 py-3 rounded-lg border transition-colors ${
+                            isDark
+                              ? "bg-gray-700 border-gray-600 text-white focus:border-blue-500"
+                              : "bg-white border-gray-300 text-gray-900 focus:border-blue-500"
+                          } focus:outline-none focus:ring-2 focus:ring-blue-500/20`}
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <label
+                        className={`block text-sm font-medium mb-2 ${
+                          isDark ? "text-gray-300" : "text-gray-700"
+                        }`}
+                      >
+                        Note (1-5)
+                      </label>
+                      <div className="flex items-center gap-2">
+                        <Star
+                          className={`w-5 h-5 ${
+                            isDark ? "text-gray-400" : "text-gray-500"
+                          }`}
+                        />
+                        <input
+                          type="number"
+                          name="rating"
+                          min="1"
+                          max="5"
+                          step="0.1"
+                          value={formData.rating}
+                          onChange={handleInputChange}
+                          className={`w-full px-4 py-3 rounded-lg border transition-colors ${
+                            isDark
+                              ? "bg-gray-700 border-gray-600 text-white focus:border-blue-500"
+                              : "bg-white border-gray-300 text-gray-900 focus:border-blue-500"
+                          } focus:outline-none focus:ring-2 focus:ring-blue-500/20`}
+                        />
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -403,25 +436,45 @@ const AddVehicleScreen: React.FC = () => {
                   }`}
                 >
                   <Tag className="w-6 h-6" />
-                  Caractéristiques
+                  Caractéristiques / Features
                 </h2>
 
                 <div className="space-y-4">
-                  <div className="flex gap-2">
-                    <input
-                      type="text"
-                      value={newFeature}
-                      onChange={(e) => setNewFeature(e.target.value)}
-                      onKeyPress={(e) =>
-                        e.key === "Enter" && (e.preventDefault(), addFeature())
-                      }
-                      className={`flex-1 px-4 py-3 rounded-lg border transition-colors ${
-                        isDark
-                          ? "bg-gray-700 border-gray-600 text-white focus:border-blue-500"
-                          : "bg-white border-gray-300 text-gray-900 focus:border-blue-500"
-                      } focus:outline-none focus:ring-2 focus:ring-blue-500/20`}
-                      placeholder="Ajouter une caractéristique..."
-                    />
+                  {/* Nouvelle caractéristique - FR/EN */}
+                  <div className="bg-white/10 p-4 rounded-lg">
+                    <h3 className="text-lg font-semibold mb-4">Ajouter une caractéristique</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                      <div>
+                        <label className="block text-sm font-medium mb-2 text-gray-700">
+                          🇫🇷 Caractéristique
+                        </label>
+                        <input
+                          type="text"
+                          value={newFeature.fr}
+                          onChange={(e) => setNewFeature(prev => ({ ...prev, fr: e.target.value }))}
+                          onKeyPress={(e) =>
+                            e.key === "Enter" && (e.preventDefault(), addFeature())
+                          }
+                          className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                          placeholder="Ajouter une caractéristique en français..."
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium mb-2 text-gray-700">
+                          🇬🇧 Feature
+                        </label>
+                        <input
+                          type="text"
+                          value={newFeature.en}
+                          onChange={(e) => setNewFeature(prev => ({ ...prev, en: e.target.value }))}
+                          onKeyPress={(e) =>
+                            e.key === "Enter" && (e.preventDefault(), addFeature())
+                          }
+                          className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                          placeholder="Add a feature in English..."
+                        />
+                      </div>
+                    </div>
                     <button
                       type="button"
                       onClick={addFeature}
@@ -431,19 +484,33 @@ const AddVehicleScreen: React.FC = () => {
                     </button>
                   </div>
 
-                  <div className="flex flex-wrap gap-2">
+                  {/* Liste des caractéristiques */}
+                  <div className="space-y-3">
                     {formData.features
-                      .filter((f) => f.trim())
+                      .filter((f) => f.fr.trim() || f.en.trim())
                       .map((feature, index) => (
                         <div
                           key={index}
-                          className={`flex items-center gap-2 px-3 py-2 rounded-full ${
+                          className={`flex items-center gap-3 p-4 rounded-lg border ${
                             isDark
-                              ? "bg-gray-700 text-gray-300"
-                              : "bg-gray-100 text-gray-700"
+                              ? "bg-gray-700 border-gray-600"
+                              : "bg-gray-50 border-gray-200"
                           }`}
                         >
-                          <span>{feature}</span>
+                          <div className="flex-1">
+                            <div className="flex items-center gap-2 mb-2">
+                              <span className="text-sm font-medium">🇫🇷</span>
+                              <span className={isDark ? "text-gray-300" : "text-gray-700"}>
+                                {feature.fr || <span className="text-gray-500 italic">Non spécifié</span>}
+                              </span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <span className="text-sm font-medium">🇬🇧</span>
+                              <span className={isDark ? "text-gray-300" : "text-gray-700"}>
+                                {feature.en || <span className="text-gray-500 italic">Not specified</span>}
+                              </span>
+                            </div>
+                          </div>
                           <button
                             type="button"
                             onClick={() => removeArrayItem(index, "features")}
@@ -474,21 +541,56 @@ const AddVehicleScreen: React.FC = () => {
                   Description
                 </h2>
 
-                <textarea
-                  name="description"
-                  value={formData.description}
-                  onChange={handleInputChange}
-                  rows={4}
-                  className={`w-full px-4 py-3 rounded-lg border transition-colors ${
-                    isDark
-                      ? "bg-gray-700 border-gray-600 text-white focus:border-blue-500"
-                      : "bg-white border-gray-300 text-gray-900 focus:border-blue-500"
-                  } focus:outline-none focus:ring-2 focus:ring-blue-500/20 resize-none`}
-                  placeholder="Décrivez le véhicule en détail..."
-                  required
-                />
+                <div className="bg-white/5 p-4 rounded-lg">
+                  <h3 className="text-lg font-semibold mb-4">Description du véhicule</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label
+                        className={`block text-sm font-medium mb-2 ${
+                          isDark ? "text-gray-300" : "text-gray-700"
+                        }`}
+                      >
+                        Description (🇫🇷) *
+                      </label>
+                      <textarea
+                        value={formData.description.fr}
+                        onChange={(e) => handleMultilingualChange("description", "fr", e.target.value)}
+                        rows={4}
+                        className={`w-full px-4 py-3 rounded-lg border transition-colors ${
+                          isDark
+                            ? "bg-gray-700 border-gray-600 text-white focus:border-blue-500"
+                            : "bg-white border-gray-300 text-gray-900 focus:border-blue-500"
+                        } focus:outline-none focus:ring-2 focus:ring-blue-500/20 resize-none`}
+                        placeholder="Décrivez le véhicule en détail en français..."
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label
+                        className={`block text-sm font-medium mb-2 ${
+                          isDark ? "text-gray-300" : "text-gray-700"
+                        }`}
+                      >
+                        Description (🇬🇧) *
+                      </label>
+                      <textarea
+                        value={formData.description.en}
+                        onChange={(e) => handleMultilingualChange("description", "en", e.target.value)}
+                        rows={4}
+                        className={`w-full px-4 py-3 rounded-lg border transition-colors ${
+                          isDark
+                            ? "bg-gray-700 border-gray-600 text-white focus:border-blue-500"
+                            : "bg-white border-gray-300 text-gray-900 focus:border-blue-500"
+                        } focus:outline-none focus:ring-2 focus:ring-blue-500/20 resize-none`}
+                        placeholder="Describe the vehicle in detail in English..."
+                        required
+                      />
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
+
             {/* Images Section */}
             <div
               className={`rounded-2xl p-6 ${
