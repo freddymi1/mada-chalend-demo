@@ -51,7 +51,7 @@ const BlogDetailScreen = () => {
     });
   };
 
-  const title = JSON.parse(blogDetail?.title as any || '""');
+  const title = blogDetail?.title ? JSON.parse(blogDetail?.title as any) : "";
 
   if (isLoading) {
     return (
@@ -264,8 +264,8 @@ const BlogDetailScreen = () => {
 
             <div className="space-y-6">
               {blogDetail.articles.map((article: any, index: number) => {
-                const articleTile = JSON.parse(article.title as any || '""');
-                const articleDescription = JSON.parse(article.description as any || '""');
+                const articleTile = article.title ? JSON.parse(article.title as any) : "";
+                const articleDescription = article.description ? JSON.parse(article.description as any) : "";
                 return(
                   <div
                   key={article.id}

@@ -44,7 +44,7 @@ const CiBlogDetailScreen = () => {
     }
   }, [id]);
 
-  const title = JSON.parse(blogDetail?.title as any);
+  const title = blogDetail?.title ? JSON.parse(blogDetail?.title as any) :"";
 
   if (isLoading1) {
     return (

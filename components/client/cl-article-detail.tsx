@@ -99,8 +99,8 @@ const ClArticleDetail = () => {
     );
   }
 
-  const title = JSON.parse(article?.title as any);
-  const description = JSON.parse(article?.description as any);
+  const title = article?.title ? JSON.parse(article?.title as any) : "";
+  const description = article?.description ? JSON.parse(article?.description as any) : "";
 
   if (!article) {
     return (

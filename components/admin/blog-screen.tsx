@@ -131,7 +131,7 @@ const BlogScreen = () => {
         {!isLoading && addedBlogs.length > 0 && (
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {addedBlogs.map((blog) => {
-              const title = JSON.parse(blog.title as any);
+              const title = blog.title && JSON.parse(blog.title as any);
               // const description = JSON.parse(blog.description as any);
               return(
                 <div
