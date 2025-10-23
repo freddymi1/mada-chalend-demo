@@ -403,7 +403,10 @@ const BookingScreen = () => {
                               <div className="flex justify-between">
                                 <span className="text-gray-600">Durée:</span>
                                 <span className="font-medium text-black/80">
-                                  {reservation?.circuitRel?.duration}
+                                  {Number(reservation?.circuitRel?.duration)} jour
+                                  {Number(reservation?.circuitRel?.duration) > 1
+                                    ? "s"
+                                    : ""}
                                 </span>
                               </div>
                             </div>
@@ -424,12 +427,12 @@ const BookingScreen = () => {
                                     {reservation?.TripTravel?.price}€
                                   </span>
                                 </div>
-                                <div className="flex justify-between">
+                                {/* <div className="flex justify-between">
                                   <span className="text-gray-600">Difficulté:</span>
                                   <span className="font-medium text-black/80">
                                     {reservation?.TripTravel?.difficulty}
                                   </span>
-                                </div>
+                                </div> */}
                                 <div className="flex justify-between">
                                   <span className="text-gray-600">Dates:</span>
                                   <span className="font-medium text-primary">
@@ -440,7 +443,8 @@ const BookingScreen = () => {
                                 <div className="flex justify-between">
                                   <span className="text-gray-600">Durée:</span>
                                   <span className="font-medium text-black/80">
-                                    {reservation?.TripTravel?.duration}
+                                    {Number(reservation?.TripTravel?.duration)} jour
+                                    {Number(reservation?.TripTravel?.duration) > 1 ? "s" : ""}
                                   </span>
                                 </div>
                               </div>
