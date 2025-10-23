@@ -21,12 +21,15 @@ import { useAdminBooking } from "../providers/admin/BookingProvider";
 import { Reservation } from "@/src/domain/entities/reservation";
 import { LoadingSpinner } from "../client/loading";
 import { useVehicle } from "../providers/admin/VehicleProvider";
+import { useLocale } from "next-intl";
 
 const BookingScreen = () => {
   // Simulation des données de réservation basées sur votre format
 
   const { bookingData, getAllBokkingData, loading, updateReservation } = useAdminBooking();
   const { handleUpdate, isLoading } = useVehicle();
+
+  const locale = useLocale();
 
   const [searchTerm, setSearchTerm] = useState("");
   const [restTypeFilter, setResTypeFilter] = useState("tous");
@@ -78,13 +81,17 @@ const BookingScreen = () => {
 
   const filteredReservations = bookingData?.reservations?.filter(
     (reservation: Reservation) => {
+      const voyageTitle = JSON.parse(reservation?.circuitRel?.title as any);
       const matchesSearch =
         searchTerm === "" ||
         reservation.nom.toLowerCase().includes(searchTerm.toLowerCase()) ||
         reservation.prenom.toLowerCase().includes(searchTerm.toLowerCase()) ||
         reservation.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
         reservation.resType?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        reservation?.circuitRel?.title
+        voyageTitle?.fr.toLowerCase()
+          .toLowerCase()
+          .includes(searchTerm.toLowerCase()) ||
+        voyageTitle?.en
           .toLowerCase()
           .includes(searchTerm.toLowerCase());
 
@@ -212,8 +219,10 @@ const BookingScreen = () => {
 
             {/* Liste des réservations */}
             <div className="space-y-4">
-              {filteredReservations?.map((reservation: any) => (
-                <div
+              {filteredReservations?.map((reservation: any) => {
+                const voyageTitle = JSON.parse(reservation?.circuitRel?.title as any);
+                return(
+                  <div
                   key={reservation?.id}
                   className="bg-white rounded-2xl shadow-lg border border-gray-100 hover:shadow-xl transition-all duration-300"
                 >
@@ -365,7 +374,7 @@ const BookingScreen = () => {
                               href={`/admin/circuits/${reservation?.circuitRel?.id}`}
                               className="font-bold text-xl text-indigo-900 mb-2"
                             >
-                              {reservation?.circuitRel?.title}
+                              {locale === "fr" ? voyageTitle?.fr : voyageTitle?.en}
                             </a>
                             <div className="space-y-2 text-sm">
                               <div className="flex justify-between">
@@ -442,7 +451,8 @@ const BookingScreen = () => {
                       )}
                   </div>
                 </div>
-              ))}
+                )
+              })}
             </div>
 
             {/* Pagination */}
