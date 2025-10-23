@@ -19,8 +19,10 @@ import {
   ChevronDown,
 } from "lucide-react";
 import { LoadingSpinner } from "../client/loading";
+import { useLocale } from "next-intl";
 
 const CircuitScreen = () => {
+  const locale = useLocale();
   const router = useRouter();
   const [editingCircuit, setEditingCircuit] = useState<Circuit | null>(null);
   const [showFilters, setShowFilters] = useState(false);
@@ -397,25 +399,28 @@ const CircuitScreen = () => {
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                  {filteredCircuits.map((circuit) => (
-                    <tr
+                  {filteredCircuits.map((circuit) => {
+                    const title = JSON.parse(circuit.title);
+                    const description = JSON.parse(circuit.description);
+                    return(
+                      <tr
                       key={circuit.id}
                       className="hover:bg-gray-50 transition-colors duration-200"
                     >
                       <td className="px-6 py-4">
                         <div className="max-w-xs">
                           <div className="text-sm font-medium text-gray-900 truncate">
-                            {circuit.title}
+                            {locale === "fr" ? title.fr : title.en}
                           </div>
                           <div className="text-sm text-gray-500 mt-1 line-clamp-2">
-                            {circuit.description}
+                            {locale === "fr" ? description.fr : description.en}
                           </div>
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="flex items-center text-sm text-gray-900">
                           <Clock className="w-4 h-4 mr-2 text-gray-400" />
-                          {circuit.duration}
+                          {Number(circuit.duration)} jour(s) / {Number(circuit.duration) - 1} nuit(s)
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
@@ -442,14 +447,17 @@ const CircuitScreen = () => {
                         <div className="flex flex-wrap gap-1 max-w-xs">
                           {circuit.highlights
                             .slice(0, 3)
-                            .map((highlight: any, index: number) => (
-                              <span
+                            .map((highlight: any, index: number) => {
+                              const text = JSON.parse(highlight.text);
+                              return(
+                                <span
                                 key={highlight.id || index}
                                 className="inline-flex px-2 py-1 text-xs bg-blue-100 text-blue-800 rounded"
                               >
-                                {highlight.text}
+                                {locale === "fr" ? text.fr : text.en}
                               </span>
-                            ))}
+                              )
+                            })}
                           {circuit.highlights.length > 3 && (
                             <span className="inline-flex px-2 py-1 text-xs bg-gray-100 text-gray-600 rounded">
                               +{circuit.highlights.length - 3}
@@ -480,7 +488,8 @@ const CircuitScreen = () => {
                         </div>
                       </td>
                     </tr>
-                  ))}
+                    )
+                  })}
                 </tbody>
               </table>
             </div>

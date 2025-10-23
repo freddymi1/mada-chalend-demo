@@ -1,6 +1,6 @@
 import React from "react";
 import { Button } from "./ui/button";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { Label } from "./ui/label";
 import {
   Select,
@@ -64,6 +64,8 @@ const CircuitBooking = ({
   getTodayString,
 }: PropsData) => {
   const t = useTranslations("lng");
+  const locale = useLocale();
+  const title = JSON.parse(circuitDetail?.title || '{}');
   return (
     <div>
       <form onSubmit={handleSubmit} className="space-y-6">
@@ -91,21 +93,22 @@ const CircuitBooking = ({
               />
             </SelectTrigger>
             <SelectContent>
-              {addedCircuits?.map((circuitItem) => (
-                <SelectItem
+              {addedCircuits?.map((circuitItem) => {
+                const title = JSON.parse(circuitItem.title);
+                return (
+                  <SelectItem
                   key={circuitItem.id || circuitItem._id}
                   value={circuitItem.id || circuitItem._id}
                 >
-                  {circuitItem.title ||
-                    circuitItem.nom ||
-                    `Circuit ${circuitItem.id}`}
+                  {locale === "fr" ? title.fr : title.en}
                 </SelectItem>
-              ))}
+                )
+              })}
             </SelectContent>
           </Select>
           {circuit && circuitDetail && (
             <p className="text-sm text-muted-foreground">
-              Circuit sélectionné : {circuitDetail.title || circuitDetail.nom}
+              {t("book.form.selectedCircuit")} : {locale === "fr" ? title.fr : title.en}
             </p>
           )}
         </div>
@@ -230,7 +233,7 @@ const CircuitBooking = ({
                 animationFillMode: "both",
               }}
             >
-              <Label htmlFor="nbrAdult">Nombre d'adultes *</Label>
+              <Label htmlFor="nbrAdult">{t("book.form.nbrAdult")} *</Label>
               <Input
                 id="nbrAdult"
                 name="nbrAdult"
@@ -250,7 +253,7 @@ const CircuitBooking = ({
                 animationFillMode: "both",
               }}
             >
-              <Label htmlFor="nbrChild">Nombre d'enfants</Label>
+              <Label htmlFor="nbrChild">{t("book.form.nbrChildren")} *</Label>
               <Input
                 id="nbrChild"
                 name="nbrChild"
@@ -278,7 +281,7 @@ const CircuitBooking = ({
                 animationFillMode: "both",
               }}
             >
-              <Label htmlFor="nbrAge2_3">2 à 3 ans *</Label>
+              <Label htmlFor="nbrAge2_3">2 {t("book.form.to")} 3 {t("book.form.yearsOld")} *</Label>
               <Input
                 id="nbrAge2_3"
                 name="nbrAge2_3"
@@ -298,7 +301,7 @@ const CircuitBooking = ({
                 animationFillMode: "both",
               }}
             >
-              <Label htmlFor="nbrAge4_7">4 à 7 ans *</Label>
+              <Label htmlFor="nbrAge4_7">4 {t("book.form.to")} 7 {t("book.form.yearsOld")} *</Label>
               <Input
                 id="nbrAge4_7"
                 name="nbrAge4_7"
@@ -318,7 +321,7 @@ const CircuitBooking = ({
                 animationFillMode: "both",
               }}
             >
-              <Label htmlFor="nbrAge8_10">2 à 3 ans *</Label>
+              <Label htmlFor="nbrAge8_10">8 {t("book.form.to")} 10 {t("book.form.yearsOld")} *</Label>
               <Input
                 id="nbrAge8_10"
                 name="nbrAge8_10"
@@ -338,7 +341,7 @@ const CircuitBooking = ({
                 animationFillMode: "both",
               }}
             >
-              <Label htmlFor="nbrAge11">11 ans et plus *</Label>
+              <Label htmlFor="nbrAge11">11 {t("book.form.toPlus")} *</Label>
               <Input
                 id="nbrAge11"
                 name="nbrAge11"

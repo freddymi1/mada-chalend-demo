@@ -3,35 +3,46 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useToast } from "@/hooks/shared/use-toast";
 
+export interface Lng {
+  en: string;
+  fr: string;
+}
+
 export interface ItineraryDay {
   day: number;
-  title: string;
-  description: string;
+  title: Lng;
+  description: Lng;
   image: string;
-  imageDescription: string;
+  imageDescription: Lng;
   distance: number;
 }
 
 interface CircuitFormData {
-  title: string;
+  title: Lng;
   duration: string;
   price: string;
   maxPeople?: string;
   difficulty: string;
-  description: string;
+  description: Lng;
   itinereryImage: string;
-  highlights: string[];
+  highlights: Lng[];
   itinerary: ItineraryDay[];
-  included: string[];
-  notIncluded: string[];
+  included: Lng[];
+  notIncluded: Lng[];
 }
 
 interface CircuitContextType {
   formData: CircuitFormData;
   setFormData: React.Dispatch<React.SetStateAction<CircuitFormData>>;
   handleInputChange: (e: React.ChangeEvent<any>) => void;
-  handleArrayInputChange: (
+  handleMultilingualChange: (
+    field: "title" | "description",
+    lang: "en" | "fr",
+    value: string
+  ) => void;
+  handleArrayMultilingualChange: (
     index: number,
+    lang: "en" | "fr",
     value: string,
     arrayName: "highlights" | "included" | "notIncluded"
   ) => void;
@@ -43,6 +54,12 @@ interface CircuitContextType {
   handleItineraryChange: (
     index: number,
     field: keyof ItineraryDay,
+    value: string
+  ) => void;
+  handleItineraryMultilingualChange: (
+    index: number,
+    field: "title" | "description" | "imageDescription",
+    lang: "en" | "fr",
     value: string
   ) => void;
   addItineraryDay: () => void;
@@ -79,17 +96,17 @@ export const CircuitProvider = ({
   const [isLoading, setIsLoading] = useState(false);
   const [circuitDetail, setCircuitDetail] = useState<any>(null);
   const [formData, setFormData] = useState<CircuitFormData>({
-    title: "",
+    title: { en: "", fr: "" },
     duration: "",
     price: "",
     maxPeople: "",
     difficulty: "Facile",
-    description: "",
+    description: { en: "", fr: "" },
     itinereryImage: "",
-    highlights: [""],
+    highlights: [{ en: "", fr: "" }],
     itinerary: [],
-    included: [""],
-    notIncluded: [""],
+    included: [{ en: "", fr: "" }],
+    notIncluded: [{ en: "", fr: "" }],
   });
 
   const [isLoadingUpload, setIsLoadingUpload] = useState(false);
@@ -113,20 +130,41 @@ export const CircuitProvider = ({
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleArrayInputChange = (
+  const handleMultilingualChange = (
+    field: "title" | "description",
+    lang: "en" | "fr",
+    value: string
+  ) => {
+    setFormData((prev) => ({
+      ...prev,
+      [field]: {
+        ...prev[field],
+        [lang]: value,
+      },
+    }));
+  };
+
+  const handleArrayMultilingualChange = (
     index: number,
+    lang: "en" | "fr",
     value: string,
     arrayName: "highlights" | "included" | "notIncluded"
   ) => {
     const newArray = [...formData[arrayName]];
-    newArray[index] = value;
+    newArray[index] = {
+      ...newArray[index],
+      [lang]: value,
+    };
     setFormData((prev) => ({ ...prev, [arrayName]: newArray }));
   };
 
   const addArrayItem = (
     arrayName: "highlights" | "included" | "notIncluded"
   ) => {
-    setFormData((prev) => ({ ...prev, [arrayName]: [...prev[arrayName], ""] }));
+    setFormData((prev) => ({ 
+      ...prev, 
+      [arrayName]: [...prev[arrayName], { en: "", fr: "" }] 
+    }));
   };
 
   const removeArrayItem = (
@@ -147,13 +185,30 @@ export const CircuitProvider = ({
     setFormData((prev) => ({ ...prev, itinerary: newItinerary }));
   };
 
+  const handleItineraryMultilingualChange = (
+    index: number,
+    field: "title" | "description" | "imageDescription",
+    lang: "en" | "fr",
+    value: string
+  ) => {
+    const newItinerary = [...formData.itinerary];
+    newItinerary[index] = {
+      ...newItinerary[index],
+      [field]: {
+        ...newItinerary[index][field],
+        [lang]: value,
+      },
+    };
+    setFormData((prev) => ({ ...prev, itinerary: newItinerary }));
+  };
+
   const addItineraryDay = () => {
     const newDay: ItineraryDay = {
       day: formData.itinerary.length + 1,
-      title: "",
-      description: "",
+      title: { en: "", fr: "" },
+      description: { en: "", fr: "" },
       image: "",
-      imageDescription: "",
+      imageDescription: { en: "", fr: "" },
       distance: 0,
     };
     setFormData((prev) => ({
@@ -164,7 +219,6 @@ export const CircuitProvider = ({
 
   const removeItineraryDay = (index: number) => {
     const newItinerary = formData.itinerary.filter((_, i) => i !== index);
-    // Reassign days in order
     const reorderedItinerary = newItinerary.map((day, idx) => ({
       ...day,
       day: idx + 1,
@@ -180,7 +234,6 @@ export const CircuitProvider = ({
     setFormData((prev) => ({ ...prev, itinereryImage: "" }));
   };
 
-  // Upload one image for itinerary
   const handleItineraryImageUpload = async (
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -200,7 +253,6 @@ export const CircuitProvider = ({
 
         if (res.ok) {
           const data = await res.json();
-          console.log("URL:", data.url);
           handleItineraryImageChange(data.url);
           toast({
             title: "Success !",
@@ -233,7 +285,6 @@ export const CircuitProvider = ({
       const formDataUpload = new FormData();
       formDataUpload.append("file", file);
 
-      // Appel API upload
       const res = await fetch("/api/upload", {
         method: "POST",
         body: formDataUpload,
@@ -241,7 +292,6 @@ export const CircuitProvider = ({
 
       if (res.ok) {
         const data = await res.json();
-        // data.url = "/uploads/nomfichier.jpg"
         handleItineraryChange(index, "image", data.url);
       } else {
         toast({
@@ -254,30 +304,41 @@ export const CircuitProvider = ({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
     setIsLoading(true);
 
-    // Filtrer les tableaux pour enlever les éléments vides
-    const filteredHighlights = formData.highlights.filter(
-      (item) => item.trim() !== ""
-    );
-    const filteredIncluded = formData.included.filter(
-      (item) => item.trim() !== ""
-    );
-    const filteredNotIncluded = formData.notIncluded.filter(
-      (item) => item.trim() !== ""
-    );
-    const filteredItinerary = formData.itinerary.filter(
-      (day) => day.title.trim() !== "" || day.description.trim() !== ""
-    );
+    // Filtrer et stringify les données multilingues
+    const filteredHighlights = formData.highlights
+      .filter((item) => item.en.trim() !== "" || item.fr.trim() !== "")
+      .map((item) => JSON.stringify(item));
+
+    const filteredIncluded = formData.included
+      .filter((item) => item.en.trim() !== "" || item.fr.trim() !== "")
+      .map((item) => JSON.stringify(item));
+
+    const filteredNotIncluded = formData.notIncluded
+      .filter((item) => item.en.trim() !== "" || item.fr.trim() !== "")
+      .map((item) => JSON.stringify(item));
+
+    const filteredItinerary = formData.itinerary
+      .filter(
+        (day) => 
+          (day.title.en.trim() !== "" || day.title.fr.trim() !== "") ||
+          (day.description.en.trim() !== "" || day.description.fr.trim() !== "")
+      )
+      .map((day) => ({
+        ...day,
+        title: JSON.stringify(day.title),
+        description: JSON.stringify(day.description),
+        imageDescription: JSON.stringify(day.imageDescription),
+      }));
 
     const circuitData = {
-      title: formData.title,
+      title: JSON.stringify(formData.title),
       duration: formData.duration,
       price: formData.price,
       maxPeople: parseInt(formData?.maxPeople!),
       difficulty: formData.difficulty,
-      description: formData.description,
+      description: JSON.stringify(formData.description),
       itinereryImage: formData.itinereryImage,
       highlights: filteredHighlights,
       included: filteredIncluded,
@@ -300,17 +361,17 @@ export const CircuitProvider = ({
           description: "Circuit ajouté avec succès !",
         });
         setFormData({
-          title: "",
+          title: { en: "", fr: "" },
           duration: "",
           price: "",
           maxPeople: "",
           difficulty: "Facile",
-          description: "",
+          description: { en: "", fr: "" },
           itinereryImage: "",
-          highlights: [""],
+          highlights: [{ en: "", fr: "" }],
           itinerary: [],
-          included: [""],
-          notIncluded: [""],
+          included: [{ en: "", fr: "" }],
+          notIncluded: [{ en: "", fr: "" }],
         });
         setIsLoading(false);
         router.push("/admin/circuits");
@@ -332,11 +393,30 @@ export const CircuitProvider = ({
 
   const handleUpdate = async (id: string) => {
     setIsLoading(true);
+
+    // Préparer les données pour la mise à jour
+    const processedItinerary = formData.itinerary.map((day) => ({
+      ...day,
+      title: JSON.stringify(day.title),
+      description: JSON.stringify(day.description),
+      imageDescription: JSON.stringify(day.imageDescription),
+    }));
+
+    const updateData = {
+      ...formData,
+      title: JSON.stringify(formData.title),
+      description: JSON.stringify(formData.description),
+      highlights: formData.highlights.map((item) => JSON.stringify(item)),
+      included: formData.included.map((item) => JSON.stringify(item)),
+      notIncluded: formData.notIncluded.map((item) => JSON.stringify(item)),
+      itinerary: processedItinerary,
+    };
+
     try {
       const res = await fetch(`/api/circuit/update/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(updateData),
       });
       if (res.ok) {
         const updatedCircuit = await res.json();
@@ -352,17 +432,17 @@ export const CircuitProvider = ({
         await getCircuitById(id);
         await fetchCircuits();
         setFormData({
-          title: "",
+          title: { en: "", fr: "" },
           duration: "",
           price: "",
           maxPeople: "",
           difficulty: "Facile",
-          description: "",
+          description: { en: "", fr: "" },
           itinereryImage: "",
-          highlights: [""],
+          highlights: [{ en: "", fr: "" }],
           itinerary: [],
-          included: [""],
-          notIncluded: [""],
+          included: [{ en: "", fr: "" }],
+          notIncluded: [{ en: "", fr: "" }],
         });
       } else {
         toast({
@@ -381,8 +461,6 @@ export const CircuitProvider = ({
   };
 
   const handleDelete = async (id: string) => {
-    console.log("IDDDDD", id);
-    // setIsLoading(true)
     try {
       const res = await fetch(`/api/circuit/delete/${id}`, {
         method: "DELETE",
@@ -434,36 +512,69 @@ export const CircuitProvider = ({
     }
   };
 
+  const parseMultilingualField = (field: any): Lng => {
+    if (!field) return { en: "", fr: "" };
+    
+    if (typeof field === 'string') {
+      try {
+        return JSON.parse(field);
+      } catch (e) {
+        return { en: field, fr: "" };
+      }
+    }
+    
+    return field;
+  };
+
   const getCircuitById = async (id: string) => {
     try {
       const res = await fetch(`/api/circuit/${id}`, { cache: "no-store" });
       if (res.ok) {
         const data = await res.json();
-        console.log("RESS", data);
         setCircuitDetail(data);
+        
+        const parsedTitle = parseMultilingualField(data.title);
+        const parsedDescription = parseMultilingualField(data.description);
+        
+        const parsedItinerary = data.itineraries && data.itineraries.length > 0
+          ? data.itineraries.map((item: any) => ({
+              ...item,
+              title: parseMultilingualField(item.title),
+              description: parseMultilingualField(item.description),
+              imageDescription: parseMultilingualField(item.imageDescription),
+            }))
+          : [];
+
+        const parsedHighlights = data.highlights && data.highlights.length > 0
+          ? data.highlights.map((item: any) => 
+              parseMultilingualField(item.text || item)
+            )
+          : [{ en: "", fr: "" }];
+
+        const parsedIncluded = data.included && data.included.length > 0
+          ? data.included.map((item: any) => 
+              parseMultilingualField(item.text || item)
+            )
+          : [{ en: "", fr: "" }];
+
+        const parsedNotIncluded = data.notIncluded && data.notIncluded.length > 0
+          ? data.notIncluded.map((item: any) => 
+              parseMultilingualField(item.text || item)
+            )
+          : [{ en: "", fr: "" }];
+        
         setFormData({
-          title: data.title || "",
+          title: parsedTitle,
           duration: data.duration || "",
           price: data.price || "",
           maxPeople: data.maxPeople ? String(data.maxPeople) : "",
           difficulty: data.difficulty || "Facile",
-          description: data.description || "",
+          description: parsedDescription,
           itinereryImage: data.itinereryImage || "",
-          highlights:
-            data.highlights && data.highlights.length > 0
-              ? data.highlights.map((item: any) => item.text)
-              : [],
-          itinerary:
-            data.itineraries && data.itineraries.length > 0
-              ? data.itineraries
-              : [],
-
-          included: data.included?.length
-            ? data.included.map((item: any) => item.text)
-            : [],
-          notIncluded: data.notIncluded?.length
-            ? data.notIncluded.map((item: any) => item.text)
-            : [],
+          highlights: parsedHighlights,
+          itinerary: parsedItinerary,
+          included: parsedIncluded,
+          notIncluded: parsedNotIncluded,
         });
         return data;
       } else {
@@ -488,10 +599,12 @@ export const CircuitProvider = ({
         formData,
         setFormData,
         handleInputChange,
-        handleArrayInputChange,
+        handleMultilingualChange,
+        handleArrayMultilingualChange,
         addArrayItem,
         removeArrayItem,
         handleItineraryChange,
+        handleItineraryMultilingualChange,
         addItineraryDay,
         removeItineraryDay,
         handleImageUpload,

@@ -9,13 +9,14 @@ import {
 import { Button } from "@/components/client/ui/button";
 import { Armchair, Calendar, Eye, Users } from "lucide-react";
 import Link from "next/link";
-import { useTranslations } from "use-intl";
+import { useLocale, useTranslations } from "use-intl";
 import { useClientCircuit } from "../providers/client/ClientCircuitProvider";
 import { useEffect } from "react";
 import { LoadingSpinner } from "./loading";
 
 export function ToursSection() {
   const t = useTranslations("lng");
+  const locale = useLocale();
 
   const { addedCircuits, fetchCircuits, isLoading } = useClientCircuit();
 
@@ -43,8 +44,11 @@ export function ToursSection() {
         ) : (
           <>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-              {addedCircuits.map((tour, index) => (
-                <Card
+              {addedCircuits.map((tour, index) => {
+                const title = JSON.parse(tour.title);
+                const description = JSON.parse(tour.description);
+                return(
+                  <Card
                   key={index}
                   className="overflow-hidden hover-lift animate-fade-in"
                   style={{
@@ -58,24 +62,24 @@ export function ToursSection() {
                         tour?.mainImage ||
                         "/tsiribihina-landscap.jpg"
                       }
-                      alt={tour.title}
+                      alt={locale === "fr" ? title.fr : title.en}
                       className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
                     />
                   </div>
                   <CardHeader>
                     <CardTitle className="text-xl text-balance">
-                      {tour.title}
+                      {locale === "fr" ? title.fr : title.en}
                     </CardTitle>
                     <div className="flex items-center justify-start gap-10">
                       <div className="flex items-center gap-2 text-muted-foreground">
                         <Calendar className="h-4 w-4" />
-                        <span>{tour.duration}</span>
+                        <span>{Number(tour.duration)} {t("ourTrip.day")} / {Number(tour.duration) -1} {t("ourTrip.night")}</span>
                       </div>
                     </div>
                   </CardHeader>
                   <CardContent>
                     <p className="text-muted-foreground mb-4 text-pretty line-clamp-3">
-                      {tour.description}
+                      {locale === "fr" ? description.fr : description.en}
                     </p>
 
                     <div className="flex gap-2">
@@ -99,7 +103,8 @@ export function ToursSection() {
                     </div>
                   </CardContent>
                 </Card>
-              ))}
+                )
+              })}
             </div>
 
             <div

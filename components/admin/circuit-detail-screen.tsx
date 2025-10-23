@@ -21,8 +21,10 @@ import {
   Armchair,
   Map,
 } from "lucide-react";
+import { useLocale } from "next-intl";
 
 const CircuitDetailScreen = () => {
+  const locale = useLocale();
   const { id } = useParams();
   const router = useRouter();
   const { circuitDetail, getCircuitById, handleDelete } = useCircuit();
@@ -63,6 +65,9 @@ const CircuitDetailScreen = () => {
   const goToImage = (index: any) => {
     setCurrentImageIndex(index);
   };
+
+  const title = JSON.parse(circuitDetail.title);
+  const description = JSON.parse(circuitDetail.description);
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
@@ -117,15 +122,63 @@ const CircuitDetailScreen = () => {
       </div>
 
       <div className="p-6">
+        {/* Images Gallery */}
+        {images.length > 0 && (
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border dark:border-gray-700 p-6 mb-6">
+            
+            <div className="relative">
+              <div className="aspect-video bg-gray-100 dark:bg-gray-700 rounded-lg overflow-hidden">
+                <img
+                  src={images[currentImageIndex]}
+                  alt={`Circuit ${circuitDetail.title}`}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+
+              {images.length > 1 && (
+                <>
+                  <button
+                    onClick={prevImage}
+                    className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-full p-2 shadow-lg transition-all"
+                  >
+                    <ChevronLeft className="w-5 h-5 text-gray-600 dark:text-gray-300" />
+                  </button>
+                  <button
+                    onClick={nextImage}
+                    className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-full p-2 shadow-lg transition-all"
+                  >
+                    <ChevronRight className="w-5 h-5 text-gray-600 dark:text-gray-300" />
+                  </button>
+                </>
+              )}
+
+              {images.length > 1 && (
+                <div className="flex justify-center mt-4 space-x-2">
+                  {images.map((_: any, index: any) => (
+                    <button
+                      key={index}
+                      onClick={() => goToImage(index)}
+                      className={`w-3 h-3 rounded-full transition-all ${
+                        index === currentImageIndex
+                          ? "bg-blue-600"
+                          : "bg-gray-300 dark:bg-gray-600"
+                      }`}
+                    />
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        )}
         {/* Circuit Information Card */}
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border dark:border-gray-700 p-6 mb-6">
           <div className="flex items-start justify-between mb-6">
             <div className="flex-1">
               <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
-                {circuitDetail.title}
+                {locale === "fr" ? title.fr : title.en}
               </h2>
               <p className="text-gray-600 dark:text-gray-300 text-base leading-relaxed">
-                {circuitDetail.description}
+                {locale === "fr" ? description.fr : description.en}
               </p>
             </div>
             <div className="ml-6">
@@ -145,7 +198,8 @@ const CircuitDetailScreen = () => {
                     Durée
                   </p>
                   <p className="font-semibold text-gray-900 dark:text-white">
-                    {circuitDetail.duration}
+                    {Number(circuitDetail.duration)} jour(s) /{" "}
+                    {Number(circuitDetail.duration) - 1} nuit(s)
                   </p>
                 </div>
               </div>
@@ -248,14 +302,20 @@ const CircuitDetailScreen = () => {
                 Points forts
               </h3>
               <ul className="space-y-3">
-                {circuitDetail.highlights.map((highlight: any) => (
-                  <li key={highlight.id} className="flex items-start space-x-3">
-                    <Star className="w-4 h-4 text-yellow-500 dark:text-yellow-400 mt-0.5 flex-shrink-0" />
-                    <span className="text-sm text-gray-700 dark:text-gray-300">
-                      {highlight.text}
-                    </span>
-                  </li>
-                ))}
+                {circuitDetail.highlights.map((highlight: any) => {
+                  const highlightText = JSON.parse(highlight.text);
+                  return (
+                    <li
+                      key={highlight.id}
+                      className="flex items-start space-x-3"
+                    >
+                      <Star className="w-4 h-4 text-yellow-500 dark:text-yellow-400 mt-0.5 flex-shrink-0" />
+                      <span className="text-sm text-gray-700 dark:text-gray-300">
+                        {locale === "fr" ? highlightText.fr : highlightText.en}
+                      </span>
+                    </li>
+                  );
+                })}
               </ul>
             </div>
           )}
@@ -268,14 +328,17 @@ const CircuitDetailScreen = () => {
                 Inclus
               </h3>
               <ul className="space-y-3">
-                {circuitDetail.included.map((item: any) => (
-                  <li key={item.id} className="flex items-start space-x-3">
-                    <CheckCircle className="w-4 h-4 text-green-500 dark:text-green-400 mt-0.5 flex-shrink-0" />
-                    <span className="text-sm text-gray-700 dark:text-gray-300">
-                      {item.text}
-                    </span>
-                  </li>
-                ))}
+                {circuitDetail.included.map((item: any) => {
+                  const itemText = JSON.parse(item.text);
+                  return (
+                    <li key={item.id} className="flex items-start space-x-3">
+                      <CheckCircle className="w-4 h-4 text-green-500 dark:text-green-400 mt-0.5 flex-shrink-0" />
+                      <span className="text-sm text-gray-700 dark:text-gray-300">
+                        {locale === "fr" ? itemText.fr : itemText.en}
+                      </span>
+                    </li>
+                  );
+                })}
               </ul>
             </div>
           )}
@@ -289,70 +352,22 @@ const CircuitDetailScreen = () => {
                   Non inclus
                 </h3>
                 <ul className="space-y-3">
-                  {circuitDetail.notIncluded.map((item: any) => (
-                    <li key={item.id} className="flex items-start space-x-3">
-                      <XCircle className="w-4 h-4 text-red-500 dark:text-red-400 mt-0.5 flex-shrink-0" />
-                      <span className="text-sm text-gray-700 dark:text-gray-300">
-                        {item.text}
-                      </span>
-                    </li>
-                  ))}
+                  {circuitDetail.notIncluded.map((item: any) => {
+                    const itemText = JSON.parse(item.text);
+                    return (
+                      <li key={item.id} className="flex items-start space-x-3">
+                        <XCircle className="w-4 h-4 text-red-500 dark:text-red-400 mt-0.5 flex-shrink-0" />
+                        <span className="text-sm text-gray-700 dark:text-gray-300">
+                          {locale === "fr" ? itemText.fr : itemText.en}
+                        </span>
+                      </li>
+                    );
+                  })}
                 </ul>
               </div>
             )}
         </div>
 
-        {/* Images Gallery */}
-        {images.length > 0 && (
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border dark:border-gray-700 p-6 mb-6">
-            <h3 className="font-semibold text-lg mb-4 text-gray-900 dark:text-white flex items-center">
-              <Camera className="w-5 h-5 mr-2" />
-              Galerie d'images ({images.length})
-            </h3>
-            <div className="relative">
-              <div className="aspect-video bg-gray-100 dark:bg-gray-700 rounded-lg overflow-hidden">
-                <img
-                  src={images[currentImageIndex]}
-                  alt={`Circuit ${circuitDetail.title}`}
-                  className="w-full h-full object-cover"
-                />
-              </div>
-
-              {images.length > 1 && (
-                <>
-                  <button
-                    onClick={prevImage}
-                    className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-full p-2 shadow-lg transition-all"
-                  >
-                    <ChevronLeft className="w-5 h-5 text-gray-600 dark:text-gray-300" />
-                  </button>
-                  <button
-                    onClick={nextImage}
-                    className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-full p-2 shadow-lg transition-all"
-                  >
-                    <ChevronRight className="w-5 h-5 text-gray-600 dark:text-gray-300" />
-                  </button>
-                </>
-              )}
-
-              {images.length > 1 && (
-                <div className="flex justify-center mt-4 space-x-2">
-                  {images.map((_: any, index: any) => (
-                    <button
-                      key={index}
-                      onClick={() => goToImage(index)}
-                      className={`w-3 h-3 rounded-full transition-all ${
-                        index === currentImageIndex
-                          ? "bg-blue-600"
-                          : "bg-gray-300 dark:bg-gray-600"
-                      }`}
-                    />
-                  ))}
-                </div>
-              )}
-            </div>
-          </div>
-        )}
         {/* Image du circuit */}
         {circuitDetail.itinereryImage && (
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border dark:border-gray-700 p-6 mb-6">
@@ -364,7 +379,7 @@ const CircuitDetailScreen = () => {
               <div className="aspect-video bg-gray-100 dark:bg-gray-700 rounded-lg overflow-hidden">
                 <img
                   src={circuitDetail.itinereryImage}
-                  alt={`Circuit ${circuitDetail.title}`}
+                  alt={`Circuit ${title.fr}`}
                   className="w-full h-full object-cover"
                 />
               </div>
@@ -383,60 +398,72 @@ const CircuitDetailScreen = () => {
             </h3>
             <div className="space-y-6">
               {circuitDetail.itineraries.map(
-                (itinerary: any, index: number) => (
-                  <div
-                    key={itinerary.id}
-                    className="border dark:border-gray-700 rounded-lg overflow-hidden relative"
-                  >
-                    <div className="lg:flex lg:h-[400px]">
-                      {" "}
-                      {/* Hauteur réduite et plus adaptée */}
-                      {/* Image */}
-                      {itinerary.image && (
-                        <div className="lg:w-1/3 relative">
-                          <img
-                            src={itinerary.image}
-                            alt={
-                              itinerary.imageDescription ||
-                              `Jour ${itinerary.day}`
-                            }
-                            className="w-full max-h-82 lg:h-full object-cover"
-                          />
+                (itinerary: any, index: number) => {
+                  const itineraryTitle = JSON.parse(itinerary.title);
+                  const itineraryDescription = JSON.parse(
+                    itinerary.description
+                  );
+                  const itineraryImageDescription = itinerary.imageDescription
+                    ? JSON.parse(itinerary.imageDescription)
+                    : null;
+                  return (
+                    <div
+                      key={itinerary.id}
+                      className="border dark:border-gray-700 rounded-lg overflow-hidden relative"
+                    >
+                      <div className="lg:flex lg:h-[400px]">
+                        {" "}
+                        {/* Hauteur réduite et plus adaptée */}
+                        {/* Image */}
+                        {itinerary.image && (
+                          <div className="lg:w-1/3 relative">
+                            <img
+                              src={itinerary.image}
+                              alt={
+                                itineraryImageDescription.fr ||
+                                `Jour ${itinerary.day}`
+                              }
+                              className="w-full max-h-82 lg:h-full object-cover"
+                            />
 
-                          {/* Timeline repositionnée à droite */}
-                          <div className="absolute top-4 right-2 !z-50 bg-white dark:bg-gray-800 text-gray-900 dark:text-white rounded-lg px-3 py-2 text-xs font-medium shadow-lg">
-                            <div className="relative">
-                              {/* Ligne verticale continue */}
-                              <div className="absolute left-[6px] top-0 bottom-0 w-0.5 bg-gray-300 dark:bg-gray-600"></div>
+                            {/* Timeline repositionnée à droite */}
+                            <div className="absolute top-4 right-2 !z-50 bg-white dark:bg-gray-800 text-gray-900 dark:text-white rounded-lg px-3 py-2 text-xs font-medium shadow-lg">
+                              <div className="relative">
+                                {/* Ligne verticale continue */}
+                                <div className="absolute left-[6px] top-0 bottom-0 w-0.5 bg-gray-300 dark:bg-gray-600"></div>
 
-                              {circuitDetail.itineraries
-                                .filter(
-                                  (it: any, i: number) =>
-                                    i >= 0 && i <= index + 1
-                                )
-                                .map((it: any, i: number) => {
-                                  const isCurrentItem = i === index;
-                                  const isLastInList =
-                                    i === circuitDetail.itineraries.length - 1;
-                                  const isNextItem = i === index + 1;
+                                {circuitDetail.itineraries
+                                  .filter(
+                                    (it: any, i: number) =>
+                                      i >= 0 && i <= index + 1
+                                  )
+                                  .map((it: any, i: number) => {
+                                    const isCurrentItem = i === index;
+                                    const isLastInList =
+                                      i ===
+                                      circuitDetail.itineraries.length - 1;
+                                    const isNextItem = i === index + 1;
+                                    const itText = JSON.parse(
+                                      it.imageDescription
+                                    );
 
-                                  return (
-                                    <div
-                                      className="flex flex-col items-start relative mb-3 last:mb-0"
-                                      key={it.id}
-                                    >
-                                      {/* Point et description */}
-                                      <div className="flex items-center gap-2 relative z-10">
-                                        <MapPin
-                                          className={`w-4 h-4 text-gray-400 ${
-                                            isCurrentItem
-                                              ? "text-green-500"
-                                              : isNextItem
-                                              ? "text-orange-500"
-                                              : "text-blue-500"
-                                          }`}
-                                        />
-                                        {/* <div
+                                    return (
+                                      <div
+                                        className="flex flex-col items-start relative mb-3 last:mb-0"
+                                        key={it.id}
+                                      >
+                                        {/* Point et description */}
+                                        <div className="flex items-center gap-2 relative z-10">
+                                          <MapPin
+                                            className={`w-4 h-4 text-gray-400 ${
+                                              isCurrentItem
+                                                ? "text-green-500"
+                                                : isNextItem
+                                                ? "text-orange-500"
+                                                : "text-blue-500"
+                                            }`}
+                                          />
+                                          {/* <div
                                           className={`w-2 h-2 rounded-full mr-2 ${
                                             isCurrentItem
                                               ? "bg-green-500"
@@ -445,65 +472,89 @@ const CircuitDetailScreen = () => {
                                               : "bg-blue-500"
                                           }`}
                                         /> */}
-                                        <span className="text-xs font-medium max-w-[120px] truncate">
-                                          {it.imageDescription}
-                                        </span>
-                                      </div>
-
-                                      {/* Distance (sauf pour le dernier élément) */}
-                                      {!isLastInList && (
-                                        <div className="flex gap-2 items-center relative z-10 mt-2">
-                                          <Clock className="w-4 h-4 text-blue-400" />
-                                          <span className="text-xs text-gray-500 dark:text-gray-400">
-                                            {it.distance} km
+                                          <span className="text-xs font-medium max-w-[120px] truncate">
+                                            {locale === "fr"
+                                              ? itText.fr
+                                              : itText.en}
                                           </span>
                                         </div>
-                                      )}
-                                    </div>
-                                  );
-                                })}
+
+                                        {/* Distance (sauf pour le dernier élément) */}
+                                        {!isLastInList && (
+                                          <div className="flex gap-2 items-center relative z-10 mt-2">
+                                            <Clock className="w-4 h-4 text-blue-400" />
+                                            <span className="text-xs text-gray-500 dark:text-gray-400">
+                                              {it.distance} km
+                                            </span>
+                                          </div>
+                                        )}
+                                      </div>
+                                    );
+                                  })}
+                              </div>
                             </div>
                           </div>
-                        </div>
-                      )}
-                      {/* Content */}
-                      <div
-                        className={`p-6 ${
-                          itinerary.image ? "lg:w-2/3" : "w-full"
-                        } bg-gray-50 dark:bg-gray-700 flex flex-col`}
-                      >
-                        <div className="flex items-center mb-4">
-                          <div className="bg-blue-600 text-white rounded-full w-8 h-8 flex items-center justify-center font-semibold text-sm mr-4">
-                            {itinerary.day}
+                        )}
+                        {/* Content */}
+                        <div
+                          className={`p-6 ${
+                            itinerary.image ? "lg:w-2/3" : "w-full"
+                          } bg-gray-50 dark:bg-gray-700 flex flex-col`}
+                        >
+                          <div className="flex items-center mb-4">
+                            <div className="bg-blue-600 text-white rounded-full w-8 h-8 flex items-center justify-center font-semibold text-sm mr-4">
+                              {itinerary.day}
+                            </div>
+                            <div>
+                              <h4 className="text-lg font-semibold text-gray-900 dark:text-white">
+                                {locale === "fr"
+                                  ? itineraryTitle.fr
+                                  : itineraryTitle.en}
+                              </h4>
+                              {itineraryImageDescription && (
+                                <p className="text-sm text-gray-500 dark:text-gray-400">
+                                  {locale === "fr"
+                                    ? itineraryImageDescription.fr
+                                    : itineraryImageDescription.en}
+                                </p>
+                              )}
+                            </div>
                           </div>
-                          <div>
-                            <h4 className="text-lg font-semibold text-gray-900 dark:text-white">
-                              {itinerary.title}
-                            </h4>
-                            {itinerary.imageDescription && (
-                              <p className="text-sm text-gray-500 dark:text-gray-400">
-                                {itinerary.imageDescription}
-                              </p>
+
+                          <div className="prose max-w-none flex-grow">
+                            {locale === "fr" ? (
+                              <>
+                                {itineraryDescription.fr
+                                  .split("\n\n")
+                                  .map((paragraph: any, pIndex: any) => (
+                                    <p
+                                      key={pIndex}
+                                      className="mb-3 text-gray-700 dark:text-gray-300 leading-relaxed text-sm"
+                                    >
+                                      {paragraph}
+                                    </p>
+                                  ))}
+                              </>
+                            ) : (
+                              <>
+                                {itineraryDescription.en
+                                  .split("\n\n")
+                                  .map((paragraph: any, pIndex: any) => (
+                                    <p
+                                      key={pIndex}
+                                      className="mb-3 text-gray-700 dark:text-gray-300 leading-relaxed text-sm"
+                                    >
+                                      {paragraph}
+                                    </p>
+                                  ))}
+                              </>
                             )}
                           </div>
                         </div>
-
-                        <div className="prose max-w-none flex-grow">
-                          {itinerary.description
-                            .split("\n\n")
-                            .map((paragraph: any, pIndex: any) => (
-                              <p
-                                key={pIndex}
-                                className="mb-3 text-gray-700 dark:text-gray-300 leading-relaxed text-sm"
-                              >
-                                {paragraph}
-                              </p>
-                            ))}
-                        </div>
                       </div>
                     </div>
-                  </div>
-                )
+                  );
+                }
               )}
             </div>
           </div>

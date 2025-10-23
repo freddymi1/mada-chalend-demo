@@ -12,17 +12,11 @@ import {
 } from "@/components/client/ui/card";
 import { Badge } from "@/components/client/ui/badge";
 import { Toaster } from "@/components/client/ui/toaster";
-import {
-  Calendar,
-  MapPin,
-  Star,
-  Camera,
-  Clock,
-} from "lucide-react";
+import { Calendar, MapPin, Star, Camera, Clock } from "lucide-react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { useTranslations } from "use-intl";
+import { useLocale, useTranslations } from "use-intl";
 import { useClientCircuit } from "@/components/providers/client/ClientCircuitProvider";
 import { LoadingSpinner } from "./loading";
 
@@ -32,6 +26,7 @@ function getCircuitImages(circuit: any) {
 
 const ClientCircuitDetailScreen = () => {
   const t = useTranslations("lng");
+  const locale = useLocale();
   const { id } = useParams();
   const router = useRouter();
   const { circuitDetail, getCircuitById, isLoading } = useClientCircuit();
@@ -63,6 +58,8 @@ const ClientCircuitDetailScreen = () => {
   const closeModal = () => {
     setSelectedImage(null);
   };
+  const title = JSON.parse(circuitDetail?.title);
+  const description = JSON.parse(circuitDetail?.description);
 
   return (
     <main className="min-h-screen w-full overflow-x-hidden">
@@ -85,7 +82,7 @@ const ClientCircuitDetailScreen = () => {
                 </Link>
                 <span className="mx-2">/</span>
                 <span className="text-foreground truncate">
-                  {circuitDetail?.title}
+                  {locale === "fr" ? title?.fr : title?.en}
                 </span>
               </nav>
 
@@ -95,7 +92,7 @@ const ClientCircuitDetailScreen = () => {
                   {/* Title and basic info */}
                   <div className="animate-slide-up w-full">
                     <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-4 text-balance break-words">
-                      {circuitDetail?.title}
+                      {locale === "fr" ? title?.fr : title?.en}
                     </h1>
                     <div className="flex flex-wrap gap-2 sm:gap-4 mb-4 sm:mb-6">
                       <Badge
@@ -104,7 +101,9 @@ const ClientCircuitDetailScreen = () => {
                       >
                         <Calendar className="h-3 w-3 sm:h-4 sm:w-4" />
                         <span className="truncate">
-                          {circuitDetail?.duration}
+                          {Number(circuitDetail?.duration)} {t("ourTrip.day")} /{" "}
+                          {Number(circuitDetail?.duration) - 1}{" "}
+                          {t("ourTrip.night")}
                         </span>
                       </Badge>
 
@@ -119,7 +118,7 @@ const ClientCircuitDetailScreen = () => {
                       </Badge>
                     </div>
                     <p className="text-base sm:text-lg text-muted-foreground text-pretty break-words">
-                      {circuitDetail?.description}
+                      {locale === "fr" ? description?.fr : description?.en}
                     </p>
                   </div>
 
@@ -140,7 +139,7 @@ const ClientCircuitDetailScreen = () => {
                           images={circuitImages.filter(
                             (img: string) => img && img.trim() !== ""
                           )}
-                          title={circuitDetail?.title}
+                          title={locale === "fr" ? title?.fr : title?.en}
                         />
                       </div>
                     )}
@@ -182,113 +181,141 @@ const ClientCircuitDetailScreen = () => {
                   <CardContent className="px-2 sm:px-6">
                     <div className="space-y-4 sm:space-y-6">
                       {circuitDetail?.itineraries?.map(
-                        (day: any, index: number) => (
-                          <div
-                            key={day.id}
-                            className="flex flex-col gap-3 p-3 sm:p-4 rounded-lg bg-muted/50 hover:bg-muted transition-colors w-full"
-                          >
-                            {/* Day content */}
-                            <div className="flex flex-col gap-3 sm:gap-4 w-full min-w-0">
-                              <div className="flex items-center gap-6">
-                                <div className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold text-xs sm:text-sm">
-                                  {day.day}
-                                </div>
-                                <h4 className="font-semibold mb-1 text-sm sm:text-base break-words">
-                                  {day.title}
-                                </h4>
-                              </div>
-
-                              <div className="grid lg:h-[400px] grid-cols-1 lg:grid-cols-2 gap-10">
-                                {day.image !== "" && (
-                                  <div
-                                    className="!w-full max-h-96 flex flex-col items-start justify-end rounded-lg overflow-hidden cursor-pointer group relative"
-                                    onClick={() => handleImageClick(day)}
-                                  >
-                                    <img
-                                      src={day.image}
-                                      alt={day.imageDescription}
-                                      className="w-full max-h-82 lg:h-full object-cover hover:scale-110 transition-transform duration-300"
-                                    />
-                                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300 flex items-center justify-center">
-                                      <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-white/90 rounded-full p-2">
-                                        <Camera className="h-4 w-4 text-gray-700" />
-                                      </div>
-                                    </div>
-                                    <h4 className="font-semibold mt-1 text-left text-sm sm:text-base lg:text-lg break-words">
-                                      {day.imageDescription}
-                                    </h4>
-                                    
+                        (day: any, index: number) => {
+                          const imgTitle = JSON.parse(day.title);
+                          const imgDescription = JSON.parse(
+                            day.imageDescription
+                          );
+                          const dayDescription = JSON.parse(day.description);
+                          return (
+                            <div
+                              key={day.id}
+                              className="flex flex-col gap-3 p-3 sm:p-4 rounded-lg bg-muted/50 hover:bg-muted transition-colors w-full"
+                            >
+                              {/* Day content */}
+                              <div className="flex flex-col gap-3 sm:gap-4 w-full min-w-0">
+                                <div className="flex items-center gap-6">
+                                  <div className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold text-xs sm:text-sm">
+                                    {day.day}
                                   </div>
-                                )}
+                                  <h4 className="font-semibold mb-1 text-sm sm:text-base break-words">
+                                    {locale === "fr"
+                                      ? imgTitle.fr
+                                      : imgTitle.en}
+                                  </h4>
+                                </div>
 
-                                <div className="!w-full flex flex-col items-start justify-start gap-4 rounded-lg overflow-hidden cursor-pointer group relative">
-                                  <div className="!z-50 bg-white w-full dark:bg-gray-800 text-gray-900 dark:text-white rounded-lg px-3 py-2 text-xs font-medium shadow-lg">
-                                    <div className="relative">
-                                      {/* Ligne verticale continue */}
-                                      <div className="absolute left-[6px] top-0 bottom-0 w-0.5 bg-gray-300 dark:bg-gray-600"></div>
+                                <div className="grid lg:h-[400px] grid-cols-1 lg:grid-cols-2 gap-10">
+                                  {day.image !== "" && (
+                                    <div
+                                      className="!w-full max-h-96 flex flex-col items-start justify-end rounded-lg overflow-hidden cursor-pointer group relative"
+                                      onClick={() => handleImageClick(day)}
+                                    >
+                                      <img
+                                        src={day.image}
+                                        alt={
+                                          locale === "fr"
+                                            ? imgDescription.fr
+                                            : imgDescription.en
+                                        }
+                                        className="w-full max-h-82 lg:h-full object-cover hover:scale-110 transition-transform duration-300"
+                                      />
+                                      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300 flex items-center justify-center">
+                                        <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-white/90 rounded-full p-2">
+                                          <Camera className="h-4 w-4 text-gray-700" />
+                                        </div>
+                                      </div>
+                                      <h4 className="font-semibold mt-1 text-left text-sm sm:text-base lg:text-lg break-words">
+                                        {locale === "fr"
+                                          ? imgDescription.fr
+                                          : imgDescription.en}
+                                      </h4>
+                                    </div>
+                                  )}
 
-                                      {circuitDetail.itineraries
-                                        .filter(
-                                          (it: any, i: number) =>
-                                            i >= 0 && i <= index + 1
-                                        )
-                                        .map((it: any, i: number) => {
-                                          const isCurrentItem = i === index;
-                                          const isLastInList =
-                                            i ===
-                                            circuitDetail.itineraries.length -
-                                              1;
-                                          const isNextItem = i === index + 1;
+                                  <div className="!w-full flex flex-col items-start justify-start gap-4 rounded-lg overflow-hidden cursor-pointer group relative">
+                                    <div className="!z-50 bg-white w-full dark:bg-gray-800 text-gray-900 dark:text-white rounded-lg px-3 py-2 text-xs font-medium shadow-lg">
+                                      <div className="relative">
+                                        {/* Ligne verticale continue */}
+                                        <div className="absolute left-[6px] top-0 bottom-0 w-0.5 bg-gray-300 dark:bg-gray-600"></div>
 
-                                          return (
-                                            <div
-                                              className="flex flex-col items-start relative mb-3 last:mb-0"
-                                              key={it.id}
-                                            >
-                                              {/* Point et description */}
-                                              <div className="flex items-center gap-2 relative z-10">
-                                                <MapPin
-                                                  className={`w-4 h-4 text-gray-400 ${
-                                                    isCurrentItem
-                                                      ? "text-green-500"
-                                                      : isNextItem
-                                                      ? "text-orange-500"
-                                                      : "text-blue-500"
-                                                  }`}
-                                                />
-                                                
-                                                <span className="text-xs font-medium max-w-[120px] truncate">
-                                                  {it.imageDescription}
-                                                </span>
-                                              </div>
+                                        {circuitDetail.itineraries
+                                          .filter(
+                                            (it: any, i: number) =>
+                                              i >= 0 && i <= index + 1
+                                          )
+                                          .map((it: any, i: number) => {
+                                            const isCurrentItem = i === index;
+                                            const isLastInList =
+                                              i ===
+                                              circuitDetail.itineraries.length -
+                                                1;
+                                            const isNextItem = i === index + 1;
 
-                                              {/* Distance (sauf pour le dernier élément) */}
-                                              {!isLastInList && (
-                                                <div className="flex gap-2 items-center relative z-10 mt-2">
-                                                  <Clock className="w-4 h-4 text-blue-400" />
-                                                  <span className="text-xs text-gray-500 dark:text-gray-400">
-                                                    {it.distance} km
+                                            const itTitle = JSON.parse(
+                                              it.title
+                                            );
+
+                                            const itDescription = JSON.parse(
+                                              it.imageDescription
+                                            );
+
+                                            return (
+                                              <div
+                                                className="flex flex-col items-start relative mb-3 last:mb-0"
+                                                key={it.id}
+                                              >
+                                                {/* Point et description */}
+                                                <div className="flex items-center gap-2 relative z-10">
+                                                  <MapPin
+                                                    className={`w-4 h-4 text-gray-400 ${
+                                                      isCurrentItem
+                                                        ? "text-green-500"
+                                                        : isNextItem
+                                                        ? "text-orange-500"
+                                                        : "text-blue-500"
+                                                    }`}
+                                                  />
+
+                                                  <span className="text-xs font-medium max-w-[120px] truncate">
+                                                    {locale === "fr"
+                                                      ? itDescription.fr
+                                                      : itDescription.en}
                                                   </span>
                                                 </div>
-                                              )}
-                                            </div>
-                                          );
-                                        })}
+
+                                                {/* Distance (sauf pour le dernier élément) */}
+                                                {!isLastInList && (
+                                                  <div className="flex gap-2 items-center relative z-10 mt-2">
+                                                    <Clock className="w-4 h-4 text-blue-400" />
+                                                    <span className="text-xs text-gray-500 dark:text-gray-400">
+                                                      {it.distance} km
+                                                    </span>
+                                                  </div>
+                                                )}
+                                              </div>
+                                            );
+                                          })}
+                                      </div>
                                     </div>
+                                    <p className="text-muted-foreground text-xs sm:text-sm mb-2 break-words">
+                                      {locale === "fr"
+                                        ? dayDescription.fr
+                                        : dayDescription.en}
+                                    </p>
+                                    <p className="text-xs text-muted-foreground italic break-words">
+                                      {locale === "fr"
+                                        ? imgDescription.fr
+                                        : imgDescription.en}
+                                    </p>
                                   </div>
-                                  <p className="text-muted-foreground text-xs sm:text-sm mb-2 break-words">
-                                    {day.description}
-                                  </p>
-                                  <p className="text-xs text-muted-foreground italic break-words">
-                                    {day.imageDescription}
-                                  </p>
                                 </div>
                               </div>
-                            </div>
 
-                            {/* Day image */}
-                          </div>
-                        )
+                              {/* Day image */}
+                            </div>
+                          );
+                        }
                       )}
                     </div>
                   </CardContent>
@@ -342,16 +369,21 @@ const ClientCircuitDetailScreen = () => {
                   </CardHeader>
                   <CardContent>
                     <div className="flex flex-col gap-2 mb-4">
-                      {circuitDetail?.highlights?.map((highlight: any) => (
-                        <div
-                          key={highlight.id}
-                          className="flex flex-col items-start gap-2"
-                        >
-                          <span className="bg-primary/20 text-primary px-3 py-1 rounded-full text-sm transition-all duration-300 hover:bg-primary/20 hover:scale-105">
-                            {highlight.text}
-                          </span>
-                        </div>
-                      ))}
+                      {circuitDetail?.highlights?.map((highlight: any) => {
+                        const highlightText = JSON.parse(highlight.text);
+                        return (
+                          <div
+                            key={highlight.id}
+                            className="flex flex-col items-start gap-2"
+                          >
+                            <span className="bg-primary/20 text-primary px-3 py-1 rounded-full text-sm transition-all duration-300 hover:bg-primary/20 hover:scale-105">
+                              {locale === "fr"
+                                ? highlightText.fr
+                                : highlightText.en}
+                            </span>
+                          </div>
+                        );
+                      })}
                     </div>
                   </CardContent>
                 </Card>
@@ -371,14 +403,26 @@ const ClientCircuitDetailScreen = () => {
                   </CardHeader>
                   <CardContent>
                     <ul className="space-y-2 text-xs sm:text-sm">
-                      {circuitDetail?.included?.map((item: any) => (
-                        <li key={item.id} className="flex items-start gap-2">
-                          <span className="text-green-500 mt-1 flex-shrink-0">
-                            ✓
-                          </span>
-                          <span className="break-words">{item.text}</span>
-                        </li>
-                      ))}
+                      {circuitDetail?.included?.map((item: any) => {
+                        const itemText = JSON.parse(item.text);
+                        return (
+                          <>
+                            {itemText.fr === "" || itemText.en === "" ? null : (
+                              <li
+                                key={item.id}
+                                className="flex items-start gap-2"
+                              >
+                                <span className="text-green-500 mt-1 flex-shrink-0">
+                                  ✓
+                                </span>
+                                <span className="break-words">
+                                  {locale === "fr" ? itemText.fr : itemText.en}
+                                </span>
+                              </li>
+                            )}
+                          </>
+                        );
+                      })}
                     </ul>
                   </CardContent>
                 </Card>
@@ -397,14 +441,26 @@ const ClientCircuitDetailScreen = () => {
                   </CardHeader>
                   <CardContent>
                     <ul className="space-y-2 text-xs sm:text-sm">
-                      {circuitDetail?.notIncluded?.map((item: any) => (
-                        <li key={item.id} className="flex items-start gap-2">
-                          <span className="text-red-500 mt-1 flex-shrink-0">
-                            ✗
-                          </span>
-                          <span className="break-words">{item.text}</span>
-                        </li>
-                      ))}
+                      {circuitDetail?.notIncluded?.map((item: any) => {
+                        const itemText = JSON.parse(item.text);
+                        return (
+                          <>
+                            {itemText.fr === "" || itemText.en === "" ? null : (
+                              <li
+                                key={item.id}
+                                className="flex items-start gap-2"
+                              >
+                                <span className="text-red-500 mt-1 flex-shrink-0">
+                                  ✗
+                                </span>
+                                <span className="break-words">
+                                  {locale === "fr" ? itemText.fr : itemText.en}
+                                </span>
+                              </li>
+                            )}
+                          </>
+                        );
+                      })}
                     </ul>
                   </CardContent>
                 </Card>
