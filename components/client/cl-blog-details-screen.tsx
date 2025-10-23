@@ -18,7 +18,7 @@ import {
 import { useParams, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { useCiBlog } from "../providers/client/ClBlogProvider";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useAuthClient } from "@/src/hooks/useAuthClient";
 import { IComment } from "@/src/domain/entities/comment";
 import { toast } from "sonner";
@@ -33,6 +33,7 @@ const CiBlogDetailScreen = () => {
   const router = useRouter();
   const params = useParams();
   const t = useTranslations("lng");
+  const locale = useLocale();
   const id = params?.id;
 
   const { blogDetail, getBlogById, isLoading1 } = useCiBlog();
@@ -42,6 +43,8 @@ const CiBlogDetailScreen = () => {
       getBlogById(id.toString());
     }
   }, [id]);
+
+  const title = JSON.parse(blogDetail?.title as any);
 
   if (isLoading1) {
     return (
@@ -124,7 +127,7 @@ const CiBlogDetailScreen = () => {
                   isDark ? "text-white" : "text-gray-900"
                 }`}
               >
-                {blogDetail.title}
+                {locale === "fr" ? title?.fr : title?.en}
               </span>
             </nav>
           </div>
@@ -140,7 +143,7 @@ const CiBlogDetailScreen = () => {
               isDark ? "text-white" : "text-gray-900"
             }`}
           >
-            {blogDetail.title}
+            {locale === "fr" ? title?.fr : title?.en}
           </h1>
 
           {blogDetail.subtitle && (
@@ -181,8 +184,10 @@ const CiBlogDetailScreen = () => {
         {blogDetail.articles && blogDetail.articles.length > 0 && (
           <div>
             <div className="space-y-6">
-              {blogDetail.articles.map((article: any, index: number) => (
-                <div
+              {blogDetail.articles.map((article: any, index: number) => {
+                const articleTitle = JSON.parse(article.title as any);
+                return(
+                  <div
                   key={article.id}
                   className={`rounded-xl overflow-hidden shadow-lg transition-all duration-300 hover:shadow-2xl ${
                     isDark ? "bg-gray-800" : "bg-white"
@@ -201,13 +206,14 @@ const CiBlogDetailScreen = () => {
                             isDark ? "text-white" : "text-gray-900"
                           }`}
                         >
-                          {article.title}
+                          {locale === "fr" ? articleTitle?.fr : articleTitle?.en}
                         </a>
                       )}
                     </div>
                   </div>
                 </div>
-              ))}
+                )
+              })}
             </div>
           </div>
         )}

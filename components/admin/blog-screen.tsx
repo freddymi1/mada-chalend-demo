@@ -14,12 +14,14 @@ import {
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { useBlog } from "../providers/admin/BlogProvider";
+import { useLocale } from "next-intl";
 
 const BlogScreen = () => {
   const { isDark } = useTheme();
   const router = useRouter();
   const { addedBlogs, fetchBlogs, handleDelete, isLoading } = useBlog();
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
+  const locale = useLocale()
 
   useEffect(() => {
     fetchBlogs();
@@ -128,8 +130,11 @@ const BlogScreen = () => {
         {/* Blog Grid */}
         {!isLoading && addedBlogs.length > 0 && (
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {addedBlogs.map((blog) => (
-              <div
+            {addedBlogs.map((blog) => {
+              const title = JSON.parse(blog.title as any);
+              // const description = JSON.parse(blog.description as any);
+              return(
+                <div
                 key={blog.id}
                 className={`rounded-xl overflow-hidden shadow-lg transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 ${
                   isDark ? "bg-gray-800" : "bg-white"
@@ -140,7 +145,7 @@ const BlogScreen = () => {
                   {blog.image ? (
                     <img
                       src={blog.image}
-                      alt={blog.title}
+                      alt={title?.fr || "Blog Image"}
                       className="w-full h-full object-cover"
                     />
                   ) : (
@@ -158,7 +163,7 @@ const BlogScreen = () => {
                       isDark ? "text-white" : "text-gray-900"
                     }`}
                   >
-                    {blog.title}
+                    {locale === "fr" ? title?.fr : title?.en}
                   </h3>
 
                   {/* Subtitle */}
@@ -172,14 +177,7 @@ const BlogScreen = () => {
                     </p>
                   )}
 
-                  {/* Description */}
-                  <p
-                    className={`text-sm mb-4 line-clamp-3 ${
-                      isDark ? "text-gray-400" : "text-gray-600"
-                    }`}
-                  >
-                    {blog.description?.slice(0,100)} <a href="" className="underline text-primary">...Voir plus</a>
-                  </p>
+                  
 
                   {/* Meta Information */}
                   <div className="space-y-2 mb-4">
@@ -246,7 +244,8 @@ const BlogScreen = () => {
                   </div>
                 </div>
               </div>
-            ))}
+              )
+            })}
           </div>
         )}
       </div>

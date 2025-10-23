@@ -25,13 +25,6 @@ export default function ArticleEditor({
 }: ArticleEditorProps) {
   return (
     <div>
-      <label
-        className={`block text-sm font-medium mb-2 ${
-          isDark ? "text-gray-300" : "text-gray-700"
-        }`}
-      >
-        Description
-      </label>
 
       <ReactQuill
         value={article.description || ""}

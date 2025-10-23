@@ -14,12 +14,14 @@ import {
   Twitter,
   User,
 } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 
 const ClArticleDetail = () => {
   const params = useParams();
   const articleId = params?.id;
   const t = useTranslations("lng");
+  const locale = useLocale();
+
   const {
     article,
     getArticleById,
@@ -81,7 +83,6 @@ const ClArticleDetail = () => {
     localStorage.setItem(`article_vote_${articleId}`, "dislike");
   };
 
-
   if (isLoading) {
     return (
       <div
@@ -97,6 +98,9 @@ const ClArticleDetail = () => {
       </div>
     );
   }
+
+  const title = JSON.parse(article?.title as any);
+  const description = JSON.parse(article?.description as any);
 
   if (!article) {
     return (
@@ -176,7 +180,7 @@ const ClArticleDetail = () => {
                 isDark ? "text-white" : "text-gray-900"
               }`}
             >
-              {article.title}
+              {locale === "fr" ? title?.fr : title?.en}
             </span>
           </nav>
         </div>
@@ -202,10 +206,16 @@ const ClArticleDetail = () => {
                             const isActive =
                               relatedArticle.id.toString() ===
                               articleId?.toString();
+                            const relatedTitle = JSON.parse(
+                              relatedArticle.title as any
+                            );
                             return (
                               <div
                                 key={relatedArticle.id}
-                                className={`rounded-xl overflow-hidden shadow-lg transition-all duration-300 hover:shadow-2xl ${
+                                onClick={() =>
+                                  router.push(`/question/${relatedArticle.id}`)
+                                }
+                                className={`rounded-xl cursor-pointer overflow-hidden shadow-lg transition-all duration-300 hover:shadow-2xl ${
                                   isActive
                                     ? isDark
                                       ? "bg-indigo-900 border-2 border-indigo-500"
@@ -224,11 +234,6 @@ const ClArticleDetail = () => {
                                 >
                                   {relatedArticle.title && (
                                     <button
-                                      onClick={() =>
-                                        router.push(
-                                          `/question/${relatedArticle.id}`
-                                        )
-                                      }
                                       disabled={isActive}
                                       className={`text-sm text-left font-semibold transition-colors ${
                                         isActive
@@ -240,7 +245,9 @@ const ClArticleDetail = () => {
                                           : "text-gray-900 hover:text-indigo-600"
                                       }`}
                                     >
-                                      {relatedArticle.title}
+                                      {locale === "fr"
+                                        ? relatedTitle?.fr
+                                        : relatedTitle?.en}
                                       {isActive && (
                                         <span className="ml-2 text-xs font-normal opacity-75">
                                           (actuel)
@@ -266,7 +273,7 @@ const ClArticleDetail = () => {
                     isDark ? "text-white" : "text-gray-900"
                   }`}
                 >
-                  {article.title}
+                  {locale === "fr" ? title?.fr : title?.en}
                 </h3>
               )}
               <div className="flex items-center">
@@ -295,7 +302,8 @@ const ClArticleDetail = () => {
                   <div
                     className="text-md leading-relaxed whitespace-pre-wrap"
                     dangerouslySetInnerHTML={{
-                      __html: article.description,
+                      __html:
+                        locale === "fr" ? description?.fr : description?.en,
                     }}
                   />
                 </div>

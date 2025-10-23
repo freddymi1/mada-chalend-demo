@@ -12,19 +12,29 @@ const AddBlogScreen = () => {
   const params = useSearchParams();
   const isUpdate = params.get("edit");
   const id = params.get("id");
+  console.log("ID",id)
 
   const {
     formData,
     handleInputChange,
+    handleMultilingualChange,
     handleArticleChange,
+    handleArticleMultilingualChange,
     addArticle,
     removeArticle,
     handleImageUpload,
     handleMainImageUpload,
     handleSubmit,
     handleUpdate,
+    getBlogById,
     isLoading,
   } = useBlog();
+
+  React.useEffect(() => {
+    if (isUpdate === "true" && id) {
+      getBlogById(id);
+    }
+  }, [isUpdate, id]);
 
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -34,6 +44,20 @@ const AddBlogScreen = () => {
       handleSubmit(e);
     }
   };
+
+  if(isLoading){
+    return (
+      <div
+        className={`min-h-screen flex items-center justify-center transition-colors duration-300 ${
+          isDark
+            ? "bg-gradient-to-br from-gray-900 to-gray-800"
+            : "bg-gradient-to-br from-slate-50 to-indigo-50"
+        }`}
+      >
+        <p className={isDark ? "text-gray-300" : "text-gray-700"}>Loading...</p>
+      </div>
+    )
+  }
 
   return (
     <div
@@ -93,28 +117,50 @@ const AddBlogScreen = () => {
             </h2>
 
             <div className="space-y-4">
-              {/* Title */}
-              <div>
-                <label
-                  className={`block text-sm font-medium mb-2 ${
-                    isDark ? "text-gray-300" : "text-gray-700"
-                  }`}
-                >
-                  Titre *
-                </label>
-                <input
-                  type="text"
-                  name="title"
-                  value={formData.title}
-                  onChange={handleInputChange}
-                  required
-                  className={`w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 focus:ring-indigo-500 ${
-                    isDark
-                      ? "bg-gray-700 border-gray-600 text-white"
-                      : "bg-white border-gray-300 text-gray-900"
-                  }`}
-                  placeholder="Entrez le titre du blog"
-                />
+              {/* Title - FR/EN */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label
+                    className={`block text-sm font-medium mb-2 ${
+                      isDark ? "text-gray-300" : "text-gray-700"
+                    }`}
+                  >
+                    Titre (🇫🇷) *
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.title.fr}
+                    onChange={(e) => handleMultilingualChange("title", "fr", e.target.value)}
+                    required
+                    className={`w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 focus:ring-indigo-500 ${
+                      isDark
+                        ? "bg-gray-700 border-gray-600 text-white"
+                        : "bg-white border-gray-300 text-gray-900"
+                    }`}
+                    placeholder="Entrez le titre du blog"
+                  />
+                </div>
+                <div>
+                  <label
+                    className={`block text-sm font-medium mb-2 ${
+                      isDark ? "text-gray-300" : "text-gray-700"
+                    }`}
+                  >
+                    Title (🇬🇧) *
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.title.en}
+                    onChange={(e) => handleMultilingualChange("title", "en", e.target.value)}
+                    required
+                    className={`w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 focus:ring-indigo-500 ${
+                      isDark
+                        ? "bg-gray-700 border-gray-600 text-white"
+                        : "bg-white border-gray-300 text-gray-900"
+                    }`}
+                    placeholder="Enter blog title"
+                  />
+                </div>
               </div>
 
               {/* Main Image Upload */}
@@ -211,131 +257,91 @@ const AddBlogScreen = () => {
                   </div>
 
                   <div className="space-y-4">
-                    {/* Article Title */}
-                    <div>
-                      <label
-                        className={`block text-sm font-medium mb-2 ${
-                          isDark ? "text-gray-300" : "text-gray-700"
-                        }`}
-                      >
-                        Titre
-                      </label>
-                      <input
-                        type="text"
-                        value={article.title || ""}
-                        onChange={(e) =>
-                          handleArticleChange(index, "title", e.target.value)
-                        }
-                        className={`w-full px-4 py-2 rounded-lg border focus:outline-none focus:ring-2 focus:ring-indigo-500 ${
-                          isDark
-                            ? "bg-gray-600 border-gray-500 text-white"
-                            : "bg-white border-gray-300 text-gray-900"
-                        }`}
-                        placeholder="Titre de l'article"
-                      />
-                    </div>
-
-                    {/* Caption */}
-                    <div>
-                      {/* <label
-                        className={`block text-sm font-medium mb-2 ${
-                          isDark ? "text-gray-300" : "text-gray-700"
-                        }`}
-                      >
-                        Description
-                      </label>
-                      <textarea
-                        value={article.description || ""}
-                        onChange={(e) =>
-                          handleArticleChange(index, "description", e.target.value)
-                        }
-                        rows={3}
-                        className={`w-full px-4 py-2 rounded-lg border focus:outline-none focus:ring-2 focus:ring-indigo-500 ${
-                          isDark
-                            ? "bg-gray-600 border-gray-500 text-white"
-                            : "bg-white border-gray-300 text-gray-900"
-                        }`}
-                        placeholder="Contenu de l'article"
-                      /> */}
-                      <ArticleEditor
-                        article={article}
-                        index={index}
-                        isDark={isDark}
-                        handleArticleChange={handleArticleChange}
-                      />
-                    </div>
-
-                    {/* Image Description */}
-                    {/* <div>
-                      <label
-                        className={`block text-sm font-medium mb-2 ${
-                          isDark ? "text-gray-300" : "text-gray-700"
-                        }`}
-                      >
-                        Legende
-                      </label>
-                      <input
-                        type="text"
-                        value={article.caption || ""}
-                        onChange={(e) =>
-                          handleArticleChange(
-                            index,
-                            "caption",
-                            e.target.value
-                          )
-                        }
-                        className={`w-full px-4 py-2 rounded-lg border focus:outline-none focus:ring-2 focus:ring-indigo-500 ${
-                          isDark
-                            ? "bg-gray-600 border-gray-500 text-white"
-                            : "bg-white border-gray-300 text-gray-900"
-                        }`}
-                        placeholder="Caption de l'image"
-                      />
-                    </div> */}
-
-                    {/* Article Image Upload */}
-                    {/* <div>
-                      <label
-                        className={`block text-sm font-medium mb-2 ${
-                          isDark ? "text-gray-300" : "text-gray-700"
-                        }`}
-                      >
-                        Capture d'ecran ou image
-                      </label>
-                      <div className="flex items-center gap-4">
+                    {/* Article Title - FR/EN */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
                         <label
-                          className={`flex items-center gap-2 px-4 py-2 rounded-lg border-2 border-dashed cursor-pointer transition-colors ${
-                            isDark
-                              ? "border-gray-500 hover:border-indigo-500 bg-gray-600"
-                              : "border-gray-300 hover:border-indigo-500 bg-white"
+                          className={`block text-sm font-medium mb-2 ${
+                            isDark ? "text-gray-300" : "text-gray-700"
                           }`}
                         >
-                          <ImageIcon className="w-4 h-4" />
-                          <span
-                            className={`text-sm ${
-                              isDark ? "text-gray-300" : "text-gray-700"
-                            }`}
-                          >
-                            Choisir
-                          </span>
-                          <input
-                            type="file"
-                            accept="image/*"
-                            onChange={(e) => handleImageUpload(index, e)}
-                            className="hidden"
-                          />
+                          Titre (🇫🇷)
                         </label>
-                        {article.image && (
-                          <div className="relative w-20 h-20 rounded-lg overflow-hidden">
-                            <img
-                              src={article.image}
-                              alt="Preview"
-                              className="w-full h-full object-cover"
-                            />
-                          </div>
-                        )}
+                        <input
+                          type="text"
+                          value={article.title?.fr || ""}
+                          onChange={(e) =>
+                            handleArticleMultilingualChange(index, "title", "fr", e.target.value)
+                          }
+                          className={`w-full px-4 py-2 rounded-lg border focus:outline-none focus:ring-2 focus:ring-indigo-500 ${
+                            isDark
+                              ? "bg-gray-600 border-gray-500 text-white"
+                              : "bg-white border-gray-300 text-gray-900"
+                          }`}
+                          placeholder="Titre de l'article"
+                        />
                       </div>
-                    </div> */}
+                      <div>
+                        <label
+                          className={`block text-sm font-medium mb-2 ${
+                            isDark ? "text-gray-300" : "text-gray-700"
+                          }`}
+                        >
+                          Title (🇬🇧)
+                        </label>
+                        <input
+                          type="text"
+                          value={article.title?.en || ""}
+                          onChange={(e) =>
+                            handleArticleMultilingualChange(index, "title", "en", e.target.value)
+                          }
+                          className={`w-full px-4 py-2 rounded-lg border focus:outline-none focus:ring-2 focus:ring-indigo-500 ${
+                            isDark
+                              ? "bg-gray-600 border-gray-500 text-white"
+                              : "bg-white border-gray-300 text-gray-900"
+                          }`}
+                          placeholder="Article title"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Description - FR/EN avec ArticleEditor */}
+                    <div className="grid grid-cols-1 gap-4">
+                      <div>
+                        <label
+                          className={`block text-sm font-medium mb-2 ${
+                            isDark ? "text-gray-300" : "text-gray-700"
+                          }`}
+                        >
+                          Description (🇫🇷)
+                        </label>
+                        <ArticleEditor
+                          article={{ description: article.description?.fr || "" }}
+                          index={index}
+                          isDark={isDark}
+                          handleArticleChange={(idx, field, value) => 
+                            handleArticleMultilingualChange(idx, "description", "fr", value)
+                          }
+                        />
+                      </div>
+                      <div>
+                        <label
+                          className={`block text-sm font-medium mb-2 ${
+                            isDark ? "text-gray-300" : "text-gray-700"
+                          }`}
+                        >
+                          Description (🇬🇧)
+                        </label>
+                        <ArticleEditor
+                          article={{ description: article.description?.en || "" }}
+                          index={index}
+                          isDark={isDark}
+                          handleArticleChange={(idx, field, value) => 
+                            handleArticleMultilingualChange(idx, "description", "en", value)
+                          }
+                        />
+                      </div>
+                    </div>
                   </div>
                 </div>
               ))}

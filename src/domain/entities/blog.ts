@@ -1,9 +1,14 @@
 import { IComment } from "./comment";
 
+export interface Lng {
+  en: string;
+  fr: string;
+}
+
 // Interface Blog
 export interface IBlog {
   id: string;
-  title?: string;
+  title?: string | Lng;
   subtitle?: string;
   description?: string;
   author?: string;
@@ -15,10 +20,10 @@ export interface IBlog {
 // Interface Article
 export interface IArticle {
   id: string;
-  title?: string;
+  title?: string | Lng;
   image?: string;
-  caption?: string;
-  description?: string;
+  caption?: string | Lng;
+  description?: string | Lng;
   blogId: string;
   blog?: IBlog; // relation inverse
   comments?: IComment[]

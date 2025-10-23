@@ -4,8 +4,13 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useToast } from "@/hooks/shared/use-toast";
 import { IBlog, IArticle } from "@/src/domain/entities/blog";
 
+export interface Lng {
+  en: string;
+  fr: string;
+}
+
 interface BlogFormData {
-  title: string;
+  title: Lng;
   image: string;
   articles: IArticle[];
 }
@@ -14,9 +19,20 @@ interface BlogContextType {
   formData: BlogFormData;
   setFormData: React.Dispatch<React.SetStateAction<BlogFormData>>;
   handleInputChange: (e: React.ChangeEvent<any>) => void;
+  handleMultilingualChange: (
+    field: "title",
+    lang: "en" | "fr",
+    value: string
+  ) => void;
   handleArticleChange: (
     index: number,
     field: keyof IArticle,
+    value: string
+  ) => void;
+  handleArticleMultilingualChange: (
+    index: number,
+    field: "title" | "caption" | "description",
+    lang: "en" | "fr",
     value: string
   ) => void;
   addArticle: () => void;
@@ -39,18 +55,14 @@ interface BlogContextType {
 
 const BlogContext = createContext<BlogContextType | undefined>(undefined);
 
-export const BlogProvider = ({
-  children,
-}: {
-  children: React.ReactNode;
-}) => {
+export const BlogProvider = ({ children }: { children: React.ReactNode }) => {
   const router = useRouter();
   const { toast } = useToast();
   const [addedBlogs, setAddedBlogs] = useState<IBlog[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [blogDetail, setBlogDetail] = useState<IBlog | null>(null);
   const [formData, setFormData] = useState<BlogFormData>({
-    title: "",
+    title: { en: "", fr: "" },
     image: "",
     articles: [],
   });
@@ -74,6 +86,20 @@ export const BlogProvider = ({
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+  const handleMultilingualChange = (
+    field: "title",
+    lang: "en" | "fr",
+    value: string
+  ) => {
+    setFormData((prev) => ({
+      ...prev,
+      [field]: {
+        ...prev[field],
+        [lang]: value,
+      },
+    }));
+  };
+
   const handleArticleChange = (
     index: number,
     field: keyof IArticle,
@@ -84,13 +110,49 @@ export const BlogProvider = ({
     setFormData((prev) => ({ ...prev, articles: newArticles }));
   };
 
+  const handleArticleMultilingualChange = (
+    index: number,
+    field: "title" | "caption" | "description",
+    lang: "en" | "fr",
+    value: string
+  ) => {
+    setFormData((prev) => {
+      const newArticles = [...prev.articles];
+      const currentArticle = newArticles[index];
+
+      // Si le champ n'existe pas encore ou est une string, initialiser avec un objet Lng vide
+      const currentField = currentArticle[field];
+      let newFieldValue: Lng;
+
+      if (!currentField || typeof currentField === "string") {
+        newFieldValue = { en: "", fr: "" };
+      } else {
+        newFieldValue = { ...(currentField as Lng) };
+      }
+
+      // Mettre à jour la valeur pour la langue spécifique
+      newFieldValue[lang] = value;
+
+      // Créer la nouvelle version de l'article
+      newArticles[index] = {
+        ...currentArticle,
+        [field]: newFieldValue,
+      };
+
+      return {
+        ...prev,
+        articles: newArticles,
+      };
+    });
+  };
+
   const addArticle = () => {
     const newArticle: IArticle = {
       id: `temp-${Date.now()}`,
-      title: "",
+      title: { en: "", fr: "" },
       image: "",
-      caption: "",
-      description: "",
+      caption: { en: "", fr: "" },
+      description: { en: "", fr: "" },
       blogId: "",
     };
     setFormData((prev) => ({
@@ -173,14 +235,29 @@ export const BlogProvider = ({
     e.preventDefault();
     setIsLoading(true);
 
-    const filteredArticles = formData.articles.filter(
-      (article) => article.title?.trim() !== "" || article.caption?.trim() !== ""
-    );
+    // Filtrer et préparer les articles
+    const filteredArticles = formData.articles
+      .filter((article) => {
+        const title = article.title as Lng;
+        const caption = article.caption as Lng;
+        return (
+          title?.fr?.trim() !== "" ||
+          title?.en?.trim() !== "" ||
+          caption?.fr?.trim() !== "" ||
+          caption?.en?.trim() !== ""
+        );
+      })
+      .map(({ id, blogId, blog, ...rest }) => ({
+        ...rest,
+        title: JSON.stringify(rest.title),
+        caption: JSON.stringify(rest.caption),
+        description: JSON.stringify(rest.description),
+      }));
 
     const blogData = {
-      title: formData.title,
+      title: JSON.stringify(formData.title),
       image: formData.image,
-      articles: filteredArticles.map(({ id, blogId, blog, ...rest }) => rest),
+      articles: filteredArticles,
     };
 
     try {
@@ -200,7 +277,7 @@ export const BlogProvider = ({
         setIsLoading(false);
         router.push("/admin/blog");
         setFormData({
-          title: "",
+          title: { en: "", fr: "" },
           image: "",
           articles: [],
         });
@@ -223,12 +300,27 @@ export const BlogProvider = ({
   const handleUpdate = async (id: string) => {
     setIsLoading(true);
 
-    const filteredArticles = formData.articles.filter(
-      (article) => article.title?.trim() !== "" || article.caption?.trim() !== ""
-    );
+    // Préparer les articles pour la mise à jour
+    const filteredArticles = formData.articles
+      .filter((article) => {
+        const title = article.title as Lng;
+        const caption = article.caption as Lng;
+        return (
+          title?.fr?.trim() !== "" ||
+          title?.en?.trim() !== "" ||
+          caption?.fr?.trim() !== "" ||
+          caption?.en?.trim() !== ""
+        );
+      })
+      .map((article) => ({
+        ...article,
+        title: JSON.stringify(article.title),
+        caption: JSON.stringify(article.caption),
+        description: JSON.stringify(article.description),
+      }));
 
     const blogData = {
-      title: formData.title,
+      title: JSON.stringify(formData.title),
       image: formData.image,
       articles: filteredArticles,
     };
@@ -254,7 +346,7 @@ export const BlogProvider = ({
         await getBlogById(id);
         await fetchBlogs();
         setFormData({
-          title: "",
+          title: { en: "", fr: "" },
           image: "",
           articles: [],
         });
@@ -327,17 +419,43 @@ export const BlogProvider = ({
     }
   };
 
+  const parseMultilingualField = (field: any): Lng => {
+    if (!field) return { en: "", fr: "" };
+
+    if (typeof field === "string") {
+      try {
+        return JSON.parse(field);
+      } catch (e) {
+        return { en: field, fr: "" };
+      }
+    }
+
+    return field;
+  };
+
   const getBlogById = async (id: string) => {
     try {
       const res = await fetch(`/api/blog/${id}`, { cache: "no-store" });
       if (res.ok) {
         const data = await res.json();
         setBlogDetail(data);
+
+        const parsedTitle = parseMultilingualField(data.title);
+
+        const parsedArticles =
+          data.articles && data.articles.length > 0
+            ? data.articles.map((article: any) => ({
+                ...article,
+                title: parseMultilingualField(article.title),
+                caption: parseMultilingualField(article.caption),
+                description: parseMultilingualField(article.description),
+              }))
+            : [];
+
         setFormData({
-          title: data.title || "",
+          title: parsedTitle,
           image: data.image || "",
-          articles:
-            data.articles && data.articles.length > 0 ? data.articles : [],
+          articles: parsedArticles,
         });
         return data;
       } else {
@@ -362,7 +480,9 @@ export const BlogProvider = ({
         formData,
         setFormData,
         handleInputChange,
+        handleMultilingualChange,
         handleArticleChange,
+        handleArticleMultilingualChange,
         addArticle,
         removeArticle,
         handleImageUpload,

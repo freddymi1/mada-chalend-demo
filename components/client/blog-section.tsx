@@ -12,12 +12,13 @@ import {
 import { useRouter } from "next/navigation";
 import React, { useEffect } from "react";
 import { useCiBlog } from "../providers/client/ClBlogProvider";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useAuthClient } from "@/src/hooks/useAuthClient";
 
 const BlogSection = () => {
   const { isDark } = useTheme();
   const t = useTranslations("lng");
+  const locale = useLocale();
 
   const router = useRouter();
   const {
@@ -132,8 +133,10 @@ const BlogSection = () => {
         {/* Blog Grid */}
         {!isLoading && addedBlogs.length > 0 && (
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
-            {addedBlogs.map((blog) => (
-              <div
+            {addedBlogs.map((blog) => {
+              const title = JSON.parse(blog.title as any);
+              return(
+                <div
                 key={blog.id}
                 onClick={() => router.push(`/blog/${blog.id}`)}
                 className={`rounded-xl overflow-hidden shadow-lg transition-all relative cursor-pointer duration-300 hover:shadow-2xl hover:-translate-y-1 ${
@@ -149,7 +152,7 @@ const BlogSection = () => {
                   {blog.image ? (
                     <img
                       src={blog.image}
-                      alt={blog.title}
+                      alt={locale === "fr" ? title?.fr : title?.en}
                       className="w-18 object-cover h-auto"
                     />
                   ) : (
@@ -167,7 +170,7 @@ const BlogSection = () => {
                       isDark ? "text-white" : "text-gray-900"
                     }`}
                   >
-                    {blog.title}
+                    {locale === "fr" ? title?.fr : title?.en}
                   </h3>
 
                   {/* Subtitle */}
@@ -198,7 +201,8 @@ const BlogSection = () => {
                   )}
                 </div>
               </div>
-            ))}
+              )
+            })}
           </div>
         )}
       </div>

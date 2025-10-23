@@ -14,12 +14,14 @@ import {
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { useBlog } from "../providers/admin/BlogProvider";
+import { useLocale } from "next-intl";
 
 const BlogDetailScreen = () => {
   const { isDark } = useTheme();
   const router = useRouter();
   const params = useParams();
   const id = params?.id;
+  const locale = useLocale()
 
   const { blogDetail, getBlogById, handleDelete, isLoading } = useBlog();
   const [deleteConfirm, setDeleteConfirm] = useState(false);
@@ -48,6 +50,8 @@ const BlogDetailScreen = () => {
       year: "numeric",
     });
   };
+
+  const title = JSON.parse(blogDetail?.title as any || '""');
 
   if (isLoading) {
     return (
@@ -148,7 +152,7 @@ const BlogDetailScreen = () => {
           <div className="mb-8 rounded-2xl overflow-hidden shadow-2xl">
             <img
               src={blogDetail.image}
-              alt={blogDetail.title}
+              alt={title?.fr || "Blog Main Image"}
               className="w-full h-96 object-cover"
             />
           </div>
@@ -166,7 +170,7 @@ const BlogDetailScreen = () => {
               isDark ? "text-white" : "text-gray-900"
             }`}
           >
-            {blogDetail.title}
+            {locale === "fr" ? title?.fr : title?.en}
           </h1>
 
           {/* Subtitle */}
@@ -259,8 +263,11 @@ const BlogDetailScreen = () => {
             </h2>
 
             <div className="space-y-6">
-              {blogDetail.articles.map((article: any, index: number) => (
-                <div
+              {blogDetail.articles.map((article: any, index: number) => {
+                const articleTile = JSON.parse(article.title as any || '""');
+                const articleDescription = JSON.parse(article.description as any || '""');
+                return(
+                  <div
                   key={article.id}
                   className={`rounded-xl overflow-hidden shadow-lg transition-all duration-300 hover:shadow-2xl ${
                     isDark ? "bg-gray-800" : "bg-white"
@@ -285,17 +292,19 @@ const BlogDetailScreen = () => {
                           isDark ? "text-white" : "text-gray-900"
                         }`}
                       >
-                        {article.title}
+                        {locale === "fr" ? articleTile?.fr : articleTile?.en}
                       </h3>
                     )}
                     {/* Article Image */}
                     <div className={`relative h-64 md:h-auto `}>
                       {article.description && (
-                        <div className="relative bottom-0 left-0 right-0 rounded-lg bg-opacity-60 p-3">
+                        <div className="relative bottom-0 left-0 right-0 rounded-lg p-3">
                           <div
-                            className="text-sm"
+                            className="text-sm text-slate-900 dark:text-white"
                             dangerouslySetInnerHTML={{
-                              __html: article.description,
+                              __html: locale === "fr"
+                                ? articleDescription?.fr || ""
+                                : articleDescription?.en || "",
                             }}
                           />
                         </div>
@@ -303,7 +312,8 @@ const BlogDetailScreen = () => {
                     </div>
                   </div>
                 </div>
-              ))}
+                )
+              })}
             </div>
           </div>
         )}
