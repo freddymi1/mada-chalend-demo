@@ -39,6 +39,7 @@ export async function POST(req: NextRequest) {
       travelDate,
       nom,
       prenom,
+      langue,
       email,
       telephone,
       address,
@@ -171,6 +172,7 @@ export async function POST(req: NextRequest) {
       email,
       telephone,
       address,
+      langue,
       personnes: Number(personnesNumber),
       nbrChild: Number(nbrChild),
       nbrAdult: Number(nbrAdult),
@@ -244,6 +246,8 @@ export async function POST(req: NextRequest) {
       debut = formatDate(reservationData.startDate);
       fin = formatDate(reservationData.endDate);
     }
+
+    const lng = langue === "fr" ? "Francais" : langue === "en" ? "Anglais" : "Autre";
 
     // 🔹 Email with elegant design
     const htmlMessage = `
@@ -349,6 +353,20 @@ export async function POST(req: NextRequest) {
                     border-bottom: 1px solid #f7fafc;
                     color: #2d3748;
                   ">${nom} ${prenom}</td>
+                </tr>
+                <tr>
+                  <td style="
+                    padding: 12px 0;
+                    border-bottom: 1px solid #f7fafc;
+                    color: #4a5568;
+                    font-weight: 600;
+                    width: 140px;
+                  ">Langue:</td>
+                  <td style="
+                    padding: 12px 0;
+                    border-bottom: 1px solid #f7fafc;
+                    color: #2d3748;
+                  ">${lng}</td>
                 </tr>
                 <tr>
                   <td style="

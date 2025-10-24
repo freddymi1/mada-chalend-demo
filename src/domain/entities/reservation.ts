@@ -15,6 +15,7 @@ export interface Reservation {
   vehicle?: string;
   nom: string;
   prenom: string;
+  langue?: string;
   email: string;
   telephone: string;
   address: string;

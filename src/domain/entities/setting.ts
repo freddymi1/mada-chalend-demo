@@ -16,6 +16,7 @@ export interface CreateContactWithServicesInput {
   email?: string;
   fbLink?: string;
   instaLink: string; // Requis
+  address?: string;
 
   // Services
   services?: CreateServiceInput[];
@@ -43,4 +44,11 @@ export interface Contact {
   services: Service[];
   createdAt: Date;
   updatedAt: Date;
+}
+
+export interface PrivacyPolicy{
+  id: string;
+  content: string;
+  createdAt: Date;
+  updatedAt: Date
 }

@@ -3,7 +3,7 @@
 import { useContact } from "@/components/providers/admin/ContactProvider";
 import { useLocale } from "next-intl";
 import React, { useEffect } from "react";
-import { Phone, Mail, MessageCircle, Facebook, Instagram, Edit } from "lucide-react";
+import { Phone, Mail, MessageCircle, Facebook, Instagram, Edit, MapIcon } from "lucide-react";
 import Link from "next/link";
 
 const ProfilePage = () => {
@@ -158,7 +158,25 @@ const ProfilePage = () => {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 max-w-5xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 xl:grid-cols-6 gap-6 mx-auto">
+            {/* Address */}
+            {profile.address && (
+              <div
+                
+                rel="noopener noreferrer"
+                className="group bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 flex flex-col items-center"
+              >
+                <div className="w-12 h-12 bg-yellow-500 rounded-full flex items-center justify-center mb-3 group-hover:scale-110 transition-transform duration-300">
+                  <MapIcon className="w-6 h-6 text-white" />
+                </div>
+                <span className="text-sm font-medium text-gray-900 dark:text-white">
+                  Adresse
+                </span>
+                <span className="text-xs text-gray-500 dark:text-gray-400 mt-1 text-center">
+                  {profile.address}
+                </span>
+              </div>
+            )}
             {/* WhatsApp */}
             {profile.whatsapp && (
               <a

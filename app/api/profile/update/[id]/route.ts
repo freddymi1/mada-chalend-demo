@@ -58,6 +58,7 @@ export async function PUT(request: Request, { params }: { params: { id: string }
         email: body.email || null,
         fbLink: body.fbLink || null,
         instaLink: body.instaLink,
+        address: body.address,
 
         // Gestion des services (optionnel)
         ...(body.services && {

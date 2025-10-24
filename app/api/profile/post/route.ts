@@ -32,6 +32,7 @@ export async function POST(request: NextRequest) {
         email: body.email || null,
         fbLink: body.fbLink || null,
         instaLink: body.instaLink,
+        address: body.address,
 
         // Services (si fournis)
         services: body.services && body.services.length > 0 ? {

@@ -132,6 +132,7 @@ model Reservation {
   prenom       String
   email        String
   telephone    String
+  langue        String? @default("fr")
   address      String
   personnes    Int
   nbrChild     Int          @default(0)
@@ -354,7 +355,8 @@ model Contact {
   phone     String?
   email     String?
   fbLink    String?
-  instaLink String
+  instaLink String?
+  address   String?
 
   services Service[]
 

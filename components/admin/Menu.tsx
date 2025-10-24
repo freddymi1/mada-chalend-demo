@@ -15,6 +15,7 @@ import {
   CarIcon,
   Waypoints,
   Users2,
+  File,
 } from "lucide-react"; // ajoute ici tous les icônes nécessaires
 import { useAuth } from "@/src/hooks/useAuth";
 import { LanguageSwitcher } from "../client/LanguageSwitcher";
@@ -68,6 +69,18 @@ export const menuItems = [
     path: "/admin/profile",
     icon: "Settings",
   },
+  {
+    id: "privacy",
+    nom: "Privacy and policy",
+    path: "/admin/privacy",
+    icon: "File",
+  },
+  {
+    id: "cgu",
+    nom: "C.G.U",
+    path: "/admin/cgu",
+    icon: "File",
+  },
 ];
 
 // mapping nom -> composant lucide-react
@@ -80,7 +93,8 @@ const iconMap: Record<string, React.ElementType> = {
   LineChart,
   BookOpen,
   Waypoints,
-  Users2
+  Users2,
+  File
 
   // MessageCircle
 };

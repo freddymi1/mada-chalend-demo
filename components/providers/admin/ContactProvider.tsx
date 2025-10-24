@@ -39,7 +39,8 @@ export interface Contact {
   phone?: string;
   email?: string;
   fbLink?: string;
-  instaLink: string;
+  instaLink?: string;
+  address?: string;
   services: Service[];
   createdAt: Date;
   updatedAt: Date;
@@ -83,6 +84,7 @@ interface ContactFormData {
   email: string;
   fbLink: string;
   instaLink: string;
+  address: string;
   services: Array<CreateServiceInput & { id: string }>;
 }
 
@@ -168,6 +170,7 @@ export const ContactProvider: React.FC<ContactProviderProps> = ({
     email: "",
     fbLink: "",
     instaLink: "",
+    address: "",
     services: [],
   });
 
@@ -272,6 +275,7 @@ export const ContactProvider: React.FC<ContactProviderProps> = ({
       email: "",
       fbLink: "",
       instaLink: "",
+      address: "",
       services: [],
     });
   };
@@ -315,6 +319,7 @@ export const ContactProvider: React.FC<ContactProviderProps> = ({
         email: formData.email,
         fbLink: formData.fbLink,
         instaLink: formData.instaLink,
+        address: formData.address,
         services: formData.services
           .filter(
             (service) =>
@@ -394,6 +399,7 @@ export const ContactProvider: React.FC<ContactProviderProps> = ({
         email: formData.email,
         fbLink: formData.fbLink,
         instaLink: formData.instaLink,
+        address: formData.address,
         // Ajouter les services pour la mise à jour
         services: formData.services
           .filter(
@@ -538,6 +544,7 @@ export const ContactProvider: React.FC<ContactProviderProps> = ({
         email: contact.email || "",
         fbLink: contact.fbLink || "",
         instaLink: contact.instaLink,
+        address: contact.address,
         services:
           contact.services?.map((service: Service) => ({
             id: service.id,
