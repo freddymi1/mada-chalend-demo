@@ -62,12 +62,12 @@ export const menuItems = [
     path: "/admin/review",
     icon: "Users2",
   },
-  // {
-  //   id: "parametres",
-  //   nom: "Paramètres",
-  //   path: "/admin/parametres",
-  //   icon: "Settings",
-  // },
+  {
+    id: "parametres",
+    nom: "Paramètres",
+    path: "/admin/profile",
+    icon: "Settings",
+  },
 ];
 
 // mapping nom -> composant lucide-react

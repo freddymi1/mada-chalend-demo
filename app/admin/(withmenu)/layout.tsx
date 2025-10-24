@@ -10,6 +10,7 @@ import { CommentProvider } from "@/components/providers/admin/CommentProvider";
 import { TripProvider } from "@/components/providers/admin/TripProvider";
 import { AdminReviewProvider } from "@/components/providers/admin/AdminReviewProvider";
 import { StatsProvider } from "@/components/providers/admin/StatsProvider";
+import { ContactProvider } from "@/components/providers/admin/ContactProvider";
 
 export const metadata: Metadata = {
   title: "Mada Chaland - Dashboard Admin",
@@ -30,7 +31,9 @@ export default function WithMenuLayout({
               <TripProvider>
                 <AdminReviewProvider>
                   <StatsProvider>
-                  <CommentProvider>{children}</CommentProvider>
+                    <ContactProvider>
+                      <CommentProvider>{children}</CommentProvider>
+                    </ContactProvider>
                   </StatsProvider>
                 </AdminReviewProvider>
               </TripProvider>

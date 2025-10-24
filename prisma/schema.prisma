@@ -252,7 +252,7 @@ model User {
   password String
   role     String @default("admin")
 
-  reviews  Review[]
+  reviews   Review[]
   comments  Comment[]
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
@@ -265,13 +265,13 @@ model Review {
   titre       String
   description String
   note        Int
-  status      String @default("pending")
+  status      String   @default("pending")
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
-  
+
   // Relations
-  userId      String
-  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("reviews")
 }
@@ -326,4 +326,62 @@ model Comment {
   updatedAt  DateTime @default(now()) @updatedAt
 
   @@map("comment")
+}
+
+model Service {
+  id        String  @id @default(cuid())
+  title     String?
+  content   String?
+  contactId String?
+
+  contactRel Contact? @relation(fields: [contactId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  @@map("services")
+}
+
+model Contact {
+  id           String  @id @default(cuid())
+  // About
+  aboutTitle   String?
+  aboutContent String?
+  subContent   String?
+
+  // Contact
+  whatsapp  String?
+  phone     String?
+  email     String?
+  fbLink    String?
+  instaLink String
+
+  services Service[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  @@map("contacts")
+}
+
+model LegalNotice{
+  id           String  @id @default(cuid())
+  content       String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  @@map("legal_notice")
+
+}
+
+model PrivacyPolicy{
+  id           String  @id @default(cuid())
+  content       String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  @@map("privacy_policy")
+
 }

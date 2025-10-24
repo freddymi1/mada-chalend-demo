@@ -59,7 +59,9 @@ const ClientCircuitDetailScreen = () => {
     setSelectedImage(null);
   };
   const title = circuitDetail?.title ? JSON.parse(circuitDetail?.title) : "";
-  const description = circuitDetail?.description ? JSON.parse(circuitDetail?.description) : "";
+  const description = circuitDetail?.description
+    ? JSON.parse(circuitDetail?.description)
+    : "";
 
   return (
     <main className="min-h-screen w-full overflow-x-hidden">
@@ -182,7 +184,9 @@ const ClientCircuitDetailScreen = () => {
                     <div className="space-y-4 sm:space-y-6">
                       {circuitDetail?.itineraries?.map(
                         (day: any, index: number) => {
-                          const imgTitle = day.title ? JSON.parse(day.title) : "";
+                          const imgTitle = day.title
+                            ? JSON.parse(day.title)
+                            : "";
                           const imgDescription = day.imageDescription
                             ? JSON.parse(day.imageDescription)
                             : "";
@@ -244,58 +248,64 @@ const ClientCircuitDetailScreen = () => {
                                         {circuitDetail.itineraries
                                           .filter(
                                             (it: any, i: number) =>
-                                              i >= 0 && i <= index + 1
+                                              i === index || i === index + 1
                                           )
-                                          .map((it: any, i: number) => {
-                                            const isCurrentItem = i === index;
-                                            const isLastInList =
-                                              i ===
-                                              circuitDetail.itineraries.length -
-                                                1;
-                                            const isNextItem = i === index + 1;
+                                          .map(
+                                            (
+                                              it: any,
+                                              i: number,
+                                              filteredArray: any
+                                            ) => {
+                                              const isCurrentItem = i === 0; // Premier élément du tableau filtré
+                                              const isNextItem = i === 1; // Deuxième élément du tableau filtré
+                                              const isLastInFilteredList =
+                                                i === filteredArray.length - 1;
 
-                                            
+                                              const itDescription =
+                                                it.imageDescription
+                                                  ? JSON.parse(
+                                                      it.imageDescription
+                                                    )
+                                                  : { fr: "", en: "" };
 
-                                            const itDescription = it.imageDescription ? JSON.parse(
-                                              it.imageDescription
-                                            ) : "";
-
-                                            return (
-                                              <div
-                                                className="flex flex-col items-start relative mb-3 last:mb-0"
-                                                key={it.id}
-                                              >
-                                                {/* Point et description */}
-                                                <div className="flex items-center gap-2 relative z-10">
-                                                  <MapPin
-                                                    className={`w-4 h-4 text-gray-400 ${
-                                                      isCurrentItem
-                                                        ? "text-green-500"
-                                                        : isNextItem
-                                                        ? "text-orange-500"
-                                                        : "text-blue-500"
-                                                    }`}
-                                                  />
-
-                                                  <span className="text-xs font-medium max-w-[120px] truncate">
-                                                    {locale === "fr"
-                                                      ? itDescription.fr
-                                                      : itDescription.en}
-                                                  </span>
-                                                </div>
-
-                                                {/* Distance (sauf pour le dernier élément) */}
-                                                {!isLastInList && (
-                                                  <div className="flex gap-2 items-center relative z-10 mt-2">
-                                                    <Clock className="w-4 h-4 text-blue-400" />
-                                                    <span className="text-xs text-gray-500 dark:text-gray-400">
-                                                      {it.distance} km
+                                              return (
+                                                <div
+                                                  className="flex flex-col items-start relative mb-3 last:mb-0"
+                                                  key={it.id}
+                                                >
+                                                  {/* Point et description */}
+                                                  <div className="flex items-center gap-2 relative z-10">
+                                                    <MapPin
+                                                      className={`w-4 h-4 ${
+                                                        isCurrentItem
+                                                          ? "text-green-500"
+                                                          : isNextItem
+                                                          ? "text-orange-500"
+                                                          : "text-blue-500"
+                                                      }`}
+                                                    />
+                                                    <span className="text-xs font-medium max-w-[120px] truncate">
+                                                      {locale === "fr"
+                                                        ? itDescription.fr
+                                                        : itDescription.en}
                                                     </span>
                                                   </div>
-                                                )}
-                                              </div>
-                                            );
-                                          })}
+
+                                                  {/* Distance (uniquement entre l'élément actif et le suivant) */}
+                                                  {isCurrentItem &&
+                                                    filteredArray.length >
+                                                      1 && (
+                                                      <div className="flex gap-2 items-center relative z-10 mt-2">
+                                                        <Clock className="w-4 h-4 text-blue-400" />
+                                                        <span className="text-xs text-gray-500 dark:text-gray-400">
+                                                          {it.distance} km
+                                                        </span>
+                                                      </div>
+                                                    )}
+                                                </div>
+                                              );
+                                            }
+                                          )}
                                       </div>
                                     </div>
                                     <p className="text-muted-foreground text-xs sm:text-sm mb-2 break-words">
@@ -370,7 +380,9 @@ const ClientCircuitDetailScreen = () => {
                   <CardContent>
                     <div className="flex flex-col gap-2 mb-4">
                       {circuitDetail?.highlights?.map((highlight: any) => {
-                        const highlightText = highlight.text ? JSON.parse(highlight.text) : ""  ;
+                        const highlightText = highlight.text
+                          ? JSON.parse(highlight.text)
+                          : "";
                         return (
                           <div
                             key={highlight.id}

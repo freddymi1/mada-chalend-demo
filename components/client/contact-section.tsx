@@ -873,7 +873,7 @@ export function ContactSection() {
                   <div>
                     <p className="font-medium">{t("contactInfo.email")}</p>
                     <p className="text-muted-foreground">
-                      contact@madachaland.mg
+                      madachaland@gmail.com
                     </p>
                   </div>
                 </div>
