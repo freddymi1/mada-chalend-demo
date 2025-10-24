@@ -96,7 +96,7 @@ const AddCgu = () => {
   };
 
   const handleCancel = () => {
-    router.push('/admin/privacy-policy');
+    router.push('/admin/cgu');
   };
 
   const handleEditorChangeFR = (value: string) => {

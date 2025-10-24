@@ -64,20 +64,20 @@ const PrivacyPolicyPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 py-8 px-4">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 py-4 sm:py-8 px-4">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="mb-8">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <div className="bg-gradient-to-br from-blue-600 to-blue-700 p-3 rounded-xl shadow-lg">
-                <Shield className="w-8 h-8 text-white" />
+        <div className="mb-6 sm:mb-8">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div className="flex items-center gap-3 sm:gap-4">
+              <div className="bg-gradient-to-br from-blue-600 to-blue-700 p-2 sm:p-3 rounded-xl shadow-lg flex-shrink-0">
+                <Shield className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
               </div>
               <div>
-                <h1 className="text-3xl font-bold text-slate-900">
+                <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-slate-900">
                   Politiques de Confidentialité
                 </h1>
-                <p className="text-slate-600 mt-1">
+                <p className="text-sm sm:text-base text-slate-600 mt-1">
                   Gérez les politiques de confidentialité de votre application
                 </p>
               </div>
@@ -87,10 +87,12 @@ const PrivacyPolicyPage = () => {
               onClick={handleAdd}
               disabled={Number(policiesArray.length) > 0}
               className={`${
-                Number(policiesArray.length) > 0 ? "cursor-not-allowed" : ""
-              }  inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white font-semibold rounded-xl hover:from-blue-700 hover:to-blue-800 transition-all shadow-lg`}
+                Number(policiesArray.length) > 0
+                  ? "cursor-not-allowed opacity-50"
+                  : ""
+              } w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 sm:px-6 py-2.5 sm:py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white font-semibold rounded-xl hover:from-blue-700 hover:to-blue-800 transition-all shadow-lg text-sm sm:text-base`}
             >
-              <Plus className="w-5 h-5" />
+              <Plus className="w-4 h-4 sm:w-5 sm:h-5" />
               Ajouter une politique
             </button>
           </div>
@@ -98,36 +100,38 @@ const PrivacyPolicyPage = () => {
 
         {/* Content */}
         {loading ? (
-          <div className="flex flex-col items-center justify-center py-20">
-            <Loader2 className="w-12 h-12 text-blue-600 animate-spin mb-4" />
-            <p className="text-slate-600 font-medium">
+          <div className="flex flex-col items-center justify-center py-12 sm:py-20">
+            <Loader2 className="w-10 h-10 sm:w-12 sm:h-12 text-blue-600 animate-spin mb-4" />
+            <p className="text-sm sm:text-base text-slate-600 font-medium">
               Chargement des politiques...
             </p>
           </div>
         ) : policiesArray.length === 0 ? (
-          <div className="bg-white rounded-2xl shadow-lg p-12 text-center">
-            <div className="bg-slate-100 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4">
-              <FileText className="w-10 h-10 text-slate-400" />
+          <div className="bg-white rounded-2xl shadow-lg p-8 sm:p-12 text-center">
+            <div className="bg-slate-100 w-16 h-16 sm:w-20 sm:h-20 rounded-full flex items-center justify-center mx-auto mb-4">
+              <FileText className="w-8 h-8 sm:w-10 sm:h-10 text-slate-400" />
             </div>
-            <h3 className="text-xl font-bold text-slate-900 mb-2">
+            <h3 className="text-lg sm:text-xl font-bold text-slate-900 mb-2">
               Aucune politique de confidentialité
             </h3>
-            <p className="text-slate-600 mb-6">
+            <p className="text-sm sm:text-base text-slate-600 mb-6">
               Commencez par créer votre première politique de confidentialité
             </p>
             <button
               disabled={Number(policiesArray.length) > 0}
               onClick={handleAdd}
               className={`${
-                Number(policiesArray.length) > 0 ? "cursor-not-allowed" : ""
-              }  inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white font-semibold rounded-xl hover:from-blue-700 hover:to-blue-800 transition-all shadow-lg`}
+                Number(policiesArray.length) > 0
+                  ? "cursor-not-allowed opacity-50"
+                  : ""
+              } inline-flex items-center gap-2 px-4 sm:px-6 py-2.5 sm:py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white font-semibold rounded-xl hover:from-blue-700 hover:to-blue-800 transition-all shadow-lg text-sm sm:text-base`}
             >
-              <Plus className="w-5 h-5" />
+              <Plus className="w-4 h-4 sm:w-5 sm:h-5" />
               Créer une politique
             </button>
           </div>
         ) : (
-          <div className="space-y-6">
+          <div className="space-y-4 sm:space-y-6">
             {policiesArray.map((policy, index) => {
               // Parser le contenu s'il est en string JSON
               let parsedContent;
@@ -143,30 +147,32 @@ const PrivacyPolicyPage = () => {
               return (
                 <div
                   key={policy.id}
-                  className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow"
+                  className="bg-white rounded-xl sm:rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow"
                 >
-                  <div className="p-6">
-                    <div className="flex items-start justify-between mb-4">
-                      <div className="flex items-start gap-4">
-                        <div className="bg-gradient-to-br from-blue-500 to-blue-600 p-3 rounded-xl">
-                          <FileText className="w-6 h-6 text-white" />
+                  <div className="p-4 sm:p-6">
+                    <div className="flex flex-col sm:flex-row items-start justify-between gap-4 mb-4">
+                      <div className="flex items-start gap-3 sm:gap-4 w-full sm:w-auto">
+                        <div className="bg-gradient-to-br from-blue-500 to-blue-600 p-2 sm:p-3 rounded-xl flex-shrink-0">
+                          <FileText className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
                         </div>
-                        <div>
-                          <h3 className="text-xl font-bold text-slate-900 mb-1">
+                        <div className="flex-1 min-w-0">
+                          <h3 className="text-base sm:text-xl font-bold text-slate-900 mb-1 break-words">
                             Politique de Confidentialité #{index + 1}
                           </h3>
-                          <div className="flex items-center gap-4 text-sm text-slate-600">
+                          <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-xs sm:text-sm text-slate-600">
                             <div className="flex items-center gap-1">
-                              <Calendar className="w-4 h-4" />
-                              <span>
+                              <Calendar className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
+                              <span className="truncate">
                                 Créé le {formatDate(policy.createdAt)}
                               </span>
                             </div>
                             {policy.updatedAt &&
                               policy.updatedAt !== policy.createdAt && (
                                 <div className="flex items-center gap-1">
-                                  <span className="text-slate-400">•</span>
-                                  <span>
+                                  <span className="text-slate-400 hidden sm:inline">
+                                    •
+                                  </span>
+                                  <span className="truncate">
                                     Modifié le {formatDate(policy.updatedAt)}
                                   </span>
                                 </div>
@@ -175,36 +181,36 @@ const PrivacyPolicyPage = () => {
                         </div>
                       </div>
 
-                      <div className="flex gap-2">
+                      <div className="flex gap-2 self-end sm:self-auto">
                         <button
                           onClick={() => handleEdit(policy.id)}
                           className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
                           title="Modifier"
                         >
-                          <Edit className="w-5 h-5" />
+                          <Edit className="w-4 h-4 sm:w-5 sm:h-5" />
                         </button>
                         <button
                           onClick={() => handleDelete(policy.id)}
                           className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
                           title="Supprimer"
                         >
-                          <Trash2 className="w-5 h-5" />
+                          <Trash2 className="w-4 h-4 sm:w-5 sm:h-5" />
                         </button>
                       </div>
                     </div>
 
                     {/* Content Preview */}
-                    <div className="bg-slate-50 rounded-xl p-4 border border-slate-200">
+                    <div className="bg-slate-50 rounded-lg sm:rounded-xl p-3 sm:p-4 border border-slate-200">
                       <div className="flex items-center gap-2 mb-3">
-                        <span className="text-2xl">
+                        <span className="text-xl sm:text-2xl">
                           {locale === "fr" ? "🇫🇷" : "🇬🇧"}
                         </span>
-                        <span className="font-semibold text-slate-700">
+                        <span className="text-sm sm:text-base font-semibold text-slate-700">
                           {locale === "fr" ? "Français" : "English"}
                         </span>
                       </div>
                       <div
-                        className="min-h-64 overflow-y-auto text-sm text-slate-600 leading-relaxed prose prose-sm max-w-none"
+                        className="min-h-48 overflow-y-auto text-xs sm:text-sm text-slate-600 leading-relaxed prose prose-sm max-w-none"
                         dangerouslySetInnerHTML={{
                           __html:
                             getText(

@@ -95,7 +95,7 @@ const AddPrivacyPolicy = () => {
   };
 
   const handleCancel = () => {
-    router.push('/admin/privacy-policy');
+    router.push('/admin/privacy');
   };
 
   const handleEditorChangeFR = (value: string) => {
