@@ -1,9 +1,25 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { Menu, X } from "lucide-react";
+import { BookOpen, Bus, Car, Home, LineChart, Menu, Settings, Users, Users2, Waypoints, X } from "lucide-react";
 import SideMenu, { menuItems } from "@/components/admin/Menu";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useAuth } from "@/src/hooks/useAuth";
+import { LanguageSwitcher } from "../client/LanguageSwitcher";
+
+const iconMap: Record<string, React.ElementType> = {
+  Home,
+  Car,
+  Bus,
+  Users,
+  Settings,
+  LineChart,
+  BookOpen,
+  Waypoints,
+  Users2
+
+  // MessageCircle
+};
 
 export default function WithMenuLayoutClient({
   children,
@@ -12,6 +28,7 @@ export default function WithMenuLayoutClient({
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
+  const { user, logout } = useAuth();
 
   // Fermer le menu quand on change de page
   useEffect(() => {
@@ -67,34 +84,25 @@ export default function WithMenuLayoutClient({
           <nav className="mt-4 flex-1 overflow-y-auto">
             {menuItems.map((item) => {
               const isActive = pathname === item.path;
+              const Icon = iconMap[item.icon];
               return (
-                <Link key={item.id} href={item.path} legacyBehavior>
-                  <a
-                    className={`w-full flex items-center px-6 py-3 text-left hover:bg-gray-50 transition-colors duration-200 ${
+                <Link key={item.id} href={item.path}>
+                  <span
+                    className={`w-full flex items-center px-6 py-3 text-left hover:bg-gray-50 transition-colors duration-200 cursor-pointer ${
                       isActive
                         ? "bg-blue-50 text-blue-600 border-r-2 border-blue-600"
                         : "text-gray-700"
                     }`}
                   >
-                    <svg
-                      className="w-5 h-5 mr-3"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d={item.icon}
-                      />
-                    </svg>
+                    {Icon && <Icon className="w-5 h-5 mr-3" />}
                     {item.nom}
-                  </a>
+                  </span>
                 </Link>
               );
             })}
+            <div className="px-4 w-full">
+              <LanguageSwitcher />
+            </div>
           </nav>
 
           {/* Profil utilisateur en bas */}
@@ -106,9 +114,9 @@ export default function WithMenuLayoutClient({
                 </div>
               </div>
               <div className="ml-3">
-                <p className="text-sm font-medium text-gray-900">Admin</p>
+                <p className="text-sm font-medium text-gray-900">{user?.username}</p>
                 <p className="text-xs text-gray-500">
-                  admin@madagascartours.com
+                  {user?.email}
                 </p>
               </div>
             </div>
