@@ -455,7 +455,7 @@ const TripScreen = () => {
                         </span>
                       </div>
                       <div className="text-xs sm:text-sm font-medium text-gray-900 truncate">
-                        {trip.price}
+                        {trip.price}€/pers
                       </div>
                       <div className="flex items-center text-gray-600">
                         <Armchair className="w-4 h-4 mr-2 text-gray-400 flex-shrink-0" />

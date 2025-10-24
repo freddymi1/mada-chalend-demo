@@ -521,7 +521,7 @@ const CircuitScreen = () => {
                         <span className="truncate">{Number(circuit.duration)} j / {Number(circuit.duration) - 1} n</span>
                       </div>
                       <div className="text-xs font-medium text-gray-900 truncate">
-                        {circuit.price}
+                        {circuit.price}€/pers
                       </div>
                       <div className="flex items-center text-xs text-gray-600 col-span-2">
                         <Armchair className="w-3 h-3 mr-1 text-gray-400 flex-shrink-0" />
