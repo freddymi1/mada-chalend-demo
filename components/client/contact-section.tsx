@@ -33,6 +33,7 @@ import {
 import { useToast } from "@/hooks/shared/use-toast";
 import { useTranslations } from "use-intl";
 import { useClientCircuit } from "../providers/client/ClientCircuitProvider";
+import { FaFacebook, FaInstagram, FaWhatsapp } from "react-icons/fa";
 
 // Types pour les différents formulaires
 type FormType = "circuit" | "partenariat" | "autre";
@@ -837,10 +838,20 @@ export function ContactSection() {
                   className="flex items-center gap-4 animate-fade-in hover-lift"
                   style={{ animationDelay: "0.4s", animationFillMode: "both" }}
                 >
+                  <FaWhatsapp className="h-6 w-6 text-primary animate-float" />
+                  <div>
+                    <p className="font-medium">Téléphone</p>
+                    <p className="text-muted-foreground">+261 34 25 105 85</p>
+                  </div>
+                </div>
+                <div
+                  className="flex items-center gap-4 animate-fade-in hover-lift"
+                  style={{ animationDelay: "0.4s", animationFillMode: "both" }}
+                >
                   <Phone className="h-6 w-6 text-primary animate-float" />
                   <div>
                     <p className="font-medium">Téléphone</p>
-                    <p className="text-muted-foreground">+261 34 12 345 67</p>
+                    <p className="text-muted-foreground">+261 32 77 113 88</p>
                   </div>
                 </div>
                 <div
@@ -857,6 +868,39 @@ export function ContactSection() {
                       contact@madachaland.mg
                     </p>
                   </div>
+                </div>
+                <div>
+                  <a
+                    href="https://www.facebook.com/madachaland"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-4 transition-all duration-300"
+                  >
+                    <FaFacebook className="h-6 w-6 text-primary animate-float" />
+                    <div>
+                      <p className="font-medium">Suivez-nous sur</p>
+                      <p className="text-muted-foreground hover:text-foreground">
+                        Facebook
+                      </p>
+                    </div>
+                  </a>
+                </div>
+                <div>
+                  <a
+                    href="https://www.instagram.com/madachaland"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-4 transition-all duration-300"
+                  >
+                    <FaInstagram className="h-6 w-6 text-primary animate-float" />
+                    <div>
+                      <p className="font-medium">Suivez-nous sur</p>
+                      <p className="text-muted-foreground hover:text-foreground">
+                        Instagram
+                      </p>
+                    </div>
+                    
+                  </a>
                 </div>
                 <div
                   className="flex items-center gap-4 animate-fade-in hover-lift"
@@ -878,7 +922,7 @@ export function ContactSection() {
               </div>
             </div>
 
-            <div
+            {/* <div
               className="aspect-video rounded-lg overflow-hidden animate-scale-in"
               style={{ animationDelay: "0.7s", animationFillMode: "both" }}
             >
@@ -887,7 +931,7 @@ export function ContactSection() {
                 alt="Notre bureau à Antananarivo"
                 className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
               />
-            </div>
+            </div> */}
           </div>
 
           {/* Contact Form */}
