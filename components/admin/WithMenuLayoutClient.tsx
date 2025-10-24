@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { BookOpen, Bus, Car, Home, LineChart, Menu, Settings, Users, Users2, Waypoints, X } from "lucide-react";
+import { BookOpen, Bus, Car, File, Home, LineChart, Menu, Settings, Users, Users2, Waypoints, X } from "lucide-react";
 import SideMenu, { menuItems } from "@/components/admin/Menu";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -16,7 +16,8 @@ const iconMap: Record<string, React.ElementType> = {
   LineChart,
   BookOpen,
   Waypoints,
-  Users2
+  Users2,
+  File
 
   // MessageCircle
 };

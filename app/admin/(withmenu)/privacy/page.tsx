@@ -85,12 +85,7 @@ const PrivacyPolicyPage = () => {
 
             <button
               onClick={handleAdd}
-              disabled={Number(policiesArray.length) > 0}
-              className={`${
-                Number(policiesArray.length) > 0
-                  ? "cursor-not-allowed opacity-50"
-                  : ""
-              } w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 sm:px-6 py-2.5 sm:py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white font-semibold rounded-xl hover:from-blue-700 hover:to-blue-800 transition-all shadow-lg text-sm sm:text-base`}
+              className={`w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 sm:px-6 py-2.5 sm:py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white font-semibold rounded-xl hover:from-blue-700 hover:to-blue-800 transition-all shadow-lg text-sm sm:text-base`}
             >
               <Plus className="w-4 h-4 sm:w-5 sm:h-5" />
               Ajouter une politique
@@ -120,11 +115,7 @@ const PrivacyPolicyPage = () => {
             <button
               disabled={Number(policiesArray.length) > 0}
               onClick={handleAdd}
-              className={`${
-                Number(policiesArray.length) > 0
-                  ? "cursor-not-allowed opacity-50"
-                  : ""
-              } inline-flex items-center gap-2 px-4 sm:px-6 py-2.5 sm:py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white font-semibold rounded-xl hover:from-blue-700 hover:to-blue-800 transition-all shadow-lg text-sm sm:text-base`}
+              className={`inline-flex items-center gap-2 px-4 sm:px-6 py-2.5 sm:py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white font-semibold rounded-xl hover:from-blue-700 hover:to-blue-800 transition-all shadow-lg text-sm sm:text-base`}
             >
               <Plus className="w-4 h-4 sm:w-5 sm:h-5" />
               Créer une politique
