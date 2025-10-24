@@ -41,7 +41,7 @@ export default async function RootLayout({
           disableTransitionOnChange
         >
           <NextIntlClientProvider messages={messages}>
-            {/* <ProtectionProvider> */}
+            <ProtectionProvider>
               <PageTransition>
                 <ClientCircuitProvider>
                   <ClientBookingProvider>
@@ -57,7 +57,7 @@ export default async function RootLayout({
                   </ClientBookingProvider>
                 </ClientCircuitProvider>
               </PageTransition>
-            {/* </ProtectionProvider> */}
+            </ProtectionProvider>
           </NextIntlClientProvider>
         </ThemeProvider>
         <Analytics />
