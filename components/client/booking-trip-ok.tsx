@@ -34,8 +34,6 @@ const BookingTripOk = ({
   getTripName,
   formatDate,
 }: BookingOkProps) => {
-  const locale = useLocale();
-  // const tripname = JSON.parse(pendingFormData?.tripTravel as any);
   return (
     <Dialog open={showConfirmDialog} onOpenChange={setShowConfirmDialog}>
       <DialogContent className="max-w-lg">

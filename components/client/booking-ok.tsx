@@ -1,6 +1,7 @@
 import React from 'react'
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from './ui/dialog'
 import { Button } from './ui/button'
+import { useLocale } from 'next-intl';
 interface BookingOkProps {
     restType: 'circuit' | 'car';
   showConfirmDialog: boolean;
@@ -26,14 +27,16 @@ const BookingOk = ({
   getVehicleName,
   formatDate,
 }: BookingOkProps) => {
+  const locale = useLocale();
   return (
     <Dialog open={showConfirmDialog} onOpenChange={setShowConfirmDialog}>
         <DialogContent className="max-w-lg">
           <DialogHeader>
-            <DialogTitle>Confirmer votre réservation</DialogTitle>
+            <DialogTitle>{locale === 'fr' ? 'Confirmer votre réservation' : 'Confirm your booking'}</DialogTitle>
             <DialogDescription>
-              Veuillez vérifier les informations de votre réservation avant de
-              confirmer.
+              {locale === 'fr'
+                ? 'Veuillez vérifier les informations de votre réservation avant de confirmer.'
+                : 'Please check your booking information before confirming.'}
             </DialogDescription>
           </DialogHeader>
 

@@ -134,7 +134,7 @@ const BlogSection = () => {
         {!isLoading && addedBlogs.length > 0 && (
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
             {addedBlogs.map((blog) => {
-              const title = JSON.parse(blog.title as any);
+              const title = blog.title ? JSON.parse(blog.title as any) : null;
               return(
                 <div
                 key={blog.id}

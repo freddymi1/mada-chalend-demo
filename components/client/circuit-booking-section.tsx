@@ -9,7 +9,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/client/ui/card";
-import { useTranslations } from "use-intl";
+import { useLocale, useTranslations } from "use-intl";
 import { useSearchParams } from "next/navigation";
 import { useClientCircuit } from "../providers/client/ClientCircuitProvider";
 
@@ -22,6 +22,7 @@ import CarBooking from "./car-booking";
 
 export function CircuitBookingSection() {
   const t = useTranslations("lng");
+  const locale = useLocale();
 
   const params = useSearchParams();
   const circuit = params.get("circuit");
@@ -286,9 +287,12 @@ export function CircuitBookingSection() {
     const selectedCircuit = addedCircuits?.find(
       (c) => (c.id || c._id) === circuitId
     );
-    return (
-      selectedCircuit?.title || selectedCircuit?.nom || "Circuit sélectionné"
-    );
+
+    const circuitTitle = selectedCircuit?.title
+      ? JSON.parse(selectedCircuit.title as any)
+      : { fr: "", en: "" };
+
+    return locale === "fr" ? circuitTitle.fr : circuitTitle.en;
   };
 
   return (

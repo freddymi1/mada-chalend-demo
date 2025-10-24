@@ -400,8 +400,8 @@ const CircuitScreen = () => {
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
                   {filteredCircuits.map((circuit) => {
-                    const title = JSON.parse(circuit.title);
-                    const description = JSON.parse(circuit.description);
+                    const title = circuit.title ? JSON.parse(circuit.title) : "";
+                    const description = circuit.description ? JSON.parse(circuit.description) : "";
                     return(
                       <tr
                       key={circuit.id}
@@ -448,7 +448,7 @@ const CircuitScreen = () => {
                           {circuit.highlights
                             .slice(0, 3)
                             .map((highlight: any, index: number) => {
-                              const text = JSON.parse(highlight.text);
+                              const text = highlight.text ? JSON.parse(highlight.text) : "";
                               return(
                                 <span
                                 key={highlight.id || index}

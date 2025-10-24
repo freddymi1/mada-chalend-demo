@@ -206,9 +206,9 @@ const ClArticleDetail = () => {
                             const isActive =
                               relatedArticle.id.toString() ===
                               articleId?.toString();
-                            const relatedTitle = JSON.parse(
+                            const relatedTitle = relatedArticle.title ? JSON.parse(
                               relatedArticle.title as any
-                            );
+                            ) : null;
                             return (
                               <div
                                 key={relatedArticle.id}

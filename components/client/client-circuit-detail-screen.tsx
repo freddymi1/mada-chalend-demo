@@ -58,8 +58,8 @@ const ClientCircuitDetailScreen = () => {
   const closeModal = () => {
     setSelectedImage(null);
   };
-  const title = JSON.parse(circuitDetail?.title);
-  const description = JSON.parse(circuitDetail?.description);
+  const title = circuitDetail?.title ? JSON.parse(circuitDetail?.title) : "";
+  const description = circuitDetail?.description ? JSON.parse(circuitDetail?.description) : "";
 
   return (
     <main className="min-h-screen w-full overflow-x-hidden">
@@ -182,11 +182,13 @@ const ClientCircuitDetailScreen = () => {
                     <div className="space-y-4 sm:space-y-6">
                       {circuitDetail?.itineraries?.map(
                         (day: any, index: number) => {
-                          const imgTitle = JSON.parse(day.title);
-                          const imgDescription = JSON.parse(
-                            day.imageDescription
-                          );
-                          const dayDescription = JSON.parse(day.description);
+                          const imgTitle = day.title ? JSON.parse(day.title) : "";
+                          const imgDescription = day.imageDescription
+                            ? JSON.parse(day.imageDescription)
+                            : "";
+                          const dayDescription = day.description
+                            ? JSON.parse(day.description)
+                            : "";
                           return (
                             <div
                               key={day.id}
@@ -252,13 +254,11 @@ const ClientCircuitDetailScreen = () => {
                                                 1;
                                             const isNextItem = i === index + 1;
 
-                                            const itTitle = JSON.parse(
-                                              it.title
-                                            );
+                                            
 
-                                            const itDescription = JSON.parse(
+                                            const itDescription = it.imageDescription ? JSON.parse(
                                               it.imageDescription
-                                            );
+                                            ) : "";
 
                                             return (
                                               <div
@@ -370,7 +370,7 @@ const ClientCircuitDetailScreen = () => {
                   <CardContent>
                     <div className="flex flex-col gap-2 mb-4">
                       {circuitDetail?.highlights?.map((highlight: any) => {
-                        const highlightText = JSON.parse(highlight.text);
+                        const highlightText = highlight.text ? JSON.parse(highlight.text) : ""  ;
                         return (
                           <div
                             key={highlight.id}
@@ -404,7 +404,7 @@ const ClientCircuitDetailScreen = () => {
                   <CardContent>
                     <ul className="space-y-2 text-xs sm:text-sm">
                       {circuitDetail?.included?.map((item: any) => {
-                        const itemText = JSON.parse(item.text);
+                        const itemText = item.text ? JSON.parse(item.text) : "";
                         return (
                           <>
                             {itemText.fr === "" || itemText.en === "" ? null : (
@@ -442,7 +442,7 @@ const ClientCircuitDetailScreen = () => {
                   <CardContent>
                     <ul className="space-y-2 text-xs sm:text-sm">
                       {circuitDetail?.notIncluded?.map((item: any) => {
-                        const itemText = JSON.parse(item.text);
+                        const itemText = item.text ? JSON.parse(item.text) : "";
                         return (
                           <>
                             {itemText.fr === "" || itemText.en === "" ? null : (

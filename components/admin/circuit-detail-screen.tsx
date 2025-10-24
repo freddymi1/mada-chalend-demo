@@ -66,8 +66,8 @@ const CircuitDetailScreen = () => {
     setCurrentImageIndex(index);
   };
 
-  const title = JSON.parse(circuitDetail.title);
-  const description = JSON.parse(circuitDetail.description);
+  const title = circuitDetail.title ? JSON.parse(circuitDetail.title) : "";
+  const description = circuitDetail.description ? JSON.parse(circuitDetail.description) : "";
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
@@ -303,7 +303,7 @@ const CircuitDetailScreen = () => {
               </h3>
               <ul className="space-y-3">
                 {circuitDetail.highlights.map((highlight: any) => {
-                  const highlightText = JSON.parse(highlight.text);
+                  const highlightText = highlight.text ? JSON.parse(highlight.text) : "";
                   return (
                     <li
                       key={highlight.id}
@@ -329,7 +329,7 @@ const CircuitDetailScreen = () => {
               </h3>
               <ul className="space-y-3">
                 {circuitDetail.included.map((item: any) => {
-                  const itemText = JSON.parse(item.text);
+                  const itemText = item.text ? JSON.parse(item.text) : "";
                   return (
                     <li key={item.id} className="flex items-start space-x-3">
                       <CheckCircle className="w-4 h-4 text-green-500 dark:text-green-400 mt-0.5 flex-shrink-0" />
@@ -353,7 +353,7 @@ const CircuitDetailScreen = () => {
                 </h3>
                 <ul className="space-y-3">
                   {circuitDetail.notIncluded.map((item: any) => {
-                    const itemText = JSON.parse(item.text);
+                    const itemText = item.text ? JSON.parse(item.text) : "";
                     return (
                       <li key={item.id} className="flex items-start space-x-3">
                         <XCircle className="w-4 h-4 text-red-500 dark:text-red-400 mt-0.5 flex-shrink-0" />
@@ -399,10 +399,8 @@ const CircuitDetailScreen = () => {
             <div className="space-y-6">
               {circuitDetail.itineraries.map(
                 (itinerary: any, index: number) => {
-                  const itineraryTitle = JSON.parse(itinerary.title);
-                  const itineraryDescription = JSON.parse(
-                    itinerary.description
-                  );
+                  const itineraryTitle = itinerary.title ? JSON.parse(itinerary.title) : "";
+                  const itineraryDescription = itinerary.description ? JSON.parse(itinerary.description) : "";
                   const itineraryImageDescription = itinerary.imageDescription
                     ? JSON.parse(itinerary.imageDescription)
                     : null;
@@ -443,9 +441,9 @@ const CircuitDetailScreen = () => {
                                       i ===
                                       circuitDetail.itineraries.length - 1;
                                     const isNextItem = i === index + 1;
-                                    const itText = JSON.parse(
+                                    const itText = it.imageDescription ? JSON.parse(
                                       it.imageDescription
-                                    );
+                                    ) : "";
 
                                     return (
                                       <div

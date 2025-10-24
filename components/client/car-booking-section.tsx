@@ -9,7 +9,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/client/ui/card";
-import { useTranslations } from "use-intl";
+import { useLocale, useTranslations } from "use-intl";
 import { useSearchParams } from "next/navigation";
 import { useClientCircuit } from "../providers/client/ClientCircuitProvider";
 
@@ -40,6 +40,7 @@ export function CarBookingSection() {
   const t = useTranslations("lng");
   const params = useSearchParams();
   const car = params.get("car");
+  const locale = useLocale();
 
   const { createReservation, loading, success } = useBooking();
 
@@ -431,7 +432,12 @@ export function CarBookingSection() {
 
   const getVehicleName = (vehicleId: string) => {
     const selectedVehicle = vehicles?.find((v) => v.id === vehicleId);
-    return selectedVehicle?.name || "Véhicule sélectionné";
+    const vehicleName = selectedVehicle?.name ? JSON.parse(selectedVehicle.name) : { fr: "", en: "" };
+    if (locale === "fr") {
+      return vehicleName.fr;
+    } else {
+      return vehicleName.en;
+    }
   };
 
   return (

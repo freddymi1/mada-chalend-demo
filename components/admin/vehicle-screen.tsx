@@ -33,8 +33,8 @@ const VehicleCard: React.FC<{
   const router = useRouter();
   const locale = useLocale();
 
-  const carName = JSON.parse(vehicle.name);
-  const carDescription = JSON.parse(vehicle.description);
+  const carName = vehicle.name ? JSON.parse(vehicle.name) : "";
+  const carDescription = vehicle.description ? JSON.parse(vehicle.description) : "";
 
   return (
     <div
@@ -123,7 +123,7 @@ const VehicleCard: React.FC<{
 
         <div className="flex flex-wrap gap-2 mb-4">
           {vehicle.features.slice(0, 3).map((feature, index) => {
-            const text = JSON.parse(feature);
+            const text = feature ? JSON.parse(feature) : "";
             return(
               <span
               key={index}

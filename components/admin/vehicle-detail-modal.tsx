@@ -40,9 +40,9 @@ const VehicleDetailModal: React.FC<VehicleDetailModalProps> = ({
   const locale = useLocale();
 
   // Parse les données multilingues
-  const carName = JSON.parse(vehicle.name);
-  const carDescription = JSON.parse(vehicle.description);
-  const features = vehicle.features.map((feature) => JSON.parse(feature));
+  const carName = vehicle.name ? JSON.parse(vehicle.name) : "";
+  const carDescription = vehicle.description ? JSON.parse(vehicle.description) : "";
+  const features = vehicle.features.map((feature) => feature ? JSON.parse(feature) : "");
 
   const allImages = [vehicle.mainImage, ...vehicle.detailImages].filter(
     (img) => img

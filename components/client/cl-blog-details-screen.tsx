@@ -185,7 +185,7 @@ const CiBlogDetailScreen = () => {
           <div>
             <div className="space-y-6">
               {blogDetail.articles.map((article: any, index: number) => {
-                const articleTitle = JSON.parse(article.title as any);
+                const articleTitle = article.title ? JSON.parse(article.title) : "";
                 return(
                   <div
                   key={article.id}

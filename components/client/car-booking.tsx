@@ -174,7 +174,7 @@ const CarBooking = ({
     return baseClass;
   };
 
-  const vehicleName = JSON.parse(vehicleDetail?.name || '{"fr": "","en": ""}');
+  const vehicleName = vehicleDetail?.name ? JSON.parse(vehicleDetail.name) : { fr: "", en: "" };
 
   return (
     <div>
@@ -204,7 +204,7 @@ const CarBooking = ({
             </SelectTrigger>
             <SelectContent>
               {vehicles?.map((vehicle) => {
-                const carName = JSON.parse(vehicle.name);
+                const carName = vehicle.name ? JSON.parse(vehicle.name) : { fr: "", en: "" };
                 return(
                   <SelectItem
                   key={vehicle.id || vehicle.id}

@@ -65,7 +65,7 @@ const CircuitBooking = ({
 }: PropsData) => {
   const t = useTranslations("lng");
   const locale = useLocale();
-  const title = JSON.parse(circuitDetail?.title || '{}');
+  const title = circuitDetail?.title ? JSON.parse(circuitDetail.title) : null;
   return (
     <div>
       <form onSubmit={handleSubmit} className="space-y-6">
