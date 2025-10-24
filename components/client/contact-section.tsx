@@ -31,7 +31,7 @@ import {
   Route,
 } from "lucide-react";
 import { useToast } from "@/hooks/shared/use-toast";
-import { useTranslations } from "use-intl";
+import { useLocale, useTranslations } from "use-intl";
 import { useClientCircuit } from "../providers/client/ClientCircuitProvider";
 import { FaFacebook, FaInstagram, FaWhatsapp } from "react-icons/fa";
 
@@ -77,7 +77,8 @@ interface AutreFormData {
 
 export function ContactSection() {
   const { toast } = useToast();
-  const t = useTranslations("lng");
+  const t = useTranslations("lng.contact");
+  const locale = useLocale()
 
   const [activeForm, setActiveForm] = useState<FormType>("circuit");
   const [loading, setLoading] = useState(false)
@@ -144,17 +145,17 @@ export function ContactSection() {
     switch (activeForm) {
       case "circuit":
         payload = { ...circuitData, type: "circuit" };
-        successMessage = `${t("contact.success.circuit")}`;
+        successMessage = t("success.circuit");
         break;
 
       case "partenariat":
         payload = { ...partenariatData, type: "partenariat" };
-        successMessage = `${t("contact.success.partenariat")}`;
+        successMessage = t("success.partenariat");
         break;
 
       case "autre":
         payload = { ...autreData, type: "autre" };
-        successMessage = `${t("contact.success.autre")}`;
+        successMessage = t("success.autre");
         break;
     }
 
@@ -171,7 +172,7 @@ export function ContactSection() {
 
       if (result.success) {
         toast({
-          title: `${t("contact.toast.successTitle")}`,
+          title: t("toast.successTitle"),
           description: successMessage,
         });
 
@@ -218,8 +219,8 @@ export function ContactSection() {
         }
       } else {
         toast({
-          title: `${t("contact.toast.errorTitle")}`,
-          description: `${t("contact.toast.errorMessage")}`,
+          title: t("toast.errorTitle"),
+          description: t("toast.errorMessage"),
           variant: "destructive",
         });
         setLoading(false)
@@ -227,8 +228,8 @@ export function ContactSection() {
     } catch (error) {
       console.error("Erreur handleSubmit:", error);
       toast({
-        title: `${t("contact.toast.serverErrorTitle")}`,
-        description: `${t("contact.toast.serverErrorMessage")}`,
+        title: t("toast.serverErrorTitle"),
+        description: t("toast.serverErrorMessage"),
         variant: "destructive",
       });
     }
@@ -268,7 +269,7 @@ export function ContactSection() {
           className="space-y-2 animate-fade-in"
           style={{ animationDelay: "0.4s", animationFillMode: "both" }}
         >
-          <Label htmlFor="nom">Nom *</Label>
+          <Label htmlFor="nom">{t("circuitForm.fields.lastName")}</Label>
           <Input
             id="nom"
             name="nom"
@@ -282,7 +283,7 @@ export function ContactSection() {
           className="space-y-2 animate-fade-in"
           style={{ animationDelay: "0.5s", animationFillMode: "both" }}
         >
-          <Label htmlFor="prenom">Prénom *</Label>
+          <Label htmlFor="prenom">{t("circuitForm.fields.firstName")}</Label>
           <Input
             id="prenom"
             name="prenom"
@@ -299,7 +300,7 @@ export function ContactSection() {
           className="space-y-2 animate-fade-in"
           style={{ animationDelay: "0.6s", animationFillMode: "both" }}
         >
-          <Label htmlFor="email">Email *</Label>
+          <Label htmlFor="email">{t("circuitForm.fields.email")}</Label>
           <Input
             id="email"
             name="email"
@@ -314,7 +315,7 @@ export function ContactSection() {
           className="space-y-2 animate-fade-in"
           style={{ animationDelay: "0.7s", animationFillMode: "both" }}
         >
-          <Label htmlFor="telephone">Téléphone</Label>
+          <Label htmlFor="telephone">{t("circuitForm.fields.phone")}</Label>
           <Input
             id="telephone"
             name="telephone"
@@ -329,7 +330,7 @@ export function ContactSection() {
         className="space-y-2 animate-fade-in"
         style={{ animationDelay: "0.8s", animationFillMode: "both" }}
       >
-        <Label htmlFor="adresse">Adresse *</Label>
+        <Label htmlFor="adresse">{t("circuitForm.fields.address")}</Label>
         <Input
           id="adresse"
           name="adresse"
@@ -345,7 +346,7 @@ export function ContactSection() {
           className="space-y-2 animate-fade-in"
           style={{ animationDelay: "0.9s", animationFillMode: "both" }}
         >
-          <Label htmlFor="nbPersonnes">Nombre de personnes *</Label>
+          <Label htmlFor="nbPersonnes">{t("circuitForm.fields.peopleCount")}</Label>
           <Select
             value={circuitData.nbPersonnes}
             onValueChange={(value) =>
@@ -353,17 +354,17 @@ export function ContactSection() {
             }
           >
             <SelectTrigger className="w-full">
-              <SelectValue placeholder="Sélectionner" />
+              <SelectValue placeholder={t("circuitForm.placeholders.selectPeople")} />
             </SelectTrigger>
             <SelectContent>
               {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15].map(
                 (num) => (
                   <SelectItem key={num} value={num.toString()}>
-                    {num} personne{num > 1 ? "s" : ""}
+                    {num} {num === 1 ? t("circuitForm.options.people.single") : t("circuitForm.options.people.plural")}
                   </SelectItem>
                 )
               )}
-              <SelectItem value="15+">15+ personnes</SelectItem>
+              <SelectItem value="15+">{t("circuitForm.options.people.moreThan15")}</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -371,7 +372,7 @@ export function ContactSection() {
           className="space-y-2 animate-fade-in"
           style={{ animationDelay: "1.0s", animationFillMode: "both" }}
         >
-          <Label htmlFor="dateDepart">Date de départ *</Label>
+          <Label htmlFor="dateDepart">{t("circuitForm.fields.departureDate")}</Label>
           <Input
             id="dateDepart"
             name="dateDepart"
@@ -386,7 +387,7 @@ export function ContactSection() {
           className="space-y-2 animate-fade-in"
           style={{ animationDelay: "1.1s", animationFillMode: "both" }}
         >
-          <Label htmlFor="duree">Durée du séjour</Label>
+          <Label htmlFor="duree">{t("circuitForm.fields.duration")}</Label>
           <Select
             value={circuitData.duree}
             onValueChange={(value) =>
@@ -394,14 +395,14 @@ export function ContactSection() {
             }
           >
             <SelectTrigger className="w-full">
-              <SelectValue placeholder="Sélectionner" />
+              <SelectValue placeholder={t("circuitForm.placeholders.selectDuration")} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="1-3">1-3 jours</SelectItem>
-              <SelectItem value="4-7">4-7 jours</SelectItem>
-              <SelectItem value="8-14">1-2 semaines</SelectItem>
-              <SelectItem value="15-21">2-3 semaines</SelectItem>
-              <SelectItem value="22+">Plus de 3 semaines</SelectItem>
+              <SelectItem value="1-3">{t("circuitForm.options.duration.1-3")}</SelectItem>
+              <SelectItem value="4-7">{t("circuitForm.options.duration.4-7")}</SelectItem>
+              <SelectItem value="8-14">{t("circuitForm.options.duration.8-14")}</SelectItem>
+              <SelectItem value="15-21">{t("circuitForm.options.duration.15-21")}</SelectItem>
+              <SelectItem value="22+">{t("circuitForm.options.duration.22+")}</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -412,7 +413,7 @@ export function ContactSection() {
           className="space-y-2 animate-fade-in"
           style={{ animationDelay: "1.2s", animationFillMode: "both" }}
         >
-          <Label htmlFor="circuitDemande">Circuit demandé *</Label>
+          <Label htmlFor="circuitDemande">{t("circuitForm.fields.circuitRequest")}</Label>
           <Select
             value={circuitData.circuitDemande}
             onValueChange={(value) =>
@@ -420,14 +421,16 @@ export function ContactSection() {
             }
           >
             <SelectTrigger className="w-full">
-              <SelectValue placeholder="Choisir un circuit" />
+              <SelectValue placeholder={t("circuitForm.placeholders.selectCircuit")} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">Selectionner un circuit</SelectItem>
-              {addedCircuits.map((cr)=>(
-
-              <SelectItem key={cr.id} value={cr.id}>{cr.title}</SelectItem>
-              ))}
+              <SelectItem value="all">{t("circuitForm.placeholders.selectCircuit")}</SelectItem>
+              {addedCircuits.map((cr)=>{
+                const crTitle = cr.title ? JSON.parse(cr.title as any) : ""
+                return(
+                  <SelectItem key={cr.id} value={cr.id}>{locale === "fr" ? crTitle.fr : crTitle.en}</SelectItem>
+                )
+              })}
             </SelectContent>
           </Select>
         </div>
@@ -435,7 +438,7 @@ export function ContactSection() {
           className="space-y-2 animate-fade-in"
           style={{ animationDelay: "1.3s", animationFillMode: "both" }}
         >
-          <Label htmlFor="budget">Budget approximatif</Label>
+          <Label htmlFor="budget">{t("circuitForm.fields.budget")}</Label>
           <Select
             value={circuitData.budget}
             onValueChange={(value) =>
@@ -443,14 +446,14 @@ export function ContactSection() {
             }
           >
             <SelectTrigger className="w-full">
-              <SelectValue placeholder="Budget par personne" />
+              <SelectValue placeholder={t("circuitForm.placeholders.selectBudget")} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="500-1000">500€ - 1000€</SelectItem>
-              <SelectItem value="1000-2000">1000€ - 2000€</SelectItem>
-              <SelectItem value="2000-3000">2000€ - 3000€</SelectItem>
-              <SelectItem value="3000+">Plus de 3000€</SelectItem>
-              <SelectItem value="flexible">Flexible</SelectItem>
+              <SelectItem value="500-1000">{t("circuitForm.options.budget.500-1000")}</SelectItem>
+              <SelectItem value="1000-2000">{t("circuitForm.options.budget.1000-2000")}</SelectItem>
+              <SelectItem value="2000-3000">{t("circuitForm.options.budget.2000-3000")}</SelectItem>
+              <SelectItem value="3000+">{t("circuitForm.options.budget.3000+")}</SelectItem>
+              <SelectItem value="flexible">{t("circuitForm.options.budget.flexible")}</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -460,11 +463,11 @@ export function ContactSection() {
         className="space-y-2 animate-fade-in"
         style={{ animationDelay: "1.4s", animationFillMode: "both" }}
       >
-        <Label htmlFor="message">Message complémentaire</Label>
+        <Label htmlFor="message">{t("circuitForm.fields.message")}</Label>
         <Textarea
           id="message"
           name="message"
-          placeholder="Décrivez vos attentes, préférences, besoins spéciaux..."
+          placeholder={t("circuitForm.placeholders.message")}
           value={circuitData.message}
           onChange={handleCircuitChange}
           rows={4}
@@ -478,7 +481,7 @@ export function ContactSection() {
       >
         <Button type="submit" className="w-full hover-glow" size="lg">
           <Route className="w-5 h-5 mr-2" />
-          Demander un devis pour ce circuit
+          {t("circuitForm.submit")}
         </Button>
       </div>
     </form>
@@ -491,7 +494,7 @@ export function ContactSection() {
           className="space-y-2 animate-fade-in"
           style={{ animationDelay: "0.4s", animationFillMode: "both" }}
         >
-          <Label htmlFor="nom">Nom *</Label>
+          <Label htmlFor="nom">{t("partnershipForm.fields.lastName")}</Label>
           <Input
             id="nom"
             name="nom"
@@ -505,7 +508,7 @@ export function ContactSection() {
           className="space-y-2 animate-fade-in"
           style={{ animationDelay: "0.5s", animationFillMode: "both" }}
         >
-          <Label htmlFor="prenom">Prénom *</Label>
+          <Label htmlFor="prenom">{t("partnershipForm.fields.firstName")}</Label>
           <Input
             id="prenom"
             name="prenom"
@@ -522,7 +525,7 @@ export function ContactSection() {
           className="space-y-2 animate-fade-in"
           style={{ animationDelay: "0.6s", animationFillMode: "both" }}
         >
-          <Label htmlFor="email">Email *</Label>
+          <Label htmlFor="email">{t("partnershipForm.fields.email")}</Label>
           <Input
             id="email"
             name="email"
@@ -537,7 +540,7 @@ export function ContactSection() {
           className="space-y-2 animate-fade-in"
           style={{ animationDelay: "0.7s", animationFillMode: "both" }}
         >
-          <Label htmlFor="telephone">Téléphone</Label>
+          <Label htmlFor="telephone">{t("partnershipForm.fields.phone")}</Label>
           <Input
             id="telephone"
             name="telephone"
@@ -552,7 +555,7 @@ export function ContactSection() {
         className="space-y-2 animate-fade-in"
         style={{ animationDelay: "0.8s", animationFillMode: "both" }}
       >
-        <Label htmlFor="nomEntreprise">Nom de l'entreprise *</Label>
+        <Label htmlFor="nomEntreprise">{t("partnershipForm.fields.companyName")}</Label>
         <Input
           id="nomEntreprise"
           name="nomEntreprise"
@@ -567,7 +570,7 @@ export function ContactSection() {
         className="space-y-2 animate-fade-in w-full"
         style={{ animationDelay: "0.9s", animationFillMode: "both" }}
       >
-        <Label htmlFor="typePartenariat">Type de partenariat *</Label>
+        <Label htmlFor="typePartenariat">{t("partnershipForm.fields.partnershipType")}</Label>
         <Select
           value={partenariatData.typePartenariat}
           onValueChange={(value) =>
@@ -575,17 +578,17 @@ export function ContactSection() {
           }
         >
           <SelectTrigger>
-            <SelectValue placeholder="Sélectionner le type" />
+            <SelectValue placeholder={t("partnershipForm.placeholders.selectPartnershipType")} />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="vehicule">Partenariat véhicule</SelectItem>
-            <SelectItem value="agence">Partenariat agence de voyage</SelectItem>
-            <SelectItem value="hotel">Partenariat hôtelier</SelectItem>
-            <SelectItem value="restaurant">Partenariat restauration</SelectItem>
-            <SelectItem value="guide">Guide touristique</SelectItem>
-            <SelectItem value="transport">Compagnie de transport</SelectItem>
-            <SelectItem value="activite">Activités touristiques</SelectItem>
-            <SelectItem value="autre">Autre</SelectItem>
+            <SelectItem value="vehicule">{t("partnershipForm.partnershipTypes.vehicle")}</SelectItem>
+            <SelectItem value="agence">{t("partnershipForm.partnershipTypes.agency")}</SelectItem>
+            <SelectItem value="hotel">{t("partnershipForm.partnershipTypes.hotel")}</SelectItem>
+            <SelectItem value="restaurant">{t("partnershipForm.partnershipTypes.restaurant")}</SelectItem>
+            <SelectItem value="guide">{t("partnershipForm.partnershipTypes.guide")}</SelectItem>
+            <SelectItem value="transport">{t("partnershipForm.partnershipTypes.transport")}</SelectItem>
+            <SelectItem value="activite">{t("partnershipForm.partnershipTypes.activity")}</SelectItem>
+            <SelectItem value="autre">{t("partnershipForm.partnershipTypes.other")}</SelectItem>
           </SelectContent>
         </Select>
       </div>
@@ -594,11 +597,11 @@ export function ContactSection() {
         className="space-y-2 animate-fade-in"
         style={{ animationDelay: "1.0s", animationFillMode: "both" }}
       >
-        <Label htmlFor="objet">Objet de la collaboration *</Label>
+        <Label htmlFor="objet">{t("partnershipForm.fields.collaborationSubject")}</Label>
         <Input
           id="objet"
           name="objet"
-          placeholder="Ex: Location de véhicules 4x4, Hébergement touristique..."
+          placeholder={t("partnershipForm.placeholders.collaborationSubject")}
           value={partenariatData.objet}
           onChange={handlePartenariatChange}
           required
@@ -610,11 +613,11 @@ export function ContactSection() {
         className="space-y-2 animate-fade-in"
         style={{ animationDelay: "1.1s", animationFillMode: "both" }}
       >
-        <Label htmlFor="description">Description de votre entreprise</Label>
+        <Label htmlFor="description">{t("partnershipForm.fields.companyDescription")}</Label>
         <Textarea
           id="description"
           name="description"
-          placeholder="Présentez votre entreprise, vos services, votre expérience..."
+          placeholder={t("partnershipForm.placeholders.companyDescription")}
           value={partenariatData.description}
           onChange={handlePartenariatChange}
           rows={3}
@@ -626,11 +629,11 @@ export function ContactSection() {
         className="space-y-2 animate-fade-in"
         style={{ animationDelay: "1.2s", animationFillMode: "both" }}
       >
-        <Label htmlFor="message">Proposition de collaboration</Label>
+        <Label htmlFor="message">{t("partnershipForm.fields.collaborationProposal")}</Label>
         <Textarea
           id="message"
           name="message"
-          placeholder="Décrivez votre proposition de collaboration, conditions, avantages mutuels..."
+          placeholder={t("partnershipForm.placeholders.collaborationProposal")}
           value={partenariatData.message}
           onChange={handlePartenariatChange}
           rows={4}
@@ -644,7 +647,7 @@ export function ContactSection() {
       >
         <Button disabled={loading} type="submit" className="w-full hover-glow" size="lg">
           <Building className="w-5 h-5 mr-2" />
-          Envoyer la demande de partenariat
+          {t("partnershipForm.submit")}
         </Button>
       </div>
     </form>
@@ -657,7 +660,7 @@ export function ContactSection() {
           className="space-y-2 animate-fade-in"
           style={{ animationDelay: "0.4s", animationFillMode: "both" }}
         >
-          <Label htmlFor="nom">Nom *</Label>
+          <Label htmlFor="nom">{t("otherForm.fields.lastName")}</Label>
           <Input
             id="nom"
             name="nom"
@@ -671,7 +674,7 @@ export function ContactSection() {
           className="space-y-2 animate-fade-in"
           style={{ animationDelay: "0.5s", animationFillMode: "both" }}
         >
-          <Label htmlFor="prenom">Prénom *</Label>
+          <Label htmlFor="prenom">{t("otherForm.fields.firstName")}</Label>
           <Input
             id="prenom"
             name="prenom"
@@ -688,7 +691,7 @@ export function ContactSection() {
           className="space-y-2 animate-fade-in"
           style={{ animationDelay: "0.6s", animationFillMode: "both" }}
         >
-          <Label htmlFor="email">Email *</Label>
+          <Label htmlFor="email">{t("otherForm.fields.email")}</Label>
           <Input
             id="email"
             name="email"
@@ -703,7 +706,7 @@ export function ContactSection() {
           className="space-y-2 animate-fade-in"
           style={{ animationDelay: "0.7s", animationFillMode: "both" }}
         >
-          <Label htmlFor="telephone">Téléphone</Label>
+          <Label htmlFor="telephone">{t("otherForm.fields.phone")}</Label>
           <Input
             id="telephone"
             name="telephone"
@@ -718,7 +721,7 @@ export function ContactSection() {
         className="space-y-2 animate-fade-in"
         style={{ animationDelay: "0.8s", animationFillMode: "both" }}
       >
-        <Label htmlFor="adresse">Adresse</Label>
+        <Label htmlFor="adresse">{t("otherForm.fields.address")}</Label>
         <Input
           id="adresse"
           name="adresse"
@@ -732,7 +735,7 @@ export function ContactSection() {
         className="space-y-2 animate-fade-in"
         style={{ animationDelay: "0.9s", animationFillMode: "both" }}
       >
-        <Label htmlFor="typeService">Type de service souhaité</Label>
+        <Label htmlFor="typeService">{t("otherForm.fields.serviceType")}</Label>
         <Select
           value={autreData.typeService}
           onValueChange={(value) =>
@@ -740,27 +743,33 @@ export function ContactSection() {
           }
         >
           <SelectTrigger>
-            <SelectValue placeholder="Sélectionner" />
+            <SelectValue placeholder={t("otherForm.placeholders.selectService")} />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="circuit-personnalise">
-              Circuit personnalisé
+              {t("otherForm.serviceTypes.custom-circuit")}
             </SelectItem>
             <SelectItem value="transfert-aeroport">
-              Transfert aéroport
+              {t("otherForm.serviceTypes.airport-transfer")}
             </SelectItem>
             <SelectItem value="location-vehicule">
-              Location de véhicule seule
+              {t("otherForm.serviceTypes.vehicle-rental")}
             </SelectItem>
-            <SelectItem value="guide-prive">Guide privé</SelectItem>
-            <SelectItem value="hebergement">Conseil hébergement</SelectItem>
+            <SelectItem value="guide-prive">
+              {t("otherForm.serviceTypes.private-guide")}
+            </SelectItem>
+            <SelectItem value="hebergement">
+              {t("otherForm.serviceTypes.accommodation")}
+            </SelectItem>
             <SelectItem value="activite-specifique">
-              Activité spécifique
+              {t("otherForm.serviceTypes.specific-activity")}
             </SelectItem>
             <SelectItem value="organisation-evenement">
-              Organisation d'événement
+              {t("otherForm.serviceTypes.event-organization")}
             </SelectItem>
-            <SelectItem value="autre">Autre demande</SelectItem>
+            <SelectItem value="autre">
+              {t("otherForm.serviceTypes.other")}
+            </SelectItem>
           </SelectContent>
         </Select>
       </div>
@@ -769,11 +778,11 @@ export function ContactSection() {
         className="space-y-2 animate-fade-in"
         style={{ animationDelay: "1.0s", animationFillMode: "both" }}
       >
-        <Label htmlFor="objet">Objet de votre demande *</Label>
+        <Label htmlFor="objet">{t("otherForm.fields.requestSubject")}</Label>
         <Input
           id="objet"
           name="objet"
-          placeholder="Ex: Organisation mariage à Madagascar, Circuit sur-mesure famille..."
+          placeholder={t("otherForm.placeholders.requestSubject")}
           value={autreData.objet}
           onChange={handleAutreChange}
           required
@@ -785,11 +794,11 @@ export function ContactSection() {
         className="space-y-2 animate-fade-in"
         style={{ animationDelay: "1.1s", animationFillMode: "both" }}
       >
-        <Label htmlFor="message">Détails de votre demande *</Label>
+        <Label htmlFor="message">{t("otherForm.fields.requestDetails")}</Label>
         <Textarea
           id="message"
           name="message"
-          placeholder="Décrivez en détail votre demande, vos besoins spécifiques, dates, contraintes particulières..."
+          placeholder={t("otherForm.placeholders.requestDetails")}
           value={autreData.message}
           onChange={handleAutreChange}
           required
@@ -804,7 +813,7 @@ export function ContactSection() {
       >
         <Button type="submit" className="w-full hover-glow" size="lg">
           <Mail className="w-5 h-5 mr-2" />
-          Envoyer ma demande
+          {t("otherForm.submit")}
         </Button>
       </div>
     </form>
@@ -815,11 +824,10 @@ export function ContactSection() {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16 animate-slide-up">
           <h2 className="text-3xl sm:text-4xl font-bold mb-6 text-balance">
-            {t("contact.title")}
+            {t("title")}
           </h2>
           <p className="text-lg text-muted-foreground max-w-3xl mx-auto text-pretty">
-            Contactez-nous pour organiser votre voyage, devenir partenaire ou
-            toute autre demande spécifique
+            {t("subtitle")}
           </p>
         </div>
 
@@ -831,7 +839,7 @@ export function ContactSection() {
           >
             <div>
               <h3 className="text-2xl font-semibold mb-6">
-                Nos informations de contact
+                {t("contactInfo.title")}
               </h3>
               <div className="space-y-4">
                 <div
@@ -840,7 +848,7 @@ export function ContactSection() {
                 >
                   <FaWhatsapp className="h-6 w-6 text-primary animate-float" />
                   <div>
-                    <p className="font-medium">Téléphone</p>
+                    <p className="font-medium">{t("contactInfo.whatsapp")}</p>
                     <p className="text-muted-foreground">+261 34 25 105 85</p>
                   </div>
                 </div>
@@ -850,7 +858,7 @@ export function ContactSection() {
                 >
                   <Phone className="h-6 w-6 text-primary animate-float" />
                   <div>
-                    <p className="font-medium">Téléphone</p>
+                    <p className="font-medium">{t("contactInfo.phone")}</p>
                     <p className="text-muted-foreground">+261 32 77 113 88</p>
                   </div>
                 </div>
@@ -863,7 +871,7 @@ export function ContactSection() {
                     style={{ animationDelay: "1s" }}
                   />
                   <div>
-                    <p className="font-medium">Email</p>
+                    <p className="font-medium">{t("contactInfo.email")}</p>
                     <p className="text-muted-foreground">
                       contact@madachaland.mg
                     </p>
@@ -878,9 +886,9 @@ export function ContactSection() {
                   >
                     <FaFacebook className="h-6 w-6 text-primary animate-float" />
                     <div>
-                      <p className="font-medium">Suivez-nous sur</p>
+                      <p className="font-medium">{t("contactInfo.followUs")}</p>
                       <p className="text-muted-foreground hover:text-foreground">
-                        Facebook
+                        {t("contactInfo.facebook")}
                       </p>
                     </div>
                   </a>
@@ -894,9 +902,9 @@ export function ContactSection() {
                   >
                     <FaInstagram className="h-6 w-6 text-primary animate-float" />
                     <div>
-                      <p className="font-medium">Suivez-nous sur</p>
+                      <p className="font-medium">{t("contactInfo.followUs")}</p>
                       <p className="text-muted-foreground hover:text-foreground">
-                        Instagram
+                        {t("contactInfo.instagram")}
                       </p>
                     </div>
                     
@@ -911,27 +919,16 @@ export function ContactSection() {
                     style={{ animationDelay: "2s" }}
                   />
                   <div>
-                    <p className="font-medium">Adresse</p>
+                    <p className="font-medium">{t("contactInfo.address")}</p>
                     <p className="text-muted-foreground">
-                      123 Avenue de l'Indépendance
+                      {t("contactInfo.addressLine1")}
                       <br />
-                      Antananarivo 101, Madagascar
+                      {t("contactInfo.addressLine2")}
                     </p>
                   </div>
                 </div>
               </div>
             </div>
-
-            {/* <div
-              className="aspect-video rounded-lg overflow-hidden animate-scale-in"
-              style={{ animationDelay: "0.7s", animationFillMode: "both" }}
-            >
-              <img
-                src="/madagascar-antananarivo-city-view-office-location.jpg"
-                alt="Notre bureau à Antananarivo"
-                className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
-              />
-            </div> */}
           </div>
 
           {/* Contact Form */}
@@ -940,7 +937,7 @@ export function ContactSection() {
             style={{ animationDelay: "0.3s", animationFillMode: "both" }}
           >
             <CardHeader>
-              <CardTitle>Contactez-nous</CardTitle>
+              <CardTitle>{t("form.title")}</CardTitle>
 
               {/* Form Type Selector */}
               <div className="flex flex-wrap gap-2 pt-4">
@@ -954,7 +951,7 @@ export function ContactSection() {
                   }`}
                 >
                   <Route className="w-4 h-4" />
-                  Demande de circuit
+                  {t("form.circuitButton.text")}
                 </button>
                 <button
                   type="button"
@@ -966,7 +963,7 @@ export function ContactSection() {
                   }`}
                 >
                   <Building className="w-4 h-4" />
-                  Partenariat
+                  {t("form.partnershipButton.text")}
                 </button>
                 <button
                   type="button"
@@ -978,7 +975,7 @@ export function ContactSection() {
                   }`}
                 >
                   <Mail className="w-4 h-4" />
-                  Autre demande
+                  {t("form.otherButton.text")}
                 </button>
               </div>
             </CardHeader>

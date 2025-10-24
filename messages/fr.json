@@ -138,36 +138,152 @@
     }
   },
   "contact": {
-    "title": "Contactez-nous",
-    "subtitle": "Pour toute question, demande de circuit ou information, contactez-nous directement.",
-    "infoTitle": "Nos coordonnées",
-    "phoneLabel": "Téléphone",
-    "emailLabel": "Email",
-    "addressLabel": "Adresse",
-    "addressValue": "123 Avenue de l'Indépendance\nAntananarivo 101, Madagascar",
-    "officeAlt": "Notre bureau à Antananarivo",
-    "formTitle": "Envoyez-nous un message",
+    "title": "Contactez-Nous",
+    "subtitle": "Contactez-nous pour organiser votre voyage, devenir partenaire ou toute autre demande spécifique",
+    "contactInfo": {
+      "title": "Nos informations de contact",
+      "whatsapp": "Whatsapp",
+      "phone": "Téléphone",
+      "email": "Email",
+      "followUs": "Suivez-nous sur",
+      "facebook": "Facebook",
+      "instagram": "Instagram",
+      "address": "Adresse",
+      "addressLine1": "123 Avenue de l'Indépendance",
+      "addressLine2": "Antananarivo 101, Madagascar"
+    },
     "form": {
-      "name": "Nom *",
-      "email": "Email *",
-      "message": "Message *",
-      "messagePlaceholder": "Votre message...",
-      "submit": "Envoyer le message"
+      "title": "Contactez-nous",
+      "circuitButton": {
+        "text": "Demande de circuit",
+        "icon": "Route"
+      },
+      "partnershipButton": {
+        "text": "Partenariat",
+        "icon": "Building"
+      },
+      "otherButton": {
+        "text": "Autre demande",
+        "icon": "Mail"
+      }
+    },
+    "circuitForm": {
+      "title": "Demande de Circuit",
+      "fields": {
+        "lastName": "Nom *",
+        "firstName": "Prénom *",
+        "email": "Email *",
+        "phone": "Téléphone",
+        "address": "Adresse *",
+        "peopleCount": "Nombre de personnes *",
+        "departureDate": "Date de départ *",
+        "duration": "Durée du séjour",
+        "circuitRequest": "Circuit demandé *",
+        "budget": "Budget approximatif",
+        "message": "Message complémentaire"
+      },
+      "placeholders": {
+        "selectPeople": "Sélectionner",
+        "selectDuration": "Sélectionner",
+        "selectCircuit": "Choisir un circuit",
+        "selectBudget": "Budget par personne",
+        "message": "Décrivez vos attentes, préférences, besoins spéciaux..."
+      },
+      "options": {
+        "people": {
+          "single": "personne",
+          "plural": "personnes",
+          "moreThan15": "15+ personnes"
+        },
+        "duration": {
+          "1-3": "1-3 jours",
+          "4-7": "4-7 jours",
+          "8-14": "1-2 semaines",
+          "15-21": "2-3 semaines",
+          "22+": "Plus de 3 semaines"
+        },
+        "budget": {
+          "500-1000": "500€ - 1000€",
+          "1000-2000": "1000€ - 2000€",
+          "2000-3000": "2000€ - 3000€",
+          "3000+": "Plus de 3000€",
+          "flexible": "Flexible"
+        }
+      },
+      "submit": "Demander un devis pour ce circuit"
+    },
+    "partnershipForm": {
+      "title": "Demande de Partenariat",
+      "fields": {
+        "lastName": "Nom *",
+        "firstName": "Prénom *",
+        "email": "Email *",
+        "phone": "Téléphone",
+        "companyName": "Nom de l'entreprise *",
+        "partnershipType": "Type de partenariat *",
+        "collaborationSubject": "Objet de la collaboration *",
+        "companyDescription": "Description de votre entreprise",
+        "collaborationProposal": "Proposition de collaboration"
+      },
+      "placeholders": {
+        "selectPartnershipType": "Sélectionner le type",
+        "collaborationSubject": "Ex: Location de véhicules 4x4, Hébergement touristique...",
+        "companyDescription": "Présentez votre entreprise, vos services, votre expérience...",
+        "collaborationProposal": "Décrivez votre proposition de collaboration, conditions, avantages mutuels..."
+      },
+      "partnershipTypes": {
+        "vehicle": "Partenariat véhicule",
+        "agency": "Partenariat agence de voyage",
+        "hotel": "Partenariat hôtelier",
+        "restaurant": "Partenariat restauration",
+        "guide": "Guide touristique",
+        "transport": "Compagnie de transport",
+        "activity": "Activités touristiques",
+        "other": "Autre"
+      },
+      "submit": "Envoyer la demande de partenariat"
+    },
+    "otherForm": {
+      "title": "Autre Demande",
+      "fields": {
+        "lastName": "Nom *",
+        "firstName": "Prénom *",
+        "email": "Email *",
+        "phone": "Téléphone",
+        "address": "Adresse",
+        "serviceType": "Type de service souhaité",
+        "requestSubject": "Objet de votre demande *",
+        "requestDetails": "Détails de votre demande *"
+      },
+      "placeholders": {
+        "selectService": "Sélectionner",
+        "requestSubject": "Ex: Organisation mariage à Madagascar, Circuit sur-mesure famille...",
+        "requestDetails": "Décrivez en détail votre demande, vos besoins spécifiques, dates, contraintes particulières..."
+      },
+      "serviceTypes": {
+        "custom-circuit": "Circuit personnalisé",
+        "airport-transfer": "Transfert aéroport",
+        "vehicle-rental": "Location de véhicule seule",
+        "private-guide": "Guide privé",
+        "accommodation": "Conseil hébergement",
+        "specific-activity": "Activité spécifique",
+        "event-organization": "Organisation d'événement",
+        "other": "Autre demande"
+      },
+      "submit": "Envoyer ma demande"
     },
     "success": {
-      "circuit": "Votre demande de circuit a été envoyée !",
-      "partenariat": "Votre demande de partenariat a été envoyée !",
-      "autre": "Votre demande a été envoyée !"
+      "circuit": "Votre demande de circuit a été envoyée avec succès ! Nous vous recontacterons rapidement.",
+      "partenariat": "Votre demande de partenariat a été envoyée avec succès ! Nous étudierons votre proposition.",
+      "autre": "Votre demande a été envoyée avec succès ! Nous vous répondrons dans les plus brefs délais."
     },
     "toast": {
       "successTitle": "Message envoyé !",
       "errorTitle": "Erreur",
+      "errorMessage": "Une erreur est survenue lors de l'envoi du message.",
       "serverErrorTitle": "Erreur serveur",
-      "errorMessage": "Impossible d’envoyer le message.",
-      "serverErrorMessage": "Veuillez réessayer plus tard."
-    },
-    "toastTitle": "Message envoyé !",
-    "toastDescription": "Nous vous répondrons dans les plus brefs délais."
+      "serverErrorMessage": "Impossible d'envoyer le message. Veuillez réessayer."
+    }
   },
   "car": {
     "title": "Location de Véhicules Touristiques",
