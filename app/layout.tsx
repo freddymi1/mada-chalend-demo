@@ -16,6 +16,9 @@ import { CiBlogProvider } from "@/components/providers/client/ClBlogProvider";
 import { TripCltProvider } from "@/components/providers/client/TripCltProvider";
 import { ReviewProvider } from "@/components/providers/client/ReviewProvider";
 import { ProtectionProvider } from "@/components/providers/client/ProtectionProvider";
+import { CiContactProvider } from "@/components/providers/client/ClContactProvider";
+import { CiCguProvider } from "@/components/providers/client/ClCguProvider";
+import { CiPrivacyProvider } from "@/components/providers/client/CiPrivacyProvider";
 
 export const metadata: Metadata = {
   title: "Mada Chaland - Agence de voyage à Madagascar",
@@ -42,21 +45,27 @@ export default async function RootLayout({
         >
           <NextIntlClientProvider messages={messages}>
             {/* <ProtectionProvider> */}
-              <PageTransition>
-                <ClientCircuitProvider>
-                  <ClientBookingProvider>
-                    <ClVehicleProvider>
-                      <CiBlogProvider>
-                        <TripCltProvider>
-                          <ReviewProvider>
-                            <Suspense fallback={null}>{children}</Suspense>
-                          </ReviewProvider>
-                        </TripCltProvider>
-                      </CiBlogProvider>
-                    </ClVehicleProvider>
-                  </ClientBookingProvider>
-                </ClientCircuitProvider>
-              </PageTransition>
+            <PageTransition>
+              <ClientCircuitProvider>
+                <ClientBookingProvider>
+                  <ClVehicleProvider>
+                    <CiBlogProvider>
+                      <TripCltProvider>
+                        <ReviewProvider>
+                          <CiContactProvider>
+                            <CiCguProvider>
+                              <CiPrivacyProvider>
+                                <Suspense fallback={null}>{children}</Suspense>
+                              </CiPrivacyProvider>
+                            </CiCguProvider>
+                          </CiContactProvider>
+                        </ReviewProvider>
+                      </TripCltProvider>
+                    </CiBlogProvider>
+                  </ClVehicleProvider>
+                </ClientBookingProvider>
+              </ClientCircuitProvider>
+            </PageTransition>
             {/* </ProtectionProvider> */}
           </NextIntlClientProvider>
         </ThemeProvider>

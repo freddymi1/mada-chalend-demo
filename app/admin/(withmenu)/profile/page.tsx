@@ -7,7 +7,7 @@ import { Phone, Mail, MessageCircle, Facebook, Instagram, Edit, MapIcon } from "
 import Link from "next/link";
 
 const ProfilePage = () => {
-  const { contacts, fetchContacts, loading, getText } = useContact();
+  const { contacts, fetchContacts, loading } = useContact();
   const locale = useLocale(); // fr ou en
   const currentLang = locale.toUpperCase() as "FR" | "EN";
 

@@ -14,6 +14,7 @@ import React, { useEffect } from "react";
 import { useCiBlog } from "../providers/client/ClBlogProvider";
 import { useLocale, useTranslations } from "next-intl";
 import { useAuthClient } from "@/src/hooks/useAuthClient";
+import AnimateLoading from "./animate-loading";
 
 const BlogSection = () => {
   const { isDark } = useTheme();
@@ -99,13 +100,7 @@ const BlogSection = () => {
       <div className="px-6 py-8 container mx-auto">
         {/* Loading State */}
         {isLoading && (
-          <div className="flex justify-center items-center py-20">
-            <Loader2
-              className={`w-8 h-8 animate-spin ${
-                isDark ? "text-indigo-400" : "text-indigo-600"
-              }`}
-            />
-          </div>
+          <AnimateLoading/>
         )}
 
         {/* Empty State */}

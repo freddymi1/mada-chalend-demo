@@ -300,7 +300,6 @@ const ReviewPage = () => {
                       __html: review.description,
                     }}/>
                     <div className="mt-3 flex gap-4 text-xs text-gray-500">
-                      <span>User ID: <span className="font-mono">{review.userId}</span></span>
                       {review.updatedAt && new Date(review.updatedAt).getTime() !== new Date(review.createdAt).getTime() && (
                         <span>Mis à jour le {new Date(review.updatedAt).toLocaleDateString('fr-FR')}</span>
                       )}

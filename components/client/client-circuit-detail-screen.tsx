@@ -19,6 +19,7 @@ import { useEffect, useState } from "react";
 import { useLocale, useTranslations } from "use-intl";
 import { useClientCircuit } from "@/components/providers/client/ClientCircuitProvider";
 import { LoadingSpinner } from "./loading";
+import AnimateLoading from "./animate-loading";
 
 function getCircuitImages(circuit: any) {
   return circuit?.itineraries?.map((day: any) => day.image);
@@ -68,7 +69,7 @@ const ClientCircuitDetailScreen = () => {
       <Header />
 
       {isLoading ? (
-        <LoadingSpinner />
+        <AnimateLoading />
       ) : (
         <>
           <div className="animate-fade-in w-full">

@@ -15,6 +15,7 @@ import {
   User,
 } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
+import AnimateLoading from "./animate-loading";
 
 const ClArticleDetail = () => {
   const params = useParams();
@@ -84,19 +85,7 @@ const ClArticleDetail = () => {
   };
 
   if (isLoading) {
-    return (
-      <div
-        className={`min-h-screen flex items-center justify-center ${
-          isDark ? "bg-gray-900" : "bg-slate-50"
-        }`}
-      >
-        <Loader2
-          className={`w-8 h-8 animate-spin ${
-            isDark ? "text-indigo-400" : "text-indigo-600"
-          }`}
-        />
-      </div>
-    );
+    return <AnimateLoading/>;
   }
 
   const title = article?.title ? JSON.parse(article?.title as any) : "";

@@ -1,18 +1,37 @@
 "use client";
 import { Facebook, Instagram, PhoneCall } from "lucide-react";
-import { useTranslations } from "use-intl";
+import { useLocale, useTranslations } from "use-intl";
 import TrustpilotWidget from "./TrustpilotWidget";
 import { useAuthClient } from "@/src/hooks/useAuthClient";
 import { useRouter } from "next/navigation";
 import { Button } from "./ui/button";
 import { FaWhatsapp } from "react-icons/fa";
+import { useCiContact } from "../providers/client/ClContactProvider";
+import { useEffect } from "react";
+import AnimateLoading from "./animate-loading";
+import FooterAnimateLoading from "./footer-animate-loading";
 
 export function Footer() {
   const t = useTranslations("lng");
   const router = useRouter();
-  const { user, logout, isAuthenticated } = useAuthClient();
-  console.log("isAuthenticated", isAuthenticated);
-  
+  const {isAuthenticated } = useAuthClient();
+  const { contacts, loading, fetchContacts } = useCiContact();
+  const locale = useLocale(); // fr ou en
+  const currentLang = locale.toUpperCase() as "FR" | "EN";
+
+  useEffect(() => {
+    const loadContacts = async () => {
+      await fetchContacts();
+    };
+    loadContacts();
+  }, []);
+
+  const profile = contacts[0];
+
+  if(loading){
+    return <FooterAnimateLoading/>
+  }
+
   return (
     <footer className="bg-background border-t dark:bg-gray-900 py-12">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -39,15 +58,15 @@ export function Footer() {
             <div className="space-y-3">
               <div className="flex flex-col gap-2">
                 <p className="text-sm text-muted-foreground">
-                  <FaWhatsapp className="inline-block h-6 w-6 mr-1" /> +261 32 77 113 88
+                  <FaWhatsapp className="inline-block h-6 w-6 mr-1" /> {profile?.whatsapp}
                 </p>
                 <p className="text-sm text-muted-foreground">
-                  <PhoneCall className="inline-block h-5 w-5 mr-1" /> +261 34 25 105 85
+                  <PhoneCall className="inline-block h-5 w-5 mr-1" /> {profile?.phone}
                 </p>
               </div>
               <div className="flex gap-4">
                 <a
-                  href="https://www.facebook.com/madachaland"
+                  href={profile?.fbLink}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-all duration-300 hover:scale-110"
@@ -56,7 +75,7 @@ export function Footer() {
                   Facebook
                 </a>
                 <a
-                  href="https://www.instagram.com/madachaland"
+                  href={profile?.instaLink}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-all duration-300 hover:scale-110"
@@ -77,13 +96,15 @@ export function Footer() {
             </h4>
             <div className="space-y-2">
               <a
-                href="#"
+                href="/cgu"
+                target="_blank"
                 className="block text-muted-foreground hover:text-foreground transition-all duration-300 hover:translate-x-2"
               >
                 {t("footer.legalInfos.legalMention")}
               </a>
               <a
-                href="#"
+                href="/privacy-policy"
+                target="_blank"
                 className="block text-muted-foreground hover:text-foreground transition-all duration-300 hover:translate-x-2"
               >
                 {t("footer.legalInfos.politic")}
@@ -100,12 +121,16 @@ export function Footer() {
             {t("footer.legalInfos.copyright")}
           </p>
         </div>
-        
+
         {/* Button creer avis */}
         <div className="container w-full flex justify-center mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
-          <Button 
-            className="cursor-pointer" 
-            onClick={() => isAuthenticated ? router.push("/avis") : router.push("/auth/login")}
+          <Button
+            className="cursor-pointer"
+            onClick={() =>
+              isAuthenticated
+                ? router.push("/avis")
+                : router.push("/auth/login")
+            }
           >
             {t("footer.createReview")}
           </Button>

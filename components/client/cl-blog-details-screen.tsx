@@ -22,6 +22,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { useAuthClient } from "@/src/hooks/useAuthClient";
 import { IComment } from "@/src/domain/entities/comment";
 import { toast } from "sonner";
+import AnimateLoading from "./animate-loading";
 
 interface CommentSectionState {
   type: "blog" | "article";
@@ -47,19 +48,7 @@ const CiBlogDetailScreen = () => {
   const title = blogDetail?.title ? JSON.parse(blogDetail?.title as any) :"";
 
   if (isLoading1) {
-    return (
-      <div
-        className={`min-h-screen flex items-center justify-center ${
-          isDark ? "bg-gray-900" : "bg-slate-50"
-        }`}
-      >
-        <Loader2
-          className={`w-8 h-8 animate-spin ${
-            isDark ? "text-indigo-400" : "text-indigo-600"
-          }`}
-        />
-      </div>
-    );
+    return <AnimateLoading/>;
   }
 
   if (!blogDetail) {

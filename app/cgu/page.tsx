@@ -1,26 +1,18 @@
 "use client";
 
-import { usePrivacy } from "@/components/providers/admin/PrivacyProvider";
-import React from "react";
-import {
-  Plus,
-  FileText,
-  Edit,
-  Trash2,
-  Loader2,
-  Shield,
-  Globe,
-  Calendar,
-} from "lucide-react";
-import { useRouter } from "next/navigation";
+import AnimateLoading from "@/components/client/animate-loading";
+import { Header } from "@/components/client/header";
+import { useCiCgu } from "@/components/providers/client/ClCguProvider";
+import { Calendar, FileText } from "lucide-react";
 import { useLocale } from "next-intl";
-import { useCgu } from "@/components/providers/admin/CguProvider";
+import { useRouter } from "next/navigation";
+import React from "react";
 
 const CguPage = () => {
+  const { cguS, loading, getText } = useCiCgu();
   const router = useRouter();
-  const { cguS, loading, deleteCGU, getText, fetchCguS } = useCgu();
+
   const locale = useLocale();
-  console.log("CGUS", cguS);
 
   // Convertir privacyPolicies en tableau s'il ne l'est pas déjà
   const cgusArray = React.useMemo(() => {
@@ -28,20 +20,6 @@ const CguPage = () => {
 
     return cguS.filter((item) => item.id !== null && item.id !== undefined);
   }, [cguS]);
-
-  const handleAdd = () => {
-    router.push("/admin/cgu/add?isEdit=false");
-  };
-
-  const handleEdit = (id: string) => {
-    router.push(`/admin/cgu/add?id=${id}&isEdit=true`);
-  };
-
-  const handleDelete = async (id: string) => {
-    if (window.confirm("Êtes-vous sûr de vouloir supprimer cette CGU ?")) {
-      await deleteCGU(id);
-    }
-  };
 
   const formatDate = (date: Date | string) => {
     return new Date(date).toLocaleDateString("fr-FR", {
@@ -53,62 +31,21 @@ const CguPage = () => {
     });
   };
 
+  if (loading) {
+    return <AnimateLoading />;
+  }
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 py-4 sm:py-8 px-4">
-      <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <div className="mb-6 sm:mb-8">
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-            <div className="flex items-center gap-3 sm:gap-4">
-              <div className="bg-gradient-to-br from-blue-600 to-blue-700 p-2 sm:p-3 rounded-xl shadow-lg flex-shrink-0">
-                <Shield className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
-              </div>
-              <div>
-                <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-slate-900">
-                  Condition général d'utilisation
-                </h1>
-                <p className="text-sm sm:text-base text-slate-600 mt-1">
-                  Gérez les CGU de votre application
-                </p>
-              </div>
-            </div>
-
-            <button
-              onClick={handleAdd}
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 sm:px-6 py-2.5 sm:py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white font-semibold rounded-xl hover:from-blue-700 hover:to-blue-800 transition-all shadow-lg text-sm sm:text-base"
-            >
-              <Plus className="w-4 h-4 sm:w-5 sm:h-5" />
-              Ajouter un CGU
-            </button>
-          </div>
-        </div>
-
-        {/* Content */}
-        {loading ? (
-          <div className="flex flex-col items-center justify-center py-12 sm:py-20">
-            <Loader2 className="w-10 h-10 sm:w-12 sm:h-12 text-blue-600 animate-spin mb-4" />
-            <p className="text-sm sm:text-base text-slate-600 font-medium">
-              Chargement des CGU...
-            </p>
-          </div>
-        ) : cgusArray.length === 0 ? (
+    <main className="min-h-screen">
+      <Header />
+      <div className="container mx-auto">
+        {cgusArray.length === 0 ? (
           <div className="bg-white rounded-2xl shadow-lg p-8 sm:p-12 text-center">
             <div className="bg-slate-100 w-16 h-16 sm:w-20 sm:h-20 rounded-full flex items-center justify-center mx-auto mb-4">
               <FileText className="w-8 h-8 sm:w-10 sm:h-10 text-slate-400" />
             </div>
             <h3 className="text-lg sm:text-xl font-bold text-slate-900 mb-2">
-              Aucune CGU
+              {locale === "fr" ? "Aucune CGU" : "No CGU"}
             </h3>
-            <p className="text-sm sm:text-base text-slate-600 mb-6">
-              Commencez par créer votre première CGU
-            </p>
-            <button
-              onClick={handleAdd}
-              className="inline-flex items-center gap-2 px-4 sm:px-6 py-2.5 sm:py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white font-semibold rounded-xl hover:from-blue-700 hover:to-blue-800 transition-all shadow-lg text-sm sm:text-base"
-            >
-              <Plus className="w-4 h-4 sm:w-5 sm:h-5" />
-              Créer une CGU
-            </button>
           </div>
         ) : (
           <div className="space-y-4 sm:space-y-6">
@@ -137,13 +74,16 @@ const CguPage = () => {
                         </div>
                         <div className="flex-1 min-w-0">
                           <h3 className="text-base sm:text-xl font-bold text-slate-900 mb-1 break-words">
-                            Mention légales #{index + 1}
+                            {locale === "fr"
+                              ? "Mention légales"
+                              : "Legal Notice"}
                           </h3>
                           <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-xs sm:text-sm text-slate-600">
                             <div className="flex items-center gap-1">
                               <Calendar className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
                               <span className="truncate">
-                                Créé le {formatDate(policy.createdAt)}
+                                {locale === "fr" ? "Créé le" : "Created at"}{" "}
+                                {formatDate(policy.createdAt)}
                               </span>
                             </div>
                             {policy.updatedAt &&
@@ -153,29 +93,15 @@ const CguPage = () => {
                                     •
                                   </span>
                                   <span className="truncate">
-                                    Modifié le {formatDate(policy.updatedAt)}
+                                    {locale === "fr"
+                                      ? "Modifié le"
+                                      : "Updated at"}{" "}
+                                    {formatDate(policy.updatedAt)}
                                   </span>
                                 </div>
                               )}
                           </div>
                         </div>
-                      </div>
-
-                      <div className="flex gap-2 self-end sm:self-auto">
-                        <button
-                          onClick={() => handleEdit(policy.id)}
-                          className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
-                          title="Modifier"
-                        >
-                          <Edit className="w-4 h-4 sm:w-5 sm:h-5" />
-                        </button>
-                        <button
-                          onClick={() => handleDelete(policy.id)}
-                          className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                          title="Supprimer"
-                        >
-                          <Trash2 className="w-4 h-4 sm:w-5 sm:h-5" />
-                        </button>
                       </div>
                     </div>
 
@@ -210,7 +136,7 @@ const CguPage = () => {
           </div>
         )}
       </div>
-    </div>
+    </main>
   );
 };
 

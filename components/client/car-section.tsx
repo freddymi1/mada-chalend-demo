@@ -8,7 +8,7 @@ import { VehicleCard } from "./vehicle-card";
 import { LoadingSpinner } from "./loading";
 import { useTranslations } from "next-intl";
 import { VehicleDTO } from "@/src/domain/entities/vehicle";
-
+import AnimateLoading from "./animate-loading";
 
 const Grid = ({ className }: { className?: string }) => (
   <svg
@@ -120,7 +120,6 @@ const List = ({ className }: { className?: string }) => (
   </svg>
 );
 
-
 // Theme hook
 const useTheme = () => {
   const [isDark, setIsDark] = useState(false);
@@ -144,9 +143,11 @@ const CarSection: React.FC = () => {
   const { isDark } = useTheme();
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
-  const [selectedVehicle, setSelectedVehicle] = useState<VehicleDTO | null>(null);
+  const [selectedVehicle, setSelectedVehicle] = useState<VehicleDTO | null>(
+    null
+  );
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const t = useTranslations('lng')
+  const t = useTranslations("lng");
 
   const { vehicles, isLoading, fetchVehicles } = useClVehicle();
 
@@ -186,7 +187,11 @@ const CarSection: React.FC = () => {
           : "bg-gradient-to-br from-slate-50 to-indigo-50"
       }`}
     >
-      <div className="container mx-auto px-6 py-8">
+      {
+        isLoading ? (
+          <AnimateLoading/>
+        ):(
+          <div className="container mx-auto px-6 py-8">
         {/* Header */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8">
           <div>
@@ -257,27 +262,22 @@ const CarSection: React.FC = () => {
           </div>
         </div>
 
-        {/* Vehicle Grid */}
-        {isLoading ? (
-          <LoadingSpinner/>
-        ) : (
-          <div
-            className={`grid gap-6 ${
-              viewMode === "grid"
-                ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
-                : "grid-cols-1"
-            }`}
-          >
-            {filteredVehicles.map((vehicle) => (
-              <VehicleCard
-                key={vehicle.id}
-                vehicle={vehicle}
-                isDark={isDark}
-                onShowDetails={handleShowDetails}
-              />
-            ))}
-          </div>
-        )}
+        <div
+          className={`grid gap-6 ${
+            viewMode === "grid"
+              ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
+              : "grid-cols-1"
+          }`}
+        >
+          {filteredVehicles.map((vehicle) => (
+            <VehicleCard
+              key={vehicle.id}
+              vehicle={vehicle}
+              isDark={isDark}
+              onShowDetails={handleShowDetails}
+            />
+          ))}
+        </div>
 
         {filteredVehicles.length === 0 && (
           <div
@@ -291,6 +291,8 @@ const CarSection: React.FC = () => {
           </div>
         )}
       </div>
+        )
+      }
 
       {/* Image Modal */}
       {selectedVehicle && (

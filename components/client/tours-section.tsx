@@ -13,6 +13,7 @@ import { useLocale, useTranslations } from "use-intl";
 import { useClientCircuit } from "../providers/client/ClientCircuitProvider";
 import { useEffect } from "react";
 import { LoadingSpinner } from "./loading";
+import AnimateLoading from "./animate-loading";
 
 export function ToursSection() {
   const t = useTranslations("lng");
@@ -27,6 +28,7 @@ export function ToursSection() {
     loadCircuits();
   }, []);
 
+
   return (
     <section id="circuits" className="py-20">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -40,7 +42,7 @@ export function ToursSection() {
         </div>
 
         {isLoading ? (
-          <LoadingSpinner />
+          <AnimateLoading />
         ) : (
           <>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">

@@ -25,12 +25,13 @@ import { useTrip } from "../providers/admin/TripProvider";
 import { useCltTrip } from "../providers/client/TripCltProvider";
 import { useLocale, useTranslations } from "next-intl";
 import { formatDate } from "./trip-screen";
+import AnimateLoading from "./animate-loading";
 
 const TripCltDetailScreen = () => {
   const t = useTranslations("lng");
   const { id } = useParams();
   const router = useRouter();
-  const { tripDetail, getTripById } = useCltTrip();
+  const { tripDetail, getTripById, isLoading } = useCltTrip();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const locale = useLocale();
 
@@ -42,14 +43,7 @@ const TripCltDetailScreen = () => {
 
   if (!tripDetail) {
     return (
-      <div className="min-h-screen p-8 bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600 dark:text-gray-300">
-            Chargement des détails du circuit...
-          </p>
-        </div>
-      </div>
+      <AnimateLoading/>
     );
   }
 

@@ -17,6 +17,7 @@ import {
 import { TripTravel } from "@/src/domain/entities/trip";
 import { useCltTrip } from "../providers/client/TripCltProvider";
 import { useRouter } from "next/navigation";
+import AnimateLoading from "./animate-loading";
 export const formatDate = (dateStr: string | Date): string => {
   const date = new Date(dateStr);
   return date.toLocaleDateString("en-US", {
@@ -87,14 +88,7 @@ const TripScreen = () => {
 
   if (isLoading) {
     return (
-      <section id="circuits" className="py-20">
-        <div className="text-center">
-          <div className="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-500 mb-4" />
-          <p className="text-slate-400">
-            {t("ourTrip.loading") || "Loading trips..."}
-          </p>
-        </div>
-      </section>
+      <AnimateLoading/>
     );
   }
 
