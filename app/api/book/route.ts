@@ -247,7 +247,7 @@ export async function POST(req: NextRequest) {
       fin = formatDate(reservationData.endDate);
     }
 
-    const lng = langue === "fr" ? "Francais" : langue === "en" ? "Anglais" : "Autre";
+    const lng = langue === "fr" ? "Francais" : langue === "en" ? "Anglais" : langue;
 
     // 🔹 Email with elegant design
     const htmlMessage = `

@@ -88,6 +88,7 @@
     },
     "form": {
       "title": "Formulaire de réservation",
+      "language":"Votre langue",
       "selectedTrip": "Trip sélectionné",
       "selectedCircuit":"Circuit sélectionné",
       "selectedCar":"Véhicule sélectionné",

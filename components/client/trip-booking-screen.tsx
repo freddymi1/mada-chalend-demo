@@ -57,6 +57,8 @@ export function TripBookingScreen() {
   const [formData, setFormData] = useState({
     tripTravel: tripTravel ? tripTravel : "",
     travelDate: selectedDate || "",
+    langue: "",
+    autreLangue: "",
     nom: "",
     prenom: "",
     email: "",
@@ -75,46 +77,70 @@ export function TripBookingScreen() {
     duration: "",
   });
 
-  const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
+  const [showAutreLangue, setShowAutreLangue] = useState(false);
 
-  // Vérifier la disponibilité avec votre structure de données
-  if (tripDetail?.travelDates) {
-    const selectedDate = tripDetail.travelDates.find(
-      (date) => date.id === formData.travelDate // ou le champ que vous utilisez pour stocker la date sélectionnée
-    );
-    
-    if (selectedDate && Number(selectedDate.placesDisponibles!) < Number(formData.personnes)) {
-      alert(`Désolé, il ne reste que ${selectedDate.placesDisponibles} place(s) disponible(s) pour cette date.`);
-      return;
+  // Handler pour les checkboxes de langue
+  const handleLangueChange = (langue: string) => {
+    if (langue === "autre") {
+      setShowAutreLangue(true);
+      setFormData({ ...formData, langue: "autre", autreLangue: "" });
+    } else {
+      setShowAutreLangue(false);
+      setFormData({ ...formData, langue, autreLangue: "" });
     }
-  }
-
-  const data = {
-    resType: "trip",
-    tripTravel: formData.tripTravel,
-    travelDate: formData.travelDate,
-    nom: formData.nom,
-    prenom: formData.prenom,
-    email: formData.email,
-    telephone: formData.telephone,
-    address: formData.address,
-    personnes: formData.personnes,
-    nbrChild: formData.nbrChild,
-    nbrAdult: formData.nbrAdult,
-    nbrAge2_3: formData.nbrAge2_3 || 0,
-    nbrAge4_7: formData.nbrAge4_7 || 0,
-    nbrAge8_10: formData.nbrAge8_10 || 0,
-    nbrAge11: formData.nbrAge11 || 0,
-    preferences: formData.preferences,
-    startDate: null,
-    endDate: null,
-    duration: null,
   };
 
-  setPendingFormData(data);
-  setShowConfirmDialog(true);
-};
+  // Handler pour l'input de langue personnalisée
+  const handleAutreLangueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({ ...formData, autreLangue: e.target.value });
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    // Vérifier la disponibilité avec votre structure de données
+    if (tripDetail?.travelDates) {
+      const selectedDate = tripDetail.travelDates.find(
+        (date) => date.id === formData.travelDate // ou le champ que vous utilisez pour stocker la date sélectionnée
+      );
+
+      if (
+        selectedDate &&
+        Number(selectedDate.placesDisponibles!) < Number(formData.personnes)
+      ) {
+        alert(
+          `Désolé, il ne reste que ${selectedDate.placesDisponibles} place(s) disponible(s) pour cette date.`
+        );
+        return;
+      }
+    }
+
+    const data = {
+      resType: "trip",
+      tripTravel: formData.tripTravel,
+      travelDate: formData.travelDate,
+      langue: formData.langue === "autre" ? formData.autreLangue : formData.langue,
+      nom: formData.nom,
+      prenom: formData.prenom,
+      email: formData.email,
+      telephone: formData.telephone,
+      address: formData.address,
+      personnes: formData.personnes,
+      nbrChild: formData.nbrChild,
+      nbrAdult: formData.nbrAdult,
+      nbrAge2_3: formData.nbrAge2_3 || 0,
+      nbrAge4_7: formData.nbrAge4_7 || 0,
+      nbrAge8_10: formData.nbrAge8_10 || 0,
+      nbrAge11: formData.nbrAge11 || 0,
+      preferences: formData.preferences,
+      startDate: null,
+      endDate: null,
+      duration: null,
+    };
+
+    setPendingFormData(data);
+    setShowConfirmDialog(true);
+  };
 
   console.log("DATE", formData.travelDate);
 
@@ -127,6 +153,8 @@ export function TripBookingScreen() {
     setFormData({
       tripTravel: tripTravel ? tripTravel : "",
       travelDate: selectedDate || "",
+      langue: "",
+      autreLangue: "",
       nom: "",
       prenom: "",
       email: "",
@@ -183,7 +211,6 @@ export function TripBookingScreen() {
     const newNbrAdult = e.target.value;
     const adultsNum = parseInt(newNbrAdult) || 0;
     const personnesNum = parseInt(formData.personnes) || 0;
-    
 
     // Limiter le nombre d'adultes au nombre total de personnes
     const maxAdults = Math.min(adultsNum, personnesNum);
@@ -307,6 +334,9 @@ export function TripBookingScreen() {
                 loading={loading}
                 getTodayString={getTodayString}
                 handleTravelDatesChange={handleTravelDatesChange}
+                showAutreLangue={showAutreLangue}
+                handleLangueChange={handleLangueChange}
+                handleAutreLangueChange={handleAutreLangueChange}
               />
             </CardContent>
           </Card>

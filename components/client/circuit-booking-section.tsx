@@ -56,6 +56,8 @@ export function CircuitBookingSection() {
 
   const [formData, setFormData] = useState({
     circuit: circuit ? circuit : "",
+    langue: "",
+    autreLangue: "",
     nom: "",
     prenom: "",
     email: "",
@@ -74,12 +76,31 @@ export function CircuitBookingSection() {
     preferences: "",
   });
 
+  const [showAutreLangue, setShowAutreLangue] = useState(false);
+
+  // Handler pour les checkboxes de langue
+  const handleLangueChange = (langue: string) => {
+    if (langue === "autre") {
+      setShowAutreLangue(true);
+      setFormData({ ...formData, langue: "autre", autreLangue: "" });
+    } else {
+      setShowAutreLangue(false);
+      setFormData({ ...formData, langue, autreLangue: "" });
+    }
+  };
+
+  // Handler pour l'input de langue personnalisée
+  const handleAutreLangueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({ ...formData, autreLangue: e.target.value });
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     const data = {
       resType: "circuit",
       circuit: formData.circuit,
+      langue: formData.langue === "autre" ? formData.autreLangue : formData.langue,
       nom: formData.nom,
       prenom: formData.prenom,
       email: formData.email,
@@ -111,6 +132,8 @@ export function CircuitBookingSection() {
     // if (success) {
     setFormData({
       circuit: circuit ? circuit : "",
+      langue: "",
+      autreLangue: "",
       nom: "",
       prenom: "",
       email: "",
@@ -330,6 +353,9 @@ export function CircuitBookingSection() {
                 handleSubmit={handleSubmit}
                 loading={loading}
                 getTodayString={getTodayString}
+                showAutreLangue={showAutreLangue}
+                handleLangueChange={handleLangueChange}
+                handleAutreLangueChange={handleAutreLangueChange}
               />
             </CardContent>
           </Card>

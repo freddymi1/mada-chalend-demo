@@ -16,6 +16,8 @@ import {
   ChevronRight,
   CheckCircle,
   User,
+  Globe2,
+  FlagIcon,
 } from "lucide-react";
 import { useAdminBooking } from "../providers/admin/BookingProvider";
 import { Reservation } from "@/src/domain/entities/reservation";
@@ -307,6 +309,13 @@ const BookingScreen = () => {
                             <Users className="w-4 h-4 text-gray-400" />
                             <span className="text-gray-600">
                               {reservation?.personnes} personne(s)
+                            </span>
+                          </div>
+
+                          <div className="flex items-center  gap-3 text-sm">
+                            <FlagIcon className="w-4 h-4 text-gray-400" />
+                            <span className="text-gray-600 font-bold">
+                              {reservation?.langue === "fr" ? "Francais" : reservation?.langue === "en" ? "Anglais" : reservation?.langue} 
                             </span>
                           </div>
 

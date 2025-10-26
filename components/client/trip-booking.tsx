@@ -22,6 +22,8 @@ interface PropsData {
   formData: {
     tripTravel: string;
     travelDate: string;
+    langue: string;
+    autreLangue: string;
     nom: string;
     prenom: string;
     email: string;
@@ -47,6 +49,9 @@ interface PropsData {
   loading: boolean; // Indicateur de soumission du formulaire
   getTodayString: () => string; // Fonction pour obtenir la date actuelle au format YYYY-MM-DD
   handleTravelDatesChange: (date: string) => void;
+  showAutreLangue: boolean;
+  handleLangueChange: (langue: string) => void;
+  handleAutreLangueChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 const TripBooking = ({
@@ -64,6 +69,9 @@ const TripBooking = ({
   loading,
   getTodayString,
   handleTravelDatesChange,
+  showAutreLangue,
+  handleLangueChange,
+  handleAutreLangueChange,
 }: PropsData) => {
   const t = useTranslations("lng");
   const locale = useLocale();
@@ -141,6 +149,83 @@ const TripBooking = ({
               ))}
             </SelectContent>
           </Select>
+        </div>
+
+        {/* Select langue */}
+
+        <div
+          className="space-y-2 animate-fade-in"
+          style={{
+            animationDelay: "0.5s",
+            animationFillMode: "both",
+          }}
+        >
+          <Label>{t("book.form.language")} *</Label>
+          <div className="flex my-4 flex-row gap-2">
+            <div className="flex items-center space-x-2">
+              <input
+                type="checkbox"
+                id="langue-fr"
+                name="langue"
+                value="fr"
+                checked={formData.langue === "fr"}
+                onChange={() => handleLangueChange("fr")}
+                className="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary"
+              />
+              <Label htmlFor="langue-fr" className="cursor-pointer font-normal">
+                {locale === "fr" ? "Français" : "French"}
+              </Label>
+            </div>
+
+            <div className="flex items-center space-x-2">
+              <input
+                type="checkbox"
+                id="langue-en"
+                name="langue"
+                value="en"
+                checked={formData.langue === "en"}
+                onChange={() => handleLangueChange("en")}
+                className="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary"
+              />
+              <Label htmlFor="langue-en" className="cursor-pointer font-normal">
+                {locale === "fr" ? "Anglais" : "English"}
+              </Label>
+            </div>
+
+            <div className="flex items-center space-x-2">
+              <input
+                type="checkbox"
+                id="langue-autre"
+                name="langue"
+                value="autre"
+                checked={formData.langue === "autre" || showAutreLangue}
+                onChange={() => handleLangueChange("autre")}
+                className="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary"
+              />
+              <Label
+                htmlFor="langue-autre"
+                className="cursor-pointer font-normal"
+              >
+                {locale === "fr" ? "Autre" : "Other"}
+              </Label>
+            </div>
+          </div>
+          {showAutreLangue && (
+            <div className="mt-2 animate-fade-in">
+              <Input
+                id="autreLangue"
+                name="autreLangue"
+                type="text"
+                value={formData.autreLangue}
+                onChange={handleAutreLangueChange}
+                placeholder={
+                  locale === "fr" ? "Précisez la langue" : "Specify language"
+                }
+                required
+                className="transition-all duration-300 focus:scale-105"
+              />
+            </div>
+          )}
         </div>
 
         <div className="grid md:grid-cols-2 gap-4">
@@ -311,7 +396,9 @@ const TripBooking = ({
                 animationFillMode: "both",
               }}
             >
-              <Label htmlFor="nbrAge2_3">2 {t("book.form.to")} 3 {t("book.form.yearsOld")} *</Label>
+              <Label htmlFor="nbrAge2_3">
+                2 {t("book.form.to")} 3 {t("book.form.yearsOld")} *
+              </Label>
               <Input
                 id="nbrAge2_3"
                 name="nbrAge2_3"
@@ -331,7 +418,9 @@ const TripBooking = ({
                 animationFillMode: "both",
               }}
             >
-              <Label htmlFor="nbrAge4_7">4 {t("book.form.to")} 7 {t("book.form.yearsOld")} *</Label>
+              <Label htmlFor="nbrAge4_7">
+                4 {t("book.form.to")} 7 {t("book.form.yearsOld")} *
+              </Label>
               <Input
                 id="nbrAge4_7"
                 name="nbrAge4_7"
@@ -351,7 +440,9 @@ const TripBooking = ({
                 animationFillMode: "both",
               }}
             >
-              <Label htmlFor="nbrAge8_10">8 {t("book.form.to")} 10 {t("book.form.yearsOld")} *</Label>
+              <Label htmlFor="nbrAge8_10">
+                8 {t("book.form.to")} 10 {t("book.form.yearsOld")} *
+              </Label>
               <Input
                 id="nbrAge8_10"
                 name="nbrAge8_10"

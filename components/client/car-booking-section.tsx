@@ -52,7 +52,8 @@ export function CarBookingSection() {
     useClVehicle();
 
   // État pour la disponibilité
-  const [vehicleAvailability, setVehicleAvailability] = useState<VehicleAvailability | null>(null);
+  const [vehicleAvailability, setVehicleAvailability] =
+    useState<VehicleAvailability | null>(null);
   const [availabilityError, setAvailabilityError] = useState<string>("");
 
   useEffect(() => {
@@ -79,6 +80,8 @@ export function CarBookingSection() {
 
   const [formData, setFormData] = useState({
     vehicle: car ? car : "",
+    langue: "",
+    autreLangue: "",
     nom: "",
     prenom: "",
     email: "",
@@ -93,51 +96,75 @@ export function CarBookingSection() {
     preferences: "",
   });
 
-  // Fonction pour vérifier si une date est disponible
-  const isDateAvailable = useCallback((date: string): boolean => {
-    if (!vehicleAvailability || !vehicleAvailability.bookedDates.length) {
-      return true;
-    }
+  const [showAutreLangue, setShowAutreLangue] = useState(false);
 
-    const selectedDate = new Date(date);
-    
-    for (const bookedDate of vehicleAvailability.bookedDates) {
-      const startDate = new Date(bookedDate.startDate);
-      const endDate = new Date(bookedDate.endDate);
-      
-      if (selectedDate >= startDate && selectedDate <= endDate) {
-        return false;
-      }
+  // Handler pour les checkboxes de langue
+  const handleLangueChange = (langue: string) => {
+    if (langue === "autre") {
+      setShowAutreLangue(true);
+      setFormData({ ...formData, langue: "autre", autreLangue: "" });
+    } else {
+      setShowAutreLangue(false);
+      setFormData({ ...formData, langue, autreLangue: "" });
     }
-    
-    return true;
-  }, [vehicleAvailability]);
+  };
+
+  // Handler pour l'input de langue personnalisée
+  const handleAutreLangueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({ ...formData, autreLangue: e.target.value });
+  };
+
+  // Fonction pour vérifier si une date est disponible
+  const isDateAvailable = useCallback(
+    (date: string): boolean => {
+      if (!vehicleAvailability || !vehicleAvailability.bookedDates.length) {
+        return true;
+      }
+
+      const selectedDate = new Date(date);
+
+      for (const bookedDate of vehicleAvailability.bookedDates) {
+        const startDate = new Date(bookedDate.startDate);
+        const endDate = new Date(bookedDate.endDate);
+
+        if (selectedDate >= startDate && selectedDate <= endDate) {
+          return false;
+        }
+      }
+
+      return true;
+    },
+    [vehicleAvailability]
+  );
 
   // Fonction pour vérifier si une période est disponible
-  const isPeriodAvailable = useCallback((startDate: string, endDate: string): boolean => {
-    if (!vehicleAvailability || !vehicleAvailability.bookedDates.length) {
-      return true;
-    }
-
-    const selectedStart = new Date(startDate);
-    const selectedEnd = new Date(endDate);
-    
-    for (const bookedDate of vehicleAvailability.bookedDates) {
-      const bookedStart = new Date(bookedDate.startDate);
-      const bookedEnd = new Date(bookedDate.endDate);
-      
-      // Vérifier s'il y a un chevauchement
-      if (
-        (selectedStart >= bookedStart && selectedStart <= bookedEnd) ||
-        (selectedEnd >= bookedStart && selectedEnd <= bookedEnd) ||
-        (selectedStart <= bookedStart && selectedEnd >= bookedEnd)
-      ) {
-        return false;
+  const isPeriodAvailable = useCallback(
+    (startDate: string, endDate: string): boolean => {
+      if (!vehicleAvailability || !vehicleAvailability.bookedDates.length) {
+        return true;
       }
-    }
-    
-    return true;
-  }, [vehicleAvailability]);
+
+      const selectedStart = new Date(startDate);
+      const selectedEnd = new Date(endDate);
+
+      for (const bookedDate of vehicleAvailability.bookedDates) {
+        const bookedStart = new Date(bookedDate.startDate);
+        const bookedEnd = new Date(bookedDate.endDate);
+
+        // Vérifier s'il y a un chevauchement
+        if (
+          (selectedStart >= bookedStart && selectedStart <= bookedEnd) ||
+          (selectedEnd >= bookedStart && selectedEnd <= bookedEnd) ||
+          (selectedStart <= bookedStart && selectedEnd >= bookedEnd)
+        ) {
+          return false;
+        }
+      }
+
+      return true;
+    },
+    [vehicleAvailability]
+  );
 
   // Fonction pour obtenir les dates indisponibles
   const getUnavailableDates = useCallback((): Date[] => {
@@ -146,11 +173,11 @@ export function CarBookingSection() {
     }
 
     const unavailableDates: Date[] = [];
-    
-    vehicleAvailability.bookedDates.forEach(bookedDate => {
+
+    vehicleAvailability.bookedDates.forEach((bookedDate) => {
       const start = new Date(bookedDate.startDate);
       const end = new Date(bookedDate.endDate);
-      
+
       // Ajouter toutes les dates entre start et end
       const currentDate = new Date(start);
       while (currentDate <= end) {
@@ -158,7 +185,7 @@ export function CarBookingSection() {
         currentDate.setDate(currentDate.getDate() + 1);
       }
     });
-    
+
     return unavailableDates;
   }, [vehicleAvailability]);
 
@@ -170,63 +197,78 @@ export function CarBookingSection() {
           setAvailabilityError("");
           // Simuler l'appel API pour récupérer la disponibilité
           // Remplacez cette partie par votre appel API réel
-          const availabilityData = await fetchVehicleAvailability(vehicleDetail.id);
+          const availabilityData = await fetchVehicleAvailability(
+            vehicleDetail.id
+          );
           setVehicleAvailability(availabilityData);
         } catch (error) {
-          console.error("Erreur lors du chargement de la disponibilité:", error);
-          setAvailabilityError("Impossible de charger la disponibilité du véhicule");
+          console.error(
+            "Erreur lors du chargement de la disponibilité:",
+            error
+          );
+          setAvailabilityError(
+            "Impossible de charger la disponibilité du véhicule"
+          );
         }
       }
     };
-    
+
     loadVehicleAvailability();
   }, [vehicleDetail]);
 
   // Fonction simulée pour récupérer la disponibilité (à remplacer par votre API)
-  const fetchVehicleAvailability = async (vehicleId: string): Promise<VehicleAvailability> => {
-  try {
-    // Supposons que vous ayez un tableau data avec les véhicules et leurs disponibilités
-    const vehicleData = vehicles.find(vehicle => vehicle.id === vehicleId);
-    
-    if (!vehicleData) {
-      throw new Error("Véhicule non trouvé");
-    }
-    
-    // Adaptez selon la structure de vos données
-    return {
-      isAvailable: vehicleData.isAvailable ?? true,
-      activeReservationsCount: vehicleData.activeReservationsCount || 0,
-      bookedDates: vehicleData.bookedDates || []
-    };
-    
-  } catch (error) {
-    console.error("Erreur lors de la récupération de la disponibilité:", error);
-    
-    return {
-      isAvailable: true,
-      activeReservationsCount: 0,
-      bookedDates: []
-    };
-  }
-};
+  const fetchVehicleAvailability = async (
+    vehicleId: string
+  ): Promise<VehicleAvailability> => {
+    try {
+      // Supposons que vous ayez un tableau data avec les véhicules et leurs disponibilités
+      const vehicleData = vehicles.find((vehicle) => vehicle.id === vehicleId);
 
-  
+      if (!vehicleData) {
+        throw new Error("Véhicule non trouvé");
+      }
+
+      // Adaptez selon la structure de vos données
+      return {
+        isAvailable: vehicleData.isAvailable ?? true,
+        activeReservationsCount: vehicleData.activeReservationsCount || 0,
+        bookedDates: vehicleData.bookedDates || [],
+      };
+    } catch (error) {
+      console.error(
+        "Erreur lors de la récupération de la disponibilité:",
+        error
+      );
+
+      return {
+        isAvailable: true,
+        activeReservationsCount: 0,
+        bookedDates: [],
+      };
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     // Vérifier la disponibilité avant de soumettre
     if (formData.startDate && formData.endDate) {
-      const isAvailable = isPeriodAvailable(formData.startDate, formData.endDate);
-      
+      const isAvailable = isPeriodAvailable(
+        formData.startDate,
+        formData.endDate
+      );
+
       if (!isAvailable) {
-        alert("Désolé, le véhicule n'est pas disponible pour les dates sélectionnées. Veuillez choisir d'autres dates.");
+        alert(
+          "Désolé, le véhicule n'est pas disponible pour les dates sélectionnées. Veuillez choisir d'autres dates."
+        );
         return;
       }
     }
 
     const data = {
       resType: "car",
+      langue: formData.langue === "autre" ? formData.autreLangue : formData.langue,
       vehicle: formData.vehicle,
       nom: formData.nom,
       prenom: formData.prenom,
@@ -255,6 +297,8 @@ export function CarBookingSection() {
     // if (success) {
     setFormData({
       vehicle: car ? car : "",
+      langue: "",
+      autreLangue: "",
       nom: "",
       prenom: "",
       email: "",
@@ -284,21 +328,27 @@ export function CarBookingSection() {
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
-    
+
     setFormData((prev) => ({
       ...prev,
       [name]: value,
     }));
 
     // Vérifier la disponibilité quand les dates changent
-    if ((name === 'startDate' || name === 'endDate') && formData.startDate && formData.endDate) {
+    if (
+      (name === "startDate" || name === "endDate") &&
+      formData.startDate &&
+      formData.endDate
+    ) {
       const isAvailable = isPeriodAvailable(
-        name === 'startDate' ? value : formData.startDate,
-        name === 'endDate' ? value : formData.endDate
+        name === "startDate" ? value : formData.startDate,
+        name === "endDate" ? value : formData.endDate
       );
-      
+
       if (!isAvailable) {
-        setAvailabilityError("Le véhicule n'est pas disponible pour les dates sélectionnées");
+        setAvailabilityError(
+          "Le véhicule n'est pas disponible pour les dates sélectionnées"
+        );
       } else {
         setAvailabilityError("");
       }
@@ -432,7 +482,9 @@ export function CarBookingSection() {
 
   const getVehicleName = (vehicleId: string) => {
     const selectedVehicle = vehicles?.find((v) => v.id === vehicleId);
-    const vehicleName = selectedVehicle?.name ? JSON.parse(selectedVehicle.name) : { fr: "", en: "" };
+    const vehicleName = selectedVehicle?.name
+      ? JSON.parse(selectedVehicle.name)
+      : { fr: "", en: "" };
     if (locale === "fr") {
       return vehicleName.fr;
     } else {
@@ -454,7 +506,6 @@ export function CarBookingSection() {
           </div>
 
           <div className="grid grid-cols-1">
-            
             <Card
               className="animate-scale-in hover-lift"
               style={{ animationDelay: "0.3s", animationFillMode: "both" }}
@@ -483,6 +534,9 @@ export function CarBookingSection() {
                   isDateAvailable={isDateAvailable}
                   isPeriodAvailable={isPeriodAvailable}
                   getUnavailableDates={getUnavailableDates}
+                  showAutreLangue={showAutreLangue}
+                  handleLangueChange={handleLangueChange}
+                  handleAutreLangueChange={handleAutreLangueChange}
                 />
               </CardContent>
             </Card>

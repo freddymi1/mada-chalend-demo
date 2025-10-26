@@ -88,6 +88,7 @@
     },
     "form": {
       "title": "Booking Form",
+      "language":"Our language",
       "selectedTrip": "Selected Trip",
       "selectedCircuit": "Selected Circuit",
       "selectedCar": "Selected Vehicle",

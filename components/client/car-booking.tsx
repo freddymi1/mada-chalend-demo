@@ -22,6 +22,8 @@ interface CarBookingProps {
   vehicleAvailability: any;
   formData: {
     vehicle: string;
+    langue: string;
+    autreLangue: string;
     nom: string;
     prenom: string;
     email: string;
@@ -49,6 +51,9 @@ interface CarBookingProps {
   isDateAvailable: (date: string) => boolean;
   isPeriodAvailable: (startDate: string, endDate: string) => boolean;
   getUnavailableDates: () => Date[];
+  showAutreLangue: boolean;
+  handleLangueChange: (langue: string) => void;
+  handleAutreLangueChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 const CarBooking = ({
@@ -70,9 +75,12 @@ const CarBooking = ({
   handleSubmit,
   loading,
   getTodayString,
+  showAutreLangue,
+  handleLangueChange,
+  handleAutreLangueChange,
 }: CarBookingProps) => {
   const t = useTranslations("lng");
-  const locale = useLocale()
+  const locale = useLocale();
 
   // Fonction pour obtenir la date minimale pour endDate
   const getMinEndDate = () => {
@@ -174,7 +182,9 @@ const CarBooking = ({
     return baseClass;
   };
 
-  const vehicleName = vehicleDetail?.name ? JSON.parse(vehicleDetail.name) : { fr: "", en: "" };
+  const vehicleName = vehicleDetail?.name
+    ? JSON.parse(vehicleDetail.name)
+    : { fr: "", en: "" };
 
   return (
     <div>
@@ -197,28 +207,39 @@ const CarBooking = ({
               <SelectValue
                 placeholder={
                   isLoading
-                    ? `${locale === "fr" ? "Chargement des véhicules..." : "Loading vehicles..."}`
-                    : `${locale === "fr" ? "Sélectionnez un véhicule" : "Select a vehicle"}`
+                    ? `${
+                        locale === "fr"
+                          ? "Chargement des véhicules..."
+                          : "Loading vehicles..."
+                      }`
+                    : `${
+                        locale === "fr"
+                          ? "Sélectionnez un véhicule"
+                          : "Select a vehicle"
+                      }`
                 }
               />
             </SelectTrigger>
             <SelectContent>
               {vehicles?.map((vehicle) => {
-                const carName = vehicle.name ? JSON.parse(vehicle.name) : { fr: "", en: "" };
-                return(
+                const carName = vehicle.name
+                  ? JSON.parse(vehicle.name)
+                  : { fr: "", en: "" };
+                return (
                   <SelectItem
-                  key={vehicle.id || vehicle.id}
-                  value={vehicle.id || vehicle.id}
-                >
-                  {locale === "fr" ? carName.fr : carName.en}
-                </SelectItem>
-                )
+                    key={vehicle.id || vehicle.id}
+                    value={vehicle.id || vehicle.id}
+                  >
+                    {locale === "fr" ? carName.fr : carName.en}
+                  </SelectItem>
+                );
               })}
             </SelectContent>
           </Select>
           {vehicle && vehicleDetail && (
             <p className="text-sm text-muted-foreground">
-              {t("book.form.selectedCar")} : {locale === "fr" ? vehicleName.fr : vehicleName.en}
+              {t("book.form.selectedCar")} :{" "}
+              {locale === "fr" ? vehicleName.fr : vehicleName.en}
             </p>
           )}
         </div>
@@ -250,8 +271,8 @@ const CarBooking = ({
                           Du{" "}
                           {new Date(booked.startDate).toLocaleDateString(
                             "fr-FR"
-                          )} {" "}
-                          {t("book.at")} {" "}
+                          )}{" "}
+                          {t("book.at")}{" "}
                           {new Date(booked.endDate).toLocaleDateString("fr-FR")}
                           {booked.status && ` (${booked.status})`}
                         </li>
@@ -263,6 +284,83 @@ const CarBooking = ({
             </div>
           </div>
         )}
+
+        {/* Select langue */}
+
+        <div
+          className="space-y-2 animate-fade-in"
+          style={{
+            animationDelay: "0.5s",
+            animationFillMode: "both",
+          }}
+        >
+          <Label>{t("book.form.language")} *</Label>
+          <div className="flex my-4 flex-row gap-2">
+            <div className="flex items-center space-x-2">
+              <input
+                type="checkbox"
+                id="langue-fr"
+                name="langue"
+                value="fr"
+                checked={formData.langue === "fr"}
+                onChange={() => handleLangueChange("fr")}
+                className="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary"
+              />
+              <Label htmlFor="langue-fr" className="cursor-pointer font-normal">
+                {locale === "fr" ? "Français" : "French"}
+              </Label>
+            </div>
+
+            <div className="flex items-center space-x-2">
+              <input
+                type="checkbox"
+                id="langue-en"
+                name="langue"
+                value="en"
+                checked={formData.langue === "en"}
+                onChange={() => handleLangueChange("en")}
+                className="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary"
+              />
+              <Label htmlFor="langue-en" className="cursor-pointer font-normal">
+                {locale === "fr" ? "Anglais" : "English"}
+              </Label>
+            </div>
+
+            <div className="flex items-center space-x-2">
+              <input
+                type="checkbox"
+                id="langue-autre"
+                name="langue"
+                value="autre"
+                checked={formData.langue === "autre" || showAutreLangue}
+                onChange={() => handleLangueChange("autre")}
+                className="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary"
+              />
+              <Label
+                htmlFor="langue-autre"
+                className="cursor-pointer font-normal"
+              >
+                {locale === "fr" ? "Autre" : "Other"}
+              </Label>
+            </div>
+          </div>
+          {showAutreLangue && (
+              <div className="mt-2 animate-fade-in">
+                <Input
+                  id="autreLangue"
+                  name="autreLangue"
+                  type="text"
+                  value={formData.autreLangue}
+                  onChange={handleAutreLangueChange}
+                  placeholder={
+                    locale === "fr" ? "Précisez la langue" : "Specify language"
+                  }
+                  required
+                  className="transition-all duration-300 focus:scale-105"
+                />
+              </div>
+            )}
+        </div>
 
         <div className="grid md:grid-cols-2 gap-4">
           <div
@@ -443,7 +541,9 @@ const CarBooking = ({
             />
             {formData.startDate && !isDateAvailable(formData.startDate) && (
               <p className="text-red-500 text-sm">
-                {locale === "fr" ? "⚠️ Cette date n'est pas disponible" : "⚠️ This date is not available"}
+                {locale === "fr"
+                  ? "⚠️ Cette date n'est pas disponible"
+                  : "⚠️ This date is not available"}
               </p>
             )}
           </div>
@@ -468,7 +568,9 @@ const CarBooking = ({
               formData.endDate &&
               !isPeriodAvailable(formData.startDate, formData.endDate) && (
                 <p className="text-red-500 text-sm">
-                  {locale === "fr" ? "⚠️ La période sélectionnée n'est pas disponible" : "⚠️ The selected period is not available"}
+                  {locale === "fr"
+                    ? "⚠️ La période sélectionnée n'est pas disponible"
+                    : "⚠️ The selected period is not available"}
                 </p>
               )}
           </div>
