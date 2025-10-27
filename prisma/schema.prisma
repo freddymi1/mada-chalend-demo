@@ -74,7 +74,22 @@ model Itinerary {
   circuitId        String
   circuit          Circuit @relation(fields: [circuitId], references: [id], onDelete: Cascade)
 
+  itineraryDistanceRel ItineraryDistance[]
+
   @@map("itineraries")
+}
+
+
+model ItineraryDistance {
+  id           String  @id @default(cuid())
+  departPoint  String
+  distance     Int?    @default(0)
+  arrivalPoint String?
+
+  itineraryId String
+  itineraries Itinerary @relation(fields: [itineraryId], references: [id], onDelete: Cascade)
+
+  @@map("itinerary_distance")
 }
 
 model Program {

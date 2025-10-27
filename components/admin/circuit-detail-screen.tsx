@@ -20,8 +20,12 @@ import {
   Plus,
   Armchair,
   Map,
+  Route,
+  Save,
+  X as CloseIcon,
 } from "lucide-react";
 import { useLocale } from "next-intl";
+import { useToast } from "@/hooks/shared/use-toast";
 
 const CircuitDetailScreen = () => {
   const locale = useLocale();
@@ -29,12 +33,258 @@ const CircuitDetailScreen = () => {
   const router = useRouter();
   const { circuitDetail, getCircuitById, handleDelete } = useCircuit();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [editingDistances, setEditingDistances] = useState<{[key: string]: boolean}>({});
+  const [distanceValues, setDistanceValues] = useState<{[key: string]: string}>({});
+  const { toast } = useToast();
 
   useEffect(() => {
     if (id) {
       getCircuitById(id.toString());
     }
   }, [id]);
+
+  // Pré-remplir les distances existantes quand circuitDetail est chargé
+  useEffect(() => {
+    if (circuitDetail?.itineraries) {
+      const initialDistanceValues: {[key: string]: string} = {};
+      
+      circuitDetail.itineraries.forEach((itinerary: any) => {
+        if (itinerary.itineraryDistanceRel && itinerary.itineraryDistanceRel.length > 0) {
+          itinerary.itineraryDistanceRel.forEach((distance: any) => {
+            const distanceKey = `${itinerary.id}-${distance.departPoint}-${distance.arrivalPoint}`;
+            initialDistanceValues[distanceKey] = distance.distance?.toString() || "";
+          });
+        }
+      });
+      
+      setDistanceValues(initialDistanceValues);
+    }
+  }, [circuitDetail]);
+
+  // Fonction pour extraire les points d'un titre
+  const extractPoints = (title: string) => {
+    if (!title || !title.includes(" – ")) return null;
+    
+    // Enlever le préfixe "J1 : " ou similaire
+    const cleanTitle = title.replace(/^J\d+\s*:\s*/, "");
+    
+    // Séparer par " – " et nettoyer
+    const points = cleanTitle
+      .split(" – ")
+      .map(point => point.trim())
+      .filter(point => point.length > 0);
+    
+    return points.length > 1 ? points : null;
+  };
+
+  // Fonction pour créer les paires de points
+  const createPointPairs = (points: string[]) => {
+    const pairs = [];
+    for (let i = 0; i < points.length - 1; i++) {
+      pairs.push({
+        depart: points[i],
+        arrival: points[i + 1],
+        key: `${points[i]}-${points[i + 1]}`
+      });
+    }
+    return pairs;
+  };
+
+  // Fonction pour trouver la distance existante
+  const findExistingDistance = (itinerary: any, depart: string, arrival: string) => {
+    if (!itinerary.itineraryDistanceRel || itinerary.itineraryDistanceRel.length === 0) return null;
+    
+    return itinerary.itineraryDistanceRel.find(
+      (d: any) => d.departPoint === depart && d.arrivalPoint === arrival
+    );
+  };
+
+  // Fonction pour sauvegarder toutes les distances d'un itinéraire
+  const handleSaveAllDistances = async (itineraryId: string, pointPairs: any[]) => {
+    try {
+      // Préparer les données au format demandé
+      const distancesData = pointPairs.map(pair => {
+        const distanceKey = `${itineraryId}-${pair.depart}-${pair.arrival}`;
+        const existingDistance = findExistingDistance(
+          circuitDetail.itineraries.find((it: any) => it.id === itineraryId),
+          pair.depart,
+          pair.arrival
+        );
+
+        return {
+          departPoint: pair.depart,
+          arrivalPoint: pair.arrival,
+          distance: distanceValues[distanceKey] || existingDistance?.distance?.toString() || "0"
+        };
+      });
+
+      // Filtrer les distances qui ont une valeur
+      const validDistances = distancesData.filter(distance => 
+        distance.distance && parseInt(distance.distance) > 0
+      );
+
+      if (validDistances.length === 0) {
+        toast({
+          title: "Attention",
+          description: "Aucune distance valide à sauvegarder",
+          variant: "destructive"
+        });
+        return;
+      }
+
+      console.log("Données envoyées à l'API:", {
+        itineraryId,
+        distances: validDistances
+      });
+
+      // Appel API pour sauvegarder toutes les distances
+      const response = await fetch("/api/circuit/distance/post", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          itineraryId,
+          distances: validDistances,
+        }),
+      });
+
+      if (response.ok) {
+        // Recharger les détails du circuit
+        await getCircuitById(id.toString());
+        toast({
+          title: "Succès !",
+          description: "Toutes les distances ont été sauvegardées avec succès",
+        });
+        
+        // Réinitialiser l'édition
+        setEditingDistances({});
+      } else {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Erreur lors de la sauvegarde");
+      }
+    } catch (error) {
+      console.error("Erreur:", error);
+      toast({
+        title: "Erreur",
+        description: "Erreur lors de la sauvegarde des distances",
+        variant: "destructive"
+      });
+    }
+  };
+
+  // Fonction pour sauvegarder une distance individuelle
+  const handleSaveDistance = async (itineraryId: string, depart: string, arrival: string) => {
+    const distanceKey = `${itineraryId}-${depart}-${arrival}`;
+    const distance = distanceValues[distanceKey] || "0";
+    
+    try {
+      // Préparer les données au format demandé
+      const distancesData = [{
+        departPoint: depart,
+        arrivalPoint: arrival,
+        distance: distance
+      }];
+
+      console.log("Données envoyées à l'API:", {
+        itineraryId,
+        distances: distancesData
+      });
+
+      // Appel API pour sauvegarder la distance
+      const response = await fetch("/api/circuit/distance/post", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          itineraryId,
+          distances: distancesData,
+        }),
+      });
+
+      if (response.ok) {
+        // Recharger les détails du circuit
+        await getCircuitById(id.toString());
+        toast({
+          title: "Succès !",
+          description: `Distance entre ${depart} et ${arrival} sauvegardée avec succès`,
+        });
+        setEditingDistances(prev => ({ ...prev, [distanceKey]: false }));
+      } else {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Erreur lors de la sauvegarde");
+      }
+    } catch (error) {
+      console.error("Erreur:", error);
+      toast({
+        title: "Erreur",
+        description: "Erreur lors de la sauvegarde de la distance",
+        variant: "destructive"
+      });
+    }
+  };
+
+  // Fonction pour supprimer une distance
+  const handleDeleteDistance = async (distanceId: string, distanceKey: string) => {
+    if (!confirm("Êtes-vous sûr de vouloir supprimer cette distance ?")) return;
+    
+    try {
+      const response = await fetch(`/api/itinerary-distance/${distanceId}`, {
+        method: "DELETE",
+      });
+
+      if (response.ok) {
+        await getCircuitById(id.toString());
+        setDistanceValues(prev => {
+          const newValues = { ...prev };
+          delete newValues[distanceKey];
+          return newValues;
+        });
+        toast({
+          title: "Succès",
+          description: "Distance supprimée avec succès",
+        });
+      } else {
+        alert("Erreur lors de la suppression de la distance");
+      }
+    } catch (error) {
+      console.error("Erreur:", error);
+      alert("Erreur lors de la suppression de la distance");
+    }
+  };
+
+  // Fonction pour activer/désactiver l'édition de toutes les distances
+  const toggleEditAllDistances = (itineraryId: string, pointPairs: any[]) => {
+    const anyEditing = pointPairs.some(pair => 
+      editingDistances[`${itineraryId}-${pair.depart}-${pair.arrival}`]
+    );
+
+    if (anyEditing) {
+      // Désactiver toutes les éditions
+      const newEditingDistances = { ...editingDistances };
+      pointPairs.forEach(pair => {
+        delete newEditingDistances[`${itineraryId}-${pair.depart}-${pair.arrival}`];
+      });
+      setEditingDistances(newEditingDistances);
+    } else {
+      // Activer toutes les éditions
+      const newEditingDistances = { ...editingDistances };
+      pointPairs.forEach(pair => {
+        const distanceKey = `${itineraryId}-${pair.depart}-${pair.arrival}`;
+        newEditingDistances[distanceKey] = true;
+      });
+      setEditingDistances(newEditingDistances);
+    }
+  };
+
+  // Fonction pour mettre à jour une valeur de distance
+  const updateDistanceValue = (distanceKey: string, value: string) => {
+    setDistanceValues(prev => ({
+      ...prev,
+      [distanceKey]: value
+    }));
+  };
 
   if (!circuitDetail) {
     return (
@@ -125,7 +375,6 @@ const CircuitDetailScreen = () => {
         {/* Images Gallery */}
         {images.length > 0 && (
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border dark:border-gray-700 p-6 mb-6">
-            
             <div className="relative">
               <div className="aspect-video bg-gray-100 dark:bg-gray-700 rounded-lg overflow-hidden">
                 <img
@@ -170,6 +419,7 @@ const CircuitDetailScreen = () => {
             </div>
           </div>
         )}
+
         {/* Circuit Information Card */}
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border dark:border-gray-700 p-6 mb-6">
           <div className="flex items-start justify-between mb-6">
@@ -204,19 +454,6 @@ const CircuitDetailScreen = () => {
                 </div>
               </div>
             </div>
-            {/* <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
-              <div className="flex items-center space-x-3">
-                <Users className="w-5 h-5 text-green-600 dark:text-green-400" />
-                <div>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">
-                    Max personnes
-                  </p>
-                  <p className="font-semibold text-gray-900 dark:text-white">
-                    {circuitDetail.maxPeople}
-                  </p>
-                </div>
-              </div>
-            </div> */}
 
             <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
               <div className="flex items-center space-x-3">
@@ -231,20 +468,6 @@ const CircuitDetailScreen = () => {
                 </div>
               </div>
             </div>
-
-            {/* <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
-              <div className="flex items-center space-x-3">
-                <Armchair className="w-5 h-5 text-primary" />
-                <div>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">
-                    Places disponnibles
-                  </p>
-                  <p className="font-semibold text-gray-900 dark:text-white">
-                    {circuitDetail.placesDisponibles}
-                  </p>
-                </div>
-              </div>
-            </div> */}
 
             <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
               <div className="flex items-center space-x-3">
@@ -388,7 +611,6 @@ const CircuitDetailScreen = () => {
         )}
 
         {/* Daily Itinerary */}
-
         {circuitDetail.itineraries && circuitDetail.itineraries.length > 0 && (
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border dark:border-gray-700 p-6">
             <h3 className="font-semibold text-lg mb-6 text-gray-900 dark:text-white flex items-center">
@@ -404,93 +626,30 @@ const CircuitDetailScreen = () => {
                   const itineraryImageDescription = itinerary.imageDescription
                     ? JSON.parse(itinerary.imageDescription)
                     : null;
+                  
+                  // Extraire les points du titre
+                  const titleText = locale === "fr" ? itineraryTitle.fr : itineraryTitle.en;
+                  const points = extractPoints(titleText);
+                  const pointPairs = points ? createPointPairs(points) : [];
+                  const hasDistances = pointPairs.length > 0;
+
                   return (
                     <div
                       key={itinerary.id}
                       className="border dark:border-gray-700 rounded-lg overflow-hidden relative"
                     >
                       <div className="lg:flex lg:h-[400px]">
-                        {" "}
-                        {/* Hauteur réduite et plus adaptée */}
                         {/* Image */}
                         {itinerary.image && (
                           <div className="lg:w-1/3 relative">
                             <img
                               src={itinerary.image}
                               alt={
-                                itineraryImageDescription.fr ||
+                                itineraryImageDescription?.fr ||
                                 `Jour ${itinerary.day}`
                               }
                               className="w-full max-h-82 lg:h-full object-cover"
                             />
-
-                            {/* Timeline repositionnée à droite */}
-                            <div className="absolute top-4 right-2 !z-50 bg-white dark:bg-gray-800 text-gray-900 dark:text-white rounded-lg px-3 py-2 text-xs font-medium shadow-lg">
-                              <div className="relative">
-                                {/* Ligne verticale continue */}
-                                <div className="absolute left-[6px] top-0 bottom-0 w-0.5 bg-gray-300 dark:bg-gray-600"></div>
-
-                                {circuitDetail.itineraries
-                                  .filter(
-                                    (it: any, i: number) =>
-                                      i >= 0 && i <= index + 1
-                                  )
-                                  .map((it: any, i: number) => {
-                                    const isCurrentItem = i === index;
-                                    const isLastInList =
-                                      i ===
-                                      circuitDetail.itineraries.length - 1;
-                                    const isNextItem = i === index + 1;
-                                    const itText = it.imageDescription ? JSON.parse(
-                                      it.imageDescription
-                                    ) : "";
-
-                                    return (
-                                      <div
-                                        className="flex flex-col items-start relative mb-3 last:mb-0"
-                                        key={it.id}
-                                      >
-                                        {/* Point et description */}
-                                        <div className="flex items-center gap-2 relative z-10">
-                                          <MapPin
-                                            className={`w-4 h-4 text-gray-400 ${
-                                              isCurrentItem
-                                                ? "text-green-500"
-                                                : isNextItem
-                                                ? "text-orange-500"
-                                                : "text-blue-500"
-                                            }`}
-                                          />
-                                          {/* <div
-                                          className={`w-2 h-2 rounded-full mr-2 ${
-                                            isCurrentItem
-                                              ? "bg-green-500"
-                                              : isNextItem
-                                              ? "bg-orange-500"
-                                              : "bg-blue-500"
-                                          }`}
-                                        /> */}
-                                          <span className="text-xs font-medium max-w-[120px] truncate">
-                                            {locale === "fr"
-                                              ? itText.fr
-                                              : itText.en}
-                                          </span>
-                                        </div>
-
-                                        {/* Distance (sauf pour le dernier élément) */}
-                                        {!isLastInList && (
-                                          <div className="flex gap-2 items-center relative z-10 mt-2">
-                                            <Clock className="w-4 h-4 text-blue-400" />
-                                            <span className="text-xs text-gray-500 dark:text-gray-400">
-                                              {it.distance} km
-                                            </span>
-                                          </div>
-                                        )}
-                                      </div>
-                                    );
-                                  })}
-                              </div>
-                            </div>
                           </div>
                         )}
                         {/* Content */}
@@ -503,11 +662,9 @@ const CircuitDetailScreen = () => {
                             <div className="bg-blue-600 text-white rounded-full w-8 h-8 flex items-center justify-center font-semibold text-sm mr-4">
                               {itinerary.day}
                             </div>
-                            <div>
+                            <div className="flex-1">
                               <h4 className="text-lg font-semibold text-gray-900 dark:text-white">
-                                {locale === "fr"
-                                  ? itineraryTitle.fr
-                                  : itineraryTitle.en}
+                                {titleText}
                               </h4>
                               {itineraryImageDescription && (
                                 <p className="text-sm text-gray-500 dark:text-gray-400">
@@ -518,6 +675,133 @@ const CircuitDetailScreen = () => {
                               )}
                             </div>
                           </div>
+
+                          {/* Distances Section */}
+                          {hasDistances && (
+                            <div className="mb-4 bg-white dark:bg-gray-800 rounded-lg p-4 border border-blue-200 dark:border-blue-800">
+                              <div className="flex items-center justify-between mb-3">
+                                <div className="flex items-center">
+                                  <Route className="w-4 h-4 text-blue-600 dark:text-blue-400 mr-2" />
+                                  <h5 className="text-sm font-semibold text-gray-900 dark:text-white">
+                                    Distances du trajet
+                                  </h5>
+                                </div>
+                                <div className="flex items-center space-x-2">
+                                  <button
+                                    onClick={() => toggleEditAllDistances(itinerary.id, pointPairs)}
+                                    className="flex items-center gap-1 px-2 py-1 text-xs bg-blue-600 hover:bg-blue-700 text-white rounded transition-colors"
+                                  >
+                                    <Edit className="w-3 h-3" />
+                                    {pointPairs.some(pair => 
+                                      editingDistances[`${itinerary.id}-${pair.depart}-${pair.arrival}`]
+                                    ) ? "Annuler" : "Modifier"}
+                                  </button>
+                                  <button
+                                    onClick={() => handleSaveAllDistances(itinerary.id, pointPairs)}
+                                    className="flex items-center gap-1 px-2 py-1 text-xs bg-green-600 hover:bg-green-700 text-white rounded transition-colors"
+                                  >
+                                    <Save className="w-3 h-3" />
+                                    Sauvegarder
+                                  </button>
+                                </div>
+                              </div>
+                              <div className="space-y-3">
+                                {pointPairs.map((pair, pairIndex) => {
+                                  const distanceKey = `${itinerary.id}-${pair.depart}-${pair.arrival}`;
+                                  const existingDistance = findExistingDistance(
+                                    itinerary,
+                                    pair.depart,
+                                    pair.arrival
+                                  );
+                                  const isEditing = editingDistances[distanceKey];
+                                  const currentValue = distanceValues[distanceKey] || existingDistance?.distance?.toString() || "";
+
+                                  return (
+                                    <div
+                                      key={pairIndex}
+                                      className="flex items-center justify-between bg-gray-50 dark:bg-gray-700 rounded p-3"
+                                    >
+                                      <div className="flex items-center space-x-2 flex-1">
+                                        <MapPin className="w-4 h-4 text-green-600 dark:text-green-400" />
+                                        <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                                          {pair.depart}
+                                        </span>
+                                        <span className="text-gray-400">→</span>
+                                        <MapPin className="w-4 h-4 text-red-600 dark:text-red-400" />
+                                        <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                                          {pair.arrival}
+                                        </span>
+                                      </div>
+
+                                      {existingDistance && !isEditing ? (
+                                        <div className="flex items-center space-x-2">
+                                          <span className="text-sm font-semibold text-blue-600 dark:text-blue-400">
+                                            {existingDistance.distance} km
+                                          </span>
+                                          <button
+                                            onClick={() =>
+                                              setEditingDistances(prev => ({
+                                                ...prev,
+                                                [distanceKey]: true
+                                              }))
+                                            }
+                                            className="p-1 hover:bg-gray-200 dark:hover:bg-gray-600 rounded"
+                                          >
+                                            <Edit className="w-4 h-4 text-gray-600 dark:text-gray-300" />
+                                          </button>
+                                          <button
+                                            onClick={() =>
+                                              handleDeleteDistance(existingDistance.id, distanceKey)
+                                            }
+                                            className="p-1 hover:bg-red-100 dark:hover:bg-red-900/30 rounded"
+                                          >
+                                            <Trash2 className="w-4 h-4 text-red-600 dark:text-red-400" />
+                                          </button>
+                                        </div>
+                                      ) : (
+                                        <div className="flex items-center space-x-2">
+                                          <input
+                                            type="number"
+                                            placeholder="Distance (km)"
+                                            value={currentValue}
+                                            onChange={(e) =>
+                                              updateDistanceValue(distanceKey, e.target.value)
+                                            }
+                                            className="w-24 px-2 py-1 text-sm border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
+                                          />
+                                          {/* <button
+                                            onClick={() =>
+                                              handleSaveDistance(
+                                                itinerary.id,
+                                                pair.depart,
+                                                pair.arrival
+                                              )
+                                            }
+                                            className="p-1 bg-green-600 hover:bg-green-700 rounded text-white"
+                                          >
+                                            <Save className="w-4 h-4" />
+                                          </button> */}
+                                          {isEditing && existingDistance && (
+                                            <button
+                                              onClick={() =>
+                                                setEditingDistances(prev => ({
+                                                  ...prev,
+                                                  [distanceKey]: false
+                                                }))
+                                              }
+                                              className="p-1 hover:bg-gray-200 dark:hover:bg-gray-600 rounded"
+                                            >
+                                              <CloseIcon className="w-4 h-4 text-gray-600 dark:text-gray-300" />
+                                            </button>
+                                          )}
+                                        </div>
+                                      )}
+                                    </div>
+                                  );
+                                })}
+                              </div>
+                            </div>
+                          )}
 
                           <div className="prose max-w-none flex-grow">
                             {locale === "fr" ? (

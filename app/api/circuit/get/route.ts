@@ -13,7 +13,18 @@ export async function GET() {
         highlights: true,
         included: true,
         notIncluded: true,
-        itineraries: true,
+        itineraries: {
+          select:{
+            id: true,
+            day: true,
+            title: true,
+            description: true,
+            image: true,
+            imageDescription: true,
+            distance: true,
+            itineraryDistanceRel: true
+          }
+        },
         reservations: {
           select: {
             id: true,

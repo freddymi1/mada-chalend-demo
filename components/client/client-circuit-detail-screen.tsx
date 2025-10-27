@@ -64,6 +64,42 @@ const ClientCircuitDetailScreen = () => {
     ? JSON.parse(circuitDetail?.description)
     : "";
 
+  const createStepList = (distances: any[]) => {
+    const steps: {
+      point: string;
+      type: "depart" | "etape" | "arrivee";
+      distance?: number;
+      duration?: string;
+    }[] = [];
+
+    distances.forEach((distance, idx) => {
+      // Ajouter le point de départ seulement pour le premier
+      if (idx === 0) {
+        steps.push({
+          point: distance.departPoint,
+          type: "depart",
+        });
+      }
+
+      // Ajouter la distance et durée
+      steps.push({
+        point: "",
+        type: "etape",
+        distance: distance.distance,
+        duration: `~${Math.round(distance.distance / 80)} h`,
+      });
+
+      // Ajouter le point d'arrivée
+      const isLast = idx === distances.length - 1;
+      steps.push({
+        point: distance.arrivalPoint,
+        type: isLast ? "arrivee" : "etape",
+      });
+    });
+
+    return steps;
+  };
+
   return (
     <main className="min-h-screen w-full overflow-x-hidden">
       <Header />
@@ -194,6 +230,14 @@ const ClientCircuitDetailScreen = () => {
                           const dayDescription = day.description
                             ? JSON.parse(day.description)
                             : "";
+                          const steps = day.itineraryDistanceRel
+                            ? createStepList(day.itineraryDistanceRel)
+                            : [];
+                          const totalDistance =
+                            day.itineraryDistanceRel?.reduce(
+                              (sum: any, d: any) => sum + d.distance,
+                              0
+                            ) || 0;
                           return (
                             <div
                               key={day.id}
@@ -241,74 +285,86 @@ const ClientCircuitDetailScreen = () => {
                                   )}
 
                                   <div className="!w-full flex flex-col items-start justify-start gap-4 rounded-lg overflow-hidden cursor-pointer group relative">
-                                    <div className="!z-50 bg-white w-full dark:bg-gray-800 text-gray-900 dark:text-white rounded-lg px-3 py-2 text-xs font-medium shadow-lg">
-                                      <div className="relative">
-                                        {/* Ligne verticale continue */}
-                                        <div className="absolute left-[6px] top-0 bottom-0 w-0.5 bg-gray-300 dark:bg-gray-600"></div>
+                                    {/* Affichage de itineraryDistanceRel */}
+                                    {steps.length > 0 && (
+                                      <div className="bg-slate-800/10 backdrop-blur rounded-2xl shadow-2xl border border-slate-700/10 p-3">
+                                        <div className="relative">
+                                          {/* Ligne verticale principale */}
+                                          <div className="absolute left-[10px] top-0 bottom-0 w-0.5 bg-gradient-to-b from-green-500 via-blue-500 to-orange-500"></div>
 
-                                        {circuitDetail.itineraries
-                                          .filter(
-                                            (it: any, i: number) =>
-                                              i === index || i === index + 1
-                                          )
-                                          .map(
-                                            (
-                                              it: any,
-                                              i: number,
-                                              filteredArray: any
-                                            ) => {
-                                              const isCurrentItem = i === 0; // Premier élément du tableau filtré
-                                              const isNextItem = i === 1; // Deuxième élément du tableau filtré
-                                              const isLastInFilteredList =
-                                                i === filteredArray.length - 1;
-
-                                              const itDescription =
-                                                it.imageDescription
-                                                  ? JSON.parse(
-                                                      it.imageDescription
-                                                    )
-                                                  : { fr: "", en: "" };
-
-                                              return (
-                                                <div
-                                                  className="flex flex-col items-start relative mb-3 last:mb-0"
-                                                  key={it.id}
-                                                >
-                                                  {/* Point et description */}
-                                                  <div className="flex items-center gap-2 relative z-10">
-                                                    <MapPin
-                                                      className={`w-4 h-4 ${
-                                                        isCurrentItem
-                                                          ? "text-green-500"
-                                                          : isNextItem
+                                          {steps.map((step, idx) => (
+                                            <div key={idx} className="relative">
+                                              {step.point ? (
+                                                // Point de passage (départ, étape, arrivée)
+                                                <div className="flex items-start gap-2">
+                                                  <div className="relative z-10 flex-shrink-0">
+                                                    <div
+                                                      className={`w-6 h-6 rounded-full flex items-center justify-center shadow-lg ${
+                                                        step.type === "depart"
+                                                          ? "text-green-500 border-2"
+                                                          : step.type ===
+                                                            "arrivee"
                                                           ? "text-orange-500"
                                                           : "text-blue-500"
                                                       }`}
-                                                    />
-                                                    <span className="text-xs font-medium max-w-[120px] truncate">
-                                                      {locale === "fr"
-                                                        ? itDescription.fr
-                                                        : itDescription.en}
-                                                    </span>
+                                                    >
+                                                      <MapPin className="w-5 h-5" />
+                                                    </div>
                                                   </div>
-
-                                                  {/* Distance (uniquement entre l'élément actif et le suivant) */}
-                                                  {isCurrentItem &&
-                                                    filteredArray.length >
-                                                      1 && (
-                                                      <div className="flex gap-2 items-center relative z-10 mt-2">
-                                                        <Clock className="w-4 h-4 text-blue-400" />
-                                                        <span className="text-xs text-gray-500 dark:text-gray-400">
-                                                          {it.distance} km
-                                                        </span>
-                                                      </div>
-                                                    )}
+                                                  <div className="flex-1 pt-1">
+                                                    {/* <div
+                                                      className={`text-xs font-semibold mb-0.5 ${
+                                                        step.type === "depart"
+                                                          ? "text-green-400"
+                                                          : step.type ===
+                                                            "arrivee"
+                                                          ? "text-orange-400"
+                                                          : "text-blue-400"
+                                                      }`}
+                                                    >
+                                                      {step.type === "depart"
+                                                        ? "Départ"
+                                                        : step.type ===
+                                                          "arrivee"
+                                                        ? "Arrivée"
+                                                        : "Étape"}
+                                                    </div> */}
+                                                    <div className="text-[10px] font-bold">
+                                                      {step.point}
+                                                    </div>
+                                                  </div>
                                                 </div>
-                                              );
-                                            }
-                                          )}
+                                              ) : (
+                                                // Distance
+                                                <div className="flex items-center gap-2 my-2">
+                                                  <div className="relative z-10 flex-shrink-0">
+                                                    <div className="w-6 h-6 backdrop-blur rounded-full flex items-center justify-center">
+                                                      <Clock className="w-5 h-5 text-blue-400" />
+                                                    </div>
+                                                  </div>
+                                                  <span className="text-[10px] font-bold text-blue-300">
+                                                      {step.distance} km
+                                                    </span>
+                                                </div>
+                                              )}
+                                            </div>
+                                          ))}
+                                        </div>
+
+                                        {/* Résumé total */}
+                                        {/* <div className="mt-6 pt-6 border-t border-slate-700">
+                                          <div className="flex items-center justify-between">
+                                            <span className="text-slate-400 font-medium">
+                                              Distance totale
+                                            </span>
+                                            <span className="text-xl font-bold text-blue-400">
+                                              {totalDistance} km
+                                            </span>
+                                          </div>
+                                        </div> */}
                                       </div>
-                                    </div>
+                                    )}
+
                                     <p className="text-muted-foreground text-xs sm:text-sm mb-2 break-words">
                                       {locale === "fr"
                                         ? dayDescription.fr
