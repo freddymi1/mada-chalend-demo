@@ -13,6 +13,9 @@ import {
   Edit,
   Trash2,
   Eye,
+  Tag,
+  X,
+  Save,
 } from "lucide-react";
 import { Vehicle } from "@/src/domain/entities/car";
 import { useVehicle } from "../providers/admin/VehicleProvider";
@@ -21,8 +24,183 @@ import { LoadingSpinner } from "../client/loading";
 import { useTheme } from "@/src/hooks/useTheme";
 import { useLocale } from "next-intl";
 import VehicleDetailModal from "./vehicle-detail-modal";
+import { useCategory, Category } from "../providers/admin/CategoryProvider";
 
-// Vehicle Card Component
+// Category Modal Component
+const CategoryModal: React.FC<{
+  isOpen: boolean;
+  onClose: () => void;
+  isDark: boolean;
+  category?: Category | null;
+  onSave: (category: Omit<Category, "id" | "createdAt" | "updatedAt">) => Promise<void>;
+  loading: boolean;
+}> = ({ isOpen, onClose, isDark, category, onSave, loading }) => {
+  const [formData, setFormData] = useState({
+    name: "",
+    icon: "Car",
+  });
+  const [errors, setErrors] = useState<{ name?: string }>({});
+
+  useEffect(() => {
+    if (category) {
+      setFormData({
+        name: category.name || "",
+        icon: category.icon || "Car",
+      });
+    } else {
+      setFormData({
+        name: "",
+        icon: "Car",
+      });
+    }
+    setErrors({});
+  }, [category, isOpen]);
+
+  const validateForm = () => {
+    const newErrors: { name?: string } = {};
+    if (!formData.name.trim()) {
+      newErrors.name = "Le nom de la catégorie est requis";
+    }
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!validateForm()) return;
+
+    try {
+      await onSave(formData);
+      onClose();
+    } catch (error) {
+      // Error is handled in the parent component
+    }
+  };
+
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm">
+      <div
+        className={`w-full max-w-md rounded-2xl shadow-2xl transform transition-all ${
+          isDark ? "bg-gray-800" : "bg-white"
+        }`}
+      >
+        {/* Header */}
+        <div
+          className={`flex items-center justify-between p-6 border-b ${
+            isDark ? "border-gray-700" : "border-gray-200"
+          }`}
+        >
+          <div className="flex items-center gap-3">
+            <Tag className={`w-6 h-6 ${isDark ? "text-blue-400" : "text-blue-600"}`} />
+            <h2
+              className={`text-xl font-bold ${
+                isDark ? "text-white" : "text-gray-900"
+              }`}
+            >
+              {category ? "Modifier la catégorie" : "Nouvelle catégorie"}
+            </h2>
+          </div>
+          <button
+            onClick={onClose}
+            className={`p-2 rounded-full transition-colors ${
+              isDark
+                ? "hover:bg-gray-700 text-gray-400"
+                : "hover:bg-gray-100 text-gray-500"
+            }`}
+          >
+            <X className="w-5 h-5" />
+          </button>
+        </div>
+
+        {/* Form */}
+        <form onSubmit={handleSubmit} className="p-6 space-y-4">
+          {/* Name Field */}
+          <div>
+            <label
+              className={`block text-sm font-medium mb-2 ${
+                isDark ? "text-gray-300" : "text-gray-700"
+              }`}
+            >
+              Nom de la catégorie *
+            </label>
+            <input
+              type="text"
+              value={formData.name}
+              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+              className={`w-full px-4 py-3 rounded-lg border transition-colors ${
+                errors.name
+                  ? "border-red-500 focus:border-red-500"
+                  : isDark
+                  ? "border-gray-600 bg-gray-700 text-white focus:border-blue-500"
+                  : "border-gray-300 bg-white text-gray-900 focus:border-blue-500"
+              }`}
+              placeholder="Ex: 4x4 Premium"
+            />
+            {errors.name && (
+              <p className="mt-2 text-sm text-red-500">{errors.name}</p>
+            )}
+          </div>
+
+          {/* Icon Field */}
+          {/* <div>
+            <label
+              className={`block text-sm font-medium mb-2 ${
+                isDark ? "text-gray-300" : "text-gray-700"
+              }`}
+            >
+              Icône (optionnel)
+            </label>
+            <input
+              type="text"
+              value={formData.icon}
+              onChange={(e) => setFormData({ ...formData, icon: e.target.value })}
+              className={`w-full px-4 py-3 rounded-lg border transition-colors ${
+                isDark
+                  ? "border-gray-600 bg-gray-700 text-white focus:border-blue-500"
+                  : "border-gray-300 bg-white text-gray-900 focus:border-blue-500"
+              }`}
+              placeholder="Ex: car-suv"
+            />
+            <p
+              className={`mt-2 text-xs ${
+                isDark ? "text-gray-400" : "text-gray-500"
+              }`}
+            >
+              Nom de l'icône Lucide React (ex: "car", "suv", "van")
+            </p>
+          </div> */}
+
+          {/* Action Buttons */}
+          <div className="flex gap-3 pt-4">
+            <button
+              type="button"
+              onClick={onClose}
+              className={`flex-1 px-4 py-3 rounded-lg font-medium transition-colors ${
+                isDark
+                  ? "bg-gray-700 text-gray-300 hover:bg-gray-600"
+                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+              }`}
+            >
+              Annuler
+            </button>
+            <button
+              type="submit"
+              disabled={loading}
+              className="flex-1 px-4 py-3 bg-blue-600 text-white rounded-lg font-medium transition-colors hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+            >
+              <Save className="w-4 h-4" />
+                  {category ? "Modifier" : "Créer"}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+};
+
+// Vehicle Card Component (unchanged)
 const VehicleCard: React.FC<{
   vehicle: Vehicle;
   isDark: boolean;
@@ -223,7 +401,9 @@ const VehicleScreen: React.FC = () => {
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [selectedVehicle, setSelectedVehicle] = useState<Vehicle | null>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isVehicleModalOpen, setIsVehicleModalOpen] = useState(false);
+  const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
+  const [editingCategory, setEditingCategory] = useState<Category | null>(null);
   const locale = useLocale()
 
   const {
@@ -234,19 +414,26 @@ const VehicleScreen: React.FC = () => {
     isLoading
   } = useVehicle();
 
+  const {
+    categories,
+    fetchCategories,
+    createCategory,
+    updateCategory,
+    deleteCategory,
+    loading: categoryLoading
+  } = useCategory();
+
   const router = useRouter();
 
-  const categories = [
-    { id: "cmfrc1gpa0000le04p1d01847", name: "4x4 Premium" },
-    { id: "cmfrc1gpa0001le04p1d01847", name: "Pick-up" },
-    { id: "cmfrc1gpa0002le04p1d01847", name: "Minibus" },
-    { id: "cmfrc1gpa0003le04p1d01847", name: "Bus" },
-    { id: "cmfrc1gpa0004le04p1d01847", name: "4x4 Compact" },
+  // Add "All" option to categories
+  const categoryOptions = [
+    { id: "all", name: "Tous" },
+    ...categories
   ];
-  categories.unshift({ id: "all", name: "Tous" });
 
   useEffect(() => {
     fetchVehicles();
+    fetchCategories();
   }, []);
 
   const filteredVehicles =
@@ -256,12 +443,46 @@ const VehicleScreen: React.FC = () => {
 
   const handleViewDetails = (vehicle: Vehicle) => {
     setSelectedVehicle(vehicle);
-    setIsModalOpen(true);
+    setIsVehicleModalOpen(true);
   };
 
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
+  const handleCloseVehicleModal = () => {
+    setIsVehicleModalOpen(false);
     setSelectedVehicle(null);
+  };
+
+  const handleOpenCategoryModal = (category?: Category) => {
+    setEditingCategory(category || null);
+    setIsCategoryModalOpen(true);
+  };
+
+  const handleCloseCategoryModal = () => {
+    setIsCategoryModalOpen(false);
+    setEditingCategory(null);
+  };
+
+  const handleSaveCategory = async (categoryData: Omit<Category, "id" | "createdAt" | "updatedAt">) => {
+    if (editingCategory) {
+      await updateCategory(editingCategory.id, categoryData);
+    } else {
+      await createCategory(categoryData);
+    }
+  };
+
+  const handleDeleteCategory = async (categoryId: string) => {
+    if (categoryId === "all") return;
+    
+    if (window.confirm("Êtes-vous sûr de vouloir supprimer cette catégorie ?")) {
+      try {
+        await deleteCategory(categoryId);
+        // If deleted category was selected, switch to "all"
+        if (selectedCategory === categoryId) {
+          setSelectedCategory("all");
+        }
+      } catch (error) {
+        // Error is handled in the provider
+      }
+    }
   };
 
   return (
@@ -291,38 +512,70 @@ const VehicleScreen: React.FC = () => {
               Découvrez notre flotte de véhicules premium
             </p>
           </div>
-          <button
-            onClick={() => router.push("/admin/vehicles/add?edit=false")}
-            className="flex items-center gap-2 px-6 py-3 bg-primary text-white rounded-lg font-medium transition-colors shadow-lg"
-          >
-            <Plus className="w-5 h-5" />
-            Ajouter une voiture
-          </button>
+          <div className="flex gap-3 mt-4 sm:mt-0">
+            <button
+              onClick={() => handleOpenCategoryModal()}
+              className="flex items-center gap-2 px-4 py-3 bg-green-600 text-white rounded-lg font-medium transition-colors shadow-lg hover:bg-green-700"
+            >
+              <Tag className="w-5 h-5" />
+              Catégorie
+            </button>
+            <button
+              onClick={() => router.push("/admin/vehicles/add?edit=false")}
+              className="flex items-center gap-2 px-6 py-3 bg-primary text-white rounded-lg font-medium transition-colors shadow-lg hover:bg-blue-700"
+            >
+              <Plus className="w-5 h-5" />
+              Ajouter une voiture
+            </button>
+          </div>
         </div>
 
         {/* Filters and Controls */}
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-8 mb-8">
           {/* Category Filter */}
-          <div className="flex flex-wrap gap-2">
-            {categories.map((category) => (
-              <button
-                key={category.id}
-                onClick={() => setSelectedCategory(category.id)}
-                className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-                  selectedCategory === category.id
-                    ? "bg-primary text-white"
-                    : isDark
-                    ? "bg-gray-800 text-gray-300 hover:bg-gray-700"
-                    : "bg-white text-gray-700 hover:bg-gray-100"
-                }`}
-              >
-                {category.name}
-              </button>
+          <div className="flex flex-wrap gap-6">
+            {categoryOptions.map((category) => (
+              <div key={category.id} className="relative group">
+                <button
+                  onClick={() => setSelectedCategory(category.id)}
+                  className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                    selectedCategory === category.id
+                      ? "bg-primary text-white"
+                      : isDark
+                      ? "bg-gray-800 text-gray-300 hover:bg-gray-700"
+                      : "bg-white text-gray-700 hover:bg-gray-100"
+                  }`}
+                >
+                  {category.name}
+                </button>
+                {category.id !== "all" && (
+                  <div className="absolute top-0 right-0 opacity-100 lg:opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 -mt-4 -mr-1">
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleOpenCategoryModal(category as any);
+                      }}
+                      className="p-1 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition-colors"
+                    >
+                      <Edit className="w-3 h-3" />
+                    </button>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleDeleteCategory(category.id);
+                      }}
+                      className="p-1 bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors"
+                    >
+                      <Trash2 className="w-3 h-3" />
+                    </button>
+                  </div>
+                )}
+              </div>
             ))}
           </div>
 
           {/* View Mode Toggle */}
-          <div className="flex items-center gap-2">
+          <div className="hidden lg:flex items-center gap-2">
             <button
               onClick={() => setViewMode("grid")}
               className={`p-2 rounded-lg transition-colors ${
@@ -351,7 +604,7 @@ const VehicleScreen: React.FC = () => {
         </div>
 
         {/* Vehicle Grid */}
-        {isLoading ? (
+        {isLoading || categoryLoading ? (
           <LoadingSpinner />
         ) : (
           <div
@@ -368,7 +621,6 @@ const VehicleScreen: React.FC = () => {
                 isDark={isDark}
                 deleteVehicle={deleteVehicle}
                 onViewDetails={handleViewDetails}
-                
               />
             ))}
           </div>
@@ -386,15 +638,25 @@ const VehicleScreen: React.FC = () => {
           </div>
         )}
 
-        {/* Modal de détail */}
+        {/* Vehicle Detail Modal */}
         {selectedVehicle && (
           <VehicleDetailModal
             vehicle={selectedVehicle}
-            isOpen={isModalOpen}
-            onClose={handleCloseModal}
+            isOpen={isVehicleModalOpen}
+            onClose={handleCloseVehicleModal}
             isDark={isDark}
           />
         )}
+
+        {/* Category Modal */}
+        <CategoryModal
+          isOpen={isCategoryModalOpen}
+          onClose={handleCloseCategoryModal}
+          isDark={isDark}
+          category={editingCategory}
+          onSave={handleSaveCategory}
+          loading={categoryLoading}
+        />
       </div>
     </div>
   );

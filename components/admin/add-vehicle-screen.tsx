@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import { useVehicle } from "../providers/admin/VehicleProvider";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useCategory } from "../providers/admin/CategoryProvider";
 
 // Theme hook
 const useTheme = () => {
@@ -42,7 +43,7 @@ const useTheme = () => {
 const AddVehicleScreen: React.FC = () => {
   const { isDark } = useTheme();
   const params = useSearchParams();
-  const router = useRouter()
+  const router = useRouter();
   const id = params.get("id");
   const {
     formData,
@@ -59,6 +60,12 @@ const AddVehicleScreen: React.FC = () => {
     isUpdate,
   } = useVehicle();
 
+  const {
+    categories,
+    fetchCategories,
+    loading: categoryLoading,
+  } = useCategory();
+
   const [newFeature, setNewFeature] = useState({ en: "", fr: "" });
   const [imageLoadingStates, setImageLoadingStates] = useState<{
     mainImage: boolean;
@@ -68,29 +75,28 @@ const AddVehicleScreen: React.FC = () => {
     detailImages: [false, false, false, false],
   });
 
-  const categories = [
-    { id: "cmfrc1gpa0000le04p1d01847", name: "4x4 Premium" },
-    { id: "cmfrc1gpa0001le04p1d01847", name: "Pick-up" },
-    { id: "cmfrc1gpa0002le04p1d01847", name: "Minibus" },
-    { id: "cmfrc1gpa0003le04p1d01847", name: "Bus" },
-    { id: "cmfrc1gpa0004le04p1d01847", name: "4x4 Compact" },
-  ];
+  useEffect(() => {
+    fetchCategories();
+  }, []);
 
   const addFeature = () => {
-  if (newFeature.en.trim() || newFeature.fr.trim()) {
-    // Créer une nouvelle caractéristique avec les deux langues
-    const newFeatureItem = { en: newFeature.en.trim(), fr: newFeature.fr.trim() };
-    
-    // Ajouter directement au tableau features
-    setFormData(prev => ({
-      ...prev,
-      features: [...prev.features, newFeatureItem]
-    }));
-    
-    // Réinitialiser le formulaire
-    setNewFeature({ en: "", fr: "" });
-  }
-};
+    if (newFeature.en.trim() || newFeature.fr.trim()) {
+      // Créer une nouvelle caractéristique avec les deux langues
+      const newFeatureItem = {
+        en: newFeature.en.trim(),
+        fr: newFeature.fr.trim(),
+      };
+
+      // Ajouter directement au tableau features
+      setFormData((prev) => ({
+        ...prev,
+        features: [...prev.features, newFeatureItem],
+      }));
+
+      // Réinitialiser le formulaire
+      setNewFeature({ en: "", fr: "" });
+    }
+  };
 
   const handleImageClick = async (index: number) => {
     // Créer un input file invisible
@@ -160,7 +166,7 @@ const AddVehicleScreen: React.FC = () => {
     }
 
     // Utiliser handleSubmit ou handleUpdate selon le mode
-    if (isUpdate && id)  {
+    if (isUpdate && id) {
       handleUpdate(id);
     } else {
       handleSubmit(e);
@@ -179,7 +185,7 @@ const AddVehicleScreen: React.FC = () => {
         {/* Header */}
         <div className="flex items-center gap-4 mb-8">
           <button
-            onClick={()=> router.push("/admin/vehicles")}
+            onClick={() => router.push("/admin/vehicles")}
             className={`p-2 rounded-lg transition-colors ${
               isDark
                 ? "bg-gray-800 text-gray-300 hover:bg-gray-700"
@@ -194,7 +200,9 @@ const AddVehicleScreen: React.FC = () => {
                 isDark ? "text-white" : "text-gray-900"
               }`}
             >
-              {isUpdate === "true" ? "Modifier le véhicule" : "Ajouter un véhicule"}
+              {isUpdate === "true"
+                ? "Modifier le véhicule"
+                : "Ajouter un véhicule"}
             </h1>
             <p
               className={`text-lg ${
@@ -231,7 +239,9 @@ const AddVehicleScreen: React.FC = () => {
                 <div className="space-y-6">
                   {/* Nom du véhicule - FR/EN */}
                   <div className="bg-white/5 p-4 rounded-lg">
-                    <h3 className="text-lg font-semibold mb-4">Nom du véhicule</h3>
+                    <h3 className="text-lg font-semibold mb-4">
+                      Nom du véhicule
+                    </h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
                         <label
@@ -244,7 +254,13 @@ const AddVehicleScreen: React.FC = () => {
                         <input
                           type="text"
                           value={formData.name.fr}
-                          onChange={(e) => handleMultilingualChange("name", "fr", e.target.value)}
+                          onChange={(e) =>
+                            handleMultilingualChange(
+                              "name",
+                              "fr",
+                              e.target.value
+                            )
+                          }
                           className={`w-full px-4 py-3 rounded-lg border transition-colors ${
                             isDark
                               ? "bg-gray-700 border-gray-600 text-white focus:border-blue-500"
@@ -265,7 +281,13 @@ const AddVehicleScreen: React.FC = () => {
                         <input
                           type="text"
                           value={formData.name.en}
-                          onChange={(e) => handleMultilingualChange("name", "en", e.target.value)}
+                          onChange={(e) =>
+                            handleMultilingualChange(
+                              "name",
+                              "en",
+                              e.target.value
+                            )
+                          }
                           className={`w-full px-4 py-3 rounded-lg border transition-colors ${
                             isDark
                               ? "bg-gray-700 border-gray-600 text-white focus:border-blue-500"
@@ -442,7 +464,9 @@ const AddVehicleScreen: React.FC = () => {
                 <div className="space-y-4">
                   {/* Nouvelle caractéristique - FR/EN */}
                   <div className="bg-white/10 p-4 rounded-lg">
-                    <h3 className="text-lg font-semibold mb-4">Ajouter une caractéristique</h3>
+                    <h3 className="text-lg font-semibold mb-4">
+                      Ajouter une caractéristique
+                    </h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                       <div>
                         <label className="block text-sm font-medium mb-2 text-gray-700">
@@ -451,9 +475,15 @@ const AddVehicleScreen: React.FC = () => {
                         <input
                           type="text"
                           value={newFeature.fr}
-                          onChange={(e) => setNewFeature(prev => ({ ...prev, fr: e.target.value }))}
+                          onChange={(e) =>
+                            setNewFeature((prev) => ({
+                              ...prev,
+                              fr: e.target.value,
+                            }))
+                          }
                           onKeyPress={(e) =>
-                            e.key === "Enter" && (e.preventDefault(), addFeature())
+                            e.key === "Enter" &&
+                            (e.preventDefault(), addFeature())
                           }
                           className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                           placeholder="Ajouter une caractéristique en français..."
@@ -466,9 +496,15 @@ const AddVehicleScreen: React.FC = () => {
                         <input
                           type="text"
                           value={newFeature.en}
-                          onChange={(e) => setNewFeature(prev => ({ ...prev, en: e.target.value }))}
+                          onChange={(e) =>
+                            setNewFeature((prev) => ({
+                              ...prev,
+                              en: e.target.value,
+                            }))
+                          }
                           onKeyPress={(e) =>
-                            e.key === "Enter" && (e.preventDefault(), addFeature())
+                            e.key === "Enter" &&
+                            (e.preventDefault(), addFeature())
                           }
                           className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                           placeholder="Add a feature in English..."
@@ -500,14 +536,30 @@ const AddVehicleScreen: React.FC = () => {
                           <div className="flex-1">
                             <div className="flex items-center gap-2 mb-2">
                               <span className="text-sm font-medium">🇫🇷</span>
-                              <span className={isDark ? "text-gray-300" : "text-gray-700"}>
-                                {feature.fr || <span className="text-gray-500 italic">Non spécifié</span>}
+                              <span
+                                className={
+                                  isDark ? "text-gray-300" : "text-gray-700"
+                                }
+                              >
+                                {feature.fr || (
+                                  <span className="text-gray-500 italic">
+                                    Non spécifié
+                                  </span>
+                                )}
                               </span>
                             </div>
                             <div className="flex items-center gap-2">
                               <span className="text-sm font-medium">🇬🇧</span>
-                              <span className={isDark ? "text-gray-300" : "text-gray-700"}>
-                                {feature.en || <span className="text-gray-500 italic">Not specified</span>}
+                              <span
+                                className={
+                                  isDark ? "text-gray-300" : "text-gray-700"
+                                }
+                              >
+                                {feature.en || (
+                                  <span className="text-gray-500 italic">
+                                    Not specified
+                                  </span>
+                                )}
                               </span>
                             </div>
                           </div>
@@ -542,7 +594,9 @@ const AddVehicleScreen: React.FC = () => {
                 </h2>
 
                 <div className="bg-white/5 p-4 rounded-lg">
-                  <h3 className="text-lg font-semibold mb-4">Description du véhicule</h3>
+                  <h3 className="text-lg font-semibold mb-4">
+                    Description du véhicule
+                  </h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <label
@@ -554,7 +608,13 @@ const AddVehicleScreen: React.FC = () => {
                       </label>
                       <textarea
                         value={formData.description.fr}
-                        onChange={(e) => handleMultilingualChange("description", "fr", e.target.value)}
+                        onChange={(e) =>
+                          handleMultilingualChange(
+                            "description",
+                            "fr",
+                            e.target.value
+                          )
+                        }
                         rows={4}
                         className={`w-full px-4 py-3 rounded-lg border transition-colors ${
                           isDark
@@ -575,7 +635,13 @@ const AddVehicleScreen: React.FC = () => {
                       </label>
                       <textarea
                         value={formData.description.en}
-                        onChange={(e) => handleMultilingualChange("description", "en", e.target.value)}
+                        onChange={(e) =>
+                          handleMultilingualChange(
+                            "description",
+                            "en",
+                            e.target.value
+                          )
+                        }
                         rows={4}
                         className={`w-full px-4 py-3 rounded-lg border transition-colors ${
                           isDark

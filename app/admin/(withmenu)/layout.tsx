@@ -13,6 +13,7 @@ import { StatsProvider } from "@/components/providers/admin/StatsProvider";
 import { ContactProvider } from "@/components/providers/admin/ContactProvider";
 import { PrivacyProvider } from "@/components/providers/admin/PrivacyProvider";
 import { CguProvider } from "@/components/providers/admin/CguProvider";
+import { CategoryProvider } from "@/components/providers/admin/CategoryProvider";
 
 export const metadata: Metadata = {
   title: "Mada Chaland - Dashboard Admin",
@@ -36,7 +37,9 @@ export default function WithMenuLayout({
                     <ContactProvider>
                       <PrivacyProvider>
                         <CguProvider>
-                          <CommentProvider>{children}</CommentProvider>
+                          <CategoryProvider>
+                            <CommentProvider>{children}</CommentProvider>
+                          </CategoryProvider>
                         </CguProvider>
                       </PrivacyProvider>
                     </ContactProvider>

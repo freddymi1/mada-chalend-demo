@@ -180,7 +180,7 @@ model Vehicle {
 }
 
 model Category {
-  id        String    @id
+  id          String    @id @default(cuid())
   name      String
   icon      String?
   createdAt DateTime  @default(now())

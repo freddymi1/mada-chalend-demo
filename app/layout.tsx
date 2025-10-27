@@ -19,6 +19,7 @@ import { ProtectionProvider } from "@/components/providers/client/ProtectionProv
 import { CiContactProvider } from "@/components/providers/client/ClContactProvider";
 import { CiCguProvider } from "@/components/providers/client/ClCguProvider";
 import { CiPrivacyProvider } from "@/components/providers/client/CiPrivacyProvider";
+import { CiCategoryProvider } from "@/components/providers/client/CiCategoryProvider";
 
 export const metadata: Metadata = {
   title: "Mada Chaland - Agence de voyage à Madagascar",
@@ -55,7 +56,9 @@ export default async function RootLayout({
                           <CiContactProvider>
                             <CiCguProvider>
                               <CiPrivacyProvider>
-                                <Suspense fallback={null}>{children}</Suspense>
+                                <CiCategoryProvider>
+                                  <Suspense fallback={null}>{children}</Suspense>
+                                </CiCategoryProvider>
                               </CiPrivacyProvider>
                             </CiCguProvider>
                           </CiContactProvider>
