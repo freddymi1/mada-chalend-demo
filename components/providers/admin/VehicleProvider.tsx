@@ -369,8 +369,14 @@ export const VehicleProvider = ({ children }: { children: ReactNode }) => {
     console.log("Deleting vehicle ID:", id);
     
     try {
+
+      const vehicleData = {
+        status: "indispo"
+      };
       const res = await fetch(`/api/car/delete/${id}`, {
-        method: "DELETE",
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(vehicleData),
       });
       
       if (res.ok) {

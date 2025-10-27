@@ -160,20 +160,20 @@ model Reservation {
 
 model Vehicle {
   id           String        @id @default(cuid())
-  name         String
-  categoryId   String
-  type         String
-  passengers   Int
-  pricePerDay  Float
-  rating       Float
-  mainImage    String
+  name         String?
+  categoryId   String?
+  type         String?
+  passengers   Int?
+  pricePerDay  Float?
+  rating       Float?
+  mainImage    String?
   detailImages String[]
   features     String[]
-  description  String
-  status       String        @default("dispo")
+  description  String?
+  status       String?        @default("dispo")
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
-  categoryRel  Category      @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  categoryRel  Category?      @relation(fields: [categoryId], references: [id], onDelete: Cascade)
   reservations Reservation[]
 
   @@map("vehicles")

@@ -9,6 +9,11 @@ export const dynamic = "force-dynamic";
 export async function GET() {
   try {
     const reviews = await prisma.review.findMany({
+      where: {
+        status: {
+          not: 'rejected'
+        }
+      },
       include: {
         user: {
           select: {

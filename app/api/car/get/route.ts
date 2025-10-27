@@ -28,6 +28,7 @@ function isVehicleAvailable(reservations: any[]): boolean {
 export async function GET() {
   try {
     const vehicles = await prisma.vehicle.findMany({
+      where:{status: "dispo"},
       include: {
         categoryRel: true, // Include related category
         reservations: true

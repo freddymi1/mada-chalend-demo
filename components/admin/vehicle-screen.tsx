@@ -230,6 +230,7 @@ const VehicleScreen: React.FC = () => {
     vehicles,
     handleDelete: deleteVehicle,
     fetchVehicles,
+    handleUpdate,
     isLoading
   } = useVehicle();
 
@@ -367,6 +368,7 @@ const VehicleScreen: React.FC = () => {
                 isDark={isDark}
                 deleteVehicle={deleteVehicle}
                 onViewDetails={handleViewDetails}
+                
               />
             ))}
           </div>
