@@ -345,12 +345,12 @@ const VehicleCard: React.FC<{
               /jour
             </span>
           </div>
-          <button
+          {/* <button
             
             className="px-6 py-2 bg-primary hover:bg-blue-700 text-white rounded-lg font-medium transition-colors"
           >
             Réserver
-          </button>
+          </button> */}
         </div>
 
         {/* Action Buttons */}
