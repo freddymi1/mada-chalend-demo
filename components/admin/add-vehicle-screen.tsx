@@ -462,6 +462,59 @@ const AddVehicleScreen: React.FC = () => {
                 </h2>
 
                 <div className="space-y-4">
+                  {/* Liste des caractéristiques */}
+                  <div className="space-y-3">
+                    {formData.features
+                      .filter((f) => f.fr.trim() || f.en.trim())
+                      .map((feature, index) => (
+                        <div
+                          key={index}
+                          className={`flex items-center gap-3 p-4 rounded-lg border ${
+                            isDark
+                              ? "bg-gray-700 border-gray-600"
+                              : "bg-gray-50 border-gray-200"
+                          }`}
+                        >
+                          <div className="flex-1">
+                            <div className="flex items-center gap-2 mb-2">
+                              <span className="text-sm font-medium">🇫🇷</span>
+                              <span
+                                className={
+                                  isDark ? "text-gray-300" : "text-gray-700"
+                                }
+                              >
+                                {feature.fr || (
+                                  <span className="text-gray-500 italic">
+                                    Non spécifié
+                                  </span>
+                                )}
+                              </span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <span className="text-sm font-medium">🇬🇧</span>
+                              <span
+                                className={
+                                  isDark ? "text-gray-300" : "text-gray-700"
+                                }
+                              >
+                                {feature.en || (
+                                  <span className="text-gray-500 italic">
+                                    Not specified
+                                  </span>
+                                )}
+                              </span>
+                            </div>
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => removeArrayItem(index, "features")}
+                            className="text-red-500 hover:text-red-700"
+                          >
+                            <X className="w-4 h-4" />
+                          </button>
+                        </div>
+                      ))}
+                  </div>
                   {/* Nouvelle caractéristique - FR/EN */}
                   <div className="bg-white/10 p-4 rounded-lg">
                     <h3 className="text-lg font-semibold mb-4">
@@ -520,59 +573,7 @@ const AddVehicleScreen: React.FC = () => {
                     </button>
                   </div>
 
-                  {/* Liste des caractéristiques */}
-                  <div className="space-y-3">
-                    {formData.features
-                      .filter((f) => f.fr.trim() || f.en.trim())
-                      .map((feature, index) => (
-                        <div
-                          key={index}
-                          className={`flex items-center gap-3 p-4 rounded-lg border ${
-                            isDark
-                              ? "bg-gray-700 border-gray-600"
-                              : "bg-gray-50 border-gray-200"
-                          }`}
-                        >
-                          <div className="flex-1">
-                            <div className="flex items-center gap-2 mb-2">
-                              <span className="text-sm font-medium">🇫🇷</span>
-                              <span
-                                className={
-                                  isDark ? "text-gray-300" : "text-gray-700"
-                                }
-                              >
-                                {feature.fr || (
-                                  <span className="text-gray-500 italic">
-                                    Non spécifié
-                                  </span>
-                                )}
-                              </span>
-                            </div>
-                            <div className="flex items-center gap-2">
-                              <span className="text-sm font-medium">🇬🇧</span>
-                              <span
-                                className={
-                                  isDark ? "text-gray-300" : "text-gray-700"
-                                }
-                              >
-                                {feature.en || (
-                                  <span className="text-gray-500 italic">
-                                    Not specified
-                                  </span>
-                                )}
-                              </span>
-                            </div>
-                          </div>
-                          <button
-                            type="button"
-                            onClick={() => removeArrayItem(index, "features")}
-                            className="text-red-500 hover:text-red-700"
-                          >
-                            <X className="w-4 h-4" />
-                          </button>
-                        </div>
-                      ))}
-                  </div>
+                  
                 </div>
               </div>
 
