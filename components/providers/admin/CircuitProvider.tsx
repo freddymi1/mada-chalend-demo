@@ -8,6 +8,14 @@ export interface Lng {
   fr: string;
 }
 
+export interface ItineraryDistanceRel {
+  id?: string;
+  departPoint: string;
+  distance: number;
+  arrivalPoint: string;
+  itineraryId?: string;
+}
+
 export interface ItineraryDay {
   day: number;
   title: Lng;
@@ -15,6 +23,7 @@ export interface ItineraryDay {
   image: string;
   imageDescription: Lng;
   distance: number;
+  itineraryDistanceRel?: ItineraryDistanceRel[]; // 🔥 AJOUT
 }
 
 interface CircuitFormData {
@@ -392,73 +401,75 @@ export const CircuitProvider = ({
   };
 
   const handleUpdate = async (id: string) => {
-    setIsLoading(true);
+  setIsLoading(true);
 
-    // Préparer les données pour la mise à jour
-    const processedItinerary = formData.itinerary.map((day) => ({
-      ...day,
-      title: JSON.stringify(day.title),
-      description: JSON.stringify(day.description),
-      imageDescription: JSON.stringify(day.imageDescription),
-    }));
+  // Préparer les données pour la mise à jour
+  const processedItinerary = formData.itinerary.map((day) => ({
+    ...day,
+    title: JSON.stringify(day.title),
+    description: JSON.stringify(day.description),
+    imageDescription: JSON.stringify(day.imageDescription),
+    // 🔥 CORRECTION : Préserver les itineraryDistanceRel
+    itineraryDistanceRel: day.itineraryDistanceRel || [],
+  }));
 
-    const updateData = {
-      ...formData,
-      title: JSON.stringify(formData.title),
-      description: JSON.stringify(formData.description),
-      highlights: formData.highlights.map((item) => JSON.stringify(item)),
-      included: formData.included.map((item) => JSON.stringify(item)),
-      notIncluded: formData.notIncluded.map((item) => JSON.stringify(item)),
-      itinerary: processedItinerary,
-    };
+  const updateData = {
+    ...formData,
+    title: JSON.stringify(formData.title),
+    description: JSON.stringify(formData.description),
+    highlights: formData.highlights.map((item) => JSON.stringify(item)),
+    included: formData.included.map((item) => JSON.stringify(item)),
+    notIncluded: formData.notIncluded.map((item) => JSON.stringify(item)),
+    itinerary: processedItinerary,
+  };
 
-    try {
-      const res = await fetch(`/api/circuit/update/${id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(updateData),
+  try {
+    const res = await fetch(`/api/circuit/update/${id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(updateData),
+    });
+    if (res.ok) {
+      const updatedCircuit = await res.json();
+      setAddedCircuits((prev) =>
+        prev.map((circuit) => (circuit.id === id ? updatedCircuit : circuit))
+      );
+      toast({
+        title: "Success !",
+        description: "Circuit mis à jour !",
       });
-      if (res.ok) {
-        const updatedCircuit = await res.json();
-        setAddedCircuits((prev) =>
-          prev.map((circuit) => (circuit.id === id ? updatedCircuit : circuit))
-        );
-        toast({
-          title: "Success !",
-          description: "Circuit mis à jour !",
-        });
-        setIsLoading(false);
-        router.push("/admin/circuits");
-        await getCircuitById(id);
-        await fetchCircuits();
-        setFormData({
-          title: { en: "", fr: "" },
-          duration: "",
-          price: "",
-          maxPeople: "",
-          difficulty: "Facile",
-          description: { en: "", fr: "" },
-          itinereryImage: "",
-          highlights: [{ en: "", fr: "" }],
-          itinerary: [],
-          included: [{ en: "", fr: "" }],
-          notIncluded: [{ en: "", fr: "" }],
-        });
-      } else {
-        toast({
-          title: "Error !",
-          description: "Erreur lors de la mise à jour du circuit.",
-        });
-        setIsLoading(false);
-      }
-    } catch {
+      setIsLoading(false);
+      router.push("/admin/circuits");
+      await getCircuitById(id);
+      await fetchCircuits();
+      setFormData({
+        title: { en: "", fr: "" },
+        duration: "",
+        price: "",
+        maxPeople: "",
+        difficulty: "Facile",
+        description: { en: "", fr: "" },
+        itinereryImage: "",
+        highlights: [{ en: "", fr: "" }],
+        itinerary: [],
+        included: [{ en: "", fr: "" }],
+        notIncluded: [{ en: "", fr: "" }],
+      });
+    } else {
       toast({
         title: "Error !",
         description: "Erreur lors de la mise à jour du circuit.",
       });
       setIsLoading(false);
     }
-  };
+  } catch {
+    toast({
+      title: "Error !",
+      description: "Erreur lors de la mise à jour du circuit.",
+    });
+    setIsLoading(false);
+  }
+};
 
   const handleDelete = async (id: string) => {
     try {
@@ -527,71 +538,73 @@ export const CircuitProvider = ({
   };
 
   const getCircuitById = async (id: string) => {
-    try {
-      const res = await fetch(`/api/circuit/${id}`, { cache: "no-store" });
-      if (res.ok) {
-        const data = await res.json();
-        setCircuitDetail(data);
-        
-        const parsedTitle = parseMultilingualField(data.title);
-        const parsedDescription = parseMultilingualField(data.description);
-        
-        const parsedItinerary = data.itineraries && data.itineraries.length > 0
-          ? data.itineraries.map((item: any) => ({
-              ...item,
-              title: parseMultilingualField(item.title),
-              description: parseMultilingualField(item.description),
-              imageDescription: parseMultilingualField(item.imageDescription),
-            }))
-          : [];
+  try {
+    const res = await fetch(`/api/circuit/${id}`, { cache: "no-store" });
+    if (res.ok) {
+      const data = await res.json();
+      setCircuitDetail(data);
+      
+      const parsedTitle = parseMultilingualField(data.title);
+      const parsedDescription = parseMultilingualField(data.description);
+      
+      const parsedItinerary = data.itineraries && data.itineraries.length > 0
+        ? data.itineraries.map((item: any) => ({
+            ...item,
+            title: parseMultilingualField(item.title),
+            description: parseMultilingualField(item.description),
+            imageDescription: parseMultilingualField(item.imageDescription),
+            // 🔥 CORRECTION : Préserver les itineraryDistanceRel
+            itineraryDistanceRel: item.itineraryDistanceRel || [],
+          }))
+        : [];
 
-        const parsedHighlights = data.highlights && data.highlights.length > 0
-          ? data.highlights.map((item: any) => 
-              parseMultilingualField(item.text || item)
-            )
-          : [{ en: "", fr: "" }];
+      const parsedHighlights = data.highlights && data.highlights.length > 0
+        ? data.highlights.map((item: any) => 
+            parseMultilingualField(item.text || item)
+          )
+        : [{ en: "", fr: "" }];
 
-        const parsedIncluded = data.included && data.included.length > 0
-          ? data.included.map((item: any) => 
-              parseMultilingualField(item.text || item)
-            )
-          : [{ en: "", fr: "" }];
+      const parsedIncluded = data.included && data.included.length > 0
+        ? data.included.map((item: any) => 
+            parseMultilingualField(item.text || item)
+          )
+        : [{ en: "", fr: "" }];
 
-        const parsedNotIncluded = data.notIncluded && data.notIncluded.length > 0
-          ? data.notIncluded.map((item: any) => 
-              parseMultilingualField(item.text || item)
-            )
-          : [{ en: "", fr: "" }];
-        
-        setFormData({
-          title: parsedTitle,
-          duration: data.duration || "",
-          price: data.price || "",
-          maxPeople: data.maxPeople ? String(data.maxPeople) : "",
-          difficulty: data.difficulty || "Facile",
-          description: parsedDescription,
-          itinereryImage: data.itinereryImage || "",
-          highlights: parsedHighlights,
-          itinerary: parsedItinerary,
-          included: parsedIncluded,
-          notIncluded: parsedNotIncluded,
-        });
-        return data;
-      } else {
-        toast({
-          title: "Error !",
-          description: "Erreur lors du chargement des circuits.",
-        });
-        return null;
-      }
-    } catch (error) {
+      const parsedNotIncluded = data.notIncluded && data.notIncluded.length > 0
+        ? data.notIncluded.map((item: any) => 
+            parseMultilingualField(item.text || item)
+          )
+        : [{ en: "", fr: "" }];
+      
+      setFormData({
+        title: parsedTitle,
+        duration: data.duration || "",
+        price: data.price || "",
+        maxPeople: data.maxPeople ? String(data.maxPeople) : "",
+        difficulty: data.difficulty || "Facile",
+        description: parsedDescription,
+        itinereryImage: data.itinereryImage || "",
+        highlights: parsedHighlights,
+        itinerary: parsedItinerary,
+        included: parsedIncluded,
+        notIncluded: parsedNotIncluded,
+      });
+      return data;
+    } else {
       toast({
         title: "Error !",
         description: "Erreur lors du chargement des circuits.",
       });
       return null;
     }
-  };
+  } catch (error) {
+    toast({
+      title: "Error !",
+      description: "Erreur lors du chargement des circuits.",
+    });
+    return null;
+  }
+};
 
   return (
     <CircuitContext.Provider

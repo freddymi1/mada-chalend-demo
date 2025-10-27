@@ -1,4 +1,3 @@
-// Update a circuit by ID
 import { prisma } from '@/src/lib/prisma';
 import { NextResponse } from 'next/server';
 
@@ -13,18 +12,17 @@ export async function PUT(request: Request, { params }: { params: { id: string }
         title: data.title,
         duration: data.duration,
         price: data.price,
-        maxPeople: data.maxPeople ? Number(data.maxPeople) : null, // 🔥 cast en Int ou null
+        maxPeople: data.maxPeople ? Number(data.maxPeople) : null,
         difficulty: data.difficulty,
         description: data.description,
         itinereryImage: data.itinereryImage,
 
-        // ⚡ Highlights (si c’est un tableau de string => delete + recrée)
         highlights: {
           deleteMany: { circuitId: id },
           create: data.highlights?.map((text: string) => ({ text })),
         },
 
-        // ⚡ Itinerary (si tu veux full replace aussi)
+        // 🔥 CORRECTION : Gérer les itineraryDistanceRel
         itineraries: {
           deleteMany: { circuitId: id },
           create: data.itinerary?.map((it: any) => ({
@@ -34,16 +32,23 @@ export async function PUT(request: Request, { params }: { params: { id: string }
             image: it.image,
             imageDescription: it.imageDescription,
             distance: Number(it.distance),
+            
+            // Recréer les itineraryDistanceRel
+            itineraryDistanceRel: it.itineraryDistanceRel && it.itineraryDistanceRel.length > 0 ? {
+              create: it.itineraryDistanceRel.map((dist: any) => ({
+                departPoint: dist.departPoint,
+                distance: Number(dist.distance),
+                arrivalPoint: dist.arrivalPoint,
+              }))
+            } : undefined,
           })),
         },
 
-        // ⚡ Included
         included: {
           deleteMany: { circuitId: id },
           create: data.included?.map((text: string) => ({ text })),
         },
 
-        // ⚡ Not included
         notIncluded: {
           deleteMany: { circuitId: id },
           create: data.notIncluded?.map((text: string) => ({ text })),
@@ -51,7 +56,11 @@ export async function PUT(request: Request, { params }: { params: { id: string }
       },
       include: {
         highlights: true,
-        itineraries: true,
+        itineraries: {
+          include: {
+            itineraryDistanceRel: true, // 🔥 Inclure dans la réponse
+          }
+        },
         included: true,
         notIncluded: true,
       },
@@ -63,3 +72,4 @@ export async function PUT(request: Request, { params }: { params: { id: string }
     return NextResponse.json({ error: 'Failed to update circuit' }, { status: 500 });
   }
 }
+
