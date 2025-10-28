@@ -82,7 +82,7 @@ export const VehicleCard: React.FC<{
         </div>
 
         <p
-          className={`text-sm mb-4 ${
+          className={`text-sm mb-4 line-clamp-3 ${
             isDark ? "text-gray-400" : "text-gray-600"
           }`}
         >
@@ -165,7 +165,7 @@ export const VehicleCard: React.FC<{
             
           </div>
         </div>
-        <div className="flex items-center justify-between gap-4">
+        <div className="flex flex-col lg:flex-row items-center justify-between gap-4">
           <button
             onClick={() => onShowDetails(vehicle)}
             className={`flex justify-center w-full items-center gap-2 px-4 py-2 rounded-lg font-medium transition-colors hover:scale-105 ${

@@ -219,7 +219,7 @@ const ClientCircuitDetailScreen = () => {
                   </CardHeader>
                   <CardContent className="px-2 sm:px-6">
                     <div className="space-y-4 sm:space-y-6">
-                      {circuitDetail?.itineraries?.map(
+                      {circuitDetail?.itineraries?.sort((a: any, b: any) => a.day - b.day).map(
                         (day: any, index: number) => {
                           const imgTitle = day.title
                             ? JSON.parse(day.title)
