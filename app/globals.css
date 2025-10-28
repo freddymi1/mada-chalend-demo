@@ -18,7 +18,7 @@
   --secondary: oklch(0.97 0 0);
   --secondary-foreground: oklch(0.205 0 0);
   --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
+  --muted-foreground: oklch(44.226% 0.00005 271.152);
 
   /* Updated to Madagascar colors: vert tropical (#22c55e) */
   --accent: oklch(0.7 0.15 140);

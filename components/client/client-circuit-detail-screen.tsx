@@ -130,16 +130,16 @@ const ClientCircuitDetailScreen = () => {
                 <div className="lg:col-span-2 space-y-6 sm:space-y-8 w-full min-w-0">
                   {/* Title and basic info */}
                   <div className="animate-slide-up w-full">
-                    <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-4 text-balance break-words">
+                    <h1 className="text-3xl lg:text-4xl font-bold text-red-500 mb-4 text-balance break-words">
                       {locale === "fr" ? title?.fr : title?.en}
                     </h1>
                     <div className="flex flex-wrap gap-2 sm:gap-4 mb-4 sm:mb-6">
                       <Badge
                         variant="secondary"
-                        className="flex items-center gap-1 text-xs sm:text-sm"
+                        className="flex bg-primary tex-white items-center gap-1 text-xs sm:text-sm"
                       >
-                        <Calendar className="h-3 w-3 sm:h-4 sm:w-4" />
-                        <span className="truncate">
+                        <Calendar className="h-3 w-3 text-white sm:h-4 sm:w-4" />
+                        <span className="truncate text-white">
                           {Number(circuitDetail?.duration)} {t("ourTrip.day")} /{" "}
                           {Number(circuitDetail?.duration) - 1}{" "}
                           {t("ourTrip.night")}
@@ -148,10 +148,10 @@ const ClientCircuitDetailScreen = () => {
 
                       <Badge
                         variant="secondary"
-                        className="flex items-center gap-1 text-xs sm:text-sm"
+                        className="flex bg-orange-600 items-center gap-1 text-xs sm:text-sm"
                       >
-                        <Star className="h-3 w-3 sm:h-4 sm:w-4" />
-                        <span className="truncate">
+                        <Star className="h-3 w-3 text-white sm:h-4 sm:w-4" />
+                        <span className="truncate text-white">
                           {circuitDetail?.difficulty}
                         </span>
                       </Badge>
@@ -249,14 +249,14 @@ const ClientCircuitDetailScreen = () => {
                                   <div className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold text-xs sm:text-sm">
                                     {day.day}
                                   </div>
-                                  <h4 className="font-semibold mb-1 text-sm sm:text-base break-words">
+                                  <h4 className="font-semibold mb-1 text-lg text-red-500 break-words">
                                     {locale === "fr"
                                       ? imgTitle.fr
                                       : imgTitle.en}
                                   </h4>
                                 </div>
 
-                                <div className="grid lg:h-[400px] grid-cols-1 lg:grid-cols-2 gap-10">
+                                <div className="grid lg:h-[400px] grid-cols-1 lg:grid-cols-2 gap-4">
                                   {day.image !== "" && (
                                     <div
                                       className="!w-full max-h-96 flex flex-col items-start justify-end rounded-lg overflow-hidden cursor-pointer group relative"
@@ -276,7 +276,7 @@ const ClientCircuitDetailScreen = () => {
                                           <Camera className="h-4 w-4 text-gray-700" />
                                         </div>
                                       </div>
-                                      <h4 className="font-semibold mt-1 text-left text-sm sm:text-base lg:text-lg break-words">
+                                      <h4 className="font-semibold mt-1 text-left text-md lg:text-lg break-words">
                                         {locale === "fr"
                                           ? imgDescription.fr
                                           : imgDescription.en}
@@ -287,7 +287,7 @@ const ClientCircuitDetailScreen = () => {
                                   <div className="!w-full flex flex-col items-start justify-start gap-4 rounded-lg overflow-hidden cursor-pointer group relative">
                                     {/* Affichage de itineraryDistanceRel */}
                                     {steps.length > 0 && (
-                                      <div className="bg-slate-800/10 backdrop-blur rounded-2xl shadow-2xl border border-slate-700/10 p-3">
+                                      <div className="bg-slate-800/5 backdrop-blur rounded-xl shadow-xl border border-slate-700/5 p-3">
                                         <div className="relative">
                                           {/* Ligne verticale principale */}
                                           <div className="absolute left-[10px] top-0 bottom-0 w-0.5 bg-gradient-to-b from-green-500 via-blue-500 to-orange-500"></div>
@@ -365,16 +365,16 @@ const ClientCircuitDetailScreen = () => {
                                       </div>
                                     )}
 
-                                    <p className="text-muted-foreground text-xs sm:text-sm mb-2 break-words">
+                                    <p className="text-muted-foreground text-md break-words">
                                       {locale === "fr"
                                         ? dayDescription.fr
                                         : dayDescription.en}
                                     </p>
-                                    <p className="text-xs text-muted-foreground italic break-words">
+                                    {/* <p className="text-md text-muted-foreground italic break-words">
                                       {locale === "fr"
                                         ? imgDescription.fr
                                         : imgDescription.en}
-                                    </p>
+                                    </p> */}
                                   </div>
                                 </div>
                               </div>
@@ -395,10 +395,10 @@ const ClientCircuitDetailScreen = () => {
                   animationFillMode: "both",
                 }}
               >
-                <CardHeader className="text-center">
-                  <CardTitle className="text-xl sm:text-2xl text-primary break-words flex items-center gap-4">
+                <CardHeader className="text-center flex items-center justify-center">
+                  <CardTitle className="text-2xl text-primary break-words flex items-center gap-4">
                     <span>{circuitDetail?.price} €</span>
-                    <p className="text-muted-foreground text-sm sm:text-base">
+                    <p className="text-muted-foreground text-lg">
                       {t("detailCircuit.booking.pricePerPerson")}
                     </p>
                   </CardTitle>
