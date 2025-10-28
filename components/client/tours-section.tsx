@@ -69,11 +69,11 @@ export function ToursSection() {
                     />
                   </div>
                   <CardHeader>
-                    <CardTitle className="text-xl text-balance">
+                    <CardTitle className="text-lg lg:text-xl text-balance">
                       {locale === "fr" ? title.fr : title.en}
                     </CardTitle>
                     <div className="flex items-center justify-start gap-10">
-                      <div className="flex items-center gap-2 text-muted-foreground">
+                      <div className="flex bg-primary px-2 py-1 rounded-lg text-white text-md items-center gap-2 text-muted-foreground">
                         <Calendar className="h-4 w-4" />
                         <span>{Number(tour.duration)} {t("ourTrip.day")} / {Number(tour.duration) -1} {t("ourTrip.night")}</span>
                       </div>
