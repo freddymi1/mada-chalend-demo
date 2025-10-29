@@ -219,7 +219,7 @@ const ReviewSlider = () => {
               <div
                 key={avis.id}
                 onClick={() => openModal(avis)}
-                className="flex-shrink-0 w-full md:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] bg-white/50 dark:bg-gray-800 rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-all duration-300 border border-slate-100 cursor-pointer hover:scale-[1.02] active:scale-[0.98]"
+                className="flex-shrink-0 w-full md:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] bg-white/50 rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-all duration-300 border border-slate-100 cursor-pointer hover:scale-[1.02] active:scale-[0.98]"
               >
                 {/* Header */}
                 <div className="flex items-start justify-between mb-4">
@@ -238,7 +238,7 @@ const ReviewSlider = () => {
                           </span>
                         )}
                       </div>
-                      <p className="text-sm text-gray-500">{avis.date}</p>
+                      <p className="text-sm text-slate-700">{avis.date}</p>
                     </div>
                   </div>
                   <div className="flex flex-col items-end">
@@ -255,7 +255,7 @@ const ReviewSlider = () => {
                     {avis.titre}
                   </h4>
                   <div
-                    className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed line-clamp-3"
+                    className="text-sm text-slate-700 leading-relaxed line-clamp-3"
                     dangerouslySetInnerHTML={{
                       __html: avis.description,
                     }}
@@ -307,14 +307,14 @@ const ReviewSlider = () => {
             onClick={(e) => e.stopPropagation()}
           >
             {/* Header de la modale */}
-            <div className="sticky top-0 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 p-6 flex items-start justify-between">
+            <div className="sticky top-0 bg-primary border-b border-gray-200 dark:border-gray-700 p-6 flex items-start justify-between">
               <div className="flex items-center gap-4 flex-1">
-                <div className="w-16 h-16 rounded-full bg-primary flex items-center justify-center text-white font-bold text-2xl shadow-lg">
+                <div className="w-16 h-16 rounded-full bg-secondary flex items-center justify-center text-primary font-bold text-2xl shadow-lg">
                   {selectedReview.author.charAt(0)}
                 </div>
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-1">
-                    <h3 className="font-bold text-xl">
+                    <h3 className="font-bold text-secondary text-xl">
                       {selectedReview.author}
                     </h3>
                     {selectedReview.verified && (
@@ -323,7 +323,7 @@ const ReviewSlider = () => {
                       </span>
                     )}
                   </div>
-                  <p className="text-sm text-gray-500">{selectedReview.date}</p>
+                  <p className="text-sm text-white/80">{selectedReview.date}</p>
                   <div className="flex items-center gap-3 mt-2">
                     {renderStars(selectedReview.note, "w-5 h-5")}
                     <span className="text-lg font-bold">
@@ -334,7 +334,7 @@ const ReviewSlider = () => {
               </div>
               <button
                 onClick={closeModal}
-                className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                className="p-2 rounded-full bg-gray-100 transition-colors"
                 aria-label="Fermer"
               >
                 <X className="w-6 h-6" />
@@ -347,7 +347,7 @@ const ReviewSlider = () => {
                 {selectedReview.titre}
               </h2>
               <div
-                className="text-base text-gray-700 dark:text-gray-300 leading-relaxed prose prose-sm max-w-none"
+                className="text-base text-slate-700 leading-relaxed prose prose-sm max-w-none"
                 dangerouslySetInnerHTML={{
                   __html: selectedReview.description,
                 }}

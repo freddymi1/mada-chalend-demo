@@ -410,11 +410,8 @@ export function HeroSection() {
               <Link href="/circuits">
                 <Button
                   size="lg"
-                  className="text-lg sm:text-xl px-10 py-6 lg:px-12 lg:py-8 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 border-0 rounded-full font-semibold tracking-wide transition-all duration-300 animate-button-pulse hover:animate-none transform hover:scale-105 hover:shadow-2xl"
-                  style={{
-                    background: "linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%)",
-                    boxShadow: "0 10px 30px rgba(59, 130, 246, 0.3)",
-                  }}
+                  className="text-lg sm:text-xl px-10 py-6 lg:px-12 lg:py-8 bg-primary cursor-pointer border-0 rounded-full font-semibold tracking-wide transition-all duration-300 animate-button-pulse hover:animate-none transform hover:scale-105 hover:shadow-2xl"
+                  
                 >
                   <span className="relative z-10">
                     {t('hero.cta')}

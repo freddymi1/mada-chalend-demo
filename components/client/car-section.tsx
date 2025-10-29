@@ -215,9 +215,7 @@ const CarSection: React.FC = () => {
                   className={`px-4 py-2 rounded-lg font-medium transition-colors ${
                     selectedCategory === category.id
                       ? "bg-primary text-white"
-                      : isDark
-                      ? "bg-gray-800 text-gray-300 hover:bg-gray-700"
-                      : "bg-white text-gray-700 hover:bg-gray-100"
+                      : "bg-white text-slate-600"
                   }`}
                 >
                   {category.name}
@@ -226,15 +224,13 @@ const CarSection: React.FC = () => {
             </div>
 
             {/* View Mode Toggle */}
-            <div className="flex items-center gap-2">
+            <div className="hidden lg:flex items-center gap-2">
               <button
                 onClick={() => setViewMode("grid")}
                 className={`p-2 rounded-lg transition-colors ${
                   viewMode === "grid"
                     ? "bg-primary text-white"
-                    : isDark
-                    ? "bg-gray-800 text-gray-300 hover:bg-gray-700"
-                    : "bg-white text-gray-700 hover:bg-gray-100"
+                    : "bg-white text-slate-600"
                 }`}
               >
                 <Grid className="w-5 h-5" />
@@ -244,9 +240,7 @@ const CarSection: React.FC = () => {
                 className={`p-2 rounded-lg transition-colors ${
                   viewMode === "list"
                     ? "bg-primary text-white"
-                    : isDark
-                    ? "bg-gray-800 text-gray-300 hover:bg-gray-700"
-                    : "bg-white text-gray-700 hover:bg-gray-100"
+                    : "bg-white text-slate-600"
                 }`}
               >
                 <List className="w-5 h-5" />

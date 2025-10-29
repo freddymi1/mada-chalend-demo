@@ -207,11 +207,7 @@ export const ImageModal: React.FC<{
           {/* Close Button */}
           <button
             onClick={onClose}
-            className={`p-1.5 sm:p-2 absolute top-2 right-2 bg-white/90 rounded-lg transition-colors z-20 ${
-              isDark
-                ? "hover:bg-red-800 text-gray-400 hover:text-white"
-                : "hover:bg-red-100 text-gray-600 hover:text-gray-900"
-            }`}
+            className={`p-1.5 sm:p-2 absolute top-2 right-2 bg-white/90 rounded-lg transition-colors z-20`}
           >
             <X className="w-5 h-5 sm:w-6 sm:h-6" />
           </button>
@@ -392,9 +388,7 @@ export const ImageModal: React.FC<{
             {/* Description */}
             <div>
               <p
-                className={`text-base leading-relaxed ${
-                  isDark ? "text-gray-300" : "text-gray-700"
-                }`}
+                className={`text-base leading-relaxed text-slate-700`}
               >
                 {locale === "fr" ? carDescription.fr : carDescription.en}
               </p>

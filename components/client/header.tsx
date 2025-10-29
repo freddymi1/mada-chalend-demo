@@ -67,7 +67,7 @@ export function Header() {
               <Link
                 key={item.href}
                 href={item.href}
-                className={`text-secondary hover:text-primary transition-all duration-300 hover:scale-105 ${
+                className={`text-secondary hover:text-white transition-all duration-300 hover:scale-105 ${
                   pathname === item.href ? "text-white font-semibold" : ""
                 }`}
               >

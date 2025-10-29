@@ -108,7 +108,7 @@ export function AboutSection() {
           style={{ animationDelay: "0.8s", animationFillMode: "both" }}
         >
           {(subContent[currentLang] || subContent.FR) && (
-            <p className="text-base md:text-lg text-gray-600 dark:text-gray-400 italic">
+            <p className="text-base md:text-lg text-slate-600 italic">
               {subContent[currentLang] || subContent.FR}
             </p>
           )}
