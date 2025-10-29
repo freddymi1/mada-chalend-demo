@@ -191,16 +191,16 @@ const TripScreen = () => {
                           className="bg-slate-700/30 rounded-lg p-3 border border-slate-600/30 flex flex-col items-start  mb-4"
                         >
                           <div className="flex items-center gap-2">
-                            <Calendar className="w-4 h-4 text-primary" />
-                            <p className="text-sm font-semibold text-primary-foreground">
+                            <Calendar className="w-4 h-4 text-slate-700" />
+                            <p className="text-sm font-semibold text-slate-700">
                               {formatDate(date.startDate)} →{" "}
                               {formatDate(date.endDate)}
                             </p>
                           </div>
                           <div className="flex items-center gap-4">
                             <div className="flex items-center gap-2">
-                              <Users className="w-4 h-4 text-primary" />
-                              <p className="text-sm font-semibold text-primary-foreground">
+                              <Users className="w-4 h-4 text-slate-700" />
+                              <p className="text-sm font-semibold text-slate-700">
                                 {date.placesDisponibles} / {date.maxPeople}
                               </p>
                             </div>
