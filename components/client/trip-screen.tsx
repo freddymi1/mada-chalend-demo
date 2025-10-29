@@ -253,7 +253,7 @@ const TripScreen = () => {
                       {/* CTA Button */}
                       <button
                         onClick={() => handleTripSelect(trip)}
-                        className="w-full group/btn relative px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-semibold rounded-lg transition-all duration-300 hover:shadow-lg hover:shadow-purple-500/30 active:scale-95 flex items-center justify-center gap-2"
+                        className="w-full group/btn relative px-6 py-3 bg-slate-600 text-white font-semibold rounded-lg transition-all duration-300 hover:shadow-lg active:scale-95 flex items-center justify-center gap-2"
                       >
                         <span>
                           {t("ourTrip.viewDetails") || "View Details"}
