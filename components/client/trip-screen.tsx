@@ -105,14 +105,14 @@ const TripScreen = () => {
         {/* Header */}
         <div className="text-center mb-20 animate-fade-in">
           <div className="inline-block mb-4">
-            <span className="px-4 py-2 bg-blue-500/10 border border-blue-500/20 rounded-full text-blue-400 text-sm font-semibold backdrop-blur-sm">
+            <span className="px-4 py-2 bg-primary/10 border border-blue-500/20 rounded-full text-primary text-sm font-semibold backdrop-blur-sm">
               ✨ {t("ourTrip.badge") || "Discover Our Adventures"}
             </span>
           </div>
           <h2 className="text-5xl sm:text-6xl font-bold mb-6 bg-clip-text">
             {t("ourTrip.title") || "Explore Unforgettable Journeys"}
           </h2>
-          <p className="text-lg text-slate-400 max-w-2xl mx-auto leading-relaxed">
+          <p className="text-lg text-slate-700 max-w-2xl mx-auto leading-relaxed">
             {t("ourTrip.description") ||
               "Curated travel experiences designed for adventurers seeking authentic connections and breathtaking moments"}
           </p>
@@ -131,7 +131,7 @@ const TripScreen = () => {
                 className="group cursor-pointer animate-slide-up"
                 style={{ animationDelay: `${idx * 100}ms` }}
               >
-                <div className="relative h-full bg-gradient-to-br from-slate-800/50 to-slate-700/50 backdrop-blur-sm border border-slate-700/50 rounded-2xl overflow-hidden transition-all duration-500 hover:border-purple-500/50 hover:shadow-2xl hover:shadow-purple-500/10">
+                <div className="relative h-full bg-white/50 backdrop-blur-sm border border-slate-700/50 rounded-2xl overflow-hidden transition-all duration-500 hover:border-purple-500/50 hover:shadow-2xl hover:shadow-purple-500/10">
                   {/* Image Container */}
                   <div className="relative h-48 sm:h-56 overflow-hidden bg-gradient-to-br from-blue-500/10 to-purple-500/10">
                     {trip.program[0]?.image ? (
@@ -157,30 +157,32 @@ const TripScreen = () => {
 
                   {/* Content */}
                   <div className="p-6 sm:p-8">
-                    <h3 className="text-xl sm:text-2xl font-bold text-white mb-2">
+                    <h3 className="text-xl sm:text-2xl font-bold text-primary mb-2">
                       {locale === "fr" ? title.fr : title.en}
                     </h3>
-                    <p className="text-white/80 dark:text-slate-400 text-sm mb-4 line-clamp-2">
+                    <p className="text-slate-900 text-sm mb-4 line-clamp-2">
                       {locale === "fr" ? description.fr : description.en}
                     </p>
 
                     {/* Quick Stats */}
                     <div className="grid grid-cols-2 gap-3 mb-6">
-                      <div className="flex items-center gap-2 text-slate-300">
-                        <Calendar className="w-4 h-4 text-emerald-400" />
+                      <div className="flex items-center gap-2 text-slate-700">
+                        <Calendar className="w-4 h-4 text-primary" />
                         <span className="text-sm">{Number(trip.duration)} {t("ourTrip.day")} / {Number(trip.duration) - 1} {t("ourTrip.night")}</span>
                       </div>
-                      <div className="flex items-center gap-2 text-slate-300">
-                        <DollarSign className="w-4 h-4 text-yellow-400" />
-                        <span className="text-sm font-semibold">
-                          ${trip.price}
-                        </span>
-                      </div>
+                      
+                    </div>
+
+                    <div className="flex mb-3 items-center justify-center gap-2 text-primary">
+                      <EuroIcon className="w-8 h-8 text-primary" />
+                      <span className="text-3xl font-bold">
+                        {trip.price}
+                      </span>
                     </div>
 
                     {/* Dates */}
                     <div className="w-full mb-6">
-                      <p className="text-xl text-white mb-1">
+                      <p className="text-xl text-primary mb-1">
                         {t("ourTrip.travelDates") || "Travel Dates"}
                       </p>
                       {trip.travelDates.map((date) => (
@@ -189,16 +191,16 @@ const TripScreen = () => {
                           className="bg-slate-700/30 rounded-lg p-3 border border-slate-600/30 flex flex-col items-start  mb-4"
                         >
                           <div className="flex items-center gap-2">
-                            <Calendar className="w-4 h-4 text-blue-400" />
-                            <p className="text-sm font-semibold text-white">
+                            <Calendar className="w-4 h-4 text-primary" />
+                            <p className="text-sm font-semibold text-primary-foreground">
                               {formatDate(date.startDate)} →{" "}
                               {formatDate(date.endDate)}
                             </p>
                           </div>
                           <div className="flex items-center gap-4">
                             <div className="flex items-center gap-2">
-                              <Users className="w-4 h-4 text-blue-400" />
-                              <p className="text-sm font-semibold text-white">
+                              <Users className="w-4 h-4 text-primary" />
+                              <p className="text-sm font-semibold text-primary-foreground">
                                 {date.placesDisponibles} / {date.maxPeople}
                               </p>
                             </div>
@@ -217,7 +219,7 @@ const TripScreen = () => {
                     {/* Highlights */}
                     {trip.highlights && trip.highlights.length > 0 && (
                       <div className="mb-6">
-                        <p className="text-xs font-semibold text-slate-300 mb-2 uppercase tracking-wider">
+                        <p className="text-xs font-semibold text-primary mb-2 uppercase tracking-wider">
                           {t("ourTrip.highlights") || "Highlights"}
                         </p>
                         <div className="flex flex-wrap gap-2">
@@ -226,7 +228,7 @@ const TripScreen = () => {
                             return (
                               <span
                                 key={getId(highlight, idx)}
-                                className="text-xs bg-blue-500/20 text-white/80 dark:text-blue-300 px-2 py-1 rounded-full border border-blue-500/30"
+                                className="text-xs bg-white text-primary px-2 py-1 rounded-full"
                               >
                                 {locale === "fr" ? item.fr : item.en}
                               </span>

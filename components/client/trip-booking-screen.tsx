@@ -299,7 +299,7 @@ export function TripBookingScreen() {
   };
 
   return (
-    <section id="reservation" className="py-20 bg-muted/50">
+    <section id="reservation" className="py-20">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-12 animate-slide-up">
@@ -312,7 +312,7 @@ export function TripBookingScreen() {
           </div>
 
           <Card
-            className="animate-scale-in hover-lift"
+            className="animate-scale-in bg-white/50 hover-lift"
             style={{ animationDelay: "0.3s", animationFillMode: "both" }}
           >
             <CardHeader>

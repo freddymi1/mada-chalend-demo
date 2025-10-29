@@ -60,7 +60,7 @@ export const LanguageSwitcher: React.FC = () => {
       <button
         onClick={() => setIsOpen(!isOpen)}
         disabled={isPending}
-        className="flex items-center space-x-2 bg-transparent border text-slate-600 hover:text-slate-700 border-indigo-400 rounded-md px-3 py-2 text-sm hover:bg-indigo-50 transition-colors duration-200 min-w-[120px] justify-between"
+        className="flex items-center space-x-2 bg-background border text-slate-600 hover:text-slate-700 border-background rounded-md px-3 py-2 text-sm hover:bg-background transition-colors duration-200 min-w-[120px] justify-between"
       >
         <div className="flex items-center space-x-2">
           <span className="text-lg">{currentLanguage?.flag}</span>
@@ -75,7 +75,7 @@ export const LanguageSwitcher: React.FC = () => {
 
       {/* Menu dropdown */}
       {isOpen && (
-        <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-indigo-200 rounded-md shadow-lg z-50 overflow-hidden">
+        <div className="absolute top-full left-0 right-0 mt-1 bg-background border border-background rounded-md shadow-lg z-50 overflow-hidden">
           {Object.values(languages).map((language) => (
             <button
               key={language.code}

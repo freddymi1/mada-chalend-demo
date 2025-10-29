@@ -37,11 +37,7 @@ const BlogSection = () => {
 
   return (
     <div
-      className={`min-h-screen transition-colors duration-300 ${
-        isDark
-          ? "bg-gradient-to-br from-gray-900 to-gray-800"
-          : "bg-gradient-to-br from-slate-50 to-indigo-50"
-      }`}
+      className={`min-h-screen transition-colors duration-300`}
     >
       {/* Header avec image de fond */}
       <div className="relative min-h-80 max-h-96 mb-8 overflow-hidden">
@@ -111,14 +107,10 @@ const BlogSection = () => {
             }`}
           >
             <FileText
-              className={`w-16 h-16 mx-auto mb-4 ${
-                isDark ? "text-gray-600" : "text-gray-400"
-              }`}
+              className={`w-16 h-16 mx-auto mb-4 text-slate-700`}
             />
             <h3
-              className={`text-xl font-semibold mb-2 ${
-                isDark ? "text-white" : "text-gray-900"
-              }`}
+              className={`text-xl font-semibold mb-2 text-slate-700`}
             >
               {t("blog.emptyBlogs")}
             </h3>
@@ -134,9 +126,7 @@ const BlogSection = () => {
                 <div
                 key={blog.id}
                 onClick={() => router.push(`/blog/${blog.id}`)}
-                className={`rounded-xl overflow-hidden shadow-lg transition-all relative cursor-pointer duration-300 hover:shadow-2xl hover:-translate-y-1 ${
-                  isDark ? "bg-gray-800" : "bg-white"
-                }`}
+                className={`rounded-xl overflow-hidden shadow-lg transition-all relative cursor-pointer duration-300 hover:shadow-2xl hover:-translate-y-1 bg-white/50`}
               >
                 {/* Blog Image */}
                 <div

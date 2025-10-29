@@ -194,9 +194,7 @@ export const ImageModal: React.FC<{
 
       {/* Modal Content */}
       <div
-        className={`relative z-10 w-full max-w-4xl mx-2 sm:mx-4 rounded-2xl overflow-hidden max-h-[95vh] overflow-y-auto ${
-          isDark ? "bg-gray-900" : "bg-white"
-        }`}
+        className={`relative z-10 w-full max-w-4xl mx-2 sm:mx-4 rounded-2xl overflow-hidden max-h-[95vh] overflow-y-auto bg-white/50`}
       >
         {/* Image Container */}
         <div
@@ -211,8 +209,8 @@ export const ImageModal: React.FC<{
             onClick={onClose}
             className={`p-1.5 sm:p-2 absolute top-2 right-2 bg-white/90 rounded-lg transition-colors z-20 ${
               isDark
-                ? "hover:bg-gray-800 text-gray-400 hover:text-white"
-                : "hover:bg-gray-100 text-gray-600 hover:text-gray-900"
+                ? "hover:bg-red-800 text-gray-400 hover:text-white"
+                : "hover:bg-red-100 text-gray-600 hover:text-gray-900"
             }`}
           >
             <X className="w-5 h-5 sm:w-6 sm:h-6" />
@@ -315,9 +313,7 @@ export const ImageModal: React.FC<{
 
         {/* Header - Section modifiée avec informations détaillées */}
         <div
-          className={`flex bg-secondary items-center justify-between p-6 border-b ${
-            isDark ? "border-gray-700" : "border-gray-200"
-          }`}
+          className={`flex bg-secondary items-center justify-between p-6 border-b`}
         >
           <div className="flex-1 space-y-4">
             {/* Titre et rating */}
@@ -325,14 +321,10 @@ export const ImageModal: React.FC<{
               {vehicle.categoryRel && (
                 <div className="flex items-center gap-2">
                   <Tag
-                    className={`w-5 h-5 ${
-                      isDark ? "text-gray-400" : "text-gray-500"
-                    }`}
+                    className={`w-5 h-5 text-primary`}
                   />
                   <h1
-                    className={`text-xl font-bold ${
-                      isDark ? "text-gray-300" : "text-gray-600"
-                    }`}
+                    className={`text-xl font-bold text-primary`}
                   >
                     {vehicle.categoryRel.name}
                   </h1>
@@ -342,9 +334,7 @@ export const ImageModal: React.FC<{
               <div className="flex items-center gap-2">
                 <Star className="w-5 h-5 text-yellow-400 fill-current" />
                 <span
-                  className={`text-lg font-semibold ${
-                    isDark ? "text-white" : "text-gray-900"
-                  }`}
+                  className={`text-lg font-semibold text-primary`}
                 >
                   {vehicle.rating}
                 </span>
@@ -352,25 +342,21 @@ export const ImageModal: React.FC<{
             </div>
 
             {/* Prix et type */}
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-4">
+            <div className="flex flex-col items-center justify-between">
+              <div className="flex my-2 items-center justify-center gap-4">
                 <div>
                   <span
-                    className={`text-2xl font-bold ${
-                      isDark ? "text-white" : "text-gray-900"
-                    }`}
+                    className={`text-3xl font-bold text-primary`}
                   >
                     €{vehicle.pricePerDay}
                   </span>
                   <span
-                    className={`text-lg ml-2 ${
-                      isDark ? "text-gray-400" : "text-gray-600"
-                    }`}
+                    className={`text-xl ml-2 text-slate-700`}
                   >
                     /{t("car.day")}
                   </span>
                 </div>
-                <div>
+                {/* <div>
                   <button
                     className={`text-md px-2 py-1 rounded-full flex items-center font-bold ${
                       isDark ? "text-white" : "text-gray-900"
@@ -378,29 +364,25 @@ export const ImageModal: React.FC<{
                   >
                     {!vehicle.isAvailable && t("car.bookStatus")}
                   </button>
-                </div>
+                </div> */}
               </div>
-              <span
-                className={`px-4 py-2 rounded-full text-sm font-medium ${
-                  isDark
-                    ? "bg-blue-600 text-white"
-                    : "bg-blue-100 text-blue-800"
-                }`}
-              >
-                {vehicle.type}
-              </span>
+              <div className="w-full flex justify-end">
+                <span
+                  className={`px-4 py-2 flex justify-end rounded-full text-sm font-medium bg-white text-slate-700`}
+                >
+                  {vehicle.type}
+                </span>
+              </div>
             </div>
 
             {/* Informations de base */}
             <div className="flex items-center gap-6">
-              <div className="flex items-center gap-2">
+              <div className="flex items-center bg-primary px-3 py-1 rounded-lg gap-2">
                 <Users
-                  className={`w-5 h-5 ${
-                    isDark ? "text-gray-400" : "text-gray-500"
-                  }`}
+                  className={`w-5 h-5 text-primary-foreground`}
                 />
                 <span
-                  className={`${isDark ? "text-gray-300" : "text-gray-600"}`}
+                  className={`text-primary-foreground`}
                 >
                   {vehicle.passengers} {t("car.seat")}
                 </span>
@@ -421,9 +403,7 @@ export const ImageModal: React.FC<{
             {/* Équipements */}
             <div>
               <h4
-                className={`text-sm font-semibold mb-2 ${
-                  isDark ? "text-gray-200" : "text-gray-800"
-                }`}
+                className={`text-sm font-semibold mb-2 text-slate-700`}
               >
                 {t("car.details.equipment")}
               </h4>
@@ -433,11 +413,7 @@ export const ImageModal: React.FC<{
                   return(
                  <span
                     key={index}
-                    className={`px-3 py-1 text-sm rounded-full ${
-                      isDark
-                        ? "bg-gray-700 text-gray-300"
-                        : "bg-gray-200 text-gray-700"
-                    }`}
+                    className={`px-3 py-1 text-sm rounded-full bg-white text-slate-700`}
                   >
                     {locale === "fr" ? text.fr : text.en}
                   </span>   
@@ -450,16 +426,12 @@ export const ImageModal: React.FC<{
             <div className="flex gap-3 pt-2">
               <button
                 onClick={() => router.push(`/reservation/car?car=${vehicle.id}`)}
-                className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors"
+                className="px-6 py-2 bg-primary text-white rounded-lg font-medium transition-colors"
               >
                 {t("car.details.booknow")}
               </button>
               <button
-                className={`px-6 py-2 rounded-lg font-medium transition-colors ${
-                  isDark
-                    ? "bg-gray-700 text-gray-300 hover:bg-gray-600"
-                    : "bg-gray-200 text-gray-700 hover:bg-gray-300"
-                }`}
+                className={`px-6 py-2 rounded-lg font-medium transition-colors bg-white text-primary`}
               >
                 {t("car.details.requestDevis")}
               </button>

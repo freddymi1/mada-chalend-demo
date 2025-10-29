@@ -94,26 +94,20 @@ const ClArticleDetail = () => {
   if (!article) {
     return (
       <div
-        className={`min-h-screen flex items-center justify-center ${
-          isDark ? "bg-gray-900" : "bg-slate-50"
-        }`}
+        className={`min-h-screen flex items-center justify-center`}
       >
         <div className="text-center">
           <FileText
-            className={`w-16 h-16 mx-auto mb-4 ${
-              isDark ? "text-gray-600" : "text-gray-400"
-            }`}
+            className={`w-16 h-16 mx-auto mb-4 text-slate-700`}
           />
           <h2
-            className={`text-2xl font-bold mb-2 ${
-              isDark ? "text-white" : "text-gray-900"
-            }`}
+            className={`text-2xl font-bold mb-2 text-slate-700`}
           >
             Article introuvable
           </h2>
           <button
             onClick={() => router.push("/admin/blogs")}
-            className="mt-4 px-6 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition-colors"
+            className="mt-4 px-6 py-2 bg-primary text-white rounded-lg transition-colors"
           >
             Retour à la liste
           </button>
@@ -124,11 +118,7 @@ const ClArticleDetail = () => {
 
   return (
     <div
-      className={`min-h-screen transition-colors duration-300 ${
-        isDark
-          ? "bg-gradient-to-br from-gray-900 to-gray-800"
-          : "bg-gradient-to-br from-slate-50 to-indigo-50"
-      }`}
+      className={`min-h-screen transition-colors duration-300`}
     >
       <div className="px-6 py-8 container mx-auto">
         <div className="flex items-center gap-4">
@@ -136,38 +126,24 @@ const ClArticleDetail = () => {
           <nav className="flex items-center space-x-2 text-sm">
             <button
               onClick={() => router.push("/blog")}
-              className={`transition-colors ${
-                isDark
-                  ? "text-gray-400 hover:text-white"
-                  : "text-gray-600 hover:text-gray-900"
-              }`}
+              className={`transition-colors text-slate-700`}
             >
               Blog
             </button>
-            <ChevronRight
-              className={`w-4 h-4 ${
-                isDark ? "text-gray-600" : "text-gray-400"
-              }`}
-            />
-            <button
+            {/* <ChevronRight
+              className={`w-4 h-4 text-slate-600`}
+            /> */}
+            {/* <button
               onClick={() => router.push(`/blog/${article.blogId}`)}
-              className={`transition-colors ${
-                isDark
-                  ? "text-gray-400 hover:text-white"
-                  : "text-gray-600 hover:text-gray-900"
-              }`}
+              className={`transition-colors text-slate-700`}
             >
               Blog Details
-            </button>
+            </button> */}
             <ChevronRight
-              className={`w-4 h-4 ${
-                isDark ? "text-gray-600" : "text-gray-400"
-              }`}
+              className={`w-4 h-4 text-slate-600`}
             />
             <span
-              className={`font-medium ${
-                isDark ? "text-white" : "text-gray-900"
-              }`}
+              className={`font-medium text-slate-700`}
             >
               {locale === "fr" ? title?.fr : title?.en}
             </span>
@@ -177,9 +153,7 @@ const ClArticleDetail = () => {
           <div className="flex flex-col lg:flex-row gap-6">
             <div className="w-full lg:w-1/3">
               <h3
-                className={`text-lg font-semibold mb-6 ${
-                  isDark ? "text-white" : "text-gray-900"
-                }`}
+                className={`text-lg font-semibold mb-6 text-slate-700`}
               >
                 {t("blog.details.articleDetail.title")}
               </h3>
@@ -211,7 +185,7 @@ const ClArticleDetail = () => {
                                       : "bg-indigo-100 border-2 border-indigo-400"
                                     : isDark
                                     ? "bg-gray-800"
-                                    : "bg-white"
+                                    : "bg-white/50"
                                 }`}
                               >
                                 <div

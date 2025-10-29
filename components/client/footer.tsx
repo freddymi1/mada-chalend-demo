@@ -33,7 +33,7 @@ export function Footer() {
   }
 
   return (
-    <footer className="bg-background border-t dark:bg-gray-900 py-12">
+    <footer className="bg-background border-t py-12">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid md:grid-cols-3 gap-8">
           <div
@@ -124,8 +124,8 @@ export function Footer() {
 
         {/* Button creer avis */}
         <div className="container w-full flex justify-center mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
-          <Button
-            className="cursor-pointer"
+          <button
+            className="cursor-pointer text-secondary py-2 px-3 rounded-lg font-bold bg-[#603814]"
             onClick={() =>
               isAuthenticated
                 ? router.push("/avis")
@@ -133,7 +133,7 @@ export function Footer() {
             }
           >
             {t("footer.createReview")}
-          </Button>
+          </button>
         </div>
       </div>
     </footer>

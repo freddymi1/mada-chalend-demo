@@ -182,11 +182,7 @@ const CarSection: React.FC = () => {
 
   return (
     <div
-      className={`min-h-screen transition-colors duration-300 ${
-        isDark
-          ? "bg-gradient-to-br from-gray-900 to-gray-800"
-          : "bg-gradient-to-br from-slate-50 to-indigo-50"
-      }`}
+      className={`min-h-screen transition-colors duration-300`}
     >
       {isLoading && loading ? (
         <AnimateLoading />
@@ -196,16 +192,12 @@ const CarSection: React.FC = () => {
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8">
             <div>
               <h1
-                className={`text-4xl font-bold mb-2 ${
-                  isDark ? "text-white" : "text-gray-900"
-                }`}
+                className={`text-4xl font-bold mb-2 text-primary`}
               >
                 {t("car.title")}
               </h1>
               <p
-                className={`text-lg ${
-                  isDark ? "text-gray-400" : "text-gray-600"
-                }`}
+                className={`text-lg text-slate-700`}
               >
                 {t("car.description")}
               </p>
@@ -281,9 +273,7 @@ const CarSection: React.FC = () => {
 
           {filteredVehicles.length === 0 && (
             <div
-              className={`text-center py-12 ${
-                isDark ? "text-gray-400" : "text-gray-600"
-              }`}
+              className={`text-center py-12 text-slate-700`}
             >
               <p className="text-lg">
                 Aucun véhicule trouvé pour cette catégorie.

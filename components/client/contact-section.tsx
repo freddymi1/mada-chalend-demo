@@ -1026,7 +1026,7 @@ export function ContactSection() {
 
           {/* Contact Form */}
           <Card
-            className="animate-scale-in hover-lift"
+            className="animate-scale-in bg-white/50 hover-lift"
             style={{ animationDelay: "0.3s", animationFillMode: "both" }}
           >
             <CardHeader>

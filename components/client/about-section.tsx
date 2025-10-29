@@ -62,10 +62,10 @@ export function AboutSection() {
   }
 
   return (
-    <section id="a-propos" className="py-20 bg-muted/50">
+    <section id="a-propos" className="py-20">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto text-center mb-16 animate-slide-up">
-          <h2 className="text-3xl sm:text-4xl font-bold mb-6 text-balance">
+          <h2 className="text-3xl sm:text-4xl font-bold mb-6 text-[#603814]">
             {aboutTitle[currentLang] || aboutTitle.FR}
           </h2>
           <p className="text-lg text-muted-foreground text-pretty">
@@ -83,7 +83,7 @@ export function AboutSection() {
             return (
               <Card
                 key={service.id}
-                className="text-center hover-lift animate-fade-in"
+                className="text-center bg-white/50 hover-lift animate-fade-in"
                 style={{
                   animationDelay: `${0.2 * (index + 1)}s`,
                   animationFillMode: "both",
@@ -91,7 +91,7 @@ export function AboutSection() {
               >
                 <CardContent className="pt-8 pb-6">
                   <Icon className="h-12 w-12 text-primary mx-auto mb-4 animate-float" />
-                  <h3 className="text-xl font-semibold mb-3">
+                  <h3 className="text-xl text-foreground font-semibold mb-3">
                     {serviceTitle[currentLang] || serviceTitle.FR}
                   </h3>
                   <p className="text-muted-foreground">

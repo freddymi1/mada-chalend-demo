@@ -15,6 +15,7 @@ export const VehicleCard: React.FC<{
   const [isFavorite, setIsFavorite] = useState(false);
   const t = useTranslations('lng');
   const locale = useLocale()
+  console.log("VEHICLE", vehicle)
 
   const router = useRouter();
 
@@ -23,11 +24,7 @@ export const VehicleCard: React.FC<{
 
   return (
     <div
-      className={`rounded-2xl overflow-hidden shadow-lg transition-all duration-300 hover:shadow-2xl hover:scale-105 ${
-        isDark
-          ? "bg-gray-800 border border-gray-700"
-          : "bg-white border border-gray-100"
-      }`}
+      className={`rounded-2xl overflow-hidden shadow-lg transition-all duration-300 hover:shadow-2xl hover:scale-105 bg-white/50`}
     >
       <div className="relative">
         <img
@@ -51,9 +48,7 @@ export const VehicleCard: React.FC<{
         </div>
         <div className="absolute top-4 left-4">
           <span
-            className={`px-3 py-1 rounded-full text-xs font-medium ${
-              isDark ? "bg-blue-600 text-white" : "bg-blue-100 text-blue-800"
-            }`}
+            className={`px-3 py-1 rounded-full text-xs font-medium text-primary`}
           >
             {vehicle.type}
           </span>
@@ -63,18 +58,14 @@ export const VehicleCard: React.FC<{
       <div className="p-6">
         <div className="flex items-center justify-between mb-2">
           <h3
-            className={`text-lg font-bold ${
-              isDark ? "text-white" : "text-gray-900"
-            }`}
+            className={`text-lg font-boldtext-primary`}
           >
             {locale === "fr" ? carName.fr : carName.en}
           </h3>
           <div className="flex items-center gap-1">
             <Star className="w-4 h-4 text-yellow-400 fill-current" />
             <span
-              className={`text-sm font-medium ${
-                isDark ? "text-gray-300" : "text-gray-600"
-              }`}
+              className={`text-sm font-medium text-primary`}
             >
               {vehicle.rating}
             </span>
@@ -82,24 +73,17 @@ export const VehicleCard: React.FC<{
         </div>
 
         <p
-          className={`text-sm mb-4 line-clamp-3 ${
-            isDark ? "text-gray-400" : "text-gray-600"
-          }`}
+          className={`text-sm mb-4 line-clamp-3 text-slate-700`}
         >
           {locale === "fr" ? carDescription.fr : carDescription.en}
         </p>
-
         <div className="flex items-center gap-4 mb-4">
-          <div className="flex items-center gap-1">
+          <div className="flex bg-primary text-primary-foreground py-1 px-2 rounded-lg items-center gap-1">
             <Users
-              className={`w-4 h-4 ${
-                isDark ? "text-gray-400" : "text-gray-500"
-              }`}
+              className={`w-4 h-4 `}
             />
             <span
-              className={`text-sm ${
-                isDark ? "text-gray-300" : "text-gray-600"
-              }`}
+              className={`text-sm`}
             >
               {vehicle.passengers} {t("car.seat")}
             </span>
@@ -112,11 +96,7 @@ export const VehicleCard: React.FC<{
             return(
               <span
               key={index}
-              className={`px-2 py-1 text-xs rounded-full ${
-                isDark
-                  ? "bg-gray-700 text-gray-300"
-                  : "bg-gray-100 text-gray-700"
-              }`}
+              className={`px-2 py-1 text-xs rounded-full bg-primary/20 text-slate-700`}
             >
               {locale === "fr" ? text.fr : text.en}
             </span>
@@ -124,37 +104,29 @@ export const VehicleCard: React.FC<{
           })}
           {vehicle.features.length > 3 && (
             <span
-              className={`px-2 py-1 text-xs rounded-full ${
-                isDark
-                  ? "bg-gray-700 text-gray-300"
-                  : "bg-gray-100 text-gray-700"
-              }`}
+              className={`px-2 py-1 text-xs rounded-full bg-primary/20 text-slate-700`}
             >
               +{vehicle.features.length - 3}
             </span>
           )}
         </div>
 
-        <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center justify-center mb-4">
           
-          <div>
+          <div className="my-2">
             <span
-              className={`text-2xl font-bold ${
-                isDark ? "text-white" : "text-gray-900"
-              }`}
+              className={`text-3xl font-bold text-primary`}
             >
               €{vehicle.pricePerDay}
             </span>
             <span
-              className={`text-sm ${
-                isDark ? "text-gray-400" : "text-gray-600"
-              }`}
+              className={`text-xl text-slate-700`}
             >
               /{t("car.day")}
             </span>
           </div>
 
-          <div>
+          {/* <div>
             <button
               className={`text-md px-2 py-1 rounded-full flex items-center font-bold ${
                 isDark ? "text-white" : "text-gray-900"
@@ -163,7 +135,7 @@ export const VehicleCard: React.FC<{
               {!vehicle.isAvailable && t("car.bookStatus")}
             </button>
             
-          </div>
+          </div> */}
         </div>
         <div className="flex flex-col lg:flex-row items-center justify-between gap-4">
           <button

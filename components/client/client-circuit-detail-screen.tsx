@@ -418,7 +418,7 @@ const ClientCircuitDetailScreen = () => {
                   </Link>
                 </CardContent>
               </Card>
-              <div className="space-y-4 sm:space-y-6 w-full">
+              <div className="space-y-4 mt-6 lg:mt-0 sm:space-y-6 w-full">
                 {/* Booking card */}
 
                 <Card

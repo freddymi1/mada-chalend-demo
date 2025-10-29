@@ -54,20 +54,14 @@ const CiBlogDetailScreen = () => {
   if (!blogDetail) {
     return (
       <div
-        className={`min-h-screen flex items-center justify-center ${
-          isDark ? "bg-gray-900" : "bg-slate-50"
-        }`}
+        className={`min-h-screen flex items-center justify-center`}
       >
         <div className="text-center">
           <FileText
-            className={`w-16 h-16 mx-auto mb-4 ${
-              isDark ? "text-gray-600" : "text-gray-400"
-            }`}
+            className={`w-16 h-16 mx-auto mb-4 text-slate-700`}
           />
           <h2
-            className={`text-2xl font-bold mb-2 ${
-              isDark ? "text-white" : "text-gray-900"
-            }`}
+            className={`text-2xl font-bold mb-2 text-slate-700`}
           >
             Blog introuvable
           </h2>
@@ -84,11 +78,7 @@ const CiBlogDetailScreen = () => {
 
   return (
     <div
-      className={`min-h-screen transition-colors duration-300 ${
-        isDark
-          ? "bg-gradient-to-br from-gray-900 to-gray-800"
-          : "bg-gradient-to-br from-slate-50 to-indigo-50"
-      }`}
+      className={`min-h-screen transition-colors duration-300 `}
     >
       <div className="px-6 py-8 container mx-auto">
         {/* Fil d'Ariane */}
@@ -98,23 +88,15 @@ const CiBlogDetailScreen = () => {
             <nav className="flex items-center space-x-2 text-sm">
               <button
                 onClick={() => router.push("/blog")}
-                className={`transition-colors ${
-                  isDark
-                    ? "text-gray-400 hover:text-white"
-                    : "text-gray-600 hover:text-gray-900"
-                }`}
+                className={`transition-colors text-slate-700`}
               >
                 Blog
               </button>
               <ChevronRight
-                className={`w-4 h-4 ${
-                  isDark ? "text-gray-600" : "text-gray-400"
-                }`}
+                className={`w-4 h-4 text-slate-600`}
               />
               <span
-                className={`font-medium ${
-                  isDark ? "text-white" : "text-gray-900"
-                }`}
+                className={`font-medium text-slate-700`}
               >
                 {locale === "fr" ? title?.fr : title?.en}
               </span>
@@ -123,14 +105,10 @@ const CiBlogDetailScreen = () => {
         </div>
 
         <div
-          className={`rounded-xl p-8 shadow-lg mb-8 ${
-            isDark ? "bg-gray-800" : "bg-white"
-          }`}
+          className={`rounded-xl p-8 shadow-lg mb-8 bg-white/50`}
         >
           <h1
-            className={`text-4xl font-bold mb-4 ${
-              isDark ? "text-white" : "text-gray-900"
-            }`}
+            className={`text-4xl font-bold mb-4 text-primary`}
           >
             {locale === "fr" ? title?.fr : title?.en}
           </h1>
@@ -148,9 +126,7 @@ const CiBlogDetailScreen = () => {
           <div className="flex flex-wrap gap-4 mb-6">
             {blogDetail.articles && (
               <div
-                className={`flex items-center gap-2 px-4 py-2 rounded-lg ${
-                  isDark ? "bg-gray-700" : "bg-gray-100"
-                }`}
+                className={`flex items-center gap-2 px-4 py-2 rounded-lg bg-white/50`}
               >
                 <FileText
                   className={`w-4 h-4 ${
@@ -178,9 +154,7 @@ const CiBlogDetailScreen = () => {
                 return(
                   <div
                   key={article.id}
-                  className={`rounded-xl overflow-hidden shadow-lg transition-all duration-300 hover:shadow-2xl ${
-                    isDark ? "bg-gray-800" : "bg-white"
-                  }`}
+                  className={`rounded-xl overflow-hidden shadow-lg transition-all duration-300 hover:shadow-2xl bg-white/50`}
                 >
                   <div className="grid md:grid-cols-2 gap-6">
                     <div

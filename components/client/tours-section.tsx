@@ -52,7 +52,7 @@ export function ToursSection() {
                 return(
                   <Card
                   key={index}
-                  className="overflow-hidden hover-lift animate-fade-in"
+                  className="overflow-hidden bg-white/50 hover-lift animate-fade-in"
                   style={{
                     animationDelay: `${0.2 + index * 0.1}s`,
                     animationFillMode: "both",

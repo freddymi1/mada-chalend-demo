@@ -114,13 +114,13 @@ const SideMenu = () => {
       >
         <div className="flex flex-col h-screen">
           {/* Header */}
-          <div className="flex items-center justify-between h-16 px-6 bg-blue-900">
+          <div className="flex items-center justify-between h-16 px-6 bg-primary">
             <div className="flex items-center gap-2 text-lg lg:text-xl font-bold text-primary hover:text-primary/80 transition-all duration-300 hover:scale-105">
               <div className="relative">
-                <MapPin className="h-8 w-8 text-primary animate-float" />
+                <MapPin className="h-8 w-8 text-primary-foreground animate-float" />
                 <div className="absolute -top-1 -right-1 w-3 h-3 bg-accent rounded-full animate-pulse"></div>
               </div>
-              <span className="hidden lg:block bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+              <span className="hidden lg:block text-primary-foreground">
                 Mada Chaland
               </span>
             </div>

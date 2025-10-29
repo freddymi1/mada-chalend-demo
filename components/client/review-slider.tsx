@@ -219,17 +219,17 @@ const ReviewSlider = () => {
               <div
                 key={avis.id}
                 onClick={() => openModal(avis)}
-                className="flex-shrink-0 w-full md:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-all duration-300 border border-slate-100 cursor-pointer hover:scale-[1.02] active:scale-[0.98]"
+                className="flex-shrink-0 w-full md:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] bg-white/50 dark:bg-gray-800 rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-all duration-300 border border-slate-100 cursor-pointer hover:scale-[1.02] active:scale-[0.98]"
               >
                 {/* Header */}
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-bold shadow-md">
+                    <div className="w-12 h-12 rounded-full bg-[#603814] flex items-center justify-center text-white font-bold shadow-md">
                       {avis.author.charAt(0)}
                     </div>
                     <div>
                       <div className="flex items-center gap-2">
-                        <h3 className="font-semibold">
+                        <h3 className="font-semibold text-foreground">
                           {avis.author}
                         </h3>
                         {avis.verified && (
@@ -264,7 +264,7 @@ const ReviewSlider = () => {
 
                 {/* View more button */}
                 <div className="mt-4 w-full flex justify-center">
-                  <Button onClick={() => openModal(avis)}>
+                  <Button className="!bg-[#603814]" onClick={() => openModal(avis)}>
                     {t("footer.viewMore")}
                   </Button>
                 </div>
@@ -303,13 +303,13 @@ const ReviewSlider = () => {
           onClick={closeModal}
         >
           <div 
-            className="bg-white dark:bg-gray-800 rounded-2xl max-w-2xl w-full max-h-[80vh] overflow-y-auto shadow-2xl animate-in zoom-in-95 duration-200"
+            className="bg-white rounded-2xl max-w-2xl w-full max-h-[80vh] overflow-y-auto shadow-2xl animate-in zoom-in-95 duration-200"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Header de la modale */}
             <div className="sticky top-0 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 p-6 flex items-start justify-between">
               <div className="flex items-center gap-4 flex-1">
-                <div className="w-16 h-16 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-bold text-2xl shadow-lg">
+                <div className="w-16 h-16 rounded-full bg-primary flex items-center justify-center text-white font-bold text-2xl shadow-lg">
                   {selectedReview.author.charAt(0)}
                 </div>
                 <div className="flex-1">
