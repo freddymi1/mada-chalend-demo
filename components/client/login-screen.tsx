@@ -99,11 +99,11 @@ const LoginScreen = () => {
       </div>
 
       {/* Section droite - Formulaire */}
-      <div className="flex-1 flex flex-col justify-center py-12 px-4 sm:px-6 lg:px-20 xl:px-24 bg-gray-50">
+      <div className="flex-1 flex flex-col justify-center py-12 px-4 sm:px-6 lg:px-20 xl:px-24 bg-background">
         <div className="mx-auto w-full max-w-md">
           {/* Logo/Titre */}
           <div className="text-center mb-10">
-            <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full mb-4">
+            <div className="inline-flex items-center justify-center w-16 h-16 bg-primary rounded-full mb-4">
               <svg
                 className="w-8 h-8 text-white"
                 fill="none"
@@ -118,10 +118,10 @@ const LoginScreen = () => {
                 />
               </svg>
             </div>
-            <h2 className="text-3xl font-bold text-gray-900 mb-2">
+            <h2 className="text-3xl font-bold text-primary mb-2">
               {t("login.form.title")}
             </h2>
-            <p className="text-gray-600">{t("login.form.subtitle")}</p>
+            <p className="text-slate-600">{t("login.form.subtitle")}</p>
           </div>
 
           {/* Message d'erreur */}
@@ -152,7 +152,7 @@ const LoginScreen = () => {
             <div>
               <label
                 htmlFor="email"
-                className="block text-sm font-medium text-gray-700 mb-2"
+                className="block text-sm font-medium text-slate-700 mb-2"
               >
                 {t("login.form.input.email.label")}
               </label>
@@ -165,7 +165,7 @@ const LoginScreen = () => {
                   required
                   value={formData.email}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 pl-11 text-blue-900 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-white"
+                  className="w-full px-4 py-3 pl-11 text-slate-900 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-transparent transition-all duration-200 bg-white"
                   placeholder="admin@madachaland.org"
                   disabled={isLoading}
                 />
@@ -204,7 +204,7 @@ const LoginScreen = () => {
                   required
                   value={formData.password}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 pl-11 pr-11 text-blue-900 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-white"
+                  className="w-full px-4 py-3 pl-11 pr-11 text-slate-900 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-transparent transition-all duration-200 bg-white"
                   placeholder="Admin@123"
                   disabled={isLoading}
                 />
@@ -277,12 +277,12 @@ const LoginScreen = () => {
                   type="checkbox"
                   checked={formData.rememberMe}
                   onChange={handleChange}
-                  className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                  className="h-4 w-4 text-slate-600 focus:ring-slate-500 border-slate-300 rounded"
                   disabled={isLoading}
                 />
                 <label
                   htmlFor="rememberMe"
-                  className="ml-2 block text-sm text-gray-700"
+                  className="ml-2 block text-sm text-slate-700"
                 >
                   {t("login.form.input.rememberMe.label")}
                 </label>
@@ -291,7 +291,7 @@ const LoginScreen = () => {
               <div className="text-sm">
                 <button
                   type="button"
-                  className="font-medium text-blue-600 hover:text-blue-500 transition-colors duration-200"
+                  className="font-medium text-slate-600 hover:text-slate-500 hover:underline transition-colors duration-200"
                   disabled={isLoading}
                 >
                   {t("login.form.input.forgotPassword.label")}
@@ -303,7 +303,7 @@ const LoginScreen = () => {
             <button
               type="submit"
               disabled={isLoading}
-              className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-xl text-white bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98]"
+              className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-xl text-white bg-primary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98]"
             >
               {isLoading ? (
                 <>
@@ -356,7 +356,7 @@ const LoginScreen = () => {
                   <div className="w-full border-t border-gray-300"></div>
                 </div>
                 <div className="relative flex justify-center text-sm">
-                  <span className="px-2 bg-gray-50 text-gray-500">
+                  <span className="px-2 bg-white text-slate-600">
                     {t("login.form.input.newOnPlateform.label")}
                   </span>
                 </div>
@@ -365,7 +365,7 @@ const LoginScreen = () => {
               <div className="mt-6">
                 <Link
                   href="/auth/signup"
-                  className="w-full flex justify-center items-center py-3 px-4 border-2 border-blue-600 text-sm font-medium rounded-xl text-blue-600 bg-white hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98]"
+                  className="w-full flex justify-center items-center py-3 px-4 border-2 border-primary text-sm font-medium rounded-xl text-primary bg-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98]"
                 >
                   <svg
                     className="w-5 h-5 mr-2"

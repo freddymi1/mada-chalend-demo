@@ -152,11 +152,11 @@ const SignUpScreen = () => {
       </div>
 
       {/* Section droite - Formulaire */}
-      <div className="flex-1 flex flex-col justify-center py-12 px-4 sm:px-6 lg:px-20 xl:px-24 bg-gray-50">
+      <div className="flex-1 flex flex-col justify-center py-12 px-4 sm:px-6 lg:px-20 xl:px-24 bg-background">
         <div className="mx-auto w-full max-w-md">
           {/* Logo/Titre */}
           <div className="text-center mb-8">
-            <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-purple-600 to-blue-600 rounded-full mb-4">
+            <div className="inline-flex items-center justify-center w-16 h-16 bg-primary rounded-full mb-4">
               <svg
                 className="w-8 h-8 text-white"
                 fill="none"
@@ -171,10 +171,10 @@ const SignUpScreen = () => {
                 />
               </svg>
             </div>
-            <h2 className="text-3xl font-bold text-gray-900 mb-2">
+            <h2 className="text-3xl font-bold text-primary mb-2">
               {t("signup.form.title")}
             </h2>
-            <p className="text-gray-600">{t("signup.form.subtitle")}</p>
+            <p className="text-slate-600">{t("signup.form.subtitle")}</p>
           </div>
 
           {/* Message d'erreur */}
@@ -205,7 +205,7 @@ const SignUpScreen = () => {
             <div>
               <label
                 htmlFor="username"
-                className="block text-sm font-medium text-gray-700 mb-2"
+                className="block text-sm font-medium text-slate-700 mb-2"
               >
                 {t("signup.form.fields.username.label")}
               </label>
@@ -217,7 +217,7 @@ const SignUpScreen = () => {
                   required
                   value={formData.username}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 pl-11 text-blue-900 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 bg-white"
+                  className="w-full px-4 py-3 pl-11 text-slate-900 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-transparent transition-all duration-200 bg-white"
                   placeholder="john_doe"
                   disabled={isLoading}
                 />
@@ -243,7 +243,7 @@ const SignUpScreen = () => {
             <div>
               <label
                 htmlFor="email"
-                className="block text-sm font-medium text-gray-700 mb-2"
+                className="block text-sm font-medium text-slate-700 mb-2"
               >
                 {t("signup.form.fields.email.label")}
               </label>
@@ -256,7 +256,7 @@ const SignUpScreen = () => {
                   required
                   value={formData.email}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 pl-11 text-blue-900 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 bg-white"
+                  className="w-full px-4 py-3 pl-11 text-slate-900 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-transparent transition-all duration-200 bg-white"
                   placeholder="vous@example.com"
                   disabled={isLoading}
                 />
@@ -282,7 +282,7 @@ const SignUpScreen = () => {
             <div>
               <label
                 htmlFor="password"
-                className="block text-sm font-medium text-gray-700 mb-2"
+                className="block text-sm font-medium text-slate-700 mb-2"
               >
                 {t("signup.form.fields.password.label")}
               </label>
@@ -295,7 +295,7 @@ const SignUpScreen = () => {
                   required
                   value={formData.password}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 pl-11 pr-11 text-blue-900 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 bg-white"
+                  className="w-full px-4 py-3 pl-11 pr-11 text-slate-900 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-transparent transition-all duration-200 bg-white"
                   placeholder="••••••••"
                   disabled={isLoading}
                 />
@@ -322,7 +322,7 @@ const SignUpScreen = () => {
                 >
                   {showPassword ? (
                     <svg
-                      className="h-5 w-5 text-gray-400 hover:text-gray-600"
+                      className="h-5 w-5 text-slate-400 hover:text-slate-600"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -336,7 +336,7 @@ const SignUpScreen = () => {
                     </svg>
                   ) : (
                     <svg
-                      className="h-5 w-5 text-gray-400 hover:text-gray-600"
+                      className="h-5 w-5 text-slate-400 hover:text-slate-600"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -366,7 +366,7 @@ const SignUpScreen = () => {
             <div>
               <label
                 htmlFor="confirmPassword"
-                className="block text-sm font-medium text-gray-700 mb-2"
+                className="block text-sm font-medium text-slate-700 mb-2"
               >
                 {t("signup.form.fields.confirmPassword.label")}
               </label>
@@ -379,13 +379,13 @@ const SignUpScreen = () => {
                   required
                   value={formData.confirmPassword}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 pl-11 pr-11 text-blue-900 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 bg-white"
+                  className="w-full px-4 py-3 pl-11 pr-11 text-slate-900 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-transparent transition-all duration-200 bg-white"
                   placeholder="••••••••"
                   disabled={isLoading}
                 />
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                   <svg
-                    className="h-5 w-5 text-gray-400"
+                    className="h-5 w-5 text-slate-400"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -406,7 +406,7 @@ const SignUpScreen = () => {
                 >
                   {showConfirmPassword ? (
                     <svg
-                      className="h-5 w-5 text-gray-400 hover:text-gray-600"
+                      className="h-5 w-5 text-slate-400 hover:text-slate-600"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -451,12 +451,12 @@ const SignUpScreen = () => {
                 type="checkbox"
                 checked={formData.rememberMe}
                 onChange={handleChange}
-                className="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded"
+                className="h-4 w-4 text-slate-600 focus:ring-slate-500 border-slate-300 rounded"
                 disabled={isLoading}
               />
               <label
                 htmlFor="rememberMe"
-                className="ml-2 block text-sm text-gray-700"
+                className="ml-2 block text-sm text-slate-700"
               >
                 {t("signup.form.fields.rememberMe")}
               </label>
@@ -469,16 +469,16 @@ const SignUpScreen = () => {
                 name="terms"
                 type="checkbox"
                 required
-                className="h-4 w-4 mt-1 text-purple-600 focus:ring-purple-500 border-gray-300 rounded"
+                className="h-4 w-4 mt-1 text-slate-600 focus:ring-slate-500 border-slate-300 rounded"
                 disabled={isLoading}
               />
               <label htmlFor="terms" className="ml-2 block text-sm text-gray-700">
                {t("signup.form.fields.terms.label")}{" "}
-                <Link href="/terms" className="text-purple-600 hover:text-purple-500">
+                <Link href="/cgu" className="text-primary">
                   {t("signup.form.fields.terms.terms")}
                 </Link>{" "}
                 et la{" "}
-                <Link href="/privacy" className="text-purple-600 hover:text-purple-500">
+                <Link href="/privacy-policy" className="text-primary">
                   {t("signup.form.fields.terms.privacy")}
                 </Link>
               </label>
@@ -488,7 +488,7 @@ const SignUpScreen = () => {
             <button
               type="submit"
               disabled={isLoading}
-              className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-xl text-white bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98]"
+              className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-xl text-white bg-primary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98]"
             >
               {isLoading ? (
                 <>
@@ -534,10 +534,10 @@ const SignUpScreen = () => {
             <div className="mt-6">
               <div className="relative">
                 <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t border-gray-300"></div>
+                  <div className="w-full border-t border-slate-300"></div>
                 </div>
                 <div className="relative flex justify-center text-sm">
-                  <span className="px-2 bg-gray-50 text-gray-500">
+                  <span className="px-2 bg-slate-50 text-slate-500">
                     {t("signup.form.login.text")}
                   </span>
                 </div>
@@ -546,7 +546,7 @@ const SignUpScreen = () => {
               <div className="mt-6">
                 <Link
                   href="/client/login"
-                  className="w-full flex justify-center items-center py-3 px-4 border-2 border-purple-600 text-sm font-medium rounded-xl text-purple-600 bg-white hover:bg-purple-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98]"
+                  className="w-full flex justify-center items-center py-3 px-4 border-2 border-primary text-sm font-medium rounded-xl text-primary bg-white hover:bg-white/50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98]"
                 >
                   <svg
                     className="w-5 h-5 mr-2"
