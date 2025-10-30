@@ -16,7 +16,7 @@
     "blog": "Blog",
     "contact": "Contact",
     "car": "Nos voitures",
-    "trip": "Nos voyages",
+    "trip": "Voyage organisé",
     "bookingTrip": "Voyage organisé"
   },
   "ourTrip": {
@@ -314,7 +314,7 @@
       "title": "Informations légales",
       "legalMention": "Mentions légales",
       "politic": "Politique de confidentialité",
-      "copyright": "© 2024 Mada Chaland. Tous droits réservés."
+      "copyright": "© 2025 Mada Chaland. Tous droits réservés."
     }
   },
   "common": {
