@@ -14,7 +14,7 @@ import FooterAnimateLoading from "./footer-animate-loading";
 export function Footer() {
   const t = useTranslations("lng");
   const router = useRouter();
-  const {isAuthenticated } = useAuthClient();
+  const { isAuthenticated } = useAuthClient();
   const { contacts, loading, fetchContacts } = useCiContact();
   const locale = useLocale(); // fr ou en
   const currentLang = locale.toUpperCase() as "FR" | "EN";
@@ -28,8 +28,8 @@ export function Footer() {
 
   const profile = contacts[0];
 
-  if(loading){
-    return <FooterAnimateLoading/>
+  if (loading) {
+    return <FooterAnimateLoading />;
   }
 
   return (
@@ -56,14 +56,24 @@ export function Footer() {
               {t("footer.followOur")}
             </h4>
             <div className="space-y-3">
-              <div className="flex flex-col gap-2">
-                <p className="text-sm text-muted-foreground">
-                  <FaWhatsapp className="inline-block h-6 w-6 mr-1" /> {profile?.whatsapp}
-                </p>
-                <p className="text-sm text-muted-foreground">
-                  <PhoneCall className="inline-block h-5 w-5 mr-1" /> {profile?.phone}
-                </p>
-              </div>
+              <a
+                href={`https://wa.me/${profile?.whatsapp?.replace(/\D/g, "")}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-sm text-muted-foreground hover:text-foreground transition-all duration-300 flex items-center gap-2"
+              >
+                <FaWhatsapp className="h-6 w-6" />
+                {profile?.whatsapp}
+              </a>
+
+              <a
+                href={`tel:${profile?.phone}`}
+                className="text-sm text-muted-foreground hover:text-foreground transition-all duration-300 flex items-center gap-2"
+              >
+                <PhoneCall className="h-5 w-5" />
+                {profile?.phone}
+              </a>
+
               <div className="flex gap-4">
                 <a
                   href={profile?.fbLink}

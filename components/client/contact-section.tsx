@@ -938,7 +938,10 @@ export function ContactSection() {
                 {t("contactInfo.title")}
               </h3>
               <div className="space-y-4">
-                <div
+                <a
+                  href={`https://wa.me/${profile?.whatsapp?.replace(/\D/g, "")}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="flex items-center gap-4 animate-fade-in hover-lift"
                   style={{ animationDelay: "0.4s", animationFillMode: "both" }}
                 >
@@ -947,8 +950,9 @@ export function ContactSection() {
                     <p className="font-medium">{t("contactInfo.whatsapp")}</p>
                     <p className="text-muted-foreground">{profile?.whatsapp}</p>
                   </div>
-                </div>
-                <div
+                </a>
+                <a
+                  href={`tel:${profile?.phone}`}
                   className="flex items-center gap-4 animate-fade-in hover-lift"
                   style={{ animationDelay: "0.4s", animationFillMode: "both" }}
                 >
@@ -957,7 +961,7 @@ export function ContactSection() {
                     <p className="font-medium">{t("contactInfo.phone")}</p>
                     <p className="text-muted-foreground">{profile?.phone}</p>
                   </div>
-                </div>
+                </a>
                 <div
                   className="flex items-center gap-4 animate-fade-in hover-lift"
                   style={{ animationDelay: "0.5s", animationFillMode: "both" }}
