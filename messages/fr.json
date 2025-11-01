@@ -341,6 +341,7 @@
       "day": "Jour"
     },
     "booking": {
+      "from": "A partir de ",
       "pricePerPerson": "par personne",
       "reserveNow": "Réserver maintenant",
       "askInfo": "Demander des infos"

@@ -77,7 +77,7 @@ export function Header() {
 
             {/* Dropdown Menu pour Réservation */}
             <DropdownMenu>
-              <DropdownMenuTrigger className="flex items-center gap-1 text-foreground hover:text-primary transition-all duration-300 hover:scale-105 focus:outline-none">
+              <DropdownMenuTrigger className="flex items-center gap-1 text-secondary hover:text-white transition-all duration-300 hover:scale-105 focus:outline-none">
                 {t("navigation.booking")}
                 <ChevronDown className="h-4 w-4" />
               </DropdownMenuTrigger>

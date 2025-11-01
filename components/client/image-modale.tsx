@@ -340,7 +340,10 @@ export const ImageModal: React.FC<{
             {/* Prix et type */}
             <div className="flex flex-col items-center justify-between">
               <div className="flex my-2 items-center justify-center gap-4">
-                <div>
+                <div className="flex items-center gap-2">
+                  <p className="text-xl text-slate-700">
+                    {t("detailCircuit.booking.from")}
+                  </p>
                   <span
                     className={`text-3xl font-bold text-primary`}
                   >
@@ -349,7 +352,7 @@ export const ImageModal: React.FC<{
                   <span
                     className={`text-xl ml-2 text-slate-700`}
                   >
-                    /{t("car.day")}
+                    / {t("car.day")}
                   </span>
                 </div>
                 {/* <div>

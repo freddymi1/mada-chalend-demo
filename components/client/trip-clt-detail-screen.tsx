@@ -43,9 +43,7 @@ const TripCltDetailScreen = () => {
   }, [id]);
 
   if (!tripDetail) {
-    return (
-      <AnimateLoading/>
-    );
+    return <AnimateLoading />;
   }
 
   const images =
@@ -106,9 +104,7 @@ const TripCltDetailScreen = () => {
                       key={index}
                       onClick={() => goToImage(index)}
                       className={`w-3 h-3 rounded-full transition-all ${
-                        index === currentImageIndex
-                          ? "bg-primary"
-                          : "bg-white"
+                        index === currentImageIndex ? "bg-primary" : "bg-white"
                       }`}
                     />
                   ))}
@@ -139,28 +135,37 @@ const TripCltDetailScreen = () => {
             <div className="flex items-center justify-between gap-3 mb-6">
               <div className="flex items-center gap-2">
                 <Calendar className="w-6 h-6" />
-                <span className="text-xl">{Number(tripDetail.duration)} {t("ourTrip.day")} / {Number(tripDetail.duration) - 1} {t("ourTrip.night")}</span>
+                <span className="text-xl">
+                  {Number(tripDetail.duration)} {t("ourTrip.day")} /{" "}
+                  {Number(tripDetail.duration) - 1} {t("ourTrip.night")}
+                </span>
               </div>
               <div className="hidden lg:flex bg-primary text-primary-foreground p-6 rounded-xl items-center gap-2">
-                <EuroIcon className="w-6 h-6" />
-                <span className="text-xl font-semibold">
-                  {tripDetail.price}
-                </span>
+                <p className="text-primary-foreground text-lg">
+                  {t("detailCircuit.booking.from")}
+                </p>
+                <div className="flex items-center gap-2">
+                  <EuroIcon className="w-6 h-6" />
+                  <span className="text-xl font-semibold">
+                    {tripDetail.price}
+                  </span>
+                </div>
               </div>
             </div>
             <div className="flex justify-center mb-4 text-primary-foreground lg:hidden bg-primary p-6 rounded-xl items-center gap-2">
+              <p className="text-primary-foreground text-lg">
+                {t("detailCircuit.booking.from")}
+              </p>
+              <div className="flex items-center gap-2">
                 <EuroIcon className="w-8 h-8" />
-                <span className="text-3xl font-bold">
-                  {tripDetail.price}
-                </span>
+                <span className="text-3xl font-bold">{tripDetail.price}</span>
               </div>
+            </div>
           </div>
 
           {/* Stats Grid */}
           <div className="flex flex-col items-start">
-            <p className="text-xl font-bold  text-slate-700">
-              Dates
-            </p>
+            <p className="text-xl font-bold  text-slate-700">Dates</p>
 
             <div className="grid grid-cols-1 mt-4 w-full md:grid-cols-2 lg:grid-cols-3 gap-6">
               {tripDetail.travelDates.map((date) => (
@@ -297,7 +302,8 @@ const TripCltDetailScreen = () => {
           <div className="bg-white/50 rounded-lg shadow-sm p-6">
             <h3 className="font-semibold text-lg mb-6 text-primary flex items-center">
               <Calendar className="w-5 h-5 mr-2" />
-              {t("ourTrip.programDay")} ({tripDetail.program.length} {t("ourTrip.day")})
+              {t("ourTrip.programDay")} ({tripDetail.program.length}{" "}
+              {t("ourTrip.day")})
             </h3>
             <div className="space-y-6">
               {tripDetail.program.map((itinerary: any, index: number) => {

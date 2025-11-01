@@ -87,9 +87,7 @@ const TripScreen = () => {
   };
 
   if (isLoading) {
-    return (
-      <AnimateLoading/>
-    );
+    return <AnimateLoading />;
   }
 
   return (
@@ -168,16 +166,21 @@ const TripScreen = () => {
                     <div className="grid grid-cols-2 gap-3 mb-6">
                       <div className="flex items-center gap-2 text-slate-700">
                         <Calendar className="w-4 h-4 text-primary" />
-                        <span className="text-sm">{Number(trip.duration)} {t("ourTrip.day")} / {Number(trip.duration) - 1} {t("ourTrip.night")}</span>
+                        <span className="text-sm">
+                          {Number(trip.duration)} {t("ourTrip.day")} /{" "}
+                          {Number(trip.duration) - 1} {t("ourTrip.night")}
+                        </span>
                       </div>
-                      
                     </div>
 
-                    <div className="flex mb-3 items-center justify-center gap-2 text-primary">
-                      <EuroIcon className="w-8 h-8 text-primary" />
-                      <span className="text-3xl font-bold">
-                        {trip.price}
-                      </span>
+                    <div className="flex flex-col mb-3 items-center justify-center gap-2 text-primary">
+                      <p className="text-muted-foreground text-lg">
+                        {t("detailCircuit.booking.from")}
+                      </p>
+                      <div className="flex items-center gap-2">
+                        <EuroIcon className="w-8 h-8 font-bold text-primary" />
+                        <span className="text-3xl font-bold">{trip.price}</span>
+                      </div>
                     </div>
 
                     {/* Dates */}

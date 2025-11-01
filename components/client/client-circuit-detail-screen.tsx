@@ -219,8 +219,9 @@ const ClientCircuitDetailScreen = () => {
                   </CardHeader>
                   <CardContent className="px-2 sm:px-6">
                     <div className="space-y-4 sm:space-y-6">
-                      {circuitDetail?.itineraries?.sort((a: any, b: any) => a.day - b.day).map(
-                        (day: any, index: number) => {
+                      {circuitDetail?.itineraries
+                        ?.sort((a: any, b: any) => a.day - b.day)
+                        .map((day: any, index: number) => {
                           const imgTitle = day.title
                             ? JSON.parse(day.title)
                             : "";
@@ -343,8 +344,8 @@ const ClientCircuitDetailScreen = () => {
                                                     </div>
                                                   </div>
                                                   <span className="text-[10px] font-bold text-blue-300">
-                                                      {step.distance} km
-                                                    </span>
+                                                    {step.distance} km
+                                                  </span>
                                                 </div>
                                               )}
                                             </div>
@@ -382,8 +383,7 @@ const ClientCircuitDetailScreen = () => {
                               {/* Day image */}
                             </div>
                           );
-                        }
-                      )}
+                        })}
                     </div>
                   </CardContent>
                 </Card>
@@ -396,11 +396,14 @@ const ClientCircuitDetailScreen = () => {
                 }}
               >
                 <CardHeader className="text-center flex items-center justify-center">
-                  <CardTitle className="text-2xl text-primary break-words flex items-center gap-4">
-                    <span>{circuitDetail?.price} €</span>
-                    <p className="text-muted-foreground text-lg">
-                      {t("detailCircuit.booking.pricePerPerson")}
-                    </p>
+                  <CardTitle className="text-2xl text-primary break-words flex flex-col items-center gap-2">
+                    <p className="text-muted-foreground text-lg">{t("detailCircuit.booking.from")}</p>
+                    <div className="flex gap-2 items-center">
+                      <span>{circuitDetail?.price} €</span>
+                      <p className="text-muted-foreground text-lg">
+                        {t("detailCircuit.booking.pricePerPerson")}
+                      </p>
+                    </div>
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="grid grid-cols 1 lg:grid-cols-2 gap-6">

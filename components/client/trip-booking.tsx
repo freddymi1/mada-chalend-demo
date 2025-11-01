@@ -76,6 +76,8 @@ const TripBooking = ({
   const t = useTranslations("lng");
   const locale = useLocale();
   console.log("DATES", tripDetail?.travelDates);
+
+  const tripTitle = tripDetail?.title ? JSON.parse(tripDetail?.title!) : ""
   return (
     <div>
       <form onSubmit={handleSubmit} className="space-y-6">
@@ -116,7 +118,7 @@ const TripBooking = ({
           </Select>
           {trip && tripDetail && (
             <p className="text-sm text-muted-foreground">
-              {t("book.form.selectedTrip")} : {tripDetail.title || ""}
+              {t("book.form.selectedTrip")} : {locale === "fr" ? tripTitle.fr : tripTitle.en || ""}
             </p>
           )}
         </div>

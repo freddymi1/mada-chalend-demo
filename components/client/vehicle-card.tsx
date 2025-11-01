@@ -13,9 +13,9 @@ export const VehicleCard: React.FC<{
   onShowDetails: (vehicle: VehicleDTO) => void;
 }> = ({ vehicle, isDark, onShowDetails }) => {
   const [isFavorite, setIsFavorite] = useState(false);
-  const t = useTranslations('lng');
-  const locale = useLocale()
-  console.log("VEHICLE", vehicle)
+  const t = useTranslations("lng");
+  const locale = useLocale();
+  console.log("VEHICLE", vehicle);
 
   const router = useRouter();
 
@@ -57,34 +57,24 @@ export const VehicleCard: React.FC<{
 
       <div className="p-6">
         <div className="flex items-center justify-between mb-2">
-          <h3
-            className={`text-lg font-boldtext-primary`}
-          >
+          <h3 className={`text-lg font-boldtext-primary`}>
             {locale === "fr" ? carName.fr : carName.en}
           </h3>
           <div className="flex items-center gap-1">
             <Star className="w-4 h-4 text-yellow-400 fill-current" />
-            <span
-              className={`text-sm font-medium text-primary`}
-            >
+            <span className={`text-sm font-medium text-primary`}>
               {vehicle.rating}
             </span>
           </div>
         </div>
 
-        <p
-          className={`text-sm mb-4 line-clamp-3 text-slate-700`}
-        >
+        <p className={`text-sm mb-4 line-clamp-3 text-slate-700`}>
           {locale === "fr" ? carDescription.fr : carDescription.en}
         </p>
         <div className="flex items-center gap-4 mb-4">
           <div className="flex bg-primary text-primary-foreground py-1 px-2 rounded-lg items-center gap-1">
-            <Users
-              className={`w-4 h-4 `}
-            />
-            <span
-              className={`text-sm`}
-            >
+            <Users className={`w-4 h-4 `} />
+            <span className={`text-sm`}>
               {vehicle.passengers} {t("car.seat")}
             </span>
           </div>
@@ -93,14 +83,14 @@ export const VehicleCard: React.FC<{
         <div className="flex flex-wrap gap-2 mb-4">
           {vehicle.features.slice(0, 3).map((feature, index) => {
             const text = JSON.parse(feature);
-            return(
+            return (
               <span
-              key={index}
-              className={`px-2 py-1 text-xs rounded-full bg-primary/20 text-slate-700`}
-            >
-              {locale === "fr" ? text.fr : text.en}
-            </span>
-            )
+                key={index}
+                className={`px-2 py-1 text-xs rounded-full bg-primary/20 text-slate-700`}
+              >
+                {locale === "fr" ? text.fr : text.en}
+              </span>
+            );
           })}
           {vehicle.features.length > 3 && (
             <span
@@ -112,18 +102,14 @@ export const VehicleCard: React.FC<{
         </div>
 
         <div className="flex items-center justify-center mb-4">
-          
-          <div className="my-2">
-            <span
-              className={`text-3xl font-bold text-primary`}
-            >
+          <div className="my-2 flex items-center gap-2">
+            <p className="text-xl text-slate-700">
+              {t("detailCircuit.booking.from")}
+            </p>
+            <span className={`text-3xl font-bold text-primary`}>
               €{vehicle.pricePerDay}
             </span>
-            <span
-              className={`text-xl text-slate-700`}
-            >
-              /{t("car.day")}
-            </span>
+            <span className={`text-xl text-slate-700`}>/ {t("car.day")}</span>
           </div>
 
           {/* <div>
@@ -149,7 +135,10 @@ export const VehicleCard: React.FC<{
             <Eye className="w-4 h-4" />
             {t("car.viewDetail")}
           </button>
-          <button onClick={()=>router.push(`/reservation/car?car=${vehicle.id}`)} className="flex justify-center w-full px-6 py-2 bg-primary text-white rounded-lg font-medium transition-colors hover:scale-105">
+          <button
+            onClick={() => router.push(`/reservation/car?car=${vehicle.id}`)}
+            className="flex justify-center w-full px-6 py-2 bg-primary text-white rounded-lg font-medium transition-colors hover:scale-105"
+          >
             {t("car.details.booknow")}
           </button>
         </div>
