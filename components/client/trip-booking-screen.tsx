@@ -136,6 +136,7 @@ export function TripBookingScreen() {
       startDate: null,
       endDate: null,
       duration: null,
+      total: Number(formData.personnes) * Number(tripDetail?.price)
     };
 
     setPendingFormData(data);
@@ -143,6 +144,8 @@ export function TripBookingScreen() {
   };
 
   console.log("DATE", formData.travelDate);
+
+  console.log("TRIP DETAIL", tripDetail)
 
   const handleConfirmReservation = async () => {
     if (!pendingFormData) return;

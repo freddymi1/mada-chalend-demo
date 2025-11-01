@@ -54,6 +54,7 @@ export async function POST(req: NextRequest) {
       endDate,
       duration,
       preferences,
+      total
     } = body;
 
     // Convertir les types si nécessaire
@@ -604,6 +605,24 @@ export async function POST(req: NextRequest) {
                   </div>
                 </div>
               </div>
+            </div>
+
+            <!-- Total a payer -->
+            
+            <div style="margin-bottom: 30px;">
+              <p style="
+                margin: 0 0 5px 0;
+                color: #db352fff;
+                font-size: 24px;
+                font-weight: 600;
+                text-transform: uppercase;
+              ">€ Total a payer</p>
+              <p style="
+                margin: 0;
+                color: #125fe2ff;
+                font-size: 24px;
+                font-weight: 700;
+              ">${total}€</p>
             </div>
 
             <!-- Preferences -->

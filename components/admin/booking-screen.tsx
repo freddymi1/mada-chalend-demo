@@ -17,6 +17,10 @@ import {
   CheckCircle,
   User,
   Globe2,
+  Flag,
+  Car,
+  Route,
+  Plane,
   FlagIcon,
 } from "lucide-react";
 import { useAdminBooking } from "../providers/admin/BookingProvider";
@@ -26,15 +30,14 @@ import { useVehicle } from "../providers/admin/VehicleProvider";
 import { useLocale } from "next-intl";
 
 const BookingScreen = () => {
-  // Simulation des données de réservation basées sur votre format
-
-  const { bookingData, getAllBokkingData, loading, updateReservation } = useAdminBooking();
+  const { bookingData, getAllBokkingData, loading, updateReservation } =
+    useAdminBooking();
   const { handleUpdate, isLoading } = useVehicle();
 
   const locale = useLocale();
 
   const [searchTerm, setSearchTerm] = useState("");
-  const [restTypeFilter, setResTypeFilter] = useState("tous");
+  const [activeTab, setActiveTab] = useState("tous");
   const [statusFilter, setStatusFilter] = useState("tous");
   const [dateFilter, setDateFilter] = useState("");
   const [showFilters, setShowFilters] = useState(false);
@@ -82,41 +85,74 @@ const BookingScreen = () => {
   };
 
   const filteredReservations = bookingData?.reservations?.filter(
-    (reservation: Reservation) => {
-      const voyageTitle = reservation?.circuitRel && JSON?.parse(reservation?.circuitRel?.title as any);
+    (reservation: any) => {
+      const voyageTitle =
+        reservation?.circuitRel &&
+        JSON?.parse(reservation?.circuitRel?.title as any);
+      const tripname =
+        reservation?.TripTravel &&
+        JSON?.parse(reservation?.TripTravel?.title as any);
+      const vehicleName =
+        reservation?.vehicleRel &&
+        JSON?.parse(reservation?.vehicleRel?.name as any);
+
       const matchesSearch =
         searchTerm === "" ||
         reservation.nom.toLowerCase().includes(searchTerm.toLowerCase()) ||
         reservation.prenom.toLowerCase().includes(searchTerm.toLowerCase()) ||
         reservation.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        reservation.resType?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        voyageTitle?.fr.toLowerCase()
-          .toLowerCase()
-          .includes(searchTerm.toLowerCase()) ||
-        voyageTitle?.en
-          .toLowerCase()
-          .includes(searchTerm.toLowerCase());
+        voyageTitle?.fr?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        voyageTitle?.en?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        tripname?.fr?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        tripname?.en?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        vehicleName?.fr?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        vehicleName?.en?.toLowerCase().includes(searchTerm.toLowerCase());
 
       const matchesStatus =
         statusFilter === "tous" || reservation.status === statusFilter;
 
-      const reservationFilter =
-        restTypeFilter === "tous" || reservation.resType === restTypeFilter;
+      const matchesTab =
+        activeTab === "tous" || reservation.resType === activeTab;
 
-      return matchesSearch && matchesStatus && reservationFilter;
+      return matchesSearch && matchesStatus && matchesTab;
     }
   );
 
+  const getTabStats = (type: string) => {
+    if (type === "tous") return bookingData?.reservations?.length || 0;
+    return (
+      bookingData?.reservations?.filter((r: Reservation) => r.resType === type)
+        .length || 0
+    );
+  };
+
   const handleValidateBooking = async (id: string) => {
-  try {
-    const dataRes: Partial<Reservation> = {
-      status: "confirmed" as any // Make sure this matches your actual status values
-    };
-    await updateReservation(id, dataRes as any);
-  } catch (error) {
-    console.error("Error validating booking:", error);
-  }
-};
+    try {
+      const dataRes: Partial<Reservation> = {
+        status: "confirmed" as any,
+      };
+      await updateReservation(id, dataRes as any);
+    } catch (error) {
+      console.error("Error validating booking:", error);
+    }
+  };
+
+  const tabs = [
+    // { id: "tous", label: "Toutes", icon: null, count: getTabStats("tous") },
+    {
+      id: "circuit",
+      label: "Circuits",
+      icon: Route,
+      count: getTabStats("circuit"),
+    },
+    {
+      id: "trip",
+      label: "Voyages organisés",
+      icon: Plane,
+      count: getTabStats("trip"),
+    },
+    { id: "car", label: "Véhicules", icon: Car, count: getTabStats("car") },
+  ];
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-indigo-50 p-6">
@@ -135,6 +171,39 @@ const BookingScreen = () => {
           <LoadingSpinner />
         ) : (
           <>
+            {/* Onglets */}
+            <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-2 mb-6">
+              <div className="flex flex-wrap gap-2">
+                {tabs.map((tab) => {
+                  const Icon = tab.icon;
+                  const isActive = activeTab === tab.id;
+                  return (
+                    <button
+                      key={tab.id}
+                      onClick={() => setActiveTab(tab.id)}
+                      className={`flex items-center gap-2 px-6 py-3 rounded-xl font-medium transition-all duration-200 ${
+                        isActive
+                          ? "bg-primary text-white shadow-md"
+                          : "text-white bg-slate-700"
+                      }`}
+                    >
+                      {Icon && <Icon className="w-5 h-5" />}
+                      <span>{tab.label}</span>
+                      <span
+                        className={`px-2 py-0.5 rounded-full text-xs font-semibold ${
+                          isActive
+                            ? "bg-white/20 text-white"
+                            : "bg-gray-200 text-gray-700"
+                        }`}
+                      >
+                        {tab.count}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
             {/* Barre de recherche et filtres */}
             <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6 mb-8">
               <div className="flex flex-col lg:flex-row gap-4">
@@ -151,18 +220,7 @@ const BookingScreen = () => {
                 </div>
 
                 {/* Filtres */}
-
                 <div className="flex gap-3">
-                  <select
-                    value={restTypeFilter}
-                    onChange={(e) => setResTypeFilter(e.target.value)}
-                    className="px-4 py-3 border text-black border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white min-w-32"
-                  >
-                    <option value="tous">Tous les reservations</option>
-                    <option value="circuit">Circuit</option>
-                    <option value="car">Voiture</option>
-                    <option value="trip">Voyage</option>
-                  </select>
                   <select
                     value={statusFilter}
                     onChange={(e) => setStatusFilter(e.target.value)}
@@ -188,18 +246,17 @@ const BookingScreen = () => {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6 pt-6 border-t border-gray-100">
                 <div className="text-center">
                   <div className="text-2xl font-bold text-indigo-600">
-                    {/* {bookingData?.pagination?.totalCount} */}
                     {filteredReservations?.length}
                   </div>
                   <div className="text-sm text-gray-600">
-                    Total réservations
+                    Réservations affichées
                   </div>
                 </div>
                 <div className="text-center">
                   <div className="text-2xl font-bold text-yellow-600">
                     {
-                      bookingData?.reservations?.filter(
-                        (r: any) => r.status === "en_attente"
+                      filteredReservations?.filter(
+                        (r: any) => r.status === "pending"
                       ).length
                     }
                   </div>
@@ -207,7 +264,7 @@ const BookingScreen = () => {
                 </div>
                 <div className="text-center">
                   <div className="text-2xl font-bold text-green-600">
-                    {bookingData?.reservations?.reduce(
+                    {filteredReservations?.reduce(
                       (sum: any, r: any) => sum + r.personnes,
                       0
                     )}
@@ -221,291 +278,345 @@ const BookingScreen = () => {
 
             {/* Liste des réservations */}
             <div className="space-y-4">
-              {filteredReservations?.map((reservation: any) => {
-                const voyageTitle = reservation?.circuitRel && JSON.parse(reservation?.circuitRel?.title as any);
-                const tripname = reservation?.TripTravel && JSON.parse(reservation?.TripTravel?.title as any);
-                const vehicleName = reservation?.vehicleRel && JSON.parse(reservation?.vehicleRel?.name as any);
-                return(
-                  <div
-                  key={reservation?.id}
-                  className="bg-white rounded-2xl shadow-lg border border-gray-100 hover:shadow-xl transition-all duration-300"
-                >
-                  <div className="p-6">
-                    <div className="flex flex-col lg:flex-row lg:items-center justify-between mb-4">
-                      <div className="flex items-center gap-4 mb-4 lg:mb-0">
-                        <div className="bg-indigo-100 rounded-full w-12 h-12 flex items-center justify-center">
-                          <Users className="w-6 h-6 text-indigo-600" />
-                        </div>
-                        <div>
-                          <h3 className="text-xl font-semibold text-gray-900">
-                            {reservation?.prenom} {reservation?.nom}
-                          </h3>
-                          <div className="flex items-center gap-2 text-sm text-gray-600">
-                            <Calendar className="w-4 h-4" />
-                            Créée le {formatDate(reservation.createdAt)}
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="flex items-center gap-3">
-                        <span
-                          className={`px-3 py-1 rounded-full text-xs font-medium border ${getStatusColor(
-                            reservation?.status as any
-                          )}`}
-                        >
-                          {getStatusLabel(reservation?.status as any)}
-                        </span>
-
-                        <div className="flex gap-2">
-                          {reservation.status === "pending" && (
-                            <button
-                              onClick={() =>
-                                handleValidateBooking(reservation?.id)
-                              }
-                              className="p-2 text-gray-400 cursor-pointer hover:text-green-600 hover:bg-indigo-50 rounded-lg transition-colors"
-                            >
-                              <CheckCircle className="w-4 h-4" />
-                            </button>
-                          )}
-                          {/* <button className="p-2 text-gray-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors">
-                            <Eye className="w-4 h-4" />
-                          </button>
-                          <button className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">
-                            <Edit className="w-4 h-4" />
-                          </button>
-                          <button className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors">
-                            <Trash2 className="w-4 h-4" />
-                          </button> */}
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                      {/* Informations client */}
-                      <div className="space-y-3">
-                        <h4 className="font-medium text-gray-900 mb-3">
-                          Informations Client
-                        </h4>
-                        <div className="space-y-2">
-                          <div className="flex items-center gap-3 text-sm">
-                            <Mail className="w-4 h-4 text-gray-400" />
-                            <span className="text-gray-600">
-                              {reservation?.email}
-                            </span>
-                          </div>
-                          <div className="flex items-center gap-3 text-sm">
-                            <Phone className="w-4 h-4 text-gray-400" />
-                            <span className="text-gray-600">
-                              {reservation?.telephone}
-                            </span>
-                          </div>
-                          <div className="flex items-center gap-3 text-sm">
-                            <MapPin className="w-4 h-4 text-gray-400" />
-                            <span className="text-gray-600">
-                              {reservation?.address}
-                            </span>
-                          </div>
-                          <div className="flex items-center gap-3 text-sm">
-                            <Users className="w-4 h-4 text-gray-400" />
-                            <span className="text-gray-600">
-                              {reservation?.personnes} personne(s)
-                            </span>
-                          </div>
-
-                          <div className="flex items-center  gap-3 text-sm">
-                            <FlagIcon className="w-4 h-4 text-gray-400" />
-                            <span className="text-gray-600 font-bold">
-                              {reservation?.langue === "fr" ? "Francais" : reservation?.langue === "en" ? "Anglais" : reservation?.langue} 
-                            </span>
-                          </div>
-
-                          <div className="flex items-center gap-3 text-sm">
-                            <Users className="w-4 h-4 text-gray-400" />
-                            <span className="text-gray-600">
-                              {reservation?.nbrAdult} adulte(s)
-                            </span>
-                          </div>
-                          <div className="flex items-center gap-3 text-sm">
-                            <Users className="w-4 h-4 text-gray-400" />
-                            <span className="text-gray-600">
-                              {reservation?.nbrChild} enfant(s)
-                            </span>
-                          </div>
-
-                          {
-                            reservation?.nbrAge2_3 > 0 && (
-                              <div className="flex items-center gap-3 text-sm">
-                                <Users className="w-4 h-4 text-gray-400" />
-                                <span className="text-gray-600">
-                                  {reservation?.nbrAge2_3} enfant(s) de 2 à 3 ans
-                                </span>
-                              </div>
-                            )
-                          }
-
-                          {reservation?.nbrAge4_7 > 0 && (
-                            <div className="flex items-center gap-3 text-sm">
-                              <Users className="w-4 h-4 text-gray-400" />
-                              <span className="text-gray-600">
-                                {reservation?.nbrAge4_7} enfant(s) de 4 à 7 ans
-                              </span>
-                            </div>
-                          )}
-                          {
-                            reservation?.nbrAge8_10 > 0 && (
-                              <div className="flex items-center gap-3 text-sm">
-                                <Users className="w-4 h-4 text-gray-400" />
-                                <span className="text-gray-600">
-                                  {reservation?.nbrAge8_10} enfant(s) de 8 à 10 ans
-                                </span>
-                              </div>
-                            )
-                          }
-                          {
-                            reservation?.nbrAge11 > 0 && (
-                              <div className="flex items-center gap-3 text-sm">
-                                <Users className="w-4 h-4 text-gray-400" />
-                                <span className="text-gray-600">
-                                  {reservation?.nbrAge11} enfant(s) de 11 ans et plus
-                                </span>
-                              </div>
-                            )
-                          }
-                        </div>
-                      </div>
-
-                      {/* Informations voyage */}
-                      <div className="space-y-3">
-                        <h4 className="font-medium text-gray-900 mb-3">
-                          Détails du Voyage
-                        </h4>
-                        {reservation.resType === "circuit" ? (
-                          <div className="bg-gradient-to-r from-indigo-50 to-blue-50 rounded-xl p-4">
-                            <a
-                              href={`/admin/circuits/${reservation?.circuitRel?.id}`}
-                              className="font-bold text-xl text-indigo-900 mb-2"
-                            >
-                              {locale === "fr" ? voyageTitle?.fr : voyageTitle?.en}
-                            </a>
-                            <div className="space-y-2 text-sm">
-                              <div className="flex justify-between">
-                                <span className="text-gray-600">Prix:</span>
-                                <span className="font-medium text-green-600">
-                                  {reservation?.circuitRel?.price}€
-                                </span>
-                              </div>
-                              <div className="flex justify-between">
-                                <span className="text-gray-600">
-                                  Difficulté:
-                                </span>
-                                <span className="font-medium text-black/80">
-                                  {reservation?.circuitRel?.difficulty}
-                                </span>
-                              </div>
-                              <div className="flex justify-between">
-                                <span className="text-gray-600">Dates:</span>
-                                <span className="font-medium text-primary">
-                                  {formatDate(reservation?.startDate)} -{" "}
-                                  {formatDate(reservation?.endDate)}
-                                </span>
-                              </div>
-                              <div className="flex justify-between">
-                                <span className="text-gray-600">Durée:</span>
-                                <span className="font-medium text-black/80">
-                                  {Number(reservation?.circuitRel?.duration)} jour
-                                  {Number(reservation?.circuitRel?.duration) > 1
-                                    ? "s"
-                                    : ""}
-                                </span>
-                              </div>
-                            </div>
-                          </div>
-                        ) : reservation.resType ==="trip" ? (
-                          <>
-                            <div className="bg-gradient-to-r from-indigo-50 to-blue-50 rounded-xl p-4">
-                              <a
-                                href={`/admin/trips/${reservation?.TripTravel?.id}`}
-                                className="font-bold text-xl text-indigo-900 mb-2"
-                              >
-                                {locale === "fr" ? tripname.fr : tripname.en}
-                              </a>
-                              <div className="space-y-2 text-sm">
-                                <div className="flex justify-between">
-                                  <span className="text-gray-600">Prix:</span>
-                                  <span className="font-medium text-green-600">
-                                    {reservation?.TripTravel?.price}€
-                                  </span>
-                                </div>
-                                {/* <div className="flex justify-between">
-                                  <span className="text-gray-600">Difficulté:</span>
-                                  <span className="font-medium text-black/80">
-                                    {reservation?.TripTravel?.difficulty}
-                                  </span>
-                                </div> */}
-                                <div className="flex justify-between">
-                                  <span className="text-gray-600">Dates:</span>
-                                  <span className="font-medium text-primary">
-                                    {formatDate(reservation?.startDate)} -{" "}
-                                    {formatDate(reservation?.endDate)}
-                                  </span>
-                                </div>
-                                <div className="flex justify-between">
-                                  <span className="text-gray-600">Durée:</span>
-                                  <span className="font-medium text-black/80">
-                                    {Number(reservation?.TripTravel?.duration)} jour
-                                    {Number(reservation?.TripTravel?.duration) > 1 ? "s" : ""}
-                                  </span>
-                                </div>
-                              </div>
-                            </div>
-                          </>
-                        ) : (
-                          <div className="bg-gradient-to-r from-indigo-50 to-blue-50 rounded-xl p-4">
-                            <a
-                              href={`/admin/circuits/${reservation?.vehicleRel?.id}`}
-                              className="font-bold text-xl text-indigo-900 mb-2"
-                            >
-                              {locale === "fr" ? vehicleName?.fr : vehicleName?.en}
-                            </a>
-                            <div className="space-y-2 text-sm">
-                              <div className="flex justify-between">
-                                <span className="text-gray-600">Prix:</span>
-                                <span className="font-medium text-green-600">
-                                  {reservation?.vehicleRel?.pricePerDay}€/Jour
-                                </span>
-                              </div>
-                              
-                              <div className="flex justify-between">
-                                <span className="text-gray-600">Dates:</span>
-                                <span className="font-medium text-primary">
-                                  {formatDate(reservation?.startDate)} -{" "}
-                                  {formatDate(reservation?.endDate)}
-                                </span>
-                              </div>
-                              
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-
-                    {/* Préférences */}
-                    {reservation?.preferences &&
-                      reservation?.preferences !==
-                        "Lorem Ipsum is simply dummy text..." && (
-                        <div className="mt-4 pt-4 border-t border-gray-100">
-                          <h4 className="font-medium text-gray-900 mb-2">
-                            Préférences
-                          </h4>
-                          <p className="text-sm text-gray-600 bg-gray-50 rounded-lg p-3">
-                            {reservation.preferences}
-                          </p>
-                        </div>
-                      )}
+              {filteredReservations?.length === 0 ? (
+                <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-12 text-center">
+                  <div className="text-gray-400 mb-4">
+                    <Search className="w-16 h-16 mx-auto" />
                   </div>
+                  <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                    Aucune réservation trouvée
+                  </h3>
+                  <p className="text-gray-600">
+                    Essayez de modifier vos filtres de recherche
+                  </p>
                 </div>
-                )
-              })}
+              ) : (
+                filteredReservations?.map((reservation: any) => {
+                  const voyageTitle =
+                    reservation?.circuitRel &&
+                    JSON.parse(reservation?.circuitRel?.title as any);
+                  const tripname =
+                    reservation?.TripTravel &&
+                    JSON.parse(reservation?.TripTravel?.title as any);
+                  const vehicleName =
+                    reservation?.vehicleRel &&
+                    JSON.parse(reservation?.vehicleRel?.name as any);
+                  return (
+                    <div
+                      key={reservation?.id}
+                      className="bg-white rounded-2xl shadow-lg border border-gray-100 hover:shadow-xl transition-all duration-300"
+                    >
+                      <div className="p-6">
+                        <div className="flex flex-col lg:flex-row lg:items-center justify-between mb-4">
+                          <div className="flex items-center gap-4 mb-4 lg:mb-0">
+                            <div className="bg-indigo-100 rounded-full w-12 h-12 flex items-center justify-center">
+                              <Users className="w-6 h-6 text-indigo-600" />
+                            </div>
+                            <div>
+                              <h3 className="text-xl font-semibold text-gray-900">
+                                {reservation?.prenom} {reservation?.nom}
+                              </h3>
+                              <div className="flex items-center gap-2 text-sm text-gray-600">
+                                <Calendar className="w-4 h-4" />
+                                Créée le {formatDate(reservation.createdAt)}
+                              </div>
+                            </div>
+                          </div>
+
+                          <div className="flex items-center gap-3">
+                            <span
+                              className={`px-3 py-1 rounded-full text-xs font-medium border ${getStatusColor(
+                                reservation?.status as any
+                              )}`}
+                            >
+                              {getStatusLabel(reservation?.status as any)}
+                            </span>
+
+                            <div className="flex gap-2">
+                              {reservation.status === "pending" && (
+                                <button
+                                  onClick={() =>
+                                    handleValidateBooking(reservation?.id)
+                                  }
+                                  className="p-2 text-gray-400 cursor-pointer hover:text-green-600 hover:bg-indigo-50 rounded-lg transition-colors"
+                                  title="Valider la réservation"
+                                >
+                                  <CheckCircle className="w-4 h-4" />
+                                </button>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                          {/* Informations client */}
+                          <div className="space-y-3">
+                            <h4 className="font-medium text-gray-900 mb-3">
+                              Informations Client
+                            </h4>
+                            <div className="space-y-2">
+                              <div className="flex items-center gap-3 text-sm">
+                                <Mail className="w-4 h-4 text-gray-400" />
+                                <span className="text-gray-600">
+                                  {reservation?.email}
+                                </span>
+                              </div>
+                              <div className="flex items-center gap-3 text-sm">
+                                <Phone className="w-4 h-4 text-gray-400" />
+                                <span className="text-gray-600">
+                                  {reservation?.telephone}
+                                </span>
+                              </div>
+                              <div className="flex items-center gap-3 text-sm">
+                                <MapPin className="w-4 h-4 text-gray-400" />
+                                <span className="text-gray-600">
+                                  {reservation?.address}
+                                </span>
+                              </div>
+                              <div className="flex items-center gap-3 text-sm">
+                                <Users className="w-4 h-4 text-gray-400" />
+                                <span className="text-gray-600">
+                                  {reservation?.personnes} personne(s)
+                                </span>
+                              </div>
+
+                              <div className="flex items-center  gap-3 text-sm">
+                                <FlagIcon className="w-4 h-4 text-gray-400" />
+                                <span className="text-gray-600 font-bold">
+                                  {reservation?.langue === "fr"
+                                    ? "Français"
+                                    : reservation?.langue === "en"
+                                    ? "Anglais"
+                                    : reservation?.langue}
+                                </span>
+                              </div>
+
+                              <div className="flex items-center gap-3 text-sm">
+                                <Users className="w-4 h-4 text-gray-400" />
+                                <span className="text-gray-600">
+                                  {reservation?.nbrAdult} adulte(s)
+                                </span>
+                              </div>
+                              <div className="flex items-center gap-3 text-sm">
+                                <Users className="w-4 h-4 text-gray-400" />
+                                <span className="text-gray-600">
+                                  {reservation?.nbrChild} enfant(s)
+                                </span>
+                              </div>
+
+                              {reservation?.nbrAge2_3 > 0 && (
+                                <div className="flex items-center gap-3 text-sm">
+                                  <Users className="w-4 h-4 text-gray-400" />
+                                  <span className="text-gray-600">
+                                    {reservation?.nbrAge2_3} enfant(s) de 2 à 3
+                                    ans
+                                  </span>
+                                </div>
+                              )}
+
+                              {reservation?.nbrAge4_7 > 0 && (
+                                <div className="flex items-center gap-3 text-sm">
+                                  <Users className="w-4 h-4 text-gray-400" />
+                                  <span className="text-gray-600">
+                                    {reservation?.nbrAge4_7} enfant(s) de 4 à 7
+                                    ans
+                                  </span>
+                                </div>
+                              )}
+                              {reservation?.nbrAge8_10 > 0 && (
+                                <div className="flex items-center gap-3 text-sm">
+                                  <Users className="w-4 h-4 text-gray-400" />
+                                  <span className="text-gray-600">
+                                    {reservation?.nbrAge8_10} enfant(s) de 8 à
+                                    10 ans
+                                  </span>
+                                </div>
+                              )}
+                              {reservation?.nbrAge11 > 0 && (
+                                <div className="flex items-center gap-3 text-sm">
+                                  <Users className="w-4 h-4 text-gray-400" />
+                                  <span className="text-gray-600">
+                                    {reservation?.nbrAge11} enfant(s) de 11 ans
+                                    et plus
+                                  </span>
+                                </div>
+                              )}
+                            </div>
+                          </div>
+
+                          {/* Informations voyage */}
+                          <div className="space-y-3">
+                            <h4 className="font-medium text-gray-900 mb-3">
+                              Détails du{" "}
+                              {reservation.resType === "circuit"
+                                ? "Circuit"
+                                : reservation.resType === "trip"
+                                ? "Voyage"
+                                : "Véhicule"}
+                            </h4>
+                            {reservation.resType === "circuit" ? (
+                              <div className="bg-gradient-to-r from-indigo-50 to-blue-50 rounded-xl p-4">
+                                <a
+                                  href={`/admin/circuits/${reservation?.circuitRel?.id}`}
+                                  className="font-bold text-xl text-indigo-900 mb-2 hover:underline"
+                                >
+                                  {locale === "fr"
+                                    ? voyageTitle?.fr
+                                    : voyageTitle?.en}
+                                </a>
+                                <div className="space-y-2 text-sm mt-3">
+                                  <div className="flex justify-between">
+                                    <span className="text-gray-600">Prix:</span>
+                                    <span className="font-medium text-green-600">
+                                      {reservation?.circuitRel?.price}€
+                                    </span>
+                                  </div>
+                                  <div className="flex justify-between">
+                                    <span className="text-gray-600">
+                                      Difficulté:
+                                    </span>
+                                    <span className="font-medium text-black/80">
+                                      {reservation?.circuitRel?.difficulty}
+                                    </span>
+                                  </div>
+                                  <div className="flex justify-between">
+                                    <span className="text-gray-600">
+                                      Dates:
+                                    </span>
+                                    <span className="font-medium text-primary">
+                                      {formatDate(reservation?.startDate)} -{" "}
+                                      {formatDate(reservation?.endDate)}
+                                    </span>
+                                  </div>
+                                  <div className="flex justify-between">
+                                    <span className="text-gray-600">
+                                      Durée:
+                                    </span>
+                                    <span className="font-medium text-black/80">
+                                      {Number(
+                                        reservation?.circuitRel?.duration
+                                      )}{" "}
+                                      jour
+                                      {Number(
+                                        reservation?.circuitRel?.duration
+                                      ) > 1
+                                        ? "s"
+                                        : ""}
+                                    </span>
+                                  </div>
+                                  <div className="flex items-center justify-between text-3xl text-slate-700 font-bold">
+                                    <span>Total a payes :{" "}</span>
+                                    <span className="text-primary">
+                                      {Number(reservation?.circuitRel?.price) *
+                                        Number(reservation.personnes)}
+                                      €
+                                    </span>
+                                  </div>
+                                </div>
+                              </div>
+                            ) : reservation.resType === "trip" ? (
+                              <div className="bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl p-4">
+                                <a
+                                  href={`/admin/trips/${reservation?.TripTravel?.id}`}
+                                  className="font-bold text-xl text-purple-900 mb-2 hover:underline"
+                                >
+                                  {locale === "fr"
+                                    ? tripname?.fr
+                                    : tripname?.en}
+                                </a>
+                                <div className="space-y-2 text-sm mt-3">
+                                  <div className="flex justify-between">
+                                    <span className="text-gray-600">Prix:</span>
+                                    <span className="font-medium text-green-600">
+                                      {reservation?.TripTravel?.price}€
+                                    </span>
+                                  </div>
+                                  <div className="flex justify-between">
+                                    <span className="text-gray-600">
+                                      Dates:
+                                    </span>
+                                    <span className="font-medium text-primary">
+                                      {formatDate(reservation?.startDate)} -{" "}
+                                      {formatDate(reservation?.endDate)}
+                                    </span>
+                                  </div>
+                                  <div className="flex justify-between">
+                                    <span className="text-gray-600">
+                                      Durée:
+                                    </span>
+                                    <span className="font-medium text-black/80">
+                                      {Number(
+                                        reservation?.TripTravel?.duration
+                                      )}{" "}
+                                      jour
+                                      {Number(
+                                        reservation?.TripTravel?.duration
+                                      ) > 1
+                                        ? "s"
+                                        : ""}
+                                    </span>
+                                  </div>
+                                  <div className="flex items-center justify-between text-3xl text-slate-700 font-bold">
+                                    <span>Net a payes :{" "}</span>
+                                    <span className="text-primary">
+                                      {Number(reservation?.TripTravel?.price) *
+                                        Number(reservation.personnes)}
+                                      €
+                                    </span>
+                                  </div>
+                                </div>
+                              </div>
+                            ) : (
+                              <div className="bg-gradient-to-r from-orange-50 to-amber-50 rounded-xl p-4">
+                                <a
+                                  href={`/admin/vehicles/${reservation?.vehicleRel?.id}`}
+                                  className="font-bold text-xl text-orange-900 mb-2 hover:underline"
+                                >
+                                  {locale === "fr"
+                                    ? vehicleName?.fr
+                                    : vehicleName?.en}
+                                </a>
+                                <div className="space-y-2 text-sm mt-3">
+                                  <div className="flex justify-between">
+                                    <span className="text-gray-600">Prix:</span>
+                                    <span className="font-medium text-green-600">
+                                      {reservation?.vehicleRel?.pricePerDay}
+                                      €/Jour
+                                    </span>
+                                  </div>
+                                  <div className="flex justify-between">
+                                    <span className="text-gray-600">
+                                      Dates:
+                                    </span>
+                                    <span className="font-medium text-primary">
+                                      {formatDate(reservation?.startDate)} -{" "}
+                                      {formatDate(reservation?.endDate)}
+                                    </span>
+                                  </div>
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+
+                        {/* Préférences */}
+                        {reservation?.preferences &&
+                          reservation?.preferences !==
+                            "Lorem Ipsum is simply dummy text..." && (
+                            <div className="mt-4 pt-4 border-t border-gray-100">
+                              <h4 className="font-medium text-gray-900 mb-2">
+                                Préférences
+                              </h4>
+                              <p className="text-sm text-gray-600 bg-gray-50 rounded-lg p-3">
+                                {reservation.preferences}
+                              </p>
+                            </div>
+                          )}
+                      </div>
+                    </div>
+                  );
+                })
+              )}
             </div>
 
             {/* Pagination */}
@@ -514,7 +625,7 @@ const BookingScreen = () => {
                 <div className="mt-8 flex items-center justify-between">
                   <div className="text-sm text-gray-600">
                     Page {bookingData?.pagination?.currentPage} sur{" "}
-                    {bookingData?.pagination?.totalPages}(
+                    {bookingData?.pagination?.totalPages} (
                     {bookingData?.pagination?.totalCount} réservations au total)
                   </div>
 

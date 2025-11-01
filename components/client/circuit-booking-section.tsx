@@ -54,6 +54,8 @@ export function CircuitBookingSection() {
     }
   }, [circuit]);
 
+  console.log("CIRCUIT DETAIL", circuitDetail)
+
   const [formData, setFormData] = useState({
     circuit: circuit ? circuit : "",
     langue: "",
@@ -117,6 +119,7 @@ export function CircuitBookingSection() {
       endDate: formData.endDate,
       duration: formData.duration,
       preferences: formData.preferences,
+      total: Number(formData.personnes) * Number(circuitDetail.price)
     };
 
     // Stocker les données et afficher le popup de confirmation

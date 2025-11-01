@@ -282,6 +282,7 @@ export function CarBookingSection() {
       endDate: formData.endDate,
       duration: formData.duration,
       preferences: formData.preferences,
+      total: Number(formData.duration) * Number(vehicleDetail?.pricePerDay)
     };
 
     // Stocker les données et afficher le popup de confirmation
