@@ -160,6 +160,7 @@ model Reservation {
   endDate      DateTime?
   duration     Int?
   preferences  String?
+  total         Int? @default(0)
   status       String?
   createdAt    DateTime     @default(now())
   updatedAt    DateTime     @updatedAt

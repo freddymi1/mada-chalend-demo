@@ -145,7 +145,7 @@ export function TripBookingScreen() {
 
   console.log("DATE", formData.travelDate);
 
-  console.log("TRIP DETAIL", tripDetail)
+  console.log("TRIP DETAIL", tripDetail?.price)
 
   const handleConfirmReservation = async () => {
     if (!pendingFormData) return;

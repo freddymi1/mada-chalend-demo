@@ -1,5 +1,6 @@
 import { Vehicle } from "./car";
 import { Circuit } from "./circuit";
+import { TripTravel } from "./trip";
 
 export enum Status {
   Valide = "valide",
@@ -30,6 +31,8 @@ export interface Reservation {
   endDate: string; // format YYYY-MM-DD
   duration: string; // nombre de jours
   preferences: string;
+  total: number;
+  TripTravel: TripTravel;
   circuitRel?: Circuit;
   vehicleRel?: Vehicle;
   status?: Status; // facultatif

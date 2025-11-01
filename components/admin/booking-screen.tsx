@@ -37,7 +37,7 @@ const BookingScreen = () => {
   const locale = useLocale();
 
   const [searchTerm, setSearchTerm] = useState("");
-  const [activeTab, setActiveTab] = useState("tous");
+  const [activeTab, setActiveTab] = useState("circuit");
   const [statusFilter, setStatusFilter] = useState("tous");
   const [dateFilter, setDateFilter] = useState("");
   const [showFilters, setShowFilters] = useState(false);
@@ -505,11 +505,9 @@ const BookingScreen = () => {
                                     </span>
                                   </div>
                                   <div className="flex items-center justify-between text-3xl text-slate-700 font-bold">
-                                    <span>Total à payer :{" "}</span>
+                                    <span>Total à payer : </span>
                                     <span className="text-primary">
-                                      {Number(reservation?.circuitRel?.price) *
-                                        Number(reservation.personnes)}
-                                      €
+                                      {Number(reservation?.total)}€
                                     </span>
                                   </div>
                                 </div>
@@ -557,11 +555,9 @@ const BookingScreen = () => {
                                     </span>
                                   </div>
                                   <div className="flex items-center justify-between text-3xl text-slate-700 font-bold">
-                                    <span>Total à payer :{" "}</span>
+                                    <span>Total à payer : </span>
                                     <span className="text-primary">
-                                      {Number(reservation?.TripTravel?.price) *
-                                        Number(reservation.personnes)}
-                                      €
+                                      {Number(reservation?.total)}€
                                     </span>
                                   </div>
                                 </div>
@@ -598,25 +594,16 @@ const BookingScreen = () => {
                                       Durée:
                                     </span>
                                     <span className="font-medium text-black/80">
-                                      {Number(
-                                        reservation?.duration
-                                      )}{" "}
-                                      jour
-                                      {Number(
-                                        reservation?.duration
-                                      ) > 1
+                                      {Number(reservation?.duration)} jour
+                                      {Number(reservation?.duration) > 1
                                         ? "s"
                                         : ""}
                                     </span>
                                   </div>
                                   <div className="flex items-center justify-between text-3xl text-slate-700 font-bold">
-                                    <span>Total à payer :{" "}</span>
+                                    <span>Total à payer : </span>
                                     <span className="text-primary">
-                                      {Number(reservation?.vehicleRel?.pricePerDay) *
-                                        Number(
-                                        reservation?.duration
-                                      )}
-                                      €
+                                      {Number(reservation?.total)}€
                                     </span>
                                   </div>
                                 </div>

@@ -185,6 +185,7 @@ export async function POST(req: NextRequest) {
       endDate: new Date(endDate),
       duration: durationNumber,
       preferences,
+      total: Number(total),
       status: "pending",
       travelDateId: travelDate
     };
