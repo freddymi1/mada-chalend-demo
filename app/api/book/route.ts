@@ -54,7 +54,7 @@ export async function POST(req: NextRequest) {
       endDate,
       duration,
       preferences,
-      total
+      total,
     } = body;
 
     // Convertir les types si nécessaire
@@ -226,12 +226,16 @@ export async function POST(req: NextRequest) {
     // 🔹 Determine the title for email based on reservation type
     let reservationTitle = "";
 
+    const circuitTitle = circuitDetails?.title ? JSON.parse(circuitDetails?.title) : "Reservation du circuit"
+    const tripTitle = tripDetails?.title ? JSON.parse(tripDetails?.title) : "Reservation d'un voyage"
+    const carTitle = carsDetails?.name ? JSON.parse(carsDetails?.name) : "Reservation d'une voiture"
+
     if (resType === "circuit") {
-      reservationTitle = circuitDetails?.title || "";
+      reservationTitle = circuitTitle.fr|| "";
     } else if (resType === "trip") {
-      reservationTitle = tripDetails?.title || "";
+      reservationTitle = tripTitle.fr || "";
     } else {
-      reservationTitle = carsDetails?.name || "";
+      reservationTitle = carTitle.fr || "";
     }
 
     let debut = ""
