@@ -616,7 +616,7 @@ export async function POST(req: NextRequest) {
                 font-size: 24px;
                 font-weight: 600;
                 text-transform: uppercase;
-              ">€ Total a payer</p>
+              ">€ Total à payer</p>
               <p style="
                 margin: 0;
                 color: #125fe2ff;

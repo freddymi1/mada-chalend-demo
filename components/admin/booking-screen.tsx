@@ -505,7 +505,7 @@ const BookingScreen = () => {
                                     </span>
                                   </div>
                                   <div className="flex items-center justify-between text-3xl text-slate-700 font-bold">
-                                    <span>Total a payes :{" "}</span>
+                                    <span>Total à payer :{" "}</span>
                                     <span className="text-primary">
                                       {Number(reservation?.circuitRel?.price) *
                                         Number(reservation.personnes)}
@@ -557,7 +557,7 @@ const BookingScreen = () => {
                                     </span>
                                   </div>
                                   <div className="flex items-center justify-between text-3xl text-slate-700 font-bold">
-                                    <span>Net a payes :{" "}</span>
+                                    <span>Total à payer :{" "}</span>
                                     <span className="text-primary">
                                       {Number(reservation?.TripTravel?.price) *
                                         Number(reservation.personnes)}
@@ -591,6 +591,32 @@ const BookingScreen = () => {
                                     <span className="font-medium text-primary">
                                       {formatDate(reservation?.startDate)} -{" "}
                                       {formatDate(reservation?.endDate)}
+                                    </span>
+                                  </div>
+                                  <div className="flex justify-between">
+                                    <span className="text-gray-600">
+                                      Durée:
+                                    </span>
+                                    <span className="font-medium text-black/80">
+                                      {Number(
+                                        reservation?.duration
+                                      )}{" "}
+                                      jour
+                                      {Number(
+                                        reservation?.duration
+                                      ) > 1
+                                        ? "s"
+                                        : ""}
+                                    </span>
+                                  </div>
+                                  <div className="flex items-center justify-between text-3xl text-slate-700 font-bold">
+                                    <span>Total à payer :{" "}</span>
+                                    <span className="text-primary">
+                                      {Number(reservation?.vehicleRel?.pricePerDay) *
+                                        Number(
+                                        reservation?.duration
+                                      )}
+                                      €
                                     </span>
                                   </div>
                                 </div>
