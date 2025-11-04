@@ -450,9 +450,15 @@ const CircuitDetailScreen = () => {
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white mb-2">
                 {locale === "fr" ? title.fr : title.en}
               </h2>
-              <p className="text-sm sm:text-base text-gray-600 dark:text-gray-300 leading-relaxed">
-                {locale === "fr" ? description.fr : description.en}
-              </p>
+              <div
+                className="text-sm text-gray-500"
+                dangerouslySetInnerHTML={{
+                  __html:
+                    locale === "fr"
+                      ? description?.fr || ""
+                      : description?.en || "",
+                }}
+              />
             </div>
             <div className="sm:ml-6">
               <span className="inline-flex items-center px-3 py-1 rounded-full text-xs sm:text-sm font-medium bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300">

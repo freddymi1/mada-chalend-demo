@@ -156,9 +156,16 @@ const ClientCircuitDetailScreen = () => {
                         </span>
                       </Badge>
                     </div>
-                    <p className="text-base sm:text-lg text-muted-foreground text-pretty break-words">
-                      {locale === "fr" ? description?.fr : description?.en}
-                    </p>
+                    
+                    <div
+                        className="text-base sm:text-lg text-muted-foreground text-pretty break-words"
+                        dangerouslySetInnerHTML={{
+                          __html:
+                            locale === "fr"
+                              ? description?.fr || ""
+                              : description?.en || "",
+                        }}
+                      />
                   </div>
 
                   {/* Image slider */}

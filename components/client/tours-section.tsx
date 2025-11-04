@@ -28,7 +28,6 @@ export function ToursSection() {
     loadCircuits();
   }, []);
 
-
   return (
     <section id="circuits" className="py-20">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -49,63 +48,69 @@ export function ToursSection() {
               {addedCircuits.map((tour, index) => {
                 const title = JSON.parse(tour.title);
                 const description = JSON.parse(tour.description);
-                return(
+                return (
                   <Card
-                  key={index}
-                  className="overflow-hidden bg-white/50 hover-lift animate-fade-in"
-                  style={{
-                    animationDelay: `${0.2 + index * 0.1}s`,
-                    animationFillMode: "both",
-                  }}
-                >
-                  <div className="aspect-video relative overflow-hidden">
-                    <img
-                      src={
-                        tour?.mainImage ||
-                        "/tsiribihina-landscap.jpg"
-                      }
-                      alt={locale === "fr" ? title.fr : title.en}
-                      className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
-                    />
-                  </div>
-                  <CardHeader>
-                    <CardTitle className="text-lg lg:text-xl text-balance">
-                      {locale === "fr" ? title.fr : title.en}
-                    </CardTitle>
-                    <div className="flex items-center justify-start gap-10">
-                      <div className="flex bg-primary px-2 py-1 rounded-lg text-white text-md items-center gap-2 text-muted-foreground">
-                        <Calendar className="h-4 w-4" />
-                        <span>{Number(tour.duration)} {t("ourTrip.day")} / {Number(tour.duration) -1} {t("ourTrip.night")}</span>
+                    key={index}
+                    className="overflow-hidden bg-white/50 hover-lift animate-fade-in"
+                    style={{
+                      animationDelay: `${0.2 + index * 0.1}s`,
+                      animationFillMode: "both",
+                    }}
+                  >
+                    <div className="aspect-video relative overflow-hidden">
+                      <img
+                        src={tour?.mainImage || "/tsiribihina-landscap.jpg"}
+                        alt={locale === "fr" ? title.fr : title.en}
+                        className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
+                      />
+                    </div>
+                    <CardHeader>
+                      <CardTitle className="text-lg lg:text-xl text-balance">
+                        {locale === "fr" ? title.fr : title.en}
+                      </CardTitle>
+                      <div className="flex items-center justify-start gap-10">
+                        <div className="flex bg-primary px-2 py-1 rounded-lg text-white text-md items-center gap-2 text-muted-foreground">
+                          <Calendar className="h-4 w-4" />
+                          <span>
+                            {Number(tour.duration)} {t("ourTrip.day")} /{" "}
+                            {Number(tour.duration) - 1} {t("ourTrip.night")}
+                          </span>
+                        </div>
                       </div>
-                    </div>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-muted-foreground mb-4 text-pretty line-clamp-3">
-                      {locale === "fr" ? description.fr : description.en}
-                    </p>
+                    </CardHeader>
+                    <CardContent>
+                      <div
+                        className="text-sm text-gray-500 truncate"
+                        dangerouslySetInnerHTML={{
+                          __html:
+                            locale === "fr"
+                              ? description?.fr || ""
+                              : description?.en || "",
+                        }}
+                      />
 
-                    <div className="flex gap-2">
-                      <Link href={`/circuits/${tour.id}`} className="flex-1">
-                        <Button
-                          variant="outline"
-                          className="w-full hover-lift bg-transparent"
+                      <div className="flex mt-2 gap-2">
+                        <Link href={`/circuits/${tour.id}`} className="flex-1">
+                          <Button
+                            variant="outline"
+                            className="w-full hover-lift bg-transparent"
+                          >
+                            <Eye className="h-4 w-4 mr-2" />
+                            {t("tours.viewDetails")}
+                          </Button>
+                        </Link>
+                        <Link
+                          href={`/reservation/circuit?circuit=${tour.id}`}
+                          className="flex-1"
                         >
-                          <Eye className="h-4 w-4 mr-2" />
-                          {t("tours.viewDetails")}
-                        </Button>
-                      </Link>
-                      <Link
-                        href={`/reservation/circuit?circuit=${tour.id}`}
-                        className="flex-1"
-                      >
-                        <Button className="w-full hover-glow">
-                          {t("tours.book")}
-                        </Button>
-                      </Link>
-                    </div>
-                  </CardContent>
-                </Card>
-                )
+                          <Button className="w-full hover-glow">
+                            {t("tours.book")}
+                          </Button>
+                        </Link>
+                      </div>
+                    </CardContent>
+                  </Card>
+                );
               })}
             </div>
 

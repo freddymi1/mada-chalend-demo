@@ -161,7 +161,9 @@ const CircuitScreen = () => {
                 <span className="whitespace-nowrap">
                   Filtres
                   {hasActiveFilters &&
-                    ` (${Object.values(filters).filter((v) => v !== "").length})`}
+                    ` (${
+                      Object.values(filters).filter((v) => v !== "").length
+                    })`}
                 </span>
               </button>
               <button
@@ -180,7 +182,9 @@ const CircuitScreen = () => {
       {showFilters && (
         <div className="w-full px-4 sm:px-6 lg:px-8 py-4 sm:py-6 bg-white border-b shadow-sm">
           <div className="flex justify-between items-center mb-3 sm:mb-4">
-            <h3 className="text-base sm:text-lg font-semibold text-gray-900">Filtres</h3>
+            <h3 className="text-base sm:text-lg font-semibold text-gray-900">
+              Filtres
+            </h3>
             <div className="flex items-center gap-2 sm:gap-3">
               {hasActiveFilters && (
                 <button
@@ -393,8 +397,12 @@ const CircuitScreen = () => {
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
                   {filteredCircuits.map((circuit) => {
-                    const title = circuit.title ? JSON.parse(circuit.title) : "";
-                    const description = circuit.description ? JSON.parse(circuit.description) : "";
+                    const title = circuit.title
+                      ? JSON.parse(circuit.title)
+                      : "";
+                    const description = circuit.description
+                      ? JSON.parse(circuit.description)
+                      : "";
                     return (
                       <tr
                         key={circuit.id}
@@ -405,15 +413,25 @@ const CircuitScreen = () => {
                             <div className="text-sm font-medium text-gray-900 truncate">
                               {locale === "fr" ? title.fr : title.en}
                             </div>
-                            <div className="text-sm text-gray-500 mt-1 line-clamp-2">
+                            {/* <div className="text-sm text-gray-500 mt-1 line-clamp-2">
                               {locale === "fr" ? description.fr : description.en}
-                            </div>
+                            </div> */}
+                            <div
+                              className="text-sm text-gray-500 truncate"
+                              dangerouslySetInnerHTML={{
+                                __html:
+                                  locale === "fr"
+                                    ? description?.fr || ""
+                                    : description?.en || "",
+                              }}
+                            />
                           </div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div className="flex items-center text-sm text-gray-900">
                             <Clock className="w-4 h-4 mr-2 text-gray-400" />
-                            {Number(circuit.duration)} jour(s) / {Number(circuit.duration) - 1} nuit(s)
+                            {Number(circuit.duration)} jour(s) /{" "}
+                            {Number(circuit.duration) - 1} nuit(s)
                           </div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
@@ -441,7 +459,9 @@ const CircuitScreen = () => {
                             {circuit.highlights
                               .slice(0, 3)
                               .map((highlight: any, index: number) => {
-                                const text = highlight.text ? JSON.parse(highlight.text) : "";
+                                const text = highlight.text
+                                  ? JSON.parse(highlight.text)
+                                  : "";
                                 return (
                                   <span
                                     key={highlight.id || index}
@@ -491,7 +511,9 @@ const CircuitScreen = () => {
             <div className="lg:hidden">
               {filteredCircuits.map((circuit) => {
                 const title = circuit.title ? JSON.parse(circuit.title) : "";
-                const description = circuit.description ? JSON.parse(circuit.description) : "";
+                const description = circuit.description
+                  ? JSON.parse(circuit.description)
+                  : "";
                 return (
                   <div
                     key={circuit.id}
@@ -518,7 +540,10 @@ const CircuitScreen = () => {
                     <div className="grid grid-cols-2 gap-3 mb-3">
                       <div className="flex items-center text-xs text-gray-600">
                         <Clock className="w-3 h-3 mr-1 text-gray-400 flex-shrink-0" />
-                        <span className="truncate">{Number(circuit.duration)} j / {Number(circuit.duration) - 1} n</span>
+                        <span className="truncate">
+                          {Number(circuit.duration)} j /{" "}
+                          {Number(circuit.duration) - 1} n
+                        </span>
                       </div>
                       <div className="text-xs font-medium text-gray-900 truncate">
                         {circuit.price}€/pers
@@ -536,7 +561,9 @@ const CircuitScreen = () => {
                         {circuit.highlights
                           .slice(0, 2)
                           .map((highlight: any, index: number) => {
-                            const text = highlight.text ? JSON.parse(highlight.text) : "";
+                            const text = highlight.text
+                              ? JSON.parse(highlight.text)
+                              : "";
                             return (
                               <span
                                 key={highlight.id || index}
