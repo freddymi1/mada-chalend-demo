@@ -138,7 +138,7 @@ const BlogSection = () => {
                     <img
                       src={blog.image}
                       alt={locale === "fr" ? title?.fr : title?.en}
-                      className="w-18 object-cover h-auto"
+                      className="w-full object-contain h-auto"
                     />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center">
@@ -151,9 +151,7 @@ const BlogSection = () => {
                 <div className="p-6 relative">
                   {/* Title */}
                   <h3
-                    className={`text-xl font-bold mb-2 line-clamp-2 ${
-                      isDark ? "text-white" : "text-gray-900"
-                    }`}
+                    className={`text-xl font-bold mb-2 line-clamp-2 text-slate-700`}
                   >
                     {locale === "fr" ? title?.fr : title?.en}
                   </h3>
@@ -161,9 +159,7 @@ const BlogSection = () => {
                   {/* Subtitle */}
                   {blog.subtitle && (
                     <p
-                      className={`text-sm mb-3 line-clamp-1 ${
-                        isDark ? "text-gray-400" : "text-gray-600"
-                      }`}
+                      className={`text-sm mb-3 line-clamp-1 text-slate-600`}
                     >
                       {blog.subtitle}
                     </p>
@@ -173,9 +169,7 @@ const BlogSection = () => {
                 <div className="space-y-2 absolute bottom-2 right-4">
                   {blog.articles && blog.articles.length > 0 && (
                     <div
-                      className={`flex items-center gap-2 text-sm ${
-                        isDark ? "text-gray-400" : "text-gray-600"
-                      }`}
+                      className={`flex items-center gap-2 text-sm text-slate-600`}
                     >
                       <FileText className="w-4 h-4" />
                       <span>
