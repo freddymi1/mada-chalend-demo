@@ -106,7 +106,7 @@ const ClArticleDetail = () => {
             Article introuvable
           </h2>
           <button
-            onClick={() => router.push("/admin/blogs")}
+            onClick={() => router.push("/admin/blog")}
             className="mt-4 px-6 py-2 bg-primary text-white rounded-lg transition-colors"
           >
             Retour à la liste
