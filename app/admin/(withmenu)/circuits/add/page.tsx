@@ -238,7 +238,7 @@ const AddCircuit = () => {
                             modules={modules}
                             formats={formats}
                             className={`rounded-xl border-2 transition-colors `}
-                            placeholder="Rédigez votre politique de confidentialité en français..."
+                            placeholder="Rédigez la description du circuir en français..."
                             theme="snow"
                           />
                           <div
@@ -280,7 +280,7 @@ const AddCircuit = () => {
                             modules={modules}
                             formats={formats}
                             className={`rounded-xl border-2 transition-colors `}
-                            placeholder="Rédigez votre politique de confidentialité en français..."
+                            placeholder="Write the description of the tour in English..."
                             theme="snow"
                           />
                           <div
