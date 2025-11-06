@@ -221,6 +221,7 @@ model CircuitRequest {
   budget      String? // si budget en nombre, sinon String
   duree       String? // ex: "3 jours"
   message     String?
+  otherCircuit String?
 
   circuitRel Circuit? @relation(fields: [circuitId], references: [id], onDelete: Cascade)
   createdAt  DateTime @default(now())

@@ -11,6 +11,7 @@ export interface CircuitFormData {
   budget: string;
   duree: string;
   message: string;
+  otherCircuit?: string;
 }
 
 // Interface pour formulaire partenariat

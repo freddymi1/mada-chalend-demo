@@ -149,12 +149,26 @@ export function ContactSection() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+    const data = {
+      nom: circuitData.nom,
+      prenom: circuitData.prenom,
+      email: circuitData.email,
+      telephone: circuitData.telephone,
+      adresse: circuitData.adresse,
+      nbPersonnes: circuitData.nbPersonnes,
+      dateDepart: circuitData.dateDepart,
+      circuitDemande: circuitData.circuitDemande,
+      otherCircuit: circuitData.circuitDemande,
+      budget: circuitData.budget,
+      duree: circuitData.duree,
+      message: circuitData.message,
+    }
     let successMessage = "";
     let payload: any = null;
 
     switch (activeForm) {
       case "circuit":
-        payload = { ...circuitData, type: "circuit" };
+        payload = { ...data, type: "circuit" };
         successMessage = t("success.circuit");
         break;
 
@@ -472,6 +486,9 @@ export function ContactSection() {
                   </SelectItem>
                 );
               })}
+              <SelectItem value="other">
+                {t("circuitForm.placeholders.other")}
+              </SelectItem>
             </SelectContent>
           </Select>
         </div>

@@ -188,7 +188,8 @@
         "selectDuration": "Select",
         "selectCircuit": "Choose a circuit",
         "selectBudget": "Budget per person",
-        "message": "Describe your expectations, preferences, special needs..."
+        "message": "Describe your expectations, preferences, special needs...",
+        "other":"Other"
       },
       "options": {
         "people": {

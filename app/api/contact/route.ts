@@ -5,7 +5,7 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-// Email template generator
+// Email template generator (inchangé)
 function generateEmailHTML(type: string, data: any): string {
   const baseStyles = `
     <style>
@@ -81,6 +81,11 @@ function generateEmailHTML(type: string, data: any): string {
       <div class="info-row">
         <span class="info-label">Circuit demandé:</span>
         <span class="info-value"><strong>${data.circuitTitle}</strong></span>
+      </div>` : ''}
+      ${data.otherCircuit && data.otherCircuit !== 'other' ? `
+      <div class="info-row">
+        <span class="info-label">Autre circuit:</span>
+        <span class="info-value"><strong>${data.otherCircuit}</strong></span>
       </div>` : ''}
       ${data.message ? `
       <div class="message-box">
@@ -190,8 +195,11 @@ export async function POST(req: Request) {
     let circuit: any = null;
 
     if (type === "circuit") {      
-      // Récupérer les détails du circuit si circuitDemande est fourni
-      if (data.circuitDemande) {
+      // Vérifier si c'est un circuit existant ou "other"
+      const isOtherCircuit = data.circuitDemande === "other";
+      
+      // Récupérer les détails du circuit seulement si ce n'est pas "other"
+      if (!isOtherCircuit && data.circuitDemande) {
         circuit = await prisma.circuit.findUnique({
           where: { id: data.circuitDemande },
           select: { 
@@ -201,24 +209,38 @@ export async function POST(req: Request) {
         });
       }
 
+      // Préparer les données pour la création
+      const circuitRequestData: any = {
+        nom: data.nom,
+        prenom: data.prenom,
+        email: data.email,
+        telephone: data.telephone,
+        adresse: data.adresse,
+        nbPersonnes: Number(data.nbPersonnes),
+        dateDepart: new Date(data.dateDepart),
+        budget: data.budget,
+        duree: data.duree,
+        message: data.message,
+        otherCircuit: data.otherCircuit,
+      };
+
+      // Ne lier le circuit que si ce n'est pas "other" et que le circuit existe
+      if (!isOtherCircuit && circuit) {
+        circuitRequestData.circuitId = data.circuitDemande;
+      }
+
       savedData = await prisma.circuitRequest.create({
-        data: {
-          nom: data.nom,
-          prenom: data.prenom,
-          email: data.email,
-          telephone: data.telephone,
-          adresse: data.adresse,
-          nbPersonnes: Number(data.nbPersonnes),
-          dateDepart: new Date(data.dateDepart),
-          circuitId: data.circuitDemande,
-          budget: data.budget,
-          duree: data.duree,
-          message: data.message,
-        },
+        data: circuitRequestData,
       });
       
       // Ajouter le titre du circuit aux données pour l'email
-      data.circuitTitle = circuit?.title || 'Circuit non spécifié';
+      if (circuit) {
+        data.circuitTitle = circuit.title;
+      } else if (isOtherCircuit && data.otherCircuit) {
+        data.circuitTitle = `Circuit personnalisé: ${data.otherCircuit}`;
+      } else {
+        data.circuitTitle = 'Circuit non spécifié';
+      }
     } else if (type === "partenariat") {
       savedData = await prisma.partenariatRequest.create({ data });
     } else if (type === "autre") {
@@ -245,12 +267,12 @@ export async function POST(req: Request) {
     const htmlContent = generateEmailHTML(type, data);
     
     const mailOptions = {
-      from: process.env.EMAIL_USER, // Use your verified sender
-      replyTo: data.email, // Allow replying directly to the user
+      from: process.env.EMAIL_USER,
+      replyTo: data.email,
       to: process.env.EMAIL_USER,
       subject: `🔔 Nouvelle demande ${type === 'circuit' ? 'de circuit' : type === 'partenariat' ? 'de partenariat' : ''} - ${data.nom} ${data.prenom}`,
       html: htmlContent,
-      text: JSON.stringify(data, null, 2), // Fallback pour clients sans HTML
+      text: JSON.stringify(data, null, 2),
     };
 
     // 4) Envoyer email

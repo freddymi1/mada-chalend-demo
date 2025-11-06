@@ -362,7 +362,7 @@ export const CircuitProvider = ({
         body: JSON.stringify(circuitData),
       });
 
-      if (res.ok) {
+      if (res) {
         const newCircuit = await res.json();
         setAddedCircuits((prev) => [...prev, newCircuit]);
         toast({
