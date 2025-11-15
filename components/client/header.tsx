@@ -14,6 +14,7 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import { useAuthClient } from "@/src/hooks/useAuthClient";
+import Image from "next/image";
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isBookingOpen, setIsBookingOpen] = useState(false);
@@ -52,7 +53,8 @@ export function Header() {
               className="flex items-center gap-3 text-lg lg:text-2xl font-bold text-primary hover:text-primary/80 transition-all duration-300 hover:scale-105"
             >
               <div className="relative">
-                <MapPin className="h-8 w-8 text-secondary animate-float" />
+                {/* <MapPin className="h-8 w-8 text-secondary animate-float" /> */}
+                <Image alt="logo" src="/assets/logo/logo.svg" width={50} height={50} className="animate-float"/>
                 <div className="absolute -top-1 -right-1 w-3 h-3 bg-accent rounded-full animate-pulse"></div>
               </div>
               <span className="hidden lg:block text-secondary">

@@ -137,6 +137,17 @@ const BookingScreen = () => {
     }
   };
 
+  const handleCancelBooking = async (id: string) => {
+    try {
+      const dataRes: Partial<Reservation> = {
+        status: "cancelled" as any,
+      };
+      await updateReservation(id, dataRes as any);
+    } catch (error) {
+      console.error("Error cancel booking:", error);
+    }
+  };
+
   const tabs = [
     // { id: "tous", label: "Toutes", icon: null, count: getTabStats("tous") },
     {
@@ -344,6 +355,15 @@ const BookingScreen = () => {
                                   <CheckCircle className="w-4 h-4" />
                                 </button>
                               )}
+                              <button
+                                  onClick={() =>
+                                    handleCancelBooking(reservation?.id)
+                                  }
+                                  className="p-2 text-white cursor-pointer bg-red-500 rounded-lg transition-colors"
+                                  title="Valider la réservation"
+                                >
+                                  <Trash2 className="w-4 h-4" />
+                                </button>
                             </div>
                           </div>
                         </div>

@@ -10,6 +10,7 @@ import { useCiContact } from "../providers/client/ClContactProvider";
 import { useEffect } from "react";
 import AnimateLoading from "./animate-loading";
 import FooterAnimateLoading from "./footer-animate-loading";
+import Image from "next/image";
 
 export function Footer() {
   const t = useTranslations("lng");
@@ -40,9 +41,18 @@ export function Footer() {
             className="animate-fade-in"
             style={{ animationDelay: "0.1s", animationFillMode: "both" }}
           >
-            <h3 className="text-2xl font-bold mb-4 text-foreground">
-              Mada Chaland
-            </h3>
+            <div className="flex gap-2 items-center">
+              <Image
+                alt="logo"
+                src="/assets/logo/logo.svg"
+                width={80}
+                height={80}
+                className="animate-float"
+              />
+              <h3 className="text-2xl font-bold mb-4 text-foreground">
+                Mada Chaland
+              </h3>
+            </div>
             <p className="text-muted-foreground text-pretty">
               {t("footer.text")}
             </p>
