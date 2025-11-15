@@ -67,6 +67,147 @@ const AddProfile: React.FC = () => {
         )}
 
         <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Section home */}
+          <section className="border-b border-gray-200 dark:border-gray-700 pb-6">
+            <h2 className="text-xl font-semibold mb-4 text-gray-700 dark:text-gray-200">
+              Informations de la page d'accueil
+            </h2>
+
+            {/* Titre À Propos - FR/EN côte à côte */}
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-2">
+                Titre de la page d'accueil
+              </label>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">
+                    🇫🇷 Français
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.homeTitle?.FR || ""}
+                    onChange={(e) =>
+                      handleMultilingualChange(
+                        "homeTitle",
+                        "FR",
+                        e.target.value
+                      )
+                    }
+                    className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    placeholder="Titre en français"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">
+                    🇬🇧 English
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.homeTitle?.EN || ""}
+                    onChange={(e) =>
+                      handleMultilingualChange(
+                        "homeTitle",
+                        "EN",
+                        e.target.value
+                      )
+                    }
+                    className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    placeholder="Title in English"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Contenu À Propos - FR/EN côte à côte */}
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-2">
+                Sous-titre de l'accuel
+              </label>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">
+                    🇫🇷 Français
+                  </label>
+                  <textarea
+                    value={formData.homeSubtitle?.FR || ""}
+                    onChange={(e) =>
+                      handleMultilingualChange(
+                        "homeSubtitle",
+                        "FR",
+                        e.target.value
+                      )
+                    }
+                    rows={4}
+                    className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    placeholder="Description en français"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">
+                    🇬🇧 English
+                  </label>
+                  <textarea
+                    value={formData.homeSubtitle?.EN || ""}
+                    onChange={(e) =>
+                      handleMultilingualChange(
+                        "homeSubtitle",
+                        "EN",
+                        e.target.value
+                      )
+                    }
+                    rows={4}
+                    className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    placeholder="Description in English"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Sous-contenu - FR/EN côte à côte */}
+            <div>
+              <label className="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-2">
+                Contenu de l'accueil
+              </label>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">
+                    🇫🇷 Français
+                  </label>
+                  <textarea
+                    value={formData.homeContent?.FR || ""}
+                    onChange={(e) =>
+                      handleMultilingualChange(
+                        "homeContent",
+                        "FR",
+                        e.target.value
+                      )
+                    }
+                    rows={3}
+                    className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    placeholder="Sous-contenu en français"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">
+                    🇬🇧 English
+                  </label>
+                  <textarea
+                    value={formData.homeContent?.EN || ""}
+                    onChange={(e) =>
+                      handleMultilingualChange(
+                        "homeContent",
+                        "EN",
+                        e.target.value
+                      )
+                    }
+                    rows={3}
+                    className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    placeholder="Sub-content in English"
+                  />
+                </div>
+              </div>
+            </div>
+          </section>
           {/* Section À Propos */}
           <section className="border-b border-gray-200 dark:border-gray-700 pb-6">
             <h2 className="text-xl font-semibold mb-4 text-gray-700 dark:text-gray-200">
@@ -166,7 +307,7 @@ const AddProfile: React.FC = () => {
             {/* Sous-contenu - FR/EN côte à côte */}
             <div>
               <label className="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-2">
-                Sous-contenu
+                Sous-contenu À Propos
               </label>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>

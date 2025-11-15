@@ -21,6 +21,10 @@ export async function POST(request: NextRequest) {
     // Création du contact avec ses services
     const contact = await prisma.contact.create({
       data: {
+        // Home
+        homeTitle: body.homeTitle || null,
+        homeSubtitle: body.homeSubtitle || null,
+        homeContent: body.homeContent || null,
         // About
         aboutTitle: body.aboutTitle || null,
         aboutContent: body.aboutContent || null,

@@ -57,6 +57,9 @@ const ProfilePage = () => {
   }
 
   const profile = contacts[0];
+  const homeTitle = parseJSON(profile.homeTitle as string);
+  const homeSubtitle = parseJSON(profile.homeSubtitle as string);
+  const homeContent = parseJSON(profile.homeContent as string);
   const aboutTitle = parseJSON(profile.aboutTitle as string);
   const aboutContent = parseJSON(profile.aboutContent as string);
   const subContent = parseJSON(profile.subContent as string);
@@ -78,6 +81,30 @@ const ProfilePage = () => {
             </Link>
           </div>
 
+          {/* HOME CONTENT */}
+          <div className="mb-6">
+            <h1 className="font-bold uppercase text-3xl text-gray-700 dark:text-gray-300 leading-relaxed">Accueil infos</h1>
+          </div>
+          <div className="text-center">
+            <h1 className="text-5xl md:text-6xl font-extrabold text-gray-900 dark:text-white mb-6 leading-tight">
+              {homeTitle[currentLang] || homeTitle.FR}
+            </h1>
+            <div className="max-w-3xl mx-auto">
+              <p className="text-lg md:text-xl text-gray-700 dark:text-gray-300 leading-relaxed mb-4">
+                {homeSubtitle[currentLang] || homeSubtitle.FR}
+              </p>
+              {(homeContent[currentLang] || homeContent.FR) && (
+                <p className="text-base md:text-lg text-gray-600 dark:text-gray-400 italic">
+                  {homeContent[currentLang] || homeContent.FR}
+                </p>
+              )}
+            </div>
+          </div>
+
+          {/* APROPOS CONTENT */}
+          <div className="my-6">
+            <h1 className="font-bold uppercase text-3xl text-gray-700 dark:text-gray-300 leading-relaxed">À Propos infos</h1>
+          </div>
           <div className="text-center">
             <h1 className="text-5xl md:text-6xl font-extrabold text-gray-900 dark:text-white mb-6 leading-tight">
               {aboutTitle[currentLang] || aboutTitle.FR}

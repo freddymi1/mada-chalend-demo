@@ -32,6 +32,9 @@ export interface Service {
 
 export interface Contact {
   id: string;
+  homeTitle?: MultiLanguageText;
+  homeSubtitle?: MultiLanguageText;
+  homeContent?: MultiLanguageText;
   aboutTitle?: MultiLanguageText;
   aboutContent?: MultiLanguageText;
   subContent?: MultiLanguageText;

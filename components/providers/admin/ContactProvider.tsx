@@ -32,6 +32,11 @@ export interface Service {
 
 export interface Contact {
   id: string;
+  // Home
+  homeTitle?: MultiLanguageText;
+  homeSubtitle?: MultiLanguageText;
+  homeContent?: MultiLanguageText;
+  // About
   aboutTitle?: MultiLanguageText;
   aboutContent?: MultiLanguageText;
   subContent?: MultiLanguageText;
@@ -52,6 +57,9 @@ export interface CreateServiceInput {
 }
 
 export interface CreateContactWithServicesInput {
+  homeTitle?: MultiLanguageText;
+  homeSubtitle?: MultiLanguageText;
+  homeContent?: MultiLanguageText;
   aboutTitle?: MultiLanguageText;
   aboutContent?: MultiLanguageText;
   subContent?: MultiLanguageText;
@@ -64,6 +72,9 @@ export interface CreateContactWithServicesInput {
 }
 
 export interface UpdateContactInput {
+  homeTitle?: MultiLanguageText;
+  homeSubtitle?: MultiLanguageText;
+  homeContent?: MultiLanguageText;
   aboutTitle?: MultiLanguageText;
   aboutContent?: MultiLanguageText;
   subContent?: MultiLanguageText;
@@ -76,6 +87,9 @@ export interface UpdateContactInput {
 
 // Form Data Interface
 interface ContactFormData {
+  homeTitle?: MultiLanguageText;
+  homeSubtitle?: MultiLanguageText;
+  homeContent?: MultiLanguageText;
   aboutTitle: MultiLanguageText;
   aboutContent: MultiLanguageText;
   subContent: MultiLanguageText;
@@ -99,7 +113,7 @@ interface ContactContextType {
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => void;
   handleMultilingualChange: (
-    field: "aboutTitle" | "aboutContent" | "subContent",
+    field: "homeTitle" | "homeSubtitle" | "homeContent" | "aboutTitle" | "aboutContent" | "subContent",
     lang: Language,
     value: string
   ) => void;
@@ -162,6 +176,9 @@ export const ContactProvider: React.FC<ContactProviderProps> = ({
 
   // Form Data State
   const [formData, setFormData] = useState<ContactFormData>({
+    homeTitle: { FR: "", EN: "" },
+    homeSubtitle: { FR: "", EN: "" },
+    homeContent: { FR: "", EN: "" },
     aboutTitle: { FR: "", EN: "" },
     aboutContent: { FR: "", EN: "" },
     subContent: { FR: "", EN: "" },
@@ -209,7 +226,7 @@ export const ContactProvider: React.FC<ContactProviderProps> = ({
   };
 
   const handleMultilingualChange = (
-    field: "aboutTitle" | "aboutContent" | "subContent",
+    field: "homeTitle" | "homeSubtitle" | "homeContent" | "aboutTitle" | "aboutContent" | "subContent",
     lang: Language,
     value: string
   ) => {
@@ -267,6 +284,9 @@ export const ContactProvider: React.FC<ContactProviderProps> = ({
   // Reset Form Data
   const resetFormData = () => {
     setFormData({
+      homeTitle: { FR: "", EN: "" },
+      homeSubtitle: { FR: "", EN: "" },
+      homeContent: { FR: "", EN: "" },
       aboutTitle: { FR: "", EN: "" },
       aboutContent: { FR: "", EN: "" },
       subContent: { FR: "", EN: "" },
@@ -311,6 +331,9 @@ export const ContactProvider: React.FC<ContactProviderProps> = ({
     try {
       // Préparer les données pour l'API avec stringify de TOUS les champs multilangues
       const contactData = {
+        homeTitle: JSON.stringify(formData.homeTitle),
+        homeSubtitle: JSON.stringify(formData.homeSubtitle),
+        homeContent: JSON.stringify(formData.homeContent),
         aboutTitle: JSON.stringify(formData.aboutTitle),
         aboutContent: JSON.stringify(formData.aboutContent),
         subContent: JSON.stringify(formData.subContent),
@@ -391,6 +414,9 @@ export const ContactProvider: React.FC<ContactProviderProps> = ({
 
     try {
       const updateData = {
+        homeTitle: JSON.stringify(formData.homeTitle),
+        homeSubtitle: JSON.stringify(formData.homeSubtitle),
+        homeContent: JSON.stringify(formData.homeContent),
         aboutTitle: JSON.stringify(formData.aboutTitle),
         aboutContent: JSON.stringify(formData.aboutContent),
         subContent: JSON.stringify(formData.subContent),
@@ -536,6 +562,9 @@ export const ContactProvider: React.FC<ContactProviderProps> = ({
 
       // Populate form data avec les données PARSÉES
       setFormData({
+        homeTitle: parseMultilingualField(contact.homeTitle as string),
+        homeSubtitle: parseMultilingualField(contact.homeSubtitle as string),
+        homeContent: parseMultilingualField(contact.homeContent as string),
         aboutTitle: parseMultilingualField(contact.aboutTitle as string),
         aboutContent: parseMultilingualField(contact.aboutContent as string),
         subContent: parseMultilingualField(contact.subContent as string),
@@ -554,6 +583,9 @@ export const ContactProvider: React.FC<ContactProviderProps> = ({
       });
 
       console.log("FORM DATA AFTER PARSING:", {
+        homeTitle: parseMultilingualField(contact.homeTitle),
+        homeSubtitle: parseMultilingualField(contact.homeSubtitle),
+        homeContent: parseMultilingualField(contact.homeContent),
         aboutTitle: parseMultilingualField(contact.aboutTitle),
         aboutContent: parseMultilingualField(contact.aboutContent),
         subContent: parseMultilingualField(contact.subContent),

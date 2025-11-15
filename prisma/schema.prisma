@@ -362,6 +362,11 @@ model Service {
 
 model Contact {
   id           String  @id @default(cuid())
+  // Home
+  homeTitle     String?
+  homeSubtitle  String?
+  homeContent   String?
+
   // About
   aboutTitle   String?
   aboutContent String?

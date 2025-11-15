@@ -47,6 +47,10 @@ export async function PUT(request: Request, { params }: { params: { id: string }
         id: id,
       },
       data: {
+        // Home
+        homeTitle: body.homeTitle || null,
+        homeSubtitle: body.homeSubtitle || null,
+        homeContent: body.homeContent || null,
         // About
         aboutTitle: body.aboutTitle || null,
         aboutContent: body.aboutContent || null,

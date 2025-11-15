@@ -5,6 +5,10 @@ export interface CreateServiceInput {
 }
 
 export interface CreateContactWithServicesInput {
+  // Home
+  homeTitle?: string;
+  homeSubtitle?: string;
+  homeContent?: string;
   // About
   aboutTitle?: string;
   aboutContent?: string;
@@ -46,9 +50,9 @@ export interface Contact {
   updatedAt: Date;
 }
 
-export interface PrivacyPolicy{
+export interface PrivacyPolicy {
   id: string;
   content: string;
   createdAt: Date;
-  updatedAt: Date
+  updatedAt: Date;
 }

@@ -1,8 +1,10 @@
 "use client"
 import { Button } from "@/components/client/ui/button"
 import Link from "next/link"
-import { useTranslations } from "use-intl";
+import { useLocale, useTranslations } from "use-intl";
 import { useState, useEffect } from "react";
+import { useCiContact } from "../providers/client/ClContactProvider";
+import AnimateLoading from "./animate-loading";
 
 export function HeroSection() {
   const t = useTranslations("lng");
@@ -18,6 +20,27 @@ export function HeroSection() {
   
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
+
+  const { contacts, loading, fetchContacts } = useCiContact();
+    const locale = useLocale(); // fr ou en
+    const currentLang = locale.toUpperCase() as "FR" | "EN";
+  
+    useEffect(() => {
+      const loadContacts = async () => {
+        await fetchContacts();
+      };
+      loadContacts();
+    }, []);
+  
+    // Helper pour parser les champs JSON
+    const parseJSON = (value: string | undefined) => {
+      if (!value) return { FR: "", EN: "" };
+      try {
+        return JSON.parse(value);
+      } catch {
+        return { FR: "", EN: "" };
+      }
+    };
   
   // Changement automatique d'image toutes les 5 secondes
   useEffect(() => {
@@ -54,6 +77,24 @@ export function HeroSection() {
     const prevIndex = currentImageIndex === 0 ? backgroundImages.length - 1 : currentImageIndex - 1;
     goToSlide(prevIndex);
   };
+
+  const profile = contacts[0];
+
+  // Récupérer les services dynamiques
+
+  const homeTitle = profile?.homeTitle
+    ? parseJSON(profile.homeTitle as string)
+    : t("about.title");
+  const homeSubtitle = profile?.homeSubtitle
+    ? parseJSON(profile.homeSubtitle as string)
+    : t("about.subtitle");
+  const homeContent = profile?.homeContent
+    ? parseJSON(profile.homeContent as string)
+    : t("about.conclusion");
+
+  if (loading) {
+    return <AnimateLoading />;
+  }
   
   return (
     <>
@@ -340,7 +381,8 @@ export function HeroSection() {
                 opacity: 1,
               }}
             >
-              {t('hero.title')}
+              {/* {t('hero.title')} */}
+              {homeTitle[currentLang] || homeTitle.FR}
             </h1>
 
             {/* Séparateur décoratif */}
@@ -362,7 +404,9 @@ export function HeroSection() {
                 color: "#f8fafc",
               }}
             >
-              {t('hero.subtitle')}
+              {/* {t('hero.subtitle')} */}
+              
+              {homeSubtitle[currentLang] || homeSubtitle.FR}
             </p>
 
             {/* Description principale */}
@@ -378,7 +422,9 @@ export function HeroSection() {
                    textShadow: "2px 2px 4px rgba(0, 0, 0, 0.9)",
                    color: "#e2e8f0",
                  }}>
-                {t('hero.description')}
+                {/* {t('hero.description')} */}
+                {homeContent[currentLang] || homeContent.FR}
+                
               </p>
             </div>
 
@@ -395,7 +441,8 @@ export function HeroSection() {
                    textShadow: "2px 2px 4px rgba(0, 0, 0, 0.9)",
                    color: "#cbd5e1",
                  }}>
-                {t('hero.longDescription')}
+                {/* {t('hero.longDescription')} */}
+                
               </p>
             </div>
 
